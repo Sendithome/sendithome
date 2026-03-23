@@ -4,6 +4,14 @@ import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
+import AppLayout from './components/AppLayout';
+import Landing from './pages/Landing';
+import NewOrder from './pages/NewOrder';
+import ReceiptUpload from './pages/ReceiptUpload';
+import Payment from './pages/Payment';
+import MyOrders from './pages/MyOrders';
+import OrderDetail from './pages/OrderDetail';
+import Profile from './pages/Profile';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 // Add page imports here
 
@@ -33,7 +41,15 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
-      {/* Add your page Route elements here */}
+      <Route element={<AppLayout />}>
+        <Route path="/" element={<Landing />} />
+        <Route path="/new-order" element={<NewOrder />} />
+        <Route path="/order/:id/receipts" element={<ReceiptUpload />} />
+        <Route path="/order/:id/payment" element={<Payment />} />
+        <Route path="/my-orders" element={<MyOrders />} />
+        <Route path="/order/:id" element={<OrderDetail />} />
+        <Route path="/profile" element={<Profile />} />
+      </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
