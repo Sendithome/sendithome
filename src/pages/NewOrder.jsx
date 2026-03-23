@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ArrowRight, MapPin, Package } from 'lucide-react';
@@ -13,6 +13,8 @@ const STEPS = ['Box Size', 'Destination', 'Confirm'];
 
 export default function NewOrder() {
   const navigate = useNavigate();
+  const urlParams = new URLSearchParams(window.location.search);
+  const hotelId = urlParams.get('hotelId');
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -26,6 +28,32 @@ export default function NewOrder() {
     hotel_name: '',
     hotel_room: '',
   });
+
+  useEffect(() => {
+    prefill();
+  }, []);
+
+  const prefill = async () => {
+    const me = await base44.auth.me();
+    const updates = {};
+    if (me?.home_country) updates.destination_country = me.home_country;
+    if (me?.home_address) updates.destination_address = me.home_address;
+    if (me?.home_city) updates.destination_city = me.home_city;
+    if (me?.home_postal_code) updates.destination_postal_code = me.home_postal_code;
+    const fullName = [me?.first_name, me?.last_name].filter(Boolean).join(' ');
+    if (fullName) updates.recipient_name = fullName;
+    if (me?.phone_number) updates.recipient_phone = me.phone_number;
+    // Pre-fill hotel from QR param
+    if (hotelId) {
+      const hotels = await base44.entities.Hotel.filter({ id: hotelId });
+      if (hotels.length > 0) updates.hotel_name = hotels[0].name;
+    } else if (me?.hotel_name) {
+      updates.hotel_name = me.hotel_name;
+    }
+    if (Object.keys(updates).length > 0) {
+      setForm(prev => ({ ...prev, ...updates }));
+    }
+  };
 
   const update = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
 
