@@ -37,8 +37,10 @@ export default function Register() {
   }, [hotelId]);
 
   const loadHotel = async () => {
-    const hotels = await base44.entities.Hotel.filter({ id: hotelId });
-    if (hotels.length > 0) setHotel(hotels[0]);
+    try {
+      const hotel = await base44.entities.Hotel.get(hotelId);
+      setHotel(hotel);
+    } catch {}
   };
 
   const update = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
