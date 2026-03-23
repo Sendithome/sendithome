@@ -6,6 +6,8 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import AppLayout from './components/AppLayout';
 import Landing from './pages/Landing';
+import QRLanding from './pages/QRLanding';
+import Register from './pages/Register';
 import NewOrder from './pages/NewOrder';
 import ReceiptUpload from './pages/ReceiptUpload';
 import Payment from './pages/Payment';
@@ -43,6 +45,8 @@ const AuthenticatedApp = () => {
     <Routes>
       <Route element={<AppLayout />}>
         <Route path="/" element={<Landing />} />
+        <Route path="/hotel/:hotelId" element={<QRLanding />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/new-order" element={<NewOrder />} />
         <Route path="/order/:id/receipts" element={<ReceiptUpload />} />
         <Route path="/order/:id/payment" element={<Payment />} />
