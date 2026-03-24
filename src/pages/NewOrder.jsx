@@ -31,7 +31,7 @@ export default function NewOrder() {
     email: '',
     phone_number: '',
     whatsapp_number: '',
-    hotel_name: ''
+    hotel_name: '',
     hotel_room: '',
     destination_country: '',
     destination_address: '',
