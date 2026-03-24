@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Package, ArrowRight, Globe, Shield, Zap, Star } from 'lucide-react';
+import { Package, ArrowRight, Globe, Shield, Zap, Star, QrCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import HowItWorks from '../components/HowItWorks';
 
@@ -104,6 +104,58 @@ export default function Landing() {
               </div>
             </motion.div>
           ))}
+        </div>
+      </section>
+
+      {/* Sample Hotel QR Code */}
+      <section className="py-14 px-4 bg-muted/40">
+        <div className="max-w-2xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <div className="inline-flex items-center gap-2 bg-accent/10 text-accent text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+              <QrCode className="w-3.5 h-3.5" />
+              Try It Now
+            </div>
+            <h2 className="text-2xl font-bold text-foreground">Scan to Experience the Guest Flow</h2>
+            <p className="text-sm text-muted-foreground mt-2 mb-8">Scan the QR code below — exactly as hotel guests would from reception</p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
+              {/* QR Code */}
+              <div className="bg-white rounded-3xl p-6 shadow-lg border border-border inline-flex flex-col items-center">
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(window.location.origin + '/hotel/69c10e96d7e89842ae433412')}&bgcolor=ffffff&color=1a1f2e&qzone=1`}
+                  alt="Hotel QR Code"
+                  className="w-44 h-44"
+                />
+                <div className="mt-3 flex items-center gap-1.5">
+                  {[1,2,3,4,5].map(i => <Star key={i} className="w-3 h-3 text-accent fill-accent" />)}
+                </div>
+                <p className="text-sm font-bold text-foreground mt-1">Atlantis The Palm</p>
+                <p className="text-xs text-muted-foreground">Dubai, UAE</p>
+              </div>
+
+              {/* Steps */}
+              <div className="text-left space-y-4">
+                {[
+                  { n: '1', label: 'Guest scans QR at reception' },
+                  { n: '2', label: 'Hotel page opens automatically' },
+                  { n: '3', label: 'Guest registers & places order' },
+                  { n: '4', label: 'Box shipped to their home' },
+                ].map(({ n, label }) => (
+                  <div key={n} className="flex items-center gap-3">
+                    <div className="w-7 h-7 rounded-full bg-accent text-accent-foreground text-xs font-bold flex items-center justify-center shrink-0">{n}</div>
+                    <p className="text-sm text-foreground">{label}</p>
+                  </div>
+                ))}
+                <Link to="/hotel/69c10e96d7e89842ae433412">
+                  <button className="mt-2 text-xs text-accent font-semibold underline underline-offset-2">Or click here to open hotel page →</button>
+                </Link>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
