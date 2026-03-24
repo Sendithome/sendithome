@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import AppLayout from './components/AppLayout';
-import Landing from './pages/Landing';
+import { Navigate } from 'react-router-dom';
 import QRLanding from './pages/QRLanding';
 import Register from './pages/Register';
 import NewOrder from './pages/NewOrder';
@@ -44,7 +44,7 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route element={<AppLayout />}>
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<Navigate to="/hotel/69c10e96d7e89842ae433412" replace />} />
         <Route path="/hotel/:hotelId" element={<QRLanding />} />
         <Route path="/register" element={<Register />} />
         <Route path="/new-order" element={<NewOrder />} />
