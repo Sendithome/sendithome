@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, MapPin, Package, Camera, Upload, Loader2, Eye, EyeOff, MessageCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, MapPin, Package, Camera, Upload, Loader2, MessageCircle, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { base44 } from '@/api/base44Client';
-import BoxCard from '../components/BoxCard';
 import CountrySelect from '../components/CountrySelect';
+import BoxCard from '../components/BoxCard';
+import { getShippingPrice } from '../utils/pricing';
 
-const STEPS = ['Box Size', 'Your Details', 'Destination', 'Confirm'];
+const STEPS = ['Your Details', 'Destination', 'Box & Price', 'Confirm'];
 
 export default function NewOrder() {
   const navigate = useNavigate();
@@ -18,42 +19,33 @@ export default function NewOrder() {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [scanningPassport, setScanningPassport] = useState(false);
-  const [showPass, setShowPass] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+  const [hotel, setHotel] = useState(null);
+
   const [form, setForm] = useState({
-    box_size: '',
-    destination_country: '',
-    destination_address: '',
-    destination_city: '',
-    destination_postal_code: '',
-    recipient_name: '',
-    recipient_phone: '',
-    hotel_name: '',
-    hotel_room: '',
     first_name: '',
     middle_name: '',
     last_name: '',
     nationality: '',
     passport_number: '',
     passport_expiry: '',
-    email: '',
     phone_number: '',
     whatsapp_number: '',
-    password: '',
-    confirm_password: '',
+    hotel_name: '',
+    hotel_room: '',
+    destination_country: '',
+    destination_address: '',
+    destination_city: '',
+    destination_postal_code: '',
+    recipient_name: '',
+    recipient_phone: '',
+    box_size: '',
   });
 
-  useEffect(() => {
-    prefill();
-  }, []);
+  useEffect(() => { prefill(); }, []);
 
   const prefill = async () => {
     const me = await base44.auth.me();
     const updates = {};
-    if (me?.home_country) updates.destination_country = me.home_country;
-    if (me?.home_address) updates.destination_address = me.home_address;
-    if (me?.home_city) updates.destination_city = me.home_city;
-    if (me?.home_postal_code) updates.destination_postal_code = me.home_postal_code;
     if (me?.first_name) updates.first_name = me.first_name;
     if (me?.last_name) updates.last_name = me.last_name;
     if (me?.middle_name) updates.middle_name = me.middle_name;
@@ -62,19 +54,23 @@ export default function NewOrder() {
     if (me?.passport_expiry) updates.passport_expiry = me.passport_expiry;
     if (me?.phone_number) updates.phone_number = me.phone_number;
     if (me?.whatsapp_number) updates.whatsapp_number = me.whatsapp_number;
-    if (me?.email) updates.email = me.email;
+    if (me?.home_country) updates.destination_country = me.home_country;
+    if (me?.home_address) updates.destination_address = me.home_address;
+    if (me?.home_city) updates.destination_city = me.home_city;
+    if (me?.home_postal_code) updates.destination_postal_code = me.home_postal_code;
     const fullName = [me?.first_name, me?.last_name].filter(Boolean).join(' ');
     if (fullName) updates.recipient_name = fullName;
+
     if (hotelId) {
-      const hotels = await base44.entities.Hotel.filter({ id: hotelId });
-      if (hotels.length > 0) updates.hotel_name = hotels[0].name;
+      const h = await base44.entities.Hotel.get(hotelId);
+      if (h) { setHotel(h); updates.hotel_name = h.name; }
     } else if (me?.hotel_name) {
       updates.hotel_name = me.hotel_name;
     }
-    if (Object.keys(updates).length > 0) {
-      setForm(prev => ({ ...prev, ...updates }));
-    }
+    if (Object.keys(updates).length > 0) setForm(prev => ({ ...prev, ...updates }));
   };
+
+  const update = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
 
   const handlePassportScan = async (e) => {
     const file = e.target.files[0];
@@ -109,18 +105,17 @@ export default function NewOrder() {
     setScanningPassport(false);
   };
 
-  const update = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
+  const shippingPrice = getShippingPrice(form.destination_country);
 
   const canNext = () => {
-    if (step === 0) return !!form.box_size;
-    if (step === 1) return form.first_name && form.last_name && form.nationality && form.passport_number && form.phone_number;
-    if (step === 2) return form.destination_country && form.destination_address && form.destination_city && form.recipient_name;
+    if (step === 0) return form.first_name && form.last_name && form.phone_number;
+    if (step === 1) return form.destination_country && form.destination_address && form.destination_city && form.recipient_name;
+    if (step === 2) return !!form.box_size;
     return true;
   };
 
   const handleCreate = async () => {
     setLoading(true);
-    // Save profile info
     await base44.auth.updateMe({
       first_name: form.first_name,
       middle_name: form.middle_name,
@@ -136,7 +131,7 @@ export default function NewOrder() {
       ...form,
       order_number: orderNum,
       status: 'pending',
-      price: 60,
+      price: shippingPrice,
       currency: 'USD',
       payment_status: 'unpaid',
     });
@@ -147,7 +142,10 @@ export default function NewOrder() {
     <div className="max-w-lg mx-auto px-4 py-8">
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">
-        <button onClick={() => step > 0 ? setStep(step - 1) : navigate('/')} className="w-9 h-9 rounded-xl bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors">
+        <button
+          onClick={() => step > 0 ? setStep(step - 1) : navigate('/')}
+          className="w-9 h-9 rounded-xl bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors"
+        >
           <ArrowLeft className="w-4 h-4" />
         </button>
         <div>
@@ -163,21 +161,27 @@ export default function NewOrder() {
         ))}
       </div>
 
-      <AnimatePresence mode="wait">
-        {step === 0 && (
-          <motion.div key="step0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-            <p className="text-sm text-muted-foreground mb-6">
-              Choose your box size. Both options are $60 — flat rate, no surprises.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <BoxCard size="10kg" selected={form.box_size === '10kg'} onSelect={(s) => update('box_size', s)} />
-              <BoxCard size="20kg" selected={form.box_size === '20kg'} onSelect={(s) => update('box_size', s)} />
-            </div>
-          </motion.div>
-        )}
+      {/* Hotel badge if coming from QR */}
+      {hotel && (
+        <div className="flex items-center gap-3 bg-accent/5 border border-accent/20 rounded-2xl px-4 py-3 mb-6">
+          <MapPin className="w-4 h-4 text-accent shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold text-foreground">{hotel.name}</p>
+            <p className="text-[10px] text-muted-foreground">{hotel.city}, {hotel.country}</p>
+          </div>
+        </div>
+      )}
 
-        {step === 1 && (
-          <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
+      <AnimatePresence mode="wait">
+
+        {/* STEP 0: Your Details */}
+        {step === 0 && (
+          <motion.div key="step0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
+            <div>
+              <h2 className="text-xl font-bold text-foreground">Your Details</h2>
+              <p className="text-sm text-muted-foreground mt-1">Fill in your details or scan your passport for instant autofill.</p>
+            </div>
+
             {/* Passport scan */}
             <div className="border-2 border-dashed border-border rounded-2xl p-5 text-center">
               {scanningPassport ? (
@@ -190,7 +194,7 @@ export default function NewOrder() {
                 <>
                   <Camera className="w-9 h-9 text-muted-foreground mx-auto mb-2" />
                   <p className="text-sm font-semibold text-foreground">Scan Your Passport</p>
-                  <p className="text-xs text-muted-foreground mt-1">Our AI will automatically extract your details.</p>
+                  <p className="text-xs text-muted-foreground mt-1">Our AI will automatically fill in your details.</p>
                   <div className="flex gap-3 justify-center mt-4">
                     <label className="cursor-pointer">
                       <span className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-xs font-medium px-4 py-2 rounded-xl">
@@ -210,7 +214,7 @@ export default function NewOrder() {
               )}
             </div>
 
-            {/* Name row */}
+            {/* Name */}
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <Label className="text-xs text-muted-foreground">First Name *</Label>
@@ -226,18 +230,18 @@ export default function NewOrder() {
               </div>
             </div>
 
-            {/* Passport row */}
+            {/* Passport */}
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <Label className="text-xs text-muted-foreground">Nationality *</Label>
+                <Label className="text-xs text-muted-foreground">Nationality</Label>
                 <Input value={form.nationality} onChange={e => update('nationality', e.target.value)} placeholder="United Kingdom" className="mt-1" />
               </div>
               <div>
-                <Label className="text-xs text-muted-foreground">Passport Number *</Label>
+                <Label className="text-xs text-muted-foreground">Passport Number</Label>
                 <Input value={form.passport_number} onChange={e => update('passport_number', e.target.value)} placeholder="AB1234567" className="mt-1" />
               </div>
               <div>
-                <Label className="text-xs text-muted-foreground">Date of Expiry</Label>
+                <Label className="text-xs text-muted-foreground">Expiry Date</Label>
                 <Input type="date" value={form.passport_expiry} onChange={e => update('passport_expiry', e.target.value)} className="mt-1" />
               </div>
             </div>
@@ -256,102 +260,136 @@ export default function NewOrder() {
             <div className="flex items-start gap-2 bg-green-50 border border-green-100 rounded-xl px-3 py-2">
               <MessageCircle className="w-3.5 h-3.5 text-green-600 mt-0.5 shrink-0" />
               <p className="text-[10px] text-green-700 leading-relaxed">
-                We use WhatsApp for real-time shipment tracking & updates.
+                We use WhatsApp for real-time shipment tracking & updates.{' '}
+                <a href="https://www.whatsapp.com/download" target="_blank" rel="noopener noreferrer" className="underline font-medium">Download WhatsApp</a>
               </p>
             </div>
-          </motion.div>
-        )}
 
-        {step === 2 && (
-          <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
-            <div className="bg-card rounded-2xl border border-border p-5 space-y-4">
-              <div className="flex items-center gap-2 mb-1">
-                <MapPin className="w-4 h-4 text-accent" />
-                <span className="text-sm font-semibold text-foreground">Delivery Address</span>
-              </div>
-              <CountrySelect value={form.destination_country} onChange={(v) => update('destination_country', v)} />
-              <div>
-                <Label className="text-xs text-muted-foreground">Recipient Name *</Label>
-                <Input value={form.recipient_name} onChange={(e) => update('recipient_name', e.target.value)} placeholder="Full name" className="mt-1" />
-              </div>
-              <div>
-                <Label className="text-xs text-muted-foreground">Phone Number</Label>
-                <Input value={form.recipient_phone} onChange={(e) => update('recipient_phone', e.target.value)} placeholder="+1 234 567 890" className="mt-1" />
-              </div>
-              <div>
-                <Label className="text-xs text-muted-foreground">Street Address *</Label>
-                <Input value={form.destination_address} onChange={(e) => update('destination_address', e.target.value)} placeholder="123 Main Street" className="mt-1" />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label className="text-xs text-muted-foreground">City *</Label>
-                  <Input value={form.destination_city} onChange={(e) => update('destination_city', e.target.value)} placeholder="City" className="mt-1" />
-                </div>
-                <div>
-                  <Label className="text-xs text-muted-foreground">Postal Code</Label>
-                  <Input value={form.destination_postal_code} onChange={(e) => update('destination_postal_code', e.target.value)} placeholder="12345" className="mt-1" />
-                </div>
-              </div>
-            </div>
-            <div className="bg-card rounded-2xl border border-border p-5 space-y-4">
-              <div className="flex items-center gap-2 mb-1">
-                <Package className="w-4 h-4 text-accent" />
-                <span className="text-sm font-semibold text-foreground">Hotel Details</span>
-              </div>
+            {/* Hotel */}
+            <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label className="text-xs text-muted-foreground">Hotel Name</Label>
-                <Input value={form.hotel_name} onChange={(e) => update('hotel_name', e.target.value)} placeholder="Hotel name" className="mt-1" />
+                <Input value={form.hotel_name} onChange={e => update('hotel_name', e.target.value)} placeholder="Hotel name" className="mt-1" />
               </div>
               <div>
                 <Label className="text-xs text-muted-foreground">Room Number</Label>
-                <Input value={form.hotel_room} onChange={(e) => update('hotel_room', e.target.value)} placeholder="Room 301" className="mt-1" />
+                <Input value={form.hotel_room} onChange={e => update('hotel_room', e.target.value)} placeholder="Room 301" className="mt-1" />
               </div>
             </div>
           </motion.div>
         )}
 
-        {step === 3 && (
-          <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-            <div className="bg-card rounded-2xl border border-border p-6 space-y-5">
-              <h3 className="font-semibold text-foreground">Order Summary</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Box Size</span>
-                  <span className="font-medium">{form.box_size}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Destination</span>
-                  <span className="font-medium">{form.destination_country}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Recipient</span>
-                  <span className="font-medium">{form.recipient_name}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Address</span>
-                  <span className="font-medium text-right">{form.destination_address}, {form.destination_city}</span>
-                </div>
-                {form.first_name && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Guest</span>
-                    <span className="font-medium">{form.first_name} {form.last_name}</span>
-                  </div>
-                )}
-                {form.hotel_name && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Hotel</span>
-                    <span className="font-medium">{form.hotel_name} {form.hotel_room && `· ${form.hotel_room}`}</span>
-                  </div>
-                )}
-                <div className="border-t border-border pt-3 flex justify-between">
-                  <span className="font-semibold">Total</span>
-                  <span className="text-xl font-bold text-accent">$60</span>
-                </div>
+        {/* STEP 1: Destination */}
+        {step === 1 && (
+          <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
+            <div>
+              <h2 className="text-xl font-bold text-foreground">Delivery Address</h2>
+              <p className="text-sm text-muted-foreground mt-1">Where should we deliver your shipment?</p>
+            </div>
+
+            <div>
+              <Label className="text-xs text-muted-foreground">Destination Country *</Label>
+              <div className="mt-1">
+                <CountrySelect value={form.destination_country} onChange={(v) => update('destination_country', v)} />
+              </div>
+              {form.destination_country && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-2 flex items-center gap-2 bg-accent/5 border border-accent/20 rounded-xl px-3 py-2"
+                >
+                  <Package className="w-3.5 h-3.5 text-accent shrink-0" />
+                  <p className="text-xs text-foreground">
+                    Shipping to <strong>{form.destination_country}</strong>:{' '}
+                    <span className="text-accent font-bold">${getShippingPrice(form.destination_country)}</span> per box
+                  </p>
+                </motion.div>
+              )}
+            </div>
+
+            <div>
+              <Label className="text-xs text-muted-foreground">Recipient Name *</Label>
+              <Input value={form.recipient_name} onChange={(e) => update('recipient_name', e.target.value)} placeholder="Full name" className="mt-1" />
+            </div>
+            <div>
+              <Label className="text-xs text-muted-foreground">Recipient Phone</Label>
+              <Input value={form.recipient_phone} onChange={(e) => update('recipient_phone', e.target.value)} placeholder="+1 234 567 890" className="mt-1" />
+            </div>
+            <div>
+              <Label className="text-xs text-muted-foreground">Street Address *</Label>
+              <Input value={form.destination_address} onChange={(e) => update('destination_address', e.target.value)} placeholder="123 Main Street" className="mt-1" />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label className="text-xs text-muted-foreground">City *</Label>
+                <Input value={form.destination_city} onChange={(e) => update('destination_city', e.target.value)} placeholder="City" className="mt-1" />
+              </div>
+              <div>
+                <Label className="text-xs text-muted-foreground">Postal Code</Label>
+                <Input value={form.destination_postal_code} onChange={(e) => update('destination_postal_code', e.target.value)} placeholder="12345" className="mt-1" />
               </div>
             </div>
-            <p className="text-xs text-muted-foreground text-center mt-4">
-              Next: Upload your shopping receipts for customs clearance
+          </motion.div>
+        )}
+
+        {/* STEP 2: Box Size + Price */}
+        {step === 2 && (
+          <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
+            <div>
+              <h2 className="text-xl font-bold text-foreground">Choose Your Box</h2>
+              <p className="text-sm text-muted-foreground mt-1">Both sizes ship to <strong>{form.destination_country}</strong> for the same price.</p>
+            </div>
+
+            {/* Price banner */}
+            <div className="bg-primary rounded-2xl px-5 py-4 flex items-center justify-between">
+              <div>
+                <p className="text-xs text-white/60 font-medium uppercase tracking-wide">Shipping to {form.destination_country}</p>
+                <p className="text-3xl font-bold text-white mt-0.5">${shippingPrice} <span className="text-base font-normal text-white/60">per box</span></p>
+              </div>
+              <div className="text-right">
+                <p className="text-xs text-accent font-semibold">1–3 working days</p>
+                <p className="text-[10px] text-white/50 mt-0.5">via FedEx / DHL</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <BoxCard size="10kg" selected={form.box_size === '10kg'} onSelect={(s) => update('box_size', s)} />
+              <BoxCard size="20kg" selected={form.box_size === '20kg'} onSelect={(s) => update('box_size', s)} />
+            </div>
+
+            <p className="text-[10px] text-muted-foreground text-center">
+              Price is the same regardless of box size. Overweight boxes may incur additional charges.
             </p>
+          </motion.div>
+        )}
+
+        {/* STEP 3: Confirm */}
+        {step === 3 && (
+          <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
+            <div>
+              <h2 className="text-xl font-bold text-foreground">Confirm Order</h2>
+              <p className="text-sm text-muted-foreground mt-1">Review your shipment details before continuing.</p>
+            </div>
+
+            <div className="bg-card rounded-2xl border border-border divide-y divide-border overflow-hidden">
+              <SummaryRow label="Guest" value={`${form.first_name} ${form.last_name}`} />
+              {form.hotel_name && <SummaryRow label="Hotel" value={`${form.hotel_name}${form.hotel_room ? ` · ${form.hotel_room}` : ''}`} />}
+              <SummaryRow label="Box Size" value={form.box_size} />
+              <SummaryRow label="Destination" value={form.destination_country} />
+              <SummaryRow label="Recipient" value={form.recipient_name} />
+              <SummaryRow label="Address" value={`${form.destination_address}, ${form.destination_city}${form.destination_postal_code ? ` ${form.destination_postal_code}` : ''}`} />
+              <div className="px-5 py-4 flex justify-between items-center bg-accent/5">
+                <span className="font-bold text-foreground">Shipping Total</span>
+                <span className="text-2xl font-bold text-accent">${shippingPrice}</span>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-2 bg-muted rounded-xl px-4 py-3">
+              <CheckCircle2 className="w-4 h-4 text-accent mt-0.5 shrink-0" />
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                After creating your order, you'll upload shopping receipts. Payment is collected at pickup.
+              </p>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -377,6 +415,15 @@ export default function NewOrder() {
           )}
         </Button>
       </div>
+    </div>
+  );
+}
+
+function SummaryRow({ label, value }) {
+  return (
+    <div className="px-5 py-3 flex justify-between items-start gap-4">
+      <span className="text-sm text-muted-foreground shrink-0">{label}</span>
+      <span className="text-sm font-medium text-foreground text-right">{value}</span>
     </div>
   );
 }
