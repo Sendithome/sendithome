@@ -108,7 +108,7 @@ export default function QRLanding() {
         >
           <Button
             className="w-full h-13 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-2xl text-base py-4"
-            onClick={() => navigate(`/register?hotelId=${hotelId}`)}
+            onClick={() => navigate(`/new-order?hotelId=${hotelId}`)}
           >
             Get Started — Register Now
             <ArrowRight className="w-5 h-5 ml-2" />
