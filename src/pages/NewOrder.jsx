@@ -28,9 +28,10 @@ export default function NewOrder() {
     nationality: '',
     passport_number: '',
     passport_expiry: '',
+    email: '',
     phone_number: '',
     whatsapp_number: '',
-    hotel_name: '',
+    hotel_name: ''
     hotel_room: '',
     destination_country: '',
     destination_address: '',
@@ -54,6 +55,7 @@ export default function NewOrder() {
     if (me?.passport_expiry) updates.passport_expiry = me.passport_expiry;
     if (me?.phone_number) updates.phone_number = me.phone_number;
     if (me?.whatsapp_number) updates.whatsapp_number = me.whatsapp_number;
+    if (me?.email) updates.email = me.email;
     if (me?.home_country) updates.destination_country = me.home_country;
     if (me?.home_address) updates.destination_address = me.home_address;
     if (me?.home_city) updates.destination_city = me.home_city;
@@ -244,6 +246,12 @@ export default function NewOrder() {
                 <Label className="text-xs text-muted-foreground">Expiry Date</Label>
                 <Input type="date" value={form.passport_expiry} onChange={e => update('passport_expiry', e.target.value)} className="mt-1" />
               </div>
+            </div>
+
+            {/* Email */}
+            <div>
+              <Label className="text-xs text-muted-foreground">Email Address *</Label>
+              <Input type="email" value={form.email} onChange={e => update('email', e.target.value)} placeholder="john@example.com" className="mt-1" />
             </div>
 
             {/* Contact */}
