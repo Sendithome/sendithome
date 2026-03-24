@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { base44 } from '@/api/base44Client';
 import CountrySelect from '../components/CountrySelect';
+import PhoneInput from '../components/PhoneInput';
 import BoxCard from '../components/BoxCard';
 import { getShippingPrice } from '../utils/pricing';
 
@@ -29,8 +30,8 @@ export default function NewOrder() {
     passport_number: '',
     passport_expiry: '',
     email: '',
-    phone_number: '',
-    whatsapp_number: '',
+    phone_number: '+971|',
+    whatsapp_number: '+971|',
     hotel_name: '',
     hotel_room: '',
     destination_country: '',
@@ -53,8 +54,8 @@ export default function NewOrder() {
     if (me?.nationality) updates.nationality = me.nationality;
     if (me?.passport_number) updates.passport_number = me.passport_number;
     if (me?.passport_expiry) updates.passport_expiry = me.passport_expiry;
-    if (me?.phone_number) updates.phone_number = me.phone_number;
-    if (me?.whatsapp_number) updates.whatsapp_number = me.whatsapp_number;
+    if (me?.phone_number) updates.phone_number = me.phone_number.includes('|') ? me.phone_number : `+971|${me.phone_number}`;
+    if (me?.whatsapp_number) updates.whatsapp_number = me.whatsapp_number.includes('|') ? me.whatsapp_number : `+971|${me.whatsapp_number}`;
     if (me?.email) updates.email = me.email;
     if (me?.home_country) updates.destination_country = me.home_country;
     if (me?.home_address) updates.destination_address = me.home_address;
@@ -118,6 +119,7 @@ export default function NewOrder() {
 
   const handleCreate = async () => {
     setLoading(true);
+    const formatPhone = (v) => { const p = (v || '').split('|'); return p.length === 2 ? `${p[0]}${p[1]}` : v; };
     await base44.auth.updateMe({
       first_name: form.first_name,
       middle_name: form.middle_name,
@@ -125,12 +127,14 @@ export default function NewOrder() {
       nationality: form.nationality,
       passport_number: form.passport_number,
       passport_expiry: form.passport_expiry,
-      phone_number: form.phone_number,
-      whatsapp_number: form.whatsapp_number,
+      phone_number: formatPhone(form.phone_number),
+      whatsapp_number: formatPhone(form.whatsapp_number),
     });
     const orderNum = 'SIH-' + Date.now().toString(36).toUpperCase();
     const order = await base44.entities.Order.create({
       ...form,
+      phone_number: formatPhone(form.phone_number),
+      whatsapp_number: formatPhone(form.whatsapp_number),
       order_number: orderNum,
       status: 'pending',
       price: shippingPrice,
@@ -258,11 +262,11 @@ export default function NewOrder() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label className="text-xs text-muted-foreground">Phone Number *</Label>
-                <Input value={form.phone_number} onChange={e => update('phone_number', e.target.value)} placeholder="+971 50 123 4567" className="mt-1" />
+                <PhoneInput value={form.phone_number} onChange={(v) => update('phone_number', v)} />
               </div>
               <div>
                 <Label className="text-xs text-muted-foreground">WhatsApp Number</Label>
-                <Input value={form.whatsapp_number} onChange={e => update('whatsapp_number', e.target.value)} placeholder="+971 50 123 4567" className="mt-1" />
+                <PhoneInput value={form.whatsapp_number} onChange={(v) => update('whatsapp_number', v)} />
               </div>
             </div>
             <div className="flex items-start gap-2 bg-green-50 border border-green-100 rounded-xl px-3 py-2">
