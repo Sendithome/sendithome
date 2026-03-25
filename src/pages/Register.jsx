@@ -54,6 +54,46 @@ export default function Register() {
     } catch {}
   };
 
+  const NATIONALITY_TO_COUNTRY = {
+    'united arab emirates': 'United Arab Emirates', 'uae': 'United Arab Emirates',
+    'emirati': 'United Arab Emirates',
+    'united states': 'United States', 'usa': 'United States', 'american': 'United States',
+    'united kingdom': 'United Kingdom', 'uk': 'United Kingdom', 'british': 'United Kingdom',
+    'saudi arabia': 'Saudi Arabia', 'saudi': 'Saudi Arabia',
+    'qatar': 'Qatar', 'qatari': 'Qatar',
+    'kuwait': 'Kuwait', 'kuwaiti': 'Kuwait',
+    'bahrain': 'Bahrain', 'bahraini': 'Bahrain',
+    'oman': 'Oman', 'omani': 'Oman',
+    'india': 'India', 'indian': 'India',
+    'pakistan': 'Pakistan', 'pakistani': 'Pakistan',
+    'egypt': 'Egypt', 'egyptian': 'Egypt',
+    'jordan': 'Jordan', 'jordanian': 'Jordan',
+    'lebanon': 'Lebanon', 'lebanese': 'Lebanon',
+    'germany': 'Germany', 'german': 'Germany',
+    'france': 'France', 'french': 'France',
+    'italy': 'Italy', 'italian': 'Italy',
+    'spain': 'Spain', 'spanish': 'Spain',
+    'russia': 'Russia', 'russian': 'Russia',
+    'china': 'China', 'chinese': 'China',
+    'japan': 'Japan', 'japanese': 'Japan',
+    'australia': 'Australia', 'australian': 'Australia',
+    'canada': 'Canada', 'canadian': 'Canada',
+    'brazil': 'Brazil', 'brazilian': 'Brazil',
+    'south africa': 'South Africa',
+    'nigeria': 'Nigeria', 'nigerian': 'Nigeria',
+    'kenya': 'Kenya', 'kenyan': 'Kenya',
+    'philippines': 'Philippines', 'filipino': 'Philippines',
+    'bangladesh': 'Bangladesh', 'bangladeshi': 'Bangladesh',
+    'netherlands': 'Netherlands', 'dutch': 'Netherlands',
+    'sweden': 'Sweden', 'swedish': 'Sweden',
+    'norway': 'Norway', 'norwegian': 'Norway',
+    'switzerland': 'Switzerland', 'swiss': 'Switzerland',
+    'singapore': 'Singapore', 'singaporean': 'Singapore',
+    'malaysia': 'Malaysia', 'malaysian': 'Malaysia',
+    'thailand': 'Thailand', 'thai': 'Thailand',
+    'turkey': 'Turkey', 'turkish': 'Turkey',
+  };
+
   const NATIONALITY_TO_DIAL = {
     'united arab emirates': '+971', 'uae': '+971',
     'united states': '+1', 'usa': '+1', 'american': '+1',
@@ -92,6 +132,15 @@ export default function Register() {
     'thailand': '+66', 'thai': '+66',
     'turkey': '+90', 'turkish': '+90',
   };
+
+  useEffect(() => {
+    if (!form.nationality) return;
+    const key = form.nationality.toLowerCase().trim();
+    const country = NATIONALITY_TO_COUNTRY[key];
+    if (country && !form.home_country) {
+      setForm(prev => ({ ...prev, home_country: country }));
+    }
+  }, [form.nationality]);
 
   useEffect(() => {
     if (!form.nationality) return;
