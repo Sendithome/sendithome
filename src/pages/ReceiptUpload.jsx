@@ -419,6 +419,44 @@ export default function ReceiptUpload() {
                 {showDeclaration ? 'Hide' : 'View'} Declaration Form
               </button>
             </div>
+            {!showBoxSelect ? (
+              <Button
+                className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-12"
+                onClick={() => setShowBoxSelect(true)}
+                disabled={reviewSelectedIds.size === 0}
+              >
+                Select Box & Pay
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            ) : (
+              <div className="space-y-4">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Select Your Box Size</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <BoxCard size="10kg" selected={boxSize === '10kg'} onSelect={setBoxSize} />
+                  <BoxCard size="20kg" selected={boxSize === '20kg'} onSelect={setBoxSize} />
+                </div>
+                <Button
+                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-12"
+                  disabled={!boxSize || savingBox}
+                  onClick={async () => {
+                    setSavingBox(true);
+                    await base44.entities.Order.update(orderId, { box_size: boxSize });
+                    navigate(`/order/${orderId}/payment`);
+                  }}
+                >
+                  {savingBox ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Package className="w-4 h-4 mr-2" />}
+                  Proceed to Payment
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            )}
+            <label className="block cursor-pointer">
+              <Button variant="outline" className="w-full rounded-xl pointer-events-none" type="button">
+                <Upload className="w-4 h-4 mr-2" /> Upload Another Receipt
+              </Button>
+              <input type="file" accept="image/*,.pdf" className="hidden" onChange={handleFileUpload} disabled={uploading || processing} />
+            </label>
+          </div>
         </div>
       )}
     </div>
