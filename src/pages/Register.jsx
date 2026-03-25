@@ -29,6 +29,11 @@ export default function Register() {
     email: '',
     phone_number: '+971|',
     whatsapp_number: '+971|',
+    home_address: '',
+    home_address2: '',
+    home_city: '',
+    home_postal_code: '',
+    home_country: '',
     password: '',
     confirm_password: '',
   });
@@ -105,6 +110,11 @@ export default function Register() {
       email: form.email,
       phone_number: formatPhone(form.phone_number),
       whatsapp_number: formatPhone(form.whatsapp_number),
+      home_address: form.home_address,
+      home_address2: form.home_address2,
+      home_city: form.home_city,
+      home_postal_code: form.home_postal_code,
+      home_country: form.home_country,
       hotel_id: hotelId || '',
       hotel_name: hotel?.name || '',
       hotel_city: hotel?.city || '',
@@ -121,6 +131,7 @@ export default function Register() {
 
   const isFormValid = form.first_name && form.last_name && form.nationality &&
     form.passport_number && form.email && form.phone_number.includes('|') && form.phone_number.split('|')[1] &&
+    form.home_address && form.home_city && form.home_country &&
     form.password && form.confirm_password;
 
   return (
@@ -258,6 +269,40 @@ export default function Register() {
                   <a href="https://www.whatsapp.com/download" target="_blank" rel="noopener noreferrer" className="underline font-medium">download it here</a>
                   {' '}— we use WhatsApp for real-time shipment tracking & updates.
                 </p>
+              </div>
+            </div>
+
+            {/* Home / Delivery Address */}
+            <div className="border border-border rounded-2xl p-4 space-y-3">
+              <div className="flex items-center gap-2 mb-1">
+                <div className="w-6 h-6 rounded-lg bg-accent/10 flex items-center justify-center">
+                  <span className="text-accent text-xs">🏠</span>
+                </div>
+                <p className="text-xs font-bold text-foreground uppercase tracking-wide">Home Delivery Address</p>
+              </div>
+              <p className="text-[10px] text-muted-foreground -mt-1">This is where your shipment will be delivered. Must match your passport details.</p>
+
+              <div>
+                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Country *</Label>
+                <Input value={form.home_country} onChange={(e) => update('home_country', e.target.value)} placeholder="e.g. United Kingdom" className="mt-1.5 h-11" required />
+              </div>
+              <div>
+                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Address Line 1 *</Label>
+                <Input value={form.home_address} onChange={(e) => update('home_address', e.target.value)} placeholder="House number & street name" className="mt-1.5 h-11" required />
+              </div>
+              <div>
+                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Address Line 2</Label>
+                <Input value={form.home_address2} onChange={(e) => update('home_address2', e.target.value)} placeholder="Apartment, suite, floor (optional)" className="mt-1.5 h-11" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">City *</Label>
+                  <Input value={form.home_city} onChange={(e) => update('home_city', e.target.value)} placeholder="City" className="mt-1.5 h-11" required />
+                </div>
+                <div>
+                  <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Postal Code</Label>
+                  <Input value={form.home_postal_code} onChange={(e) => update('home_postal_code', e.target.value)} placeholder="12345" className="mt-1.5 h-11" />
+                </div>
               </div>
             </div>
 
