@@ -160,7 +160,7 @@ export default function NewOrder() {
               <p className="text-sm text-muted-foreground mt-1">Your personal details are pre-filled from your account.</p>
             </div>
 
-            {/* Read-only identity summary */}
+            {/* Read-only account summary */}
             <div className="bg-muted/50 rounded-2xl border border-border p-4">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Account Details</p>
               <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
@@ -168,29 +168,13 @@ export default function NewOrder() {
                 <div><span className="text-muted-foreground text-xs">Nationality</span><p className="font-medium text-foreground">{form.nationality || '—'}</p></div>
                 <div><span className="text-muted-foreground text-xs">Passport No.</span><p className="font-medium text-foreground">{form.passport_number || '—'}</p></div>
                 <div><span className="text-muted-foreground text-xs">Expiry</span><p className="font-medium text-foreground">{form.passport_expiry || '—'}</p></div>
+                <div><span className="text-muted-foreground text-xs">Email</span><p className="font-medium text-foreground">{form.email || '—'}</p></div>
+                <div><span className="text-muted-foreground text-xs">Phone</span><p className="font-medium text-foreground">{form.phone_number ? form.phone_number.replace('|', ' ') : '—'}</p></div>
+                <div className="col-span-2"><span className="text-muted-foreground text-xs">WhatsApp</span><p className="font-medium text-foreground">{form.whatsapp_number ? form.whatsapp_number.replace('|', ' ') : '—'}</p></div>
               </div>
-            </div>
-
-            <div>
-              <Label className="text-xs text-muted-foreground">Email Address</Label>
-              <Input type="email" value={form.email} onChange={e => update('email', e.target.value)} placeholder="john@example.com" className="mt-1" />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label className="text-xs text-muted-foreground">Phone Number *</Label>
-                <PhoneInput value={form.phone_number} onChange={(v) => update('phone_number', v)} />
-              </div>
-              <div>
-                <Label className="text-xs text-muted-foreground">WhatsApp Number</Label>
-                <PhoneInput value={form.whatsapp_number} onChange={(v) => update('whatsapp_number', v)} />
-              </div>
-            </div>
-            <div className="flex items-start gap-2 bg-green-50 border border-green-100 rounded-xl px-3 py-2">
-              <MessageCircle className="w-3.5 h-3.5 text-green-600 mt-0.5 shrink-0" />
-              <p className="text-[10px] text-green-700 leading-relaxed">
-                We use WhatsApp for real-time shipment tracking & updates.{' '}
-                <a href="https://www.whatsapp.com/download" target="_blank" rel="noopener noreferrer" className="underline font-medium">Download WhatsApp</a>
+              <p className="text-[10px] text-muted-foreground mt-3">
+                Need to update your details?{' '}
+                <a href="/profile" className="text-accent font-medium hover:underline">Edit in Profile</a>
               </p>
             </div>
 
