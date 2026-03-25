@@ -1,5 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Package, Home, ClipboardList, User, Globe } from 'lucide-react';
+import { Package, Home, ClipboardList, User } from 'lucide-react';
+import LanguageSelector from './LanguageSelector';
 import { motion } from 'framer-motion';
 
 const NAV_ITEMS = [
@@ -25,10 +26,8 @@ export default function AppLayout() {
             </div>
           </Link>
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-1.5 text-xs opacity-80 hover:opacity-100 transition-opacity">
-              <Globe className="w-3.5 h-3.5" />
-              <span>EN</span>
-            </button>
+            <div id="google_translate_element" style={{display:'none'}} />
+            <LanguageSelector />
           </div>
         </div>
       </header>
