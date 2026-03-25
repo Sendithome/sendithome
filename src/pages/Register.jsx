@@ -20,6 +20,7 @@ export default function Register() {
   const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const [form, setForm] = useState({
     first_name: '',
@@ -51,7 +52,44 @@ export default function Register() {
     } catch {}
   };
 
-  const update = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
+  const update = (key, value) => {
+    setForm(prev => ({ ...prev, [key]: value }));
+    setErrors(prev => ({ ...prev, [key]: '' }));
+  };
+
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  // Passport: 1-2 letters followed by 6-9 digits (covers most international formats)
+  const validatePassport = (num) => /^[A-Z0-9]{6,12}$/i.test(num.trim());
+
+  const validate = () => {
+    const newErrors = {};
+    if (!form.first_name.trim()) newErrors.first_name = 'First name is required';
+    if (!form.last_name.trim()) newErrors.last_name = 'Last name is required';
+    if (!form.nationality.trim()) newErrors.nationality = 'Nationality is required';
+    if (!form.passport_number.trim()) {
+      newErrors.passport_number = 'Passport number is required';
+    } else if (!validatePassport(form.passport_number)) {
+      newErrors.passport_number = 'Invalid passport number (6–12 alphanumeric characters)';
+    }
+    if (!form.passport_expiry) newErrors.passport_expiry = 'Expiry date is required';
+    if (!form.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!validateEmail(form.email)) {
+      newErrors.email = 'Enter a valid email address';
+    }
+    if (!form.phone_number.split('|')[1]) newErrors.phone_number = 'Phone number is required';
+    if (!form.home_country) newErrors.home_country = 'Country is required';
+    if (!form.home_address.trim()) newErrors.home_address = 'Address is required';
+    if (!form.home_city.trim()) newErrors.home_city = 'City is required';
+    if (!form.home_postal_code.trim()) newErrors.home_postal_code = 'Postal code is required';
+    if (!form.password) newErrors.password = 'Password is required';
+    else if (form.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
+    if (!form.confirm_password) newErrors.confirm_password = 'Please confirm your password';
+    else if (form.password !== form.confirm_password) newErrors.confirm_password = 'Passwords do not match';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handlePassportScan = async (e) => {
     const file = e.target.files[0];
@@ -90,14 +128,7 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.password !== form.confirm_password) {
-      alert('Passwords do not match');
-      return;
-    }
-    if (form.password.length < 8) {
-      alert('Password must be at least 8 characters');
-      return;
-    }
+    if (!validate()) return;
     setSubmitting(true);
 
     const formatPhone = (v) => { const p = (v || '').split('|'); return p.length === 2 ? `${p[0]}${p[1]}` : v; };
@@ -131,10 +162,7 @@ export default function Register() {
     setSubmitting(false);
   };
 
-  const isFormValid = form.first_name && form.last_name && form.nationality &&
-    form.passport_number && form.email && form.phone_number.includes('|') && form.phone_number.split('|')[1] &&
-    form.home_address && form.home_city && form.home_country &&
-    form.password && form.confirm_password;
+  const isFormValid = true; // validation handled in validate()
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
@@ -223,7 +251,8 @@ export default function Register() {
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">First Name *</Label>
-                <Input value={form.first_name} onChange={(e) => update('first_name', e.target.value)} placeholder="John" className="mt-1.5 h-11" required />
+                <Input value={form.first_name} onChange={(e) => update('first_name', e.target.value)} placeholder="John" className={`mt-1.5 h-11 ${errors.first_name ? 'border-destructive' : ''}`} />
+                {errors.first_name && <p className="text-xs text-destructive mt-1">{errors.first_name}</p>}
               </div>
               <div>
                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Middle Name</Label>
@@ -231,33 +260,39 @@ export default function Register() {
               </div>
               <div>
                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Last Name *</Label>
-                <Input value={form.last_name} onChange={(e) => update('last_name', e.target.value)} placeholder="Smith" className="mt-1.5 h-11" required />
+                <Input value={form.last_name} onChange={(e) => update('last_name', e.target.value)} placeholder="Smith" className={`mt-1.5 h-11 ${errors.last_name ? 'border-destructive' : ''}`} />
+                {errors.last_name && <p className="text-xs text-destructive mt-1">{errors.last_name}</p>}
               </div>
             </div>
 
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nationality *</Label>
-                <Input value={form.nationality} onChange={(e) => update('nationality', e.target.value)} placeholder="United Kingdom" className="mt-1.5 h-11" required />
+                <Input value={form.nationality} onChange={(e) => update('nationality', e.target.value)} placeholder="United Kingdom" className={`mt-1.5 h-11 ${errors.nationality ? 'border-destructive' : ''}`} />
+                {errors.nationality && <p className="text-xs text-destructive mt-1">{errors.nationality}</p>}
               </div>
               <div>
                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Passport Number *</Label>
-                <Input value={form.passport_number} onChange={(e) => update('passport_number', e.target.value)} placeholder="AB1234567" className="mt-1.5 h-11" required />
+                <Input value={form.passport_number} onChange={(e) => update('passport_number', e.target.value.toUpperCase())} placeholder="AB1234567" className={`mt-1.5 h-11 ${errors.passport_number ? 'border-destructive' : ''}`} />
+                {errors.passport_number && <p className="text-xs text-destructive mt-1">{errors.passport_number}</p>}
               </div>
               <div>
                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Date of Expiry *</Label>
-                <Input type="date" value={form.passport_expiry} onChange={(e) => update('passport_expiry', e.target.value)} className="mt-1.5 h-11" required />
+                <Input type="date" value={form.passport_expiry} onChange={(e) => update('passport_expiry', e.target.value)} className={`mt-1.5 h-11 ${errors.passport_expiry ? 'border-destructive' : ''}`} />
+                {errors.passport_expiry && <p className="text-xs text-destructive mt-1">{errors.passport_expiry}</p>}
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Email Address *</Label>
-                <Input type="email" value={form.email} onChange={(e) => update('email', e.target.value)} placeholder="john@example.com" className="mt-1.5 h-11" required />
+                <Input type="email" value={form.email} onChange={(e) => update('email', e.target.value)} placeholder="john@example.com" className={`mt-1.5 h-11 ${errors.email ? 'border-destructive' : ''}`} />
+                {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
               </div>
               <div>
                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Phone Number *</Label>
                 <PhoneInput value={form.phone_number} onChange={(v) => update('phone_number', v)} />
+                {errors.phone_number && <p className="text-xs text-destructive mt-1">{errors.phone_number}</p>}
               </div>
             </div>
 
@@ -289,6 +324,7 @@ export default function Register() {
                 <div className="mt-1.5">
                   <CountrySelect value={form.home_country} onChange={(v) => update('home_country', v)} />
                 </div>
+                {errors.home_country && <p className="text-xs text-destructive mt-1">{errors.home_country}</p>}
                 {form.home_country && (
                   <p className="text-xs text-accent font-semibold mt-1.5">
                     🚚 Shipping to {form.home_country}: <span className="font-bold">${getShippingPrice(form.home_country)} per box</span>
@@ -297,7 +333,8 @@ export default function Register() {
               </div>
               <div>
                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Address Line 1 *</Label>
-                <Input value={form.home_address} onChange={(e) => update('home_address', e.target.value)} placeholder="House number & street name" className="mt-1.5 h-11" required />
+                <Input value={form.home_address} onChange={(e) => update('home_address', e.target.value)} placeholder="House number & street name" className={`mt-1.5 h-11 ${errors.home_address ? 'border-destructive' : ''}`} />
+                {errors.home_address && <p className="text-xs text-destructive mt-1">{errors.home_address}</p>}
               </div>
               <div>
                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Address Line 2</Label>
@@ -306,11 +343,13 @@ export default function Register() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">City *</Label>
-                  <Input value={form.home_city} onChange={(e) => update('home_city', e.target.value)} placeholder="City" className="mt-1.5 h-11" required />
+                  <Input value={form.home_city} onChange={(e) => update('home_city', e.target.value)} placeholder="City" className={`mt-1.5 h-11 ${errors.home_city ? 'border-destructive' : ''}`} />
+                  {errors.home_city && <p className="text-xs text-destructive mt-1">{errors.home_city}</p>}
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Postal Code</Label>
-                  <Input value={form.home_postal_code} onChange={(e) => update('home_postal_code', e.target.value)} placeholder="12345" className="mt-1.5 h-11" />
+                  <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Postal Code *</Label>
+                  <Input value={form.home_postal_code} onChange={(e) => update('home_postal_code', e.target.value)} placeholder="12345" className={`mt-1.5 h-11 ${errors.home_postal_code ? 'border-destructive' : ''}`} />
+                  {errors.home_postal_code && <p className="text-xs text-destructive mt-1">{errors.home_postal_code}</p>}
                 </div>
               </div>
             </div>
@@ -324,13 +363,13 @@ export default function Register() {
                     value={form.password}
                     onChange={(e) => update('password', e.target.value)}
                     placeholder="Min 8 characters"
-                    className="h-11 pr-10"
-                    required
+                    className={`h-11 pr-10 ${errors.password ? 'border-destructive' : ''}`}
                   />
                   <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                     {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
+                {errors.password && <p className="text-xs text-destructive mt-1">{errors.password}</p>}
               </div>
               <div>
                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Confirm Password *</Label>
@@ -340,13 +379,13 @@ export default function Register() {
                     value={form.confirm_password}
                     onChange={(e) => update('confirm_password', e.target.value)}
                     placeholder="Re-enter password"
-                    className="h-11 pr-10"
-                    required
+                    className={`h-11 pr-10 ${errors.confirm_password ? 'border-destructive' : ''}`}
                   />
                   <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                     {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
+                {errors.confirm_password && <p className="text-xs text-destructive mt-1">{errors.confirm_password}</p>}
               </div>
             </div>
           </div>
