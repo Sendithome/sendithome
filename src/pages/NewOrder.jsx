@@ -79,6 +79,35 @@ export default function NewOrder() {
     if (Object.keys(updates).length > 0) setForm(prev => ({ ...prev, ...updates }));
   };
 
+  const NATIONALITY_TO_DIAL = {
+    'united arab emirates': '+971', 'uae': '+971',
+    'united states': '+1', 'usa': '+1',
+    'united kingdom': '+44', 'uk': '+44',
+    'saudi arabia': '+966', 'qatar': '+974', 'kuwait': '+965',
+    'bahrain': '+973', 'oman': '+968', 'jordan': '+962',
+    'lebanon': '+961', 'egypt': '+20', 'turkey': '+90',
+    'india': '+91', 'pakistan': '+92', 'bangladesh': '+880',
+    'germany': '+49', 'france': '+33', 'italy': '+39',
+    'spain': '+34', 'netherlands': '+31', 'sweden': '+46',
+    'norway': '+47', 'switzerland': '+41', 'australia': '+61',
+    'canada': '+1', 'brazil': '+55', 'south africa': '+27',
+    'nigeria': '+234', 'kenya': '+254', 'philippines': '+63',
+    'singapore': '+65', 'malaysia': '+60', 'thailand': '+66',
+    'china': '+86', 'japan': '+81', 'south korea': '+82',
+    'russia': '+7', 'indonesia': '+62', 'vietnam': '+84',
+  };
+
+  useEffect(() => {
+    if (!form.destination_country) return;
+    const dial = NATIONALITY_TO_DIAL[form.destination_country.toLowerCase().trim()];
+    if (dial) {
+      setForm(prev => ({
+        ...prev,
+        recipient_phone: dial + (prev.recipient_phone.replace(/^\+\d+/, '') || ''),
+      }));
+    }
+  }, [form.destination_country]);
+
   const update = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
 
   const shippingPrice = getShippingPrice(form.destination_country);
