@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, MapPin, Package, Camera, Upload, Loader2, MessageCircle, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, MapPin, Package, Loader2, MessageCircle, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { base44 } from '@/api/base44Client';
-import CountrySelect from '../components/CountrySelect';
 import PhoneInput from '../components/PhoneInput';
-import BoxCard from '../components/BoxCard';
 import { getShippingPrice } from '../utils/pricing';
 
-const STEPS = ['Your Details', 'Home Address', 'Box & Price', 'Confirm'];
+const STEPS = ['Your Details', 'Home Address', 'Confirm'];
 
 export default function NewOrder() {
   const navigate = useNavigate();
@@ -19,7 +17,6 @@ export default function NewOrder() {
   const hotelId = urlParams.get('hotelId');
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [scanningPassport, setScanningPassport] = useState(false);
   const [hotel, setHotel] = useState(null);
 
   const [form, setForm] = useState({
@@ -43,7 +40,6 @@ export default function NewOrder() {
     destination_postal_code: '',
     recipient_name: '',
     recipient_phone: '',
-    box_size: '',
   });
 
   useEffect(() => { prefill(); }, []);
@@ -64,6 +60,7 @@ export default function NewOrder() {
     if (me?.home_address) updates.destination_address = me.home_address;
     if (me?.home_city) updates.destination_city = me.home_city;
     if (me?.home_postal_code) updates.destination_postal_code = me.home_postal_code;
+    if (me?.phone_number) updates.recipient_phone = me.phone_number.includes('|') ? me.phone_number.split('|').join('') : me.phone_number;
     const fullName = [me?.first_name, me?.last_name].filter(Boolean).join(' ');
     if (fullName) updates.recipient_name = fullName;
 
@@ -84,45 +81,11 @@ export default function NewOrder() {
 
   const update = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
 
-  const handlePassportScan = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    e.target.value = '';
-    setScanningPassport(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Extract the following details from this passport image: first name, middle name (if any), last name, nationality (as a country name), passport number, and expiry date (in YYYY-MM-DD format). If a field is not visible or unclear, return an empty string.`,
-      response_json_schema: {
-        type: 'object',
-        properties: {
-          first_name: { type: 'string' },
-          middle_name: { type: 'string' },
-          last_name: { type: 'string' },
-          nationality: { type: 'string' },
-          passport_number: { type: 'string' },
-          expiry_date: { type: 'string' },
-        },
-      },
-      file_urls: [file_url],
-    });
-    setForm(prev => ({
-      ...prev,
-      first_name: result.first_name || prev.first_name,
-      middle_name: result.middle_name || prev.middle_name,
-      last_name: result.last_name || prev.last_name,
-      nationality: result.nationality || prev.nationality,
-      passport_number: result.passport_number || prev.passport_number,
-      passport_expiry: result.expiry_date || prev.passport_expiry,
-    }));
-    setScanningPassport(false);
-  };
-
   const shippingPrice = getShippingPrice(form.destination_country);
 
   const canNext = () => {
-    if (step === 0) return form.first_name && form.last_name && form.phone_number;
-    if (step === 1) return form.destination_country && form.destination_address && form.destination_city && form.recipient_name;
-    if (step === 2) return !!form.box_size;
+    if (step === 0) return form.first_name && form.last_name && form.phone_number.split('|')[1];
+    if (step === 1) return !!form.destination_country;
     return true;
   };
 
@@ -176,7 +139,7 @@ export default function NewOrder() {
         ))}
       </div>
 
-      {/* Hotel badge if coming from QR */}
+      {/* Hotel badge */}
       {hotel && (
         <div className="flex items-center gap-3 bg-accent/5 border border-accent/20 rounded-2xl px-4 py-3 mb-6">
           <MapPin className="w-4 h-4 text-accent shrink-0" />
@@ -208,13 +171,11 @@ export default function NewOrder() {
               </div>
             </div>
 
-            {/* Email */}
             <div>
-              <Label className="text-xs text-muted-foreground">Email Address *</Label>
+              <Label className="text-xs text-muted-foreground">Email Address</Label>
               <Input type="email" value={form.email} onChange={e => update('email', e.target.value)} placeholder="john@example.com" className="mt-1" />
             </div>
 
-            {/* Contact */}
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label className="text-xs text-muted-foreground">Phone Number *</Label>
@@ -263,7 +224,7 @@ export default function NewOrder() {
           </motion.div>
         )}
 
-        {/* STEP 1: Destination */}
+        {/* STEP 1: Home Address */}
         {step === 1 && (
           <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
             <div>
@@ -271,18 +232,16 @@ export default function NewOrder() {
               <p className="text-sm text-muted-foreground mt-1">Your home address is automatically fetched from your account.</p>
             </div>
 
-            {/* Shipping price banner */}
             {form.destination_country && (
               <div className="flex items-center gap-2 bg-accent/5 border border-accent/20 rounded-xl px-4 py-3">
                 <Package className="w-4 h-4 text-accent shrink-0" />
                 <p className="text-sm text-foreground">
                   Shipping to <strong>{form.destination_country}</strong>:{' '}
-                  <span className="text-accent font-bold">${getShippingPrice(form.destination_country)}</span> per box
+                  <span className="text-accent font-bold">${shippingPrice}</span> per box
                 </p>
               </div>
             )}
 
-            {/* Read-only delivery deck */}
             <div className="bg-muted/50 rounded-2xl border border-border p-4">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Home Address</p>
               <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
@@ -307,75 +266,43 @@ export default function NewOrder() {
                   <p className="font-medium text-foreground">{form.destination_country || '—'}</p>
                 </div>
                 <div>
-                  <span className="text-muted-foreground text-xs">Recipient Phone</span>
+                  <span className="text-muted-foreground text-xs">Phone</span>
                   <p className="font-medium text-foreground">{form.recipient_phone || '—'}</p>
                 </div>
               </div>
             </div>
 
             <p className="text-xs text-muted-foreground text-center">
-              Need to change your delivery address?{' '}
+              Need to change your home address?{' '}
               <a href="/profile" className="text-accent font-medium hover:underline">Edit in Profile</a>
             </p>
           </motion.div>
         )}
 
-        {/* STEP 2: Box Size + Price */}
+        {/* STEP 2: Confirm */}
         {step === 2 && (
-          <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
-            <div>
-              <h2 className="text-xl font-bold text-foreground">Choose Your Box</h2>
-              <p className="text-sm text-muted-foreground mt-1">Both sizes ship to <strong>{form.destination_country}</strong> for the same price.</p>
-            </div>
-
-            {/* Price banner */}
-            <div className="bg-primary rounded-2xl px-5 py-4 flex items-center justify-between">
-              <div>
-                <p className="text-xs text-white/60 font-medium uppercase tracking-wide">Shipping to {form.destination_country}</p>
-                <p className="text-3xl font-bold text-white mt-0.5">${shippingPrice} <span className="text-base font-normal text-white/60">per box</span></p>
-              </div>
-              <div className="text-right">
-                <p className="text-xs text-accent font-semibold">1–3 working days</p>
-                <p className="text-[10px] text-white/50 mt-0.5">via FedEx / DHL</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <BoxCard size="10kg" selected={form.box_size === '10kg'} onSelect={(s) => update('box_size', s)} />
-              <BoxCard size="20kg" selected={form.box_size === '20kg'} onSelect={(s) => update('box_size', s)} />
-            </div>
-
-            <p className="text-[10px] text-muted-foreground text-center">
-              Price is the same regardless of box size. Overweight boxes may incur additional charges.
-            </p>
-          </motion.div>
-        )}
-
-        {/* STEP 3: Confirm */}
-        {step === 3 && (
-          <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
+          <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
             <div>
               <h2 className="text-xl font-bold text-foreground">Confirm Order</h2>
               <p className="text-sm text-muted-foreground mt-1">Review your shipment details before continuing.</p>
             </div>
 
             <div className="bg-card rounded-2xl border border-border divide-y divide-border overflow-hidden">
-              <SummaryRow label="Guest" value={`${form.first_name} ${form.last_name}`} />
-              {form.hotel_name && <SummaryRow label="Hotel" value={`${form.hotel_name}${form.hotel_room ? ` · ${form.hotel_room}` : ''}`} />}
-              <SummaryRow label="Box Size" value={form.box_size} />
-              <SummaryRow label="Destination" value={form.destination_country} />
+              <SummaryRow label="Guest" value={[form.first_name, form.last_name].filter(Boolean).join(' ')} />
+              {form.hotel_name && <SummaryRow label="Hotel" value={`${form.hotel_name}${form.hotel_room ? ` · Room ${form.hotel_room}` : ''}`} />}
+              <SummaryRow label="Ships To" value={form.destination_country} />
               <SummaryRow label="Recipient" value={form.recipient_name} />
-              <SummaryRow label="Address" value={`${form.destination_address}, ${form.destination_city}${form.destination_postal_code ? ` ${form.destination_postal_code}` : ''}`} />
+              <SummaryRow label="Address" value={[form.destination_address, form.destination_city, form.destination_postal_code].filter(Boolean).join(', ')} />
               <div className="px-5 py-4 flex justify-between items-center bg-accent/5">
-                <span className="font-bold text-foreground">Shipping Total</span>
-                <span className="text-2xl font-bold text-accent">${shippingPrice}</span>
+                <span className="font-bold text-foreground">Shipping Price</span>
+                <span className="text-xl font-bold text-accent">${shippingPrice} per box</span>
               </div>
             </div>
 
             <div className="flex items-start gap-2 bg-muted rounded-xl px-4 py-3">
               <CheckCircle2 className="w-4 h-4 text-accent mt-0.5 shrink-0" />
               <p className="text-xs text-muted-foreground leading-relaxed">
-                After creating your order, you'll upload shopping receipts. Payment is collected at pickup.
+                Next: upload your shopping receipts, select your box size, and pay online. Your parcel will be picked up within 24 working hours.
               </p>
             </div>
           </motion.div>
@@ -392,11 +319,11 @@ export default function NewOrder() {
         <Button
           className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-12"
           disabled={!canNext() || loading}
-          onClick={() => step < 3 ? setStep(step + 1) : handleCreate()}
+          onClick={() => step < 2 ? setStep(step + 1) : handleCreate()}
         >
           {loading ? (
             <div className="w-5 h-5 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full animate-spin" />
-          ) : step < 3 ? (
+          ) : step < 2 ? (
             <>Continue <ArrowRight className="w-4 h-4 ml-2" /></>
           ) : (
             'Create Order & Upload Receipts'
