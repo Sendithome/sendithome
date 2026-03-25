@@ -33,6 +33,9 @@ export default function NewOrder() {
     phone_number: '+971|',
     whatsapp_number: '+971|',
     hotel_name: '',
+    hotel_address: '',
+    hotel_city: '',
+    hotel_country: '',
     hotel_room: '',
     destination_country: '',
     destination_address: '',
@@ -66,7 +69,13 @@ export default function NewOrder() {
 
     if (hotelId) {
       const h = await base44.entities.Hotel.get(hotelId);
-      if (h) { setHotel(h); updates.hotel_name = h.name; }
+      if (h) {
+        setHotel(h);
+        updates.hotel_name = h.name;
+        updates.hotel_address = h.address || '';
+        updates.hotel_city = h.city || '';
+        updates.hotel_country = h.country || '';
+      }
     } else if (me?.hotel_name) {
       updates.hotel_name = me.hotel_name;
     }
@@ -278,16 +287,32 @@ export default function NewOrder() {
             </div>
 
             {/* Hotel */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label className="text-xs text-muted-foreground">Hotel Name</Label>
-                <Input value={form.hotel_name} onChange={e => update('hotel_name', e.target.value)} placeholder="Hotel name" className="mt-1" />
+            {hotel ? (
+              <div className="bg-muted/50 rounded-2xl border border-border p-4 space-y-2">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Hotel (from QR scan)</p>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                  <div><span className="text-muted-foreground text-xs">Name</span><p className="font-medium text-foreground">{form.hotel_name}</p></div>
+                  {form.hotel_address && <div><span className="text-muted-foreground text-xs">Address</span><p className="font-medium text-foreground">{form.hotel_address}</p></div>}
+                  <div><span className="text-muted-foreground text-xs">City</span><p className="font-medium text-foreground">{form.hotel_city}</p></div>
+                  <div><span className="text-muted-foreground text-xs">Country</span><p className="font-medium text-foreground">{form.hotel_country}</p></div>
+                </div>
+                <div className="pt-2 border-t border-border">
+                  <Label className="text-xs text-muted-foreground">Room Number *</Label>
+                  <Input value={form.hotel_room} onChange={e => update('hotel_room', e.target.value)} placeholder="e.g. 301" className="mt-1" />
+                </div>
               </div>
-              <div>
-                <Label className="text-xs text-muted-foreground">Room Number</Label>
-                <Input value={form.hotel_room} onChange={e => update('hotel_room', e.target.value)} placeholder="Room 301" className="mt-1" />
+            ) : (
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-xs text-muted-foreground">Hotel Name</Label>
+                  <Input value={form.hotel_name} onChange={e => update('hotel_name', e.target.value)} placeholder="Hotel name" className="mt-1" />
+                </div>
+                <div>
+                  <Label className="text-xs text-muted-foreground">Room Number</Label>
+                  <Input value={form.hotel_room} onChange={e => update('hotel_room', e.target.value)} placeholder="Room 301" className="mt-1" />
+                </div>
               </div>
-            </div>
+            )}
           </motion.div>
         )}
 
