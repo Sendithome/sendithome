@@ -1,6 +1,14 @@
+import { useState } from 'react';
 import { getShippingPrice } from '../utils/pricing';
+import SignaturePad from './SignaturePad';
 
-export default function ShipmentDeclarationForm({ order, items, onProceed }) {
+export default function ShipmentDeclarationForm({ order, items, onProceed, onSignatureChange }) {
+  const [signature, setSignature] = useState(null);
+
+  const handleSig = (dataUrl) => {
+    setSignature(dataUrl);
+    if (onSignatureChange) onSignatureChange(dataUrl);
+  };
   const shippingDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
   const totalDeclaredValue = items.filter(i => i.eligible !== false).reduce((s, i) => s + ((i.price || 0) * (i.quantity || 1)), 0);
   const currency = items[0]?.currency || 'USD';
@@ -218,6 +226,13 @@ export default function ShipmentDeclarationForm({ order, items, onProceed }) {
                   <p className="text-[10px] font-bold">{shippingDate}</p>
                 </div>
               </div>
+            </div>
+            <div className="mt-4">
+              <p className="text-[9px] text-gray-500 uppercase mb-1">E-Signature *</p>
+              <SignaturePad onChange={handleSig} />
+              {signature && (
+                <p className="text-[9px] text-green-600 mt-1">✓ Signature captured</p>
+              )}
             </div>
           </div>
         </div>
