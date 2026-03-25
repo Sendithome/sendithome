@@ -19,7 +19,6 @@ export default function ReceiptUpload() {
   const [boxSize, setBoxSize] = useState('');
   const [showBoxSelect, setShowBoxSelect] = useState(false);
   const [savingBox, setSavingBox] = useState(false);
-  const [showDeclaration, setShowDeclaration] = useState(false);
 
   // Items extracted from current upload — pending confirmation
   const [pendingReceipt, setPendingReceipt] = useState(null);
@@ -396,28 +395,10 @@ export default function ReceiptUpload() {
             </div>
           </div>
 
-          {/* Shipment Declaration Form — shown before box/payment */}
-          {showDeclaration && (
-            <div className="mb-4">
-              <div className="flex items-center gap-2 mb-3">
-                <ClipboardList className="w-4 h-4 text-accent" />
-                <h3 className="text-sm font-semibold text-foreground">Shipment Declaration Form</h3>
-              </div>
-              <ShipmentDeclarationForm order={order} items={savedItems} />
-            </div>
-          )}
-
-          {/* Summary + actions */}
+          {/* Summary + actions */
           <div className="bg-card rounded-2xl border border-accent/20 p-4 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{reviewSelectedIds.size} item{reviewSelectedIds.size !== 1 ? 's' : ''} to ship</span>
-              <button
-                onClick={() => setShowDeclaration(v => !v)}
-                className="text-xs text-accent font-medium hover:underline flex items-center gap-1"
-              >
-                <ClipboardList className="w-3 h-3" />
-                {showDeclaration ? 'Hide' : 'View'} Declaration Form
-              </button>
             </div>
             {!showBoxSelect ? (
               <Button
@@ -435,19 +416,30 @@ export default function ReceiptUpload() {
                   <BoxCard size="10kg" selected={boxSize === '10kg'} onSelect={setBoxSize} />
                   <BoxCard size="20kg" selected={boxSize === '20kg'} onSelect={setBoxSize} />
                 </div>
-                <Button
-                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-12"
-                  disabled={!boxSize || savingBox}
-                  onClick={async () => {
-                    setSavingBox(true);
-                    await base44.entities.Order.update(orderId, { box_size: boxSize });
-                    navigate(`/order/${orderId}/payment`);
-                  }}
-                >
-                  {savingBox ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Package className="w-4 h-4 mr-2" />}
-                  Proceed to Payment
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+
+                {/* Declaration form shown AFTER box selection */}
+                {boxSize && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3 mt-2">
+                      <ClipboardList className="w-4 h-4 text-accent" />
+                      <h3 className="text-sm font-semibold text-foreground">Customs Declaration — Please Review</h3>
+                    </div>
+                    <ShipmentDeclarationForm order={{ ...order, box_size: boxSize }} items={savedItems} />
+                    <Button
+                      className="w-full mt-4 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-12"
+                      disabled={savingBox}
+                      onClick={async () => {
+                        setSavingBox(true);
+                        await base44.entities.Order.update(orderId, { box_size: boxSize });
+                        navigate(`/order/${orderId}/payment`);
+                      }}
+                    >
+                      {savingBox ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Package className="w-4 h-4 mr-2" />}
+                      Confirm Declaration & Proceed to Payment
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
             <label className="block cursor-pointer">
