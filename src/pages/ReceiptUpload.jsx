@@ -395,7 +395,7 @@ export default function ReceiptUpload() {
             </div>
           </div>
 
-          {/* Summary + actions */
+          {/* Summary + actions */}
           <div className="bg-card rounded-2xl border border-accent/20 p-4 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{reviewSelectedIds.size} item{reviewSelectedIds.size !== 1 ? 's' : ''} to ship</span>
