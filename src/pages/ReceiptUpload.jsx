@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { buildRestrictionPrompt } from '../utils/countryRestrictions';
 import { useNavigate } from 'react-router-dom';
 import { Upload, Camera, FileText, Check, X, Loader2, ArrowLeft, ArrowRight, AlertCircle, CheckSquare, Square, Package, ClipboardList } from 'lucide-react';
 import BoxCard from '../components/BoxCard';
@@ -62,12 +63,13 @@ export default function ReceiptUpload() {
     setUploading(false);
 
     setProcessing(true);
+    const restrictionNote = buildRestrictionPrompt(order?.destination_country);
     const extractResult = await base44.integrations.Core.InvokeLLM({
       prompt: `Analyze this shopping receipt image. Extract all purchased items with their names, categories, quantities, and prices.
       Determine eligibility for international shipping strictly based on category.
       ELIGIBLE categories (mark eligible: true): Women's Fashion, Men's Fashion, Children's Fashion, Clothing, Apparel, Footwear, Bags, Hats, Accessories, Souvenirs, Kids Toys.
       ALL OTHER categories are NOT eligible (mark eligible: false) — including food, electronics, cosmetics, medicine, alcohol, tobacco, hazardous materials, etc.
-      For ineligible items, provide a short reason why they cannot be shipped.`,
+      For ineligible items, provide a short reason why they cannot be shipped.${restrictionNote}`,
       response_json_schema: {
         type: "object",
         properties: {
