@@ -234,18 +234,14 @@ export default function Register() {
                   Take a photo or upload your passport. Our AI will automatically extract your details.
                 </p>
                 <div className="flex gap-3 justify-center mt-4">
-                  <label className="cursor-pointer">
-                    <Button type="button" size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl pointer-events-none">
-                      <Camera className="w-3.5 h-3.5 mr-1.5" />
-                      Scan Passport
-                    </Button>
+                  <label className="cursor-pointer inline-flex items-center gap-1.5 h-8 px-3 rounded-xl text-xs font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
+                    <Camera className="w-3.5 h-3.5" />
+                    Scan Passport
                     <input type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePassportScan} />
                   </label>
-                  <label className="cursor-pointer">
-                    <Button type="button" variant="outline" size="sm" className="rounded-xl pointer-events-none">
-                      <Upload className="w-3.5 h-3.5 mr-1.5" />
-                      Upload Photo
-                    </Button>
+                  <label className="cursor-pointer inline-flex items-center gap-1.5 h-8 px-3 rounded-xl text-xs font-medium border border-input bg-background hover:bg-muted transition-colors">
+                    <Upload className="w-3.5 h-3.5" />
+                    Upload Photo
                     <input type="file" accept="image/*,.pdf" className="hidden" onChange={handlePassportScan} />
                   </label>
                 </div>
