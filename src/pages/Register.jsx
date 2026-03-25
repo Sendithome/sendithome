@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { base44 } from '@/api/base44Client';
+import PhoneInput from '../components/PhoneInput';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -26,8 +27,8 @@ export default function Register() {
     passport_number: '',
     passport_expiry: '',
     email: '',
-    phone_number: '',
-    whatsapp_number: '',
+    phone_number: '+971|',
+    whatsapp_number: '+971|',
     password: '',
     confirm_password: '',
   });
@@ -86,9 +87,14 @@ export default function Register() {
       alert('Passwords do not match');
       return;
     }
+    if (form.password.length < 8) {
+      alert('Password must be at least 8 characters');
+      return;
+    }
     setSubmitting(true);
 
-    // Save profile data to user
+    const formatPhone = (v) => { const p = (v || '').split('|'); return p.length === 2 ? `${p[0]}${p[1]}` : v; };
+
     await base44.auth.updateMe({
       first_name: form.first_name,
       middle_name: form.middle_name,
@@ -96,15 +102,15 @@ export default function Register() {
       nationality: form.nationality,
       passport_number: form.passport_number,
       passport_expiry: form.passport_expiry,
-      phone_number: form.phone_number,
-      whatsapp_number: form.whatsapp_number,
+      email: form.email,
+      phone_number: formatPhone(form.phone_number),
+      whatsapp_number: formatPhone(form.whatsapp_number),
       hotel_id: hotelId || '',
       hotel_name: hotel?.name || '',
       hotel_city: hotel?.city || '',
       hotel_country: hotel?.country || '',
     });
 
-    // Navigate to new order with hotel pre-filled
     if (hotelId) {
       navigate(`/new-order?hotelId=${hotelId}`);
     } else {
@@ -114,7 +120,8 @@ export default function Register() {
   };
 
   const isFormValid = form.first_name && form.last_name && form.nationality &&
-    form.passport_number && form.email && form.phone_number && form.password && form.confirm_password;
+    form.passport_number && form.email && form.phone_number.includes('|') && form.phone_number.split('|')[1] &&
+    form.password && form.confirm_password;
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
@@ -237,13 +244,13 @@ export default function Register() {
               </div>
               <div>
                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Phone Number *</Label>
-                <Input value={form.phone_number} onChange={(e) => update('phone_number', e.target.value)} placeholder="+971 50 123 4567" className="mt-1.5 h-11" required />
+                <PhoneInput value={form.phone_number} onChange={(v) => update('phone_number', v)} />
               </div>
             </div>
 
             <div>
-              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">WhatsApp Number *</Label>
-              <Input value={form.whatsapp_number} onChange={(e) => update('whatsapp_number', e.target.value)} placeholder="+971 50 123 4567" className="mt-1.5 h-11" />
+              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">WhatsApp Number</Label>
+              <PhoneInput value={form.whatsapp_number} onChange={(v) => update('whatsapp_number', v)} />
               <div className="flex items-start gap-2 mt-2 bg-green-50 border border-green-100 rounded-xl px-3 py-2">
                 <MessageCircle className="w-3.5 h-3.5 text-green-600 mt-0.5 shrink-0" />
                 <p className="text-[10px] text-green-700 leading-relaxed">
