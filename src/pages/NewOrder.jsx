@@ -268,51 +268,55 @@ export default function NewOrder() {
           <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
             <div>
               <h2 className="text-xl font-bold text-foreground">Delivery Address</h2>
-              <p className="text-sm text-muted-foreground mt-1">Where should we deliver your shipment?</p>
+              <p className="text-sm text-muted-foreground mt-1">Pre-filled from your account. Update in Profile if needed.</p>
             </div>
 
-            <div>
-              <Label className="text-xs text-muted-foreground">Destination Country *</Label>
-              <div className="mt-1">
-                <CountrySelect value={form.destination_country} onChange={(v) => update('destination_country', v)} />
+            {/* Shipping price banner */}
+            {form.destination_country && (
+              <div className="flex items-center gap-2 bg-accent/5 border border-accent/20 rounded-xl px-4 py-3">
+                <Package className="w-4 h-4 text-accent shrink-0" />
+                <p className="text-sm text-foreground">
+                  Shipping to <strong>{form.destination_country}</strong>:{' '}
+                  <span className="text-accent font-bold">${getShippingPrice(form.destination_country)}</span> per box
+                </p>
               </div>
-              {form.destination_country && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-2 flex items-center gap-2 bg-accent/5 border border-accent/20 rounded-xl px-3 py-2"
-                >
-                  <Package className="w-3.5 h-3.5 text-accent shrink-0" />
-                  <p className="text-xs text-foreground">
-                    Shipping to <strong>{form.destination_country}</strong>:{' '}
-                    <span className="text-accent font-bold">${getShippingPrice(form.destination_country)}</span> per box
-                  </p>
-                </motion.div>
-              )}
+            )}
+
+            {/* Read-only delivery deck */}
+            <div className="bg-muted/50 rounded-2xl border border-border p-4">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Delivery Details</p>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                <div className="col-span-2">
+                  <span className="text-muted-foreground text-xs">Recipient Name</span>
+                  <p className="font-medium text-foreground">{form.recipient_name || '—'}</p>
+                </div>
+                <div className="col-span-2">
+                  <span className="text-muted-foreground text-xs">Street Address</span>
+                  <p className="font-medium text-foreground">{form.destination_address || '—'}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">City</span>
+                  <p className="font-medium text-foreground">{form.destination_city || '—'}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Postal Code</span>
+                  <p className="font-medium text-foreground">{form.destination_postal_code || '—'}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Country</span>
+                  <p className="font-medium text-foreground">{form.destination_country || '—'}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Recipient Phone</span>
+                  <p className="font-medium text-foreground">{form.recipient_phone || '—'}</p>
+                </div>
+              </div>
             </div>
 
-            <div>
-              <Label className="text-xs text-muted-foreground">Recipient Name *</Label>
-              <Input value={form.recipient_name} onChange={(e) => update('recipient_name', e.target.value)} placeholder="Full name" className="mt-1" />
-            </div>
-            <div>
-              <Label className="text-xs text-muted-foreground">Recipient Phone</Label>
-              <Input value={form.recipient_phone} onChange={(e) => update('recipient_phone', e.target.value)} placeholder="+1 234 567 890" className="mt-1" />
-            </div>
-            <div>
-              <Label className="text-xs text-muted-foreground">Street Address *</Label>
-              <Input value={form.destination_address} onChange={(e) => update('destination_address', e.target.value)} placeholder="123 Main Street" className="mt-1" />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label className="text-xs text-muted-foreground">City *</Label>
-                <Input value={form.destination_city} onChange={(e) => update('destination_city', e.target.value)} placeholder="City" className="mt-1" />
-              </div>
-              <div>
-                <Label className="text-xs text-muted-foreground">Postal Code</Label>
-                <Input value={form.destination_postal_code} onChange={(e) => update('destination_postal_code', e.target.value)} placeholder="12345" className="mt-1" />
-              </div>
-            </div>
+            <p className="text-xs text-muted-foreground text-center">
+              Need to change your delivery address?{' '}
+              <a href="/profile" className="text-accent font-medium hover:underline">Edit in Profile</a>
+            </p>
           </motion.div>
         )}
 
