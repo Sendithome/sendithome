@@ -1,90 +1,100 @@
-import { useState } from 'react';
-import { ShieldCheck, ShieldX, Loader2, CheckCircle2, XCircle, Clock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect, useRef } from 'react';
+import { ShieldCheck, ShieldX, Loader2, CheckCircle2, XCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
-export default function PassportVerification({ passportNumber, nationality, expiryDate, firstName, lastName, onVerified }) {
+export default function PassportVerification({ passportNumber, nationality, expiryDate, firstName, lastName, onResult }) {
   const [status, setStatus] = useState('idle'); // idle | loading | verified | failed
   const [result, setResult] = useState(null);
+  const debounceRef = useRef(null);
+  const lastVerifiedRef = useRef('');
 
-  const canVerify = passportNumber?.trim() && nationality?.trim() && expiryDate && firstName?.trim() && lastName?.trim();
+  const allFilled = passportNumber?.trim() && nationality?.trim() && expiryDate && firstName?.trim() && lastName?.trim();
+  const key = `${passportNumber}|${nationality}|${expiryDate}|${firstName}|${lastName}`;
 
-  const handleVerify = async () => {
-    setStatus('loading');
-    setResult(null);
-    const res = await base44.functions.invoke('verifyPassport', {
-      passport_number: passportNumber,
-      nationality,
-      expiry_date: expiryDate,
-      first_name: firstName,
-      last_name: lastName,
-    });
-    const data = res.data;
-    setResult(data);
-    setStatus(data.verified ? 'verified' : 'failed');
-    if (data.verified && onVerified) onVerified(true);
-  };
+  useEffect(() => {
+    if (!allFilled) {
+      setStatus('idle');
+      setResult(null);
+      if (onResult) onResult(null);
+      return;
+    }
+
+    if (key === lastVerifiedRef.current) return;
+
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(async () => {
+      setStatus('loading');
+      setResult(null);
+      if (onResult) onResult(null);
+
+      const res = await base44.functions.invoke('verifyPassport', {
+        passport_number: passportNumber,
+        nationality,
+        expiry_date: expiryDate,
+        first_name: firstName,
+        last_name: lastName,
+      });
+
+      const data = res.data;
+      lastVerifiedRef.current = key;
+      setResult(data);
+      setStatus(data.verified ? 'verified' : 'failed');
+      if (onResult) onResult(data);
+    }, 1200);
+
+    return () => clearTimeout(debounceRef.current);
+  }, [key]);
+
+  if (!allFilled) return null;
 
   return (
-    <div className="mt-4 rounded-2xl border overflow-hidden" style={{ borderColor: status === 'verified' ? '#22c55e33' : status === 'failed' ? '#ef444433' : '#e5e7eb' }}>
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3"
-        style={{ background: status === 'verified' ? '#f0fdf4' : status === 'failed' ? '#fef2f2' : '#f9fafb' }}>
-        <div className="flex items-center gap-2">
-          {status === 'loading' && <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />}
-          {status === 'verified' && <ShieldCheck className="w-4 h-4 text-green-600" />}
-          {status === 'failed' && <ShieldX className="w-4 h-4 text-red-500" />}
-          {status === 'idle' && <ShieldCheck className="w-4 h-4 text-muted-foreground" />}
-          <span className="text-xs font-semibold" style={{
-            color: status === 'verified' ? '#16a34a' : status === 'failed' ? '#dc2626' : '#6b7280'
-          }}>
-            {status === 'idle' && 'Passport Verification'}
-            {status === 'loading' && 'Verifying your passport details...'}
-            {status === 'verified' && 'Passport Verified ✓'}
-            {status === 'failed' && 'Verification Issues Found'}
-          </span>
-        </div>
-        {(status === 'idle' || status === 'failed') && (
-          <Button
-            type="button"
-            size="sm"
-            disabled={!canVerify || status === 'loading'}
-            onClick={handleVerify}
-            className="rounded-xl text-xs h-7 px-3"
-            style={{ background: '#FF007F', color: '#fff' }}
-          >
-            {status === 'failed' ? 'Retry' : 'Verify Now'}
-          </Button>
-        )}
+    <div className={`rounded-2xl border overflow-hidden transition-all ${
+      status === 'verified' ? 'border-green-300 bg-green-50' :
+      status === 'failed' ? 'border-red-200 bg-red-50' :
+      'border-border bg-muted/30'
+    }`}>
+      {/* Header row */}
+      <div className="flex items-center gap-2 px-4 py-3">
+        {status === 'loading' && <Loader2 className="w-4 h-4 animate-spin text-muted-foreground shrink-0" />}
+        {status === 'verified' && <ShieldCheck className="w-4 h-4 text-green-600 shrink-0" />}
+        {status === 'failed' && <ShieldX className="w-4 h-4 text-red-500 shrink-0" />}
+
+        <span className={`text-xs font-semibold flex-1 ${
+          status === 'verified' ? 'text-green-700' :
+          status === 'failed' ? 'text-red-600' :
+          'text-muted-foreground'
+        }`}>
+          {status === 'loading' && 'Verifying passport details...'}
+          {status === 'verified' && 'Passport Verified'}
+          {status === 'failed' && 'Verification Failed'}
+        </span>
+
         {status === 'verified' && (
-          <span className="text-xs font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded-full">VERIFIED</span>
+          <span className="text-[10px] font-bold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full">
+            ✓ VERIFIED
+          </span>
         )}
       </div>
 
-      {/* Checks breakdown */}
-      {result && (
-        <div className="px-4 py-3 space-y-2 border-t border-border bg-white">
-          <CheckRow label="Passport number format" passed={result.checks?.passport_format} />
-          <CheckRow label="Not expired" passed={result.checks?.not_expired} />
-          <CheckRow label="Valid name" passed={result.checks?.valid_name} />
-          <CheckRow label="Recognized country" passed={result.checks?.valid_country} />
+      {/* Check breakdown */}
+      {result && status !== 'loading' && (
+        <div className="px-4 pb-3 space-y-1.5 border-t border-border/50">
+          <div className="pt-2 space-y-1.5">
+            <CheckRow label="Passport number format is valid" passed={result.checks?.passport_format} />
+            <CheckRow label="Passport is not expired" passed={result.checks?.not_expired} />
+            <CheckRow label="Name is valid" passed={result.checks?.valid_name} />
+            <CheckRow label="Nationality is recognized" passed={result.checks?.valid_country} />
+          </div>
           {result.message && (
-            <p className="text-xs text-muted-foreground pt-1 border-t border-border mt-2">{result.message}</p>
-          )}
-          {result.passport_country_format && !result.checks?.passport_format && (
-            <p className="text-xs text-blue-600 bg-blue-50 rounded-lg px-3 py-2">
-              Expected format: {result.passport_country_format}
+            <p className={`text-xs mt-2 pt-2 border-t border-border/40 ${status === 'verified' ? 'text-green-700' : 'text-red-600'}`}>
+              {result.message}
             </p>
           )}
-        </div>
-      )}
-
-      {status === 'idle' && !canVerify && (
-        <div className="px-4 py-2 bg-muted/30 border-t border-border">
-          <p className="text-[10px] text-muted-foreground flex items-center gap-1">
-            <Clock className="w-3 h-3" />
-            Fill in passport number, nationality, expiry date, first & last name to verify
-          </p>
+          {result.passport_country_format && !result.checks?.passport_format && (
+            <p className="text-xs text-blue-600 bg-blue-50 border border-blue-100 rounded-lg px-3 py-2 mt-1">
+              Expected format for {nationality}: {result.passport_country_format}
+            </p>
+          )}
         </div>
       )}
     </div>
@@ -97,7 +107,7 @@ function CheckRow({ label, passed }) {
       {passed
         ? <CheckCircle2 className="w-3.5 h-3.5 text-green-500 shrink-0" />
         : <XCircle className="w-3.5 h-3.5 text-red-400 shrink-0" />}
-      <span className={`text-xs ${passed ? 'text-foreground' : 'text-red-500'}`}>{label}</span>
+      <span className={`text-xs ${passed ? 'text-green-700' : 'text-red-500'}`}>{label}</span>
     </div>
   );
 }
