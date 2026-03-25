@@ -245,61 +245,66 @@ export default function ReceiptUpload() {
                   </div>
                   <div>
                     <p className="text-sm font-semibold">{pendingReceipt.store_name}</p>
-                    <p className="text-xs text-muted-foreground">{eligibleItems.length} eligible items found</p>
+                    <p className="text-xs text-muted-foreground">{eligibleItems.length} eligible · {ineligibleItems.length} not eligible</p>
                   </div>
                 </div>
               )}
 
-              {eligibleItems.length > 0 && (
-                <div className="bg-card rounded-2xl border border-border overflow-hidden mb-4">
-                  <button onClick={toggleAll} className="w-full flex items-center justify-between px-4 py-3 border-b border-border hover:bg-muted/40 transition-colors">
-                    <span className="text-xs font-semibold text-foreground uppercase tracking-wide">Eligible Items — Select to Ship</span>
-                    <div className="flex items-center gap-1.5">
-                      {allEligibleSelected ? <CheckSquare className="w-4 h-4 text-accent" /> : <Square className="w-4 h-4 text-muted-foreground" />}
-                      <span className="text-xs text-muted-foreground">All</span>
-                    </div>
-                  </button>
-                  <div className="divide-y divide-border">
+              {/* Two-column layout */}
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                {/* Eligible Column */}
+                <div className="bg-green-50 border border-green-200 rounded-2xl overflow-hidden">
+                  <div className="flex items-center justify-between px-3 py-2.5 border-b border-green-200 bg-green-100">
+                    <span className="text-[11px] font-bold text-green-800 uppercase tracking-wide">✅ Can Ship</span>
+                    <button onClick={toggleAll} className="text-[10px] text-green-700 font-medium hover:underline">
+                      {allEligibleSelected ? 'None' : 'All'}
+                    </button>
+                  </div>
+                  <div className="divide-y divide-green-100">
+                    {eligibleItems.length === 0 && (
+                      <p className="text-xs text-green-700 px-3 py-4 text-center opacity-60">No eligible items</p>
+                    )}
                     {eligibleItems.map((item) => {
                       const isSelected = selectedIds.has(item._tempId);
                       return (
-                        <button key={item._tempId} onClick={() => toggleItem(item._tempId)} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted/30 transition-colors text-left">
-                          <div className={`w-5 h-5 rounded flex items-center justify-center shrink-0 border-2 transition-all ${isSelected ? 'bg-accent border-accent' : 'border-border'}`}>
-                            {isSelected && <Check className="w-3 h-3 text-accent-foreground" />}
+                        <button key={item._tempId} onClick={() => toggleItem(item._tempId)} className="w-full flex items-start gap-2 px-3 py-2.5 hover:bg-green-100/60 transition-colors text-left">
+                          <div className={`w-4 h-4 rounded mt-0.5 flex items-center justify-center shrink-0 border-2 transition-all ${isSelected ? 'bg-green-600 border-green-600' : 'border-green-400 bg-white'}`}>
+                            {isSelected && <Check className="w-2.5 h-2.5 text-white" />}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className={`text-sm font-medium truncate ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>{item.item_name}</p>
-                            <p className="text-xs text-muted-foreground">{item.category} · Qty: {item.quantity}</p>
+                            <p className="text-xs font-medium text-green-900 leading-snug">{item.item_name}</p>
+                            <p className="text-[10px] text-green-700">{item.category}</p>
+                            {item.price && <p className="text-[10px] text-green-800 font-semibold">{item.currency} {item.price}</p>}
                           </div>
-                          <span className={`text-sm font-medium shrink-0 ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>{item.currency} {item.price}</span>
                         </button>
                       );
                     })}
                   </div>
                 </div>
-              )}
 
-              {ineligibleItems.length > 0 && (
-                <div className="bg-destructive/5 rounded-2xl border border-destructive/20 overflow-hidden mb-4">
-                  <div className="flex items-center gap-2 px-4 py-3 border-b border-destructive/20">
-                    <AlertCircle className="w-3.5 h-3.5 text-destructive" />
-                    <span className="text-xs font-semibold text-destructive uppercase tracking-wide">Cannot Ship ({ineligibleItems.length})</span>
+                {/* Non-Eligible Column */}
+                <div className="bg-red-50 border border-red-200 rounded-2xl overflow-hidden">
+                  <div className="flex items-center px-3 py-2.5 border-b border-red-200 bg-red-100">
+                    <span className="text-[11px] font-bold text-red-800 uppercase tracking-wide">❌ Cannot Ship</span>
                   </div>
-                  <div className="divide-y divide-destructive/10">
+                  <div className="divide-y divide-red-100">
+                    {ineligibleItems.length === 0 && (
+                      <p className="text-xs text-red-700 px-3 py-4 text-center opacity-60">None</p>
+                    )}
                     {ineligibleItems.map((item) => (
-                      <div key={item._tempId} className="flex items-center gap-3 px-4 py-3 opacity-60">
-                        <div className="w-5 h-5 rounded border-2 border-destructive/40 flex items-center justify-center shrink-0">
-                          <X className="w-3 h-3 text-destructive" />
+                      <div key={item._tempId} className="flex items-start gap-2 px-3 py-2.5">
+                        <div className="w-4 h-4 rounded mt-0.5 flex items-center justify-center shrink-0 border-2 border-red-300 bg-white">
+                          <X className="w-2.5 h-2.5 text-red-500" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate line-through text-muted-foreground">{item.item_name}</p>
-                          <p className="text-xs text-destructive">{item.ineligible_reason}</p>
+                          <p className="text-xs font-medium text-red-900 line-through leading-snug">{item.item_name}</p>
+                          <p className="text-[10px] text-red-600">{item.ineligible_reason || item.category}</p>
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
-              )}
+              </div>
 
               <Button
                 className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-11"
@@ -329,44 +334,63 @@ export default function ReceiptUpload() {
                 ))}
               </div>
 
-              <div className="bg-card rounded-2xl border border-border overflow-hidden mb-4">
-                <button
-                  onClick={() => {
-                    const allIds = new Set(savedItems.filter(i => i.eligible !== false).map(i => i.id));
-                    const allSelected = savedItems.filter(i => i.eligible !== false).every(i => reviewSelectedIds.has(i.id));
-                    setReviewSelectedIds(allSelected ? new Set() : allIds);
-                  }}
-                  className="w-full flex items-center justify-between px-4 py-3 border-b border-border hover:bg-muted/40 transition-colors"
-                >
-                  <span className="text-xs font-semibold text-foreground uppercase tracking-wide">All Items to Ship</span>
-                  <div className="flex items-center gap-1.5">
-                    {savedItems.filter(i => i.eligible !== false).every(i => reviewSelectedIds.has(i.id))
-                      ? <CheckSquare className="w-4 h-4 text-accent" />
-                      : <Square className="w-4 h-4 text-muted-foreground" />}
-                    <span className="text-xs text-muted-foreground">All</span>
+              {/* Two-column review layout */}
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                {/* Eligible saved */}
+                <div className="bg-green-50 border border-green-200 rounded-2xl overflow-hidden">
+                  <div className="flex items-center justify-between px-3 py-2.5 border-b border-green-200 bg-green-100">
+                    <span className="text-[11px] font-bold text-green-800 uppercase tracking-wide">✅ Can Ship</span>
+                    <button
+                      onClick={() => {
+                        const eligible = savedItems.filter(i => i.eligible !== false);
+                        const allSel = eligible.every(i => reviewSelectedIds.has(i.id));
+                        setReviewSelectedIds(allSel ? new Set() : new Set(eligible.map(i => i.id)));
+                      }}
+                      className="text-[10px] text-green-700 font-medium hover:underline"
+                    >
+                      {savedItems.filter(i => i.eligible !== false).every(i => reviewSelectedIds.has(i.id)) ? 'None' : 'All'}
+                    </button>
                   </div>
-                </button>
-                <div className="divide-y divide-border">
-                  {savedItems.map((item) => {
-                    const isSelected = reviewSelectedIds.has(item.id);
-                    const canSelect = item.eligible !== false;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => { if (!canSelect) return; setReviewSelectedIds(prev => { const n = new Set(prev); n.has(item.id) ? n.delete(item.id) : n.add(item.id); return n; }); }}
-                        className={`w-full flex items-center gap-3 px-4 py-3 transition-colors text-left ${canSelect ? 'hover:bg-muted/30 cursor-pointer' : 'opacity-50 cursor-default'}`}
-                      >
-                        <div className={`w-5 h-5 rounded flex items-center justify-center shrink-0 border-2 transition-all ${!canSelect ? 'border-destructive/40 bg-destructive/5' : isSelected ? 'bg-accent border-accent' : 'border-border'}`}>
-                          {!canSelect ? <X className="w-3 h-3 text-destructive" /> : isSelected && <Check className="w-3 h-3 text-accent-foreground" />}
+                  <div className="divide-y divide-green-100">
+                    {savedItems.filter(i => i.eligible !== false).map((item) => {
+                      const isSelected = reviewSelectedIds.has(item.id);
+                      return (
+                        <button key={item.id} onClick={() => setReviewSelectedIds(prev => { const n = new Set(prev); n.has(item.id) ? n.delete(item.id) : n.add(item.id); return n; })} className="w-full flex items-start gap-2 px-3 py-2.5 hover:bg-green-100/60 transition-colors text-left">
+                          <div className={`w-4 h-4 rounded mt-0.5 flex items-center justify-center shrink-0 border-2 transition-all ${isSelected ? 'bg-green-600 border-green-600' : 'border-green-400 bg-white'}`}>
+                            {isSelected && <Check className="w-2.5 h-2.5 text-white" />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-medium text-green-900 leading-snug">{item.item_name}</p>
+                            <p className="text-[10px] text-green-700">{item.category}</p>
+                            {item.price && <p className="text-[10px] text-green-800 font-semibold">{item.currency} {item.price}</p>}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Non-eligible saved */}
+                <div className="bg-red-50 border border-red-200 rounded-2xl overflow-hidden">
+                  <div className="flex items-center px-3 py-2.5 border-b border-red-200 bg-red-100">
+                    <span className="text-[11px] font-bold text-red-800 uppercase tracking-wide">❌ Cannot Ship</span>
+                  </div>
+                  <div className="divide-y divide-red-100">
+                    {savedItems.filter(i => i.eligible === false).length === 0 && (
+                      <p className="text-xs text-red-700 px-3 py-4 text-center opacity-60">None</p>
+                    )}
+                    {savedItems.filter(i => i.eligible === false).map((item) => (
+                      <div key={item.id} className="flex items-start gap-2 px-3 py-2.5">
+                        <div className="w-4 h-4 rounded mt-0.5 flex items-center justify-center shrink-0 border-2 border-red-300 bg-white">
+                          <X className="w-2.5 h-2.5 text-red-500" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className={`text-sm font-medium truncate ${!canSelect ? 'line-through text-muted-foreground' : isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>{item.item_name}</p>
-                          <p className="text-xs text-muted-foreground">{item.category} · Qty: {item.quantity}{!canSelect && ` · ${item.ineligible_reason}`}</p>
+                          <p className="text-xs font-medium text-red-900 line-through leading-snug">{item.item_name}</p>
+                          <p className="text-[10px] text-red-600">{item.ineligible_reason || item.category}</p>
                         </div>
-                        <span className={`text-sm font-medium shrink-0 ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>{item.currency} {item.price}</span>
-                      </button>
-                    );
-                  })}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
