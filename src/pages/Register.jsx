@@ -54,6 +54,57 @@ export default function Register() {
     } catch {}
   };
 
+  const NATIONALITY_TO_DIAL = {
+    'united arab emirates': '+971', 'uae': '+971',
+    'united states': '+1', 'usa': '+1', 'american': '+1',
+    'united kingdom': '+44', 'uk': '+44', 'british': '+44',
+    'saudi arabia': '+966', 'saudi': '+966',
+    'qatar': '+974', 'qatari': '+974',
+    'kuwait': '+965', 'kuwaiti': '+965',
+    'bahrain': '+973', 'bahraini': '+973',
+    'oman': '+968', 'omani': '+968',
+    'india': '+91', 'indian': '+91',
+    'pakistan': '+92', 'pakistani': '+92',
+    'egypt': '+20', 'egyptian': '+20',
+    'jordan': '+962', 'jordanian': '+962',
+    'lebanon': '+961', 'lebanese': '+961',
+    'germany': '+49', 'german': '+49',
+    'france': '+33', 'french': '+33',
+    'italy': '+39', 'italian': '+39',
+    'spain': '+34', 'spanish': '+34',
+    'russia': '+7', 'russian': '+7',
+    'china': '+86', 'chinese': '+86',
+    'japan': '+81', 'japanese': '+81',
+    'australia': '+61', 'australian': '+61',
+    'canada': '+1', 'canadian': '+1',
+    'brazil': '+55', 'brazilian': '+55',
+    'south africa': '+27',
+    'nigeria': '+234', 'nigerian': '+234',
+    'kenya': '+254', 'kenyan': '+254',
+    'philippines': '+63', 'filipino': '+63',
+    'bangladesh': '+880', 'bangladeshi': '+880',
+    'netherlands': '+31', 'dutch': '+31',
+    'sweden': '+46', 'swedish': '+46',
+    'norway': '+47', 'norwegian': '+47',
+    'switzerland': '+41', 'swiss': '+41',
+    'singapore': '+65', 'singaporean': '+65',
+    'malaysia': '+60', 'malaysian': '+60',
+    'thailand': '+66', 'thai': '+66',
+    'turkey': '+90', 'turkish': '+90',
+  };
+
+  useEffect(() => {
+    if (!form.nationality) return;
+    const dial = NATIONALITY_TO_DIAL[form.nationality.toLowerCase().trim()];
+    if (dial) {
+      setForm(prev => ({
+        ...prev,
+        phone_number: `${dial}|${prev.phone_number.split('|')[1] || ''}`,
+        whatsapp_number: `${dial}|${prev.whatsapp_number.split('|')[1] || ''}`,
+      }));
+    }
+  }, [form.nationality]);
+
   const update = (key, value) => {
     setForm(prev => ({ ...prev, [key]: value }));
     setErrors(prev => ({ ...prev, [key]: '' }));
