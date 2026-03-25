@@ -11,7 +11,7 @@ import PhoneInput from '../components/PhoneInput';
 import BoxCard from '../components/BoxCard';
 import { getShippingPrice } from '../utils/pricing';
 
-const STEPS = ['Your Details', 'Destination', 'Box & Price', 'Confirm'];
+const STEPS = ['Your Details', 'Home Address', 'Box & Price', 'Confirm'];
 
 export default function NewOrder() {
   const navigate = useNavigate();
@@ -267,8 +267,8 @@ export default function NewOrder() {
         {step === 1 && (
           <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
             <div>
-              <h2 className="text-xl font-bold text-foreground">Delivery Address</h2>
-              <p className="text-sm text-muted-foreground mt-1">Pre-filled from your account. Update in Profile if needed.</p>
+              <h2 className="text-xl font-bold text-foreground">Home Address</h2>
+              <p className="text-sm text-muted-foreground mt-1">Your home address is automatically fetched from your account.</p>
             </div>
 
             {/* Shipping price banner */}
@@ -284,7 +284,7 @@ export default function NewOrder() {
 
             {/* Read-only delivery deck */}
             <div className="bg-muted/50 rounded-2xl border border-border p-4">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Delivery Details</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Home Address</p>
               <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
                 <div className="col-span-2">
                   <span className="text-muted-foreground text-xs">Recipient Name</span>
