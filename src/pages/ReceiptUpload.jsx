@@ -20,6 +20,8 @@ export default function ReceiptUpload() {
   const [pendingItems, setPendingItems] = useState([]);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [confirming, setConfirming] = useState(false);
+  // Combined review of all saved items
+  const [reviewSelectedIds, setReviewSelectedIds] = useState(new Set());
 
   useEffect(() => {
     if (!orderId) return;
@@ -35,6 +37,7 @@ export default function ReceiptUpload() {
     if (orders.length > 0) setOrder(orders[0]);
     setSavedReceipts(existingReceipts);
     setSavedItems(existingItems);
+    setReviewSelectedIds(new Set(existingItems.map(i => i.id)));
   };
 
   const handleFileUpload = useCallback(async (e) => {
@@ -318,38 +321,96 @@ export default function ReceiptUpload() {
         </div>
       )}
 
-      {/* Previously saved receipts */}
-      {savedReceipts.length > 0 && pendingItems.length === 0 && (
+      {/* Combined items review — shown when receipts exist and no pending extraction */}
+      {savedItems.length > 0 && pendingItems.length === 0 && (
         <div className="mt-6">
-          <h3 className="text-sm font-semibold text-foreground mb-3">Uploaded Receipts</h3>
-          <div className="space-y-2">
+          {/* Receipts summary */}
+          <div className="flex items-center gap-2 mb-3">
+            <FileText className="w-4 h-4 text-accent" />
+            <h3 className="text-sm font-semibold text-foreground">{savedReceipts.length} Receipt{savedReceipts.length !== 1 ? 's' : ''} Uploaded</h3>
+          </div>
+          <div className="flex flex-wrap gap-2 mb-5">
             {savedReceipts.map((r) => (
-              <div key={r.id} className="flex items-center gap-3 bg-card rounded-xl border border-border p-3">
-                <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
-                  <FileText className="w-4 h-4 text-green-600" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{r.store_name || 'Receipt'}</p>
-                  <p className="text-xs text-muted-foreground">{r.extracted_items_count || 0} items</p>
-                </div>
-                <Check className="w-4 h-4 text-green-600" />
+              <div key={r.id} className="flex items-center gap-1.5 bg-green-50 border border-green-200 rounded-lg px-3 py-1.5">
+                <Check className="w-3 h-3 text-green-600" />
+                <span className="text-xs font-medium text-green-800">{r.store_name || 'Receipt'}</span>
+                <span className="text-[10px] text-green-600">({r.extracted_items_count || 0} items)</span>
               </div>
             ))}
           </div>
 
-          <div className="mt-4 space-y-3">
+          {/* All items combined checklist */}
+          <div className="bg-card rounded-2xl border border-border overflow-hidden mb-4">
+            <button
+              onClick={() => {
+                const allIds = new Set(savedItems.filter(i => i.eligible !== false).map(i => i.id));
+                const allSelected = savedItems.filter(i => i.eligible !== false).every(i => reviewSelectedIds.has(i.id));
+                setReviewSelectedIds(allSelected ? new Set() : allIds);
+              }}
+              className="w-full flex items-center justify-between px-4 py-3 border-b border-border hover:bg-muted/40 transition-colors"
+            >
+              <span className="text-xs font-semibold text-foreground uppercase tracking-wide">All Items to Ship</span>
+              <div className="flex items-center gap-1.5">
+                {savedItems.filter(i => i.eligible !== false).every(i => reviewSelectedIds.has(i.id))
+                  ? <CheckSquare className="w-4 h-4 text-accent" />
+                  : <Square className="w-4 h-4 text-muted-foreground" />}
+                <span className="text-xs text-muted-foreground">All</span>
+              </div>
+            </button>
+            <div className="divide-y divide-border">
+              {savedItems.map((item) => {
+                const isSelected = reviewSelectedIds.has(item.id);
+                const canSelect = item.eligible !== false;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      if (!canSelect) return;
+                      setReviewSelectedIds(prev => { const n = new Set(prev); n.has(item.id) ? n.delete(item.id) : n.add(item.id); return n; });
+                    }}
+                    className={`w-full flex items-center gap-3 px-4 py-3 transition-colors text-left ${canSelect ? 'hover:bg-muted/30 cursor-pointer' : 'opacity-50 cursor-default'}`}
+                  >
+                    <div className={`w-5 h-5 rounded flex items-center justify-center shrink-0 border-2 transition-all ${
+                      !canSelect ? 'border-destructive/40 bg-destructive/5' : isSelected ? 'bg-accent border-accent' : 'border-border'
+                    }`}>
+                      {!canSelect ? <X className="w-3 h-3 text-destructive" /> : isSelected && <Check className="w-3 h-3 text-accent-foreground" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-sm font-medium truncate ${!canSelect ? 'line-through text-muted-foreground' : isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>
+                        {item.item_name}
+                      </p>
+                      <p className="text-xs text-muted-foreground">{item.category} · Qty: {item.quantity}{!canSelect && ` · ${item.ineligible_reason}`}</p>
+                    </div>
+                    <span className={`text-sm font-medium shrink-0 ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>
+                      {item.currency} {item.price}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Summary + actions */}
+          <div className="bg-card rounded-2xl border border-accent/20 p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">{reviewSelectedIds.size} item{reviewSelectedIds.size !== 1 ? 's' : ''} selected to ship</span>
+              <span className="text-sm font-bold text-foreground">
+                {savedItems.filter(i => reviewSelectedIds.has(i.id)).reduce((s, i) => s + (i.price || 0), 0).toFixed(2)} {savedItems[0]?.currency || ''}
+              </span>
+            </div>
             <Button
               className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-12"
               onClick={() => navigate(`/order/${orderId}/payment`)}
+              disabled={reviewSelectedIds.size === 0}
             >
-              Continue to Payment
+              Proceed to Payment
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
             <label className="block cursor-pointer">
-              <Button variant="outline" className="w-full rounded-xl pointer-events-none">
-                Upload Another Receipt
+              <Button variant="outline" className="w-full rounded-xl pointer-events-none" type="button">
+                <Upload className="w-4 h-4 mr-2" /> Upload Another Receipt
               </Button>
-              <input type="file" accept="image/*,.pdf" className="hidden" onChange={handleFileUpload} />
+              <input type="file" accept="image/*,.pdf" className="hidden" onChange={handleFileUpload} disabled={uploading || processing} />
             </label>
           </div>
         </div>

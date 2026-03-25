@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { base44 } from '@/api/base44Client';
 import PhoneInput from '../components/PhoneInput';
+import CountrySelect from '../components/CountrySelect';
+import { getShippingPrice } from '../utils/pricing';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -284,7 +286,14 @@ export default function Register() {
 
               <div>
                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Country *</Label>
-                <Input value={form.home_country} onChange={(e) => update('home_country', e.target.value)} placeholder="e.g. United Kingdom" className="mt-1.5 h-11" required />
+                <div className="mt-1.5">
+                  <CountrySelect value={form.home_country} onChange={(v) => update('home_country', v)} />
+                </div>
+                {form.home_country && (
+                  <p className="text-xs text-accent font-semibold mt-1.5">
+                    🚚 Shipping to {form.home_country}: <span className="font-bold">${getShippingPrice(form.home_country)} per box</span>
+                  </p>
+                )}
               </div>
               <div>
                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Address Line 1 *</Label>
