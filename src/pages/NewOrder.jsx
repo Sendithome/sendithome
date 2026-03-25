@@ -194,70 +194,17 @@ export default function NewOrder() {
           <motion.div key="step0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
             <div>
               <h2 className="text-xl font-bold text-foreground">Your Details</h2>
-              <p className="text-sm text-muted-foreground mt-1">Fill in your details or scan your passport for instant autofill.</p>
+              <p className="text-sm text-muted-foreground mt-1">Your personal details are pre-filled from your account.</p>
             </div>
 
-            {/* Passport scan */}
-            <div className="border-2 border-dashed border-border rounded-2xl p-5 text-center">
-              {scanningPassport ? (
-                <div className="flex flex-col items-center gap-3 py-2">
-                  <Loader2 className="w-8 h-8 text-accent animate-spin" />
-                  <p className="text-sm font-medium">AI is reading your passport...</p>
-                  <p className="text-xs text-muted-foreground">This takes a few seconds</p>
-                </div>
-              ) : (
-                <>
-                  <Camera className="w-9 h-9 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-sm font-semibold text-foreground">Scan Your Passport</p>
-                  <p className="text-xs text-muted-foreground mt-1">Our AI will automatically fill in your details.</p>
-                  <div className="flex gap-3 justify-center mt-4">
-                    <label className="cursor-pointer">
-                      <span className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-xs font-medium px-4 py-2 rounded-xl">
-                        <Camera className="w-3.5 h-3.5" /> Scan Passport
-                      </span>
-                      <input type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePassportScan} />
-                    </label>
-                    <label className="cursor-pointer">
-                      <span className="inline-flex items-center gap-1.5 border border-border text-foreground text-xs font-medium px-4 py-2 rounded-xl">
-                        <Upload className="w-3.5 h-3.5" /> Upload Photo
-                      </span>
-                      <input type="file" accept="image/*,.pdf" className="hidden" onChange={handlePassportScan} />
-                    </label>
-                  </div>
-                  <p className="text-[10px] text-muted-foreground mt-3">Or fill in the details manually below</p>
-                </>
-              )}
-            </div>
-
-            {/* Name */}
-            <div className="grid grid-cols-3 gap-3">
-              <div>
-                <Label className="text-xs text-muted-foreground">First Name *</Label>
-                <Input value={form.first_name} onChange={e => update('first_name', e.target.value)} placeholder="John" className="mt-1" />
-              </div>
-              <div>
-                <Label className="text-xs text-muted-foreground">Middle Name</Label>
-                <Input value={form.middle_name} onChange={e => update('middle_name', e.target.value)} placeholder="William" className="mt-1" />
-              </div>
-              <div>
-                <Label className="text-xs text-muted-foreground">Last Name *</Label>
-                <Input value={form.last_name} onChange={e => update('last_name', e.target.value)} placeholder="Smith" className="mt-1" />
-              </div>
-            </div>
-
-            {/* Passport */}
-            <div className="grid grid-cols-3 gap-3">
-              <div>
-                <Label className="text-xs text-muted-foreground">Nationality</Label>
-                <Input value={form.nationality} onChange={e => update('nationality', e.target.value)} placeholder="United Kingdom" className="mt-1" />
-              </div>
-              <div>
-                <Label className="text-xs text-muted-foreground">Passport Number</Label>
-                <Input value={form.passport_number} onChange={e => update('passport_number', e.target.value)} placeholder="AB1234567" className="mt-1" />
-              </div>
-              <div>
-                <Label className="text-xs text-muted-foreground">Expiry Date</Label>
-                <Input type="date" value={form.passport_expiry} onChange={e => update('passport_expiry', e.target.value)} className="mt-1" />
+            {/* Read-only identity summary */}
+            <div className="bg-muted/50 rounded-2xl border border-border p-4">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Account Details</p>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                <div><span className="text-muted-foreground text-xs">Name</span><p className="font-medium text-foreground">{[form.first_name, form.middle_name, form.last_name].filter(Boolean).join(' ') || '—'}</p></div>
+                <div><span className="text-muted-foreground text-xs">Nationality</span><p className="font-medium text-foreground">{form.nationality || '—'}</p></div>
+                <div><span className="text-muted-foreground text-xs">Passport No.</span><p className="font-medium text-foreground">{form.passport_number || '—'}</p></div>
+                <div><span className="text-muted-foreground text-xs">Expiry</span><p className="font-medium text-foreground">{form.passport_expiry || '—'}</p></div>
               </div>
             </div>
 
