@@ -85,16 +85,24 @@ export default function QRLanding() {
           <h2 className="text-xl font-bold text-foreground">Ship Your Shopping Home</h2>
           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
             Send your purchases directly from <span className="font-semibold text-foreground">{hotel.name}</span> to your home.
-            Just <span className="font-semibold text-accent">$60 per box</span> — delivered in 1–3 working days via air.
+            Just <span className="font-semibold text-accent">$60 per box</span> — delivered in 1–3 working days via international priority.
           </p>
 
           <ul className="mt-5 space-y-2.5">
-            {['10 kg or 20 kg — same flat rate', '50+ countries covered', 'Hotel pickup within 24 hours', 'Full tracking via WhatsApp'].map((item, i) => (
-              <li key={i} className="flex items-center gap-2.5 text-sm text-foreground">
-                <div className="w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
+            {[
+              { text: '10 kg or 20 kg — same flat rate', sub: "it's just amazing" },
+              { text: '50+ countries covered', sub: null },
+              { text: 'Hotel pickup within 24 hours', sub: 'Day Zero' },
+              { text: 'Full tracking via WhatsApp', sub: null },
+            ].map((item, i) => (
+              <li key={i} className="flex items-start gap-2.5 text-sm text-foreground">
+                <div className="w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center shrink-0 mt-0.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-accent" />
                 </div>
-                {item}
+                <span>
+                  {item.text}
+                  {item.sub && <span className="ml-1 text-accent font-medium italic">— {item.sub}</span>}
+                </span>
               </li>
             ))}
           </ul>
