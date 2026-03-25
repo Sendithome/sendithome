@@ -173,7 +173,7 @@ export default function Register() {
   const isFormValid = true; // validation handled in validate()
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
+    <div className="min-h-screen flex flex-col">
       {/* Left: Form */}
       <div className="flex-1 px-5 py-8 max-w-2xl mx-auto w-full">
         {/* Header */}
@@ -436,28 +436,6 @@ export default function Register() {
         </p>
       </div>
 
-      {/* Right: Luxury visual (desktop only) */}
-      <div className="hidden md:flex flex-col items-center justify-center w-96 bg-gradient-to-b from-[#f5f0e8] to-[#e8dfc8] p-8 sticky top-0 h-screen">
-        <div className="text-center">
-          <div className="grid grid-cols-2 gap-3 mb-6">
-            {[
-              { label: 'LUXURY BRAND', price: '$2,400', bg: 'bg-gray-900 text-white' },
-              { label: 'DESIGNER', price: '$8,500', bg: 'bg-gray-900 text-white' },
-              { label: 'DUBAI MALL', price: null, bg: 'bg-white border border-gray-200' },
-            ].map((item, i) => (
-              <div key={i} className={`${item.bg} ${i === 2 ? 'col-span-2' : ''} rounded-2xl p-4 text-center`}>
-                <p className={`text-xs font-bold tracking-widest ${item.bg.includes('gray-900') ? 'text-white' : 'text-gray-800'}`}>{item.label}</p>
-                {item.price && (
-                  <div className="mt-2 inline-block bg-amber-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-full">{item.price}</div>
-                )}
-              </div>
-            ))}
-          </div>
-          <p className="text-lg font-bold text-gray-800 mb-1">Shop Without Limits.</p>
-          <p className="text-lg font-bold text-gray-800">Travel Without Luggage.</p>
-          <p className="text-sm text-gray-500 mt-3">Send your purchases home from any partner hotel</p>
-        </div>
-      </div>
     </div>
   );
 }
