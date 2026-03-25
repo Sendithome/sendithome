@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Upload, Camera, FileText, Check, X, Loader2, ArrowLeft, ArrowRight, AlertCircle, CheckSquare, Square, Package } from 'lucide-react';
+import { Upload, Camera, FileText, Check, X, Loader2, ArrowLeft, ArrowRight, AlertCircle, CheckSquare, Square, Package, ClipboardList } from 'lucide-react';
 import BoxCard from '../components/BoxCard';
+import ShipmentDeclarationForm from '../components/ShipmentDeclarationForm';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 
@@ -18,6 +19,7 @@ export default function ReceiptUpload() {
   const [boxSize, setBoxSize] = useState('');
   const [showBoxSelect, setShowBoxSelect] = useState(false);
   const [savingBox, setSavingBox] = useState(false);
+  const [showDeclaration, setShowDeclaration] = useState(false);
 
   // Items extracted from current upload — pending confirmation
   const [pendingReceipt, setPendingReceipt] = useState(null);
@@ -394,52 +396,29 @@ export default function ReceiptUpload() {
             </div>
           </div>
 
+          {/* Shipment Declaration Form — shown before box/payment */}
+          {showDeclaration && (
+            <div className="mb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <ClipboardList className="w-4 h-4 text-accent" />
+                <h3 className="text-sm font-semibold text-foreground">Shipment Declaration Form</h3>
+              </div>
+              <ShipmentDeclarationForm order={order} items={savedItems} />
+            </div>
+          )}
+
           {/* Summary + actions */}
           <div className="bg-card rounded-2xl border border-accent/20 p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{reviewSelectedIds.size} item{reviewSelectedIds.size !== 1 ? 's' : ''} selected to ship</span>
-              <span className="text-sm font-bold text-foreground">
-                {savedItems.filter(i => reviewSelectedIds.has(i.id)).reduce((s, i) => s + (i.price || 0), 0).toFixed(2)} {savedItems[0]?.currency || ''}
-              </span>
-            </div>
-            {!showBoxSelect ? (
-              <Button
-                className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-12"
-                onClick={() => setShowBoxSelect(true)}
-                disabled={reviewSelectedIds.size === 0}
+              <span className="text-sm text-muted-foreground">{reviewSelectedIds.size} item{reviewSelectedIds.size !== 1 ? 's' : ''} to ship</span>
+              <button
+                onClick={() => setShowDeclaration(v => !v)}
+                className="text-xs text-accent font-medium hover:underline flex items-center gap-1"
               >
-                Select Box & Pay
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            ) : (
-              <div className="space-y-4">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Select Your Box Size</p>
-                <div className="grid grid-cols-2 gap-3">
-                  <BoxCard size="10kg" selected={boxSize === '10kg'} onSelect={setBoxSize} />
-                  <BoxCard size="20kg" selected={boxSize === '20kg'} onSelect={setBoxSize} />
-                </div>
-                <Button
-                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-12"
-                  disabled={!boxSize || savingBox}
-                  onClick={async () => {
-                    setSavingBox(true);
-                    await base44.entities.Order.update(orderId, { box_size: boxSize });
-                    navigate(`/order/${orderId}/payment`);
-                  }}
-                >
-                  {savingBox ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Package className="w-4 h-4 mr-2" />}
-                  Proceed to Payment
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-            )}
-            <label className="block cursor-pointer">
-              <Button variant="outline" className="w-full rounded-xl pointer-events-none" type="button">
-                <Upload className="w-4 h-4 mr-2" /> Upload Another Receipt
-              </Button>
-              <input type="file" accept="image/*,.pdf" className="hidden" onChange={handleFileUpload} disabled={uploading || processing} />
-            </label>
-          </div>
+                <ClipboardList className="w-3 h-3" />
+                {showDeclaration ? 'Hide' : 'View'} Declaration Form
+              </button>
+            </div>
         </div>
       )}
     </div>
