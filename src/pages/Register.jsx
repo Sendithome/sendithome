@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { base44 } from '@/api/base44Client';
 import PhoneInput from '../components/PhoneInput';
+import PassportVerification from '../components/PassportVerification';
 import CountrySelect from '../components/CountrySelect';
 import { getShippingPrice } from '../utils/pricing';
 
@@ -282,6 +283,14 @@ export default function Register() {
                 {errors.passport_expiry && <p className="text-xs text-destructive mt-1">{errors.passport_expiry}</p>}
               </div>
             </div>
+
+            <PassportVerification
+              passportNumber={form.passport_number}
+              nationality={form.nationality}
+              expiryDate={form.passport_expiry}
+              firstName={form.first_name}
+              lastName={form.last_name}
+            />
 
             <div className="grid grid-cols-2 gap-3">
               <div>
