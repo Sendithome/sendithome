@@ -64,8 +64,10 @@ export default function ReceiptUpload() {
     setProcessing(true);
     const extractResult = await base44.integrations.Core.InvokeLLM({
       prompt: `Analyze this shopping receipt image. Extract all purchased items with their names, categories, quantities, and prices.
-      Also check if each item is eligible for international shipping (NOT eligible: perishable food, hazardous materials, live plants, weapons, alcohol over 5L, tobacco over 200 cigarettes, prescription medicine, counterfeit goods).
-      If not eligible, state the reason.`,
+      Determine eligibility for international shipping strictly based on category.
+      ELIGIBLE categories (mark eligible: true): Women's Fashion, Men's Fashion, Children's Fashion, Clothing, Apparel, Footwear, Bags, Hats, Accessories, Souvenirs, Kids Toys.
+      ALL OTHER categories are NOT eligible (mark eligible: false) — including food, electronics, cosmetics, medicine, alcohol, tobacco, hazardous materials, etc.
+      For ineligible items, provide a short reason why they cannot be shipped.`,
       response_json_schema: {
         type: "object",
         properties: {
@@ -195,7 +197,7 @@ export default function ReceiptUpload() {
         <div>
           {/* Upload area */}
           {pendingItems.length === 0 && (
-            <label className="block cursor-pointer mb-6">
+            <div className="mb-6">
               <div className="border-2 border-dashed border-accent/30 rounded-2xl p-8 text-center hover:border-accent/60 hover:bg-accent/5 transition-all">
                 {uploading || processing ? (
                   <div className="flex flex-col items-center gap-3">
@@ -215,11 +217,22 @@ export default function ReceiptUpload() {
                       Take a photo or upload an image of your shopping receipt
                     </p>
                     <p className="text-xs text-accent font-medium mt-3">Our AI will auto-extract all items</p>
+                    <div className="flex gap-3 justify-center mt-5">
+                      <label className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 rounded-xl text-xs font-semibold bg-accent text-accent-foreground hover:bg-accent/90 transition-colors">
+                        <Camera className="w-3.5 h-3.5" />
+                        Open Camera
+                        <input type="file" accept="image/*" capture="environment" className="hidden" onChange={handleFileUpload} disabled={uploading || processing} />
+                      </label>
+                      <label className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 rounded-xl text-xs font-semibold border border-input bg-background hover:bg-muted transition-colors">
+                        <Upload className="w-3.5 h-3.5" />
+                        Upload File
+                        <input type="file" accept="image/*,.pdf" className="hidden" onChange={handleFileUpload} disabled={uploading || processing} />
+                      </label>
+                    </div>
                   </>
                 )}
               </div>
-              <input type="file" accept="image/*,.pdf" className="hidden" onChange={handleFileUpload} disabled={uploading || processing} />
-            </label>
+            </div>
           )}
 
           {/* Pending item selection */}
