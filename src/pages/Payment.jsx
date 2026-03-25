@@ -38,6 +38,7 @@ export default function Payment() {
       payment_status: 'paid',
       estimated_delivery: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
     });
+    // Order picked up within 24 working hours after payment
     setPaid(true);
     setProcessing(false);
   };
@@ -54,8 +55,7 @@ export default function Payment() {
         </motion.div>
         <h1 className="text-2xl font-bold text-foreground">Payment Successful!</h1>
         <p className="text-sm text-muted-foreground mt-3 max-w-sm mx-auto">
-          Your order has been confirmed. Pack your box and leave it at the hotel reception.
-          We'll pick it up within 24 hours.
+          Payment confirmed! Pack your items in your box and leave it at the hotel reception desk. We'll arrange pickup within <strong className="text-foreground">24 working hours</strong>.
         </p>
         <div className="mt-8 space-y-3">
           <Button
