@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CreditCard, Shield, Check, Package } from 'lucide-react';
+import { ArrowLeft, CreditCard, Shield, Check, Package, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
@@ -14,6 +14,18 @@ export default function Payment() {
   const [items, setItems] = useState([]);
   const [processing, setProcessing] = useState(false);
   const [paid, setPaid] = useState(false);
+
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardName, setCardName] = useState('');
+  const [expiry, setExpiry] = useState('');
+  const [cvv, setCvv] = useState('');
+
+  const formatCardNumber = (v) => v.replace(/\D/g, '').slice(0, 16).replace(/(\d{4})/g, '$1 ').trim();
+  const formatExpiry = (v) => {
+    const d = v.replace(/\D/g, '').slice(0, 4);
+    return d.length >= 3 ? d.slice(0,2) + '/' + d.slice(2) : d;
+  };
+  const cardValid = cardNumber.replace(/\s/g,'').length === 16 && cardName.trim().length > 1 && expiry.length === 5 && cvv.length >= 3;
 
   useEffect(() => {
     if (!orderId) return;
@@ -30,9 +42,10 @@ export default function Payment() {
   };
 
   const handlePayment = async () => {
+    if (!cardValid) return;
     setProcessing(true);
     // Simulate payment processing
-    await new Promise(r => setTimeout(r, 2000));
+    await new Promise(r => setTimeout(r, 2500));
     await base44.entities.Order.update(orderId, {
       status: 'paid',
       payment_status: 'paid',
@@ -132,34 +145,96 @@ export default function Payment() {
         </div>
       </div>
 
-      {/* Trust badges */}
-      <div className="mt-6 flex items-center justify-center gap-4 text-xs text-muted-foreground">
-        <div className="flex items-center gap-1">
-          <Shield className="w-3.5 h-3.5 text-green-600" />
-          <span>Secure Payment</span>
+      {/* Card Payment Form */}
+      <div className="mt-6 bg-card rounded-2xl border border-border p-5 space-y-4">
+        <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center gap-2">
+            <Lock className="w-4 h-4 text-green-600" />
+            <span className="text-sm font-semibold text-foreground">Secure Card Payment</span>
+          </div>
+          <div className="flex gap-2 items-center">
+            <span className="text-xs bg-blue-600 text-white px-1.5 py-0.5 rounded font-bold">VISA</span>
+            <span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded font-bold">MC</span>
+            <span className="text-xs bg-blue-400 text-white px-1.5 py-0.5 rounded font-bold">AMEX</span>
+          </div>
         </div>
-        <div className="w-px h-4 bg-border" />
-        <div className="flex items-center gap-1">
-          <CreditCard className="w-3.5 h-3.5" />
-          <span>All cards accepted</span>
+
+        {/* Card Number */}
+        <div>
+          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Card Number</label>
+          <div className="relative mt-1.5">
+            <input
+              type="text"
+              inputMode="numeric"
+              placeholder="1234 5678 9012 3456"
+              value={cardNumber}
+              onChange={e => setCardNumber(formatCardNumber(e.target.value))}
+              className="w-full h-11 rounded-lg border border-input bg-transparent px-3 pr-10 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring placeholder:text-muted-foreground"
+            />
+            <CreditCard className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          </div>
+        </div>
+
+        {/* Card Name */}
+        <div>
+          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Cardholder Name</label>
+          <input
+            type="text"
+            placeholder="John Smith"
+            value={cardName}
+            onChange={e => setCardName(e.target.value)}
+            className="mt-1.5 w-full h-11 rounded-lg border border-input bg-transparent px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring placeholder:text-muted-foreground"
+          />
+        </div>
+
+        {/* Expiry + CVV */}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Expiry Date</label>
+            <input
+              type="text"
+              inputMode="numeric"
+              placeholder="MM/YY"
+              value={expiry}
+              onChange={e => setExpiry(formatExpiry(e.target.value))}
+              className="mt-1.5 w-full h-11 rounded-lg border border-input bg-transparent px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring placeholder:text-muted-foreground"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">CVV / CVC</label>
+            <input
+              type="password"
+              inputMode="numeric"
+              maxLength={4}
+              placeholder="•••"
+              value={cvv}
+              onChange={e => setCvv(e.target.value.replace(/\D/g,'').slice(0,4))}
+              className="mt-1.5 w-full h-11 rounded-lg border border-input bg-transparent px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring placeholder:text-muted-foreground"
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 text-xs text-muted-foreground pt-1">
+          <Shield className="w-3.5 h-3.5 text-green-600 shrink-0" />
+          <span>Your payment info is encrypted with 256-bit SSL. We never store your card details.</span>
         </div>
       </div>
 
       {/* Pay button */}
       <Button
-        className="w-full mt-8 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-14 text-base"
+        className="w-full mt-5 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-14 text-base"
         onClick={handlePayment}
-        disabled={processing}
+        disabled={processing || !cardValid}
       >
         {processing ? (
           <div className="flex items-center gap-2">
             <div className="w-5 h-5 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full animate-spin" />
-            Processing...
+            Processing Payment...
           </div>
         ) : (
           <>
-            <CreditCard className="w-5 h-5 mr-2" />
-            Pay $60.00
+            <Lock className="w-5 h-5 mr-2" />
+            Pay ${order?.price || 60}.00 Securely
           </>
         )}
       </Button>
