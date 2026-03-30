@@ -1,4 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { initCurrencyRates } from '../utils/currencyConversion';
 import { Package, Home, ClipboardList, User } from 'lucide-react';
 import LanguageSelector from './LanguageSelector';
 import { motion } from 'framer-motion';
@@ -11,6 +13,10 @@ const NAV_ITEMS = [
 
 export default function AppLayout() {
   const location = useLocation();
+
+  useEffect(() => {
+    initCurrencyRates();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
