@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { base44 } from '@/api/base44Client';
 import PhoneInput from '../components/PhoneInput';
 import { getShippingPrice } from '../utils/pricing';
+import { convertToLocalCurrency } from '../utils/currencyConversion';
 
 const STEPS = ['Your Details', 'Home Address', 'Confirm'];
 
@@ -250,7 +251,11 @@ export default function NewOrder() {
                 <Package className="w-4 h-4 text-accent shrink-0" />
                 <p className="text-sm text-foreground">
                   Shipping to <strong>{form.destination_country}</strong>:{' '}
-                  <span className="text-accent font-bold">${shippingPrice}</span> per box
+                  <span className="text-accent font-bold">${shippingPrice} USD</span>
+                  {convertToLocalCurrency(shippingPrice, form.destination_country) && (
+                    <span className="text-muted-foreground text-xs"> (≈ {convertToLocalCurrency(shippingPrice, form.destination_country)})</span>
+                  )}
+                  {' '}per box
                 </p>
               </div>
             )}
@@ -308,7 +313,12 @@ export default function NewOrder() {
               <SummaryRow label="Address" value={[form.destination_address, form.destination_city, form.destination_postal_code].filter(Boolean).join(', ')} />
               <div className="px-5 py-4 flex justify-between items-center bg-accent/5">
                 <span className="font-bold text-foreground">Shipping Price</span>
-                <span className="text-xl font-bold text-accent">${shippingPrice} per box</span>
+                <div className="text-right">
+                  <span className="text-xl font-bold text-accent">${shippingPrice} USD</span>
+                  {convertToLocalCurrency(shippingPrice, form.destination_country) && (
+                    <p className="text-xs text-muted-foreground">≈ {convertToLocalCurrency(shippingPrice, form.destination_country)}</p>
+                  )}
+                </div>
               </div>
             </div>
 

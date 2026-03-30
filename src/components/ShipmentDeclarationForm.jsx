@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { getShippingPrice } from '../utils/pricing';
+import { convertToLocalCurrency } from '../utils/currencyConversion';
 import SignaturePad from './SignaturePad';
 
 export default function ShipmentDeclarationForm({ order, items, onProceed, onSignatureChange }) {
@@ -192,8 +193,11 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
               <p className="font-bold text-[10px] mt-0.5">Send It Home · FedEx / DHL</p>
             </div>
             <div className="p-2">
-              <p className="text-[9px] text-gray-500 uppercase">Shipping Fee (USD)</p>
-              <p className="font-bold text-[10px] mt-0.5">${shippingCost}.00 per box</p>
+              <p className="text-[9px] text-gray-500 uppercase">Shipping Fee</p>
+              <p className="font-bold text-[10px] mt-0.5">${shippingCost}.00 USD per box</p>
+              {convertToLocalCurrency(shippingCost, order?.destination_country) && (
+                <p className="text-[9px] text-gray-500 mt-0.5">≈ {convertToLocalCurrency(shippingCost, order?.destination_country)}</p>
+              )}
             </div>
             <div className="p-2">
               <p className="text-[9px] text-gray-500 uppercase">Est. Transit Time</p>
