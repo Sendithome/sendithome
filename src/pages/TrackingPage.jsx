@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ShipmentMap from '../components/ShipmentMap';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Package, Loader2, MapPin, Clock, CheckCircle2, Truck, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -159,6 +160,11 @@ export default function TrackingPage() {
                   <RefreshCw className="w-3.5 h-3.5" /> Refresh Status
                 </Button>
               </div>
+
+              {/* Map */}
+              {order.destination_country && (
+                <ShipmentMap order={order} />
+              )}
 
               {/* Timeline */}
               {isCancelled ? (
