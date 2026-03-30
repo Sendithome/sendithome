@@ -16,6 +16,7 @@ import OrderDetail from './pages/OrderDetail';
 import Profile from './pages/Profile';
 import TrackingPage from './pages/TrackingPage';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
+import DevDocs from './pages/DevDocs';
 // Add page imports here
 
 const AuthenticatedApp = () => {
@@ -55,6 +56,7 @@ const AuthenticatedApp = () => {
         <Route path="/order/:id" element={<OrderDetail />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/track" element={<TrackingPage />} />
+        <Route path="/docs" element={<DevDocs />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
