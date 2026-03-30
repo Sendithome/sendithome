@@ -10,6 +10,7 @@ import PhoneInput from '../components/PhoneInput';
 import PassportVerification from '../components/PassportVerification';
 import CountrySelect from '../components/CountrySelect';
 import { getShippingPrice } from '../utils/pricing';
+import { convertToLocalCurrency } from '../utils/currencyConversion';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -443,7 +444,10 @@ export default function Register() {
                 {errors.home_country && <p className="text-xs text-destructive mt-1">{errors.home_country}</p>}
                 {form.home_country && (
                   <p className="text-xs text-accent font-semibold mt-1.5">
-                    🚚 Shipping to {form.home_country}: <span className="font-bold">${getShippingPrice(form.home_country)} per box</span>
+                    🚚 Shipping to {form.home_country}: <span className="font-bold">${getShippingPrice(form.home_country)} USD per box</span>
+                    {convertToLocalCurrency(getShippingPrice(form.home_country), form.home_country) && (
+                      <span className="text-muted-foreground font-normal"> (≈ {convertToLocalCurrency(getShippingPrice(form.home_country), form.home_country)})</span>
+                    )}
                   </p>
                 )}
               </div>
