@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Package, MapPin, Receipt, CreditCard, Truck } from 'lucide-react';
+import OrderDocuments from '../components/OrderDocuments';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 import TrackingTimeline from '../components/TrackingTimeline';
@@ -161,6 +162,11 @@ export default function OrderDetail() {
           </div>
         </div>
       )}
+
+      {/* Documents */}
+      <div className="mt-4">
+        <OrderDocuments orderId={orderId} />
+      </div>
     </div>
   );
 }
