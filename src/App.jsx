@@ -17,6 +17,7 @@ import Profile from './pages/Profile';
 import TrackingPage from './pages/TrackingPage';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import DevDocs from './pages/DevDocs';
+import HotelDashboard from './pages/HotelDashboard';
 // Add page imports here
 
 const AuthenticatedApp = () => {
@@ -57,6 +58,7 @@ const AuthenticatedApp = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/track" element={<TrackingPage />} />
         <Route path="/docs" element={<DevDocs />} />
+        <Route path="/hotel-dashboard" element={<HotelDashboard />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
