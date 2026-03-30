@@ -65,6 +65,24 @@ const TOP_50_COUNTRIES = [
   { name: 'Greece', flag: '🇬🇷', region: 'Europe' },
 ];
 
+const COUNTRY_DIAL = {
+  'United Arab Emirates': '+971', 'Saudi Arabia': '+966', 'Qatar': '+974',
+  'Kuwait': '+965', 'Bahrain': '+973', 'Oman': '+968', 'Jordan': '+962',
+  'Egypt': '+20', 'Lebanon': '+961', 'Turkey': '+90',
+  'United Kingdom': '+44', 'Germany': '+49', 'France': '+33', 'Italy': '+39',
+  'Spain': '+34', 'Netherlands': '+31', 'Sweden': '+46', 'Norway': '+47',
+  'Switzerland': '+41', 'Belgium': '+32', 'Portugal': '+351', 'Poland': '+48',
+  'Russia': '+7', 'Greece': '+30', 'Ireland': '+353',
+  'India': '+91', 'Pakistan': '+92', 'Bangladesh': '+880', 'Philippines': '+63',
+  'China': '+86', 'Japan': '+81', 'South Korea': '+82', 'Singapore': '+65',
+  'Malaysia': '+60', 'Thailand': '+66', 'Indonesia': '+62', 'Vietnam': '+84',
+  'Sri Lanka': '+94', 'Nepal': '+977',
+  'United States': '+1', 'Canada': '+1', 'Brazil': '+55', 'Mexico': '+52',
+  'Argentina': '+54', 'Colombia': '+57',
+  'Australia': '+61', 'New Zealand': '+64',
+  'South Africa': '+27', 'Nigeria': '+234', 'Kenya': '+254', 'Ghana': '+233',
+};
+
 const REGION_COLORS = {
   'Europe': 'bg-blue-50 text-blue-700 border-blue-100',
   'Middle East': 'bg-amber-50 text-amber-700 border-amber-100',
@@ -89,9 +107,9 @@ export default function HotelDashboard() {
   const [logoUploading, setLogoUploading] = useState(false);
   const [regionFilter, setRegionFilter] = useState('All');
   const [form, setForm] = useState({
-    name: '', address: '', city: '', country: '',
-    contact_email: '', contact_phone: '', star_rating: 5,
-    concierge_name: '', logo_url: '', active: true,
+    name: '', address_line1: '', address_line2: '', city: '', state: '',
+    postal_code: '', country: '', contact_email: '', dial_code: '+971',
+    contact_phone: '', star_rating: 5, concierge_name: '', logo_url: '', active: true,
   });
 
   useEffect(() => {
@@ -106,13 +124,19 @@ export default function HotelDashboard() {
     if (hotels.length > 0) {
       const h = hotels[0];
       setHotel(h);
+      const rawPhone = h.contact_phone || '';
+      const dialMatch = rawPhone.match(/^(\+\d{1,4})\s*(.*)$/);
       setForm({
         name: h.name || '',
-        address: h.address || '',
+        address_line1: h.address || '',
+        address_line2: h.address_line2 || '',
         city: h.city || '',
+        state: h.state || '',
+        postal_code: h.postal_code || '',
         country: h.country || '',
         contact_email: h.contact_email || me.email,
-        contact_phone: h.contact_phone || '',
+        dial_code: dialMatch ? dialMatch[1] : (COUNTRY_DIAL[h.country] || '+971'),
+        contact_phone: dialMatch ? dialMatch[2] : rawPhone,
         star_rating: h.star_rating || 5,
         concierge_name: h.concierge_name || '',
         logo_url: h.logo_url || '',
@@ -123,15 +147,27 @@ export default function HotelDashboard() {
     }
   };
 
-  const update = (k, v) => setForm(prev => ({ ...prev, [k]: v }));
+  const update = (k, v) => {
+    if (k === 'country') {
+      const dial = COUNTRY_DIAL[v] || '';
+      setForm(prev => ({ ...prev, [k]: v, ...(dial ? { dial_code: dial } : {}) }));
+    } else {
+      setForm(prev => ({ ...prev, [k]: v }));
+    }
+  };
 
   const handleSave = async () => {
     setSaving(true);
+    const payload = {
+      ...form,
+      address: form.address_line1,
+      contact_phone: form.dial_code + ' ' + form.contact_phone,
+    };
     if (hotel) {
-      const updated = await base44.entities.Hotel.update(hotel.id, form);
+      const updated = await base44.entities.Hotel.update(hotel.id, payload);
       setHotel(updated);
     } else {
-      const created = await base44.entities.Hotel.create(form);
+      const created = await base44.entities.Hotel.create(payload);
       setHotel(created);
     }
     setSaving(false);
@@ -330,26 +366,51 @@ export default function HotelDashboard() {
                       <Label className="text-xs text-muted-foreground">Concierge Name</Label>
                       <Input value={form.concierge_name} onChange={e => update('concierge_name', e.target.value)} placeholder="John Smith" className="mt-1 h-10 text-sm" />
                     </div>
+
+                    {/* Address */}
                     <div className="sm:col-span-2">
-                      <Label className="text-xs text-muted-foreground">Address</Label>
-                      <Input value={form.address} onChange={e => update('address', e.target.value)} placeholder="Sheikh Zayed Road, Downtown" className="mt-1 h-10 text-sm" />
+                      <Label className="text-xs text-muted-foreground">Address Line 1 *</Label>
+                      <Input value={form.address_line1} onChange={e => update('address_line1', e.target.value)} placeholder="Building number & street name" className="mt-1 h-10 text-sm" />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <Label className="text-xs text-muted-foreground">Address Line 2</Label>
+                      <Input value={form.address_line2} onChange={e => update('address_line2', e.target.value)} placeholder="Area, district, landmark (optional)" className="mt-1 h-10 text-sm" />
                     </div>
                     <div>
                       <Label className="text-xs text-muted-foreground">City *</Label>
                       <Input value={form.city} onChange={e => update('city', e.target.value)} placeholder="Dubai" className="mt-1 h-10 text-sm" />
                     </div>
                     <div>
+                      <Label className="text-xs text-muted-foreground">State / Emirate</Label>
+                      <Input value={form.state} onChange={e => update('state', e.target.value)} placeholder="Dubai" className="mt-1 h-10 text-sm" />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Postal / ZIP Code</Label>
+                      <Input value={form.postal_code} onChange={e => update('postal_code', e.target.value)} placeholder="00000" className="mt-1 h-10 text-sm" />
+                    </div>
+                    <div>
                       <Label className="text-xs text-muted-foreground">Country *</Label>
                       <Input value={form.country} onChange={e => update('country', e.target.value)} placeholder="United Arab Emirates" className="mt-1 h-10 text-sm" />
                     </div>
+
+                    {/* Contact */}
                     <div>
                       <Label className="text-xs text-muted-foreground">Contact Email</Label>
                       <Input value={form.contact_email} onChange={e => update('contact_email', e.target.value)} placeholder="info@hotel.com" className="mt-1 h-10 text-sm" />
                     </div>
                     <div>
                       <Label className="text-xs text-muted-foreground">Contact Phone</Label>
-                      <Input value={form.contact_phone} onChange={e => update('contact_phone', e.target.value)} placeholder="+971 4 000 0000" className="mt-1 h-10 text-sm" />
+                      <div className="flex gap-1.5 mt-1">
+                        <div className="flex items-center gap-1 bg-muted border border-input rounded-md px-2 shrink-0">
+                          <span className="text-xs font-mono text-foreground whitespace-nowrap">{form.dial_code || '+?'}</span>
+                        </div>
+                        <Input value={form.contact_phone} onChange={e => update('contact_phone', e.target.value)} placeholder="50 000 0000" className="h-10 text-sm flex-1" />
+                      </div>
+                      {form.country && COUNTRY_DIAL[form.country] && (
+                        <p className="text-[10px] text-muted-foreground mt-1">Country code auto-set for {form.country}</p>
+                      )}
                     </div>
+
                     <div>
                       <Label className="text-xs text-muted-foreground">Star Rating</Label>
                       <div className="flex gap-1 mt-2">
