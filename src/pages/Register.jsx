@@ -11,6 +11,7 @@ import PassportVerification from '../components/PassportVerification';
 import CountrySelect from '../components/CountrySelect';
 import { getShippingPrice } from '../utils/pricing';
 import { convertToLocalCurrency } from '../utils/currencyConversion';
+import BoxCard from '../components/BoxCard';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -442,13 +443,22 @@ export default function Register() {
                   <CountrySelect value={form.home_country} onChange={(v) => update('home_country', v)} />
                 </div>
                 {errors.home_country && <p className="text-xs text-destructive mt-1">{errors.home_country}</p>}
-                {form.home_country && (
-                  <p className="text-xs text-accent font-semibold mt-1.5">
-                    🚚 Shipping to {form.home_country}: <span className="font-bold">${getShippingPrice(form.home_country)} USD per box</span>
-                    {convertToLocalCurrency(getShippingPrice(form.home_country), form.home_country) && (
-                      <span className="text-muted-foreground font-normal"> (≈ {convertToLocalCurrency(getShippingPrice(form.home_country), form.home_country)})</span>
-                    )}
-                  </p>
+                {form.home_country && getShippingPrice(form.home_country) && (
+                  <div className="mt-3 space-y-2">
+                    <p className="text-xs text-accent font-semibold">
+                      🚚 Shipping to {form.home_country}:{' '}
+                      <span className="font-bold">${getShippingPrice(form.home_country)} USD per box</span>
+                      {convertToLocalCurrency(getShippingPrice(form.home_country), form.home_country) && (
+                        <span className="text-muted-foreground font-normal"> (≈ {convertToLocalCurrency(getShippingPrice(form.home_country), form.home_country)})</span>
+                      )}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">Choose your box size — same flat rate for both:</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <BoxCard size="10kg" selected={false} onSelect={() => {}} />
+                      <BoxCard size="20kg" selected={false} onSelect={() => {}} />
+                    </div>
+                    <p className="text-[10px] text-muted-foreground text-center">You can finalise your box size after uploading receipts.</p>
+                  </div>
                 )}
               </div>
               <div>
