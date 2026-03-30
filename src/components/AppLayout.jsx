@@ -1,13 +1,14 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { initCurrencyRates } from '../utils/currencyConversion';
-import { Package, Home, ClipboardList, User } from 'lucide-react';
+import { Package, Home, ClipboardList, User, Truck } from 'lucide-react';
 import LanguageSelector from './LanguageSelector';
 import { motion } from 'framer-motion';
 
 const NAV_ITEMS = [
   { path: '/', icon: Home, label: 'Home' },
   { path: '/my-orders', icon: ClipboardList, label: 'My Orders' },
+  { path: '/track', icon: Truck, label: 'Track' },
   { path: '/profile', icon: User, label: 'Profile' },
 ];
 

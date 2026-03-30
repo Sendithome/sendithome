@@ -14,6 +14,7 @@ import Payment from './pages/Payment';
 import MyOrders from './pages/MyOrders';
 import OrderDetail from './pages/OrderDetail';
 import Profile from './pages/Profile';
+import TrackingPage from './pages/TrackingPage';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 // Add page imports here
 
@@ -53,6 +54,7 @@ const AuthenticatedApp = () => {
         <Route path="/my-orders" element={<MyOrders />} />
         <Route path="/order/:id" element={<OrderDetail />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/track" element={<TrackingPage />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
