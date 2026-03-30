@@ -172,7 +172,6 @@ export default function HotelDashboard() {
     }
     setSaving(false);
     setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
   };
 
   const handleLogoUpload = async (e) => {
@@ -424,14 +423,29 @@ export default function HotelDashboard() {
                     </div>
                   </div>
 
-                  <Button
-                    onClick={handleSave}
-                    disabled={saving || !form.name || !form.city || !form.country}
-                    className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-10"
-                  >
-                    {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : saved ? <CheckCircle2 className="w-4 h-4 mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                    {saving ? 'Saving…' : saved ? 'Saved!' : hotel ? 'Update Hotel Profile' : 'Save Hotel Profile'}
-                  </Button>
+                  {!saved ? (
+                    <Button
+                      onClick={handleSave}
+                      disabled={saving || !form.name || !form.city || !form.country}
+                      className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-10"
+                    >
+                      {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                      {saving ? 'Saving…' : hotel ? 'Update Hotel Profile' : 'Save Hotel Profile'}
+                    </Button>
+                  ) : (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-center gap-2 text-green-600 bg-green-50 border border-green-200 rounded-xl py-2.5">
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span className="text-sm font-semibold">Hotel profile saved successfully!</span>
+                      </div>
+                      <Button
+                        onClick={() => { setTab('qr'); setSaved(false); }}
+                        className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-xl h-11 text-sm"
+                      >
+                        <QrCode className="w-4 h-4 mr-2" /> Generate Your QR Code →
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
 
