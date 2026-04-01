@@ -396,8 +396,17 @@ export default function HotelDashboard() {
                 <h1 className="text-xl font-black">Welcome to Send It Home</h1>
                 <p className="text-sm opacity-80 mt-1 max-w-md">Enable your hotel guests to ship their purchases directly home. Generate your unique QR code and place it at concierge.</p>
                 <div className="flex gap-2 mt-4">
-                  <button onClick={() => setTab('qr')} className="bg-accent text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-accent/90 transition-colors flex items-center gap-1.5">
-                    <QrCode className="w-3.5 h-3.5" /> Generate QR Code
+                  <button
+                    onClick={() => {
+                      if (!hotel) {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      } else {
+                        setTab('qr');
+                      }
+                    }}
+                    className="bg-accent text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-accent/90 transition-colors flex items-center gap-1.5"
+                  >
+                    <QrCode className="w-3.5 h-3.5" /> {hotel ? 'Generate QR Code' : 'Complete Hotel Profile'}
                   </button>
                   <button onClick={() => setTab('countries')} className="bg-white/10 text-white text-xs font-semibold px-4 py-2 rounded-xl hover:bg-white/20 transition-colors flex items-center gap-1.5">
                     <Globe className="w-3.5 h-3.5" /> View Destinations
@@ -507,10 +516,10 @@ export default function HotelDashboard() {
 
               {!hotel ? (
                 <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 text-center">
-                  <p className="text-sm font-semibold text-amber-800 mb-1">Hotel Profile Required</p>
-                  <p className="text-xs text-amber-700">Please complete your hotel profile first before generating a QR code.</p>
-                  <Button size="sm" variant="outline" className="mt-3" onClick={() => setTab('home')}>
-                    Complete Profile
+                  <p className="text-sm font-semibold text-amber-800 mb-2">Complete Your Hotel Profile First</p>
+                  <p className="text-xs text-amber-700 mb-3">You need to save your hotel details before generating a QR code.</p>
+                  <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground" onClick={() => setTab('home')}>
+                    <Hotel className="w-3.5 h-3.5 mr-1.5" /> Fill in Hotel Registration Form
                   </Button>
                 </div>
               ) : (
