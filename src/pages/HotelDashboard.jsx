@@ -149,7 +149,10 @@ export default function HotelDashboard() {
 
   const update = (k, v) => {
     if (k === 'country') {
-      const dial = COUNTRY_DIAL[v] || '';
+      const matchedKey = Object.keys(COUNTRY_DIAL).find(
+        key => key.toLowerCase() === v.toLowerCase()
+      );
+      const dial = matchedKey ? COUNTRY_DIAL[matchedKey] : '';
       setForm(prev => ({ ...prev, [k]: v, ...(dial ? { dial_code: dial } : {}) }));
     } else {
       setForm(prev => ({ ...prev, [k]: v }));
