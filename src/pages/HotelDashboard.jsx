@@ -271,6 +271,123 @@ export default function HotelDashboard() {
           {tab === 'home' && (
             <motion.div key="home" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="space-y-6">
 
+              {/* Hotel Profile Form — FIRST */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-sm font-bold text-foreground">Hotel Profile</h2>
+                  {hotel && <span className="text-[10px] text-green-600 font-semibold bg-green-50 px-2 py-0.5 rounded-full">✓ Profile saved</span>}
+                </div>
+                <div className="bg-card border border-border rounded-2xl p-5 space-y-4">
+                  {/* Logo */}
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 rounded-2xl border-2 border-dashed border-border bg-muted flex items-center justify-center overflow-hidden shrink-0">
+                      {form.logo_url ? (
+                        <img src={form.logo_url} className="w-full h-full object-cover" alt="logo" />
+                      ) : (
+                        <Hotel className="w-6 h-6 text-muted-foreground" />
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-foreground">Hotel Logo</p>
+                      <label className="mt-1 cursor-pointer inline-flex items-center gap-1.5 text-xs text-accent font-medium hover:underline">
+                        {logoUploading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Upload className="w-3 h-3" />}
+                        {logoUploading ? 'Uploading…' : 'Upload logo'}
+                        <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Hotel Name *</Label>
+                      <Input value={form.name} onChange={e => update('name', e.target.value)} placeholder="Grand Hyatt Dubai" className="mt-1 h-10 text-sm" />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Concierge Name</Label>
+                      <Input value={form.concierge_name} onChange={e => update('concierge_name', e.target.value)} placeholder="John Smith" className="mt-1 h-10 text-sm" />
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <Label className="text-xs text-muted-foreground">Address Line 1 *</Label>
+                      <Input value={form.address_line1} onChange={e => update('address_line1', e.target.value)} placeholder="Building number & street name" className="mt-1 h-10 text-sm" />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <Label className="text-xs text-muted-foreground">Address Line 2</Label>
+                      <Input value={form.address_line2} onChange={e => update('address_line2', e.target.value)} placeholder="Area, district, landmark (optional)" className="mt-1 h-10 text-sm" />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">City *</Label>
+                      <Input value={form.city} onChange={e => update('city', e.target.value)} placeholder="Dubai" className="mt-1 h-10 text-sm" />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">State / Emirate</Label>
+                      <Input value={form.state} onChange={e => update('state', e.target.value)} placeholder="Dubai" className="mt-1 h-10 text-sm" />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Postal / ZIP Code</Label>
+                      <Input value={form.postal_code} onChange={e => update('postal_code', e.target.value)} placeholder="00000" className="mt-1 h-10 text-sm" />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Country *</Label>
+                      <Input value={form.country} onChange={e => update('country', e.target.value)} placeholder="United Arab Emirates" className="mt-1 h-10 text-sm" />
+                    </div>
+
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Contact Email</Label>
+                      <Input value={form.contact_email} onChange={e => update('contact_email', e.target.value)} placeholder="info@hotel.com" className="mt-1 h-10 text-sm" />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Contact Phone</Label>
+                      <div className="flex gap-1.5 mt-1">
+                        <div className="flex items-center gap-1 bg-muted border border-input rounded-md px-2 shrink-0">
+                          <span className="text-xs font-mono text-foreground whitespace-nowrap">{form.dial_code || '+?'}</span>
+                        </div>
+                        <Input value={form.contact_phone} onChange={e => update('contact_phone', e.target.value)} placeholder="50 000 0000" className="h-10 text-sm flex-1" />
+                      </div>
+                      {form.country && COUNTRY_DIAL[form.country] && (
+                        <p className="text-[10px] text-muted-foreground mt-1">Country code auto-set for {form.country}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Star Rating</Label>
+                      <div className="flex gap-1 mt-2">
+                        {[1, 2, 3, 4, 5].map(n => (
+                          <button key={n} onClick={() => update('star_rating', n)}
+                            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${form.star_rating >= n ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground'}`}>
+                            <Star className="w-3.5 h-3.5 fill-current" />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {!saved ? (
+                    <Button
+                      onClick={handleSave}
+                      disabled={saving || !form.name || !form.city || !form.country}
+                      className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-10"
+                    >
+                      {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                      {saving ? 'Saving…' : hotel ? 'Update Hotel Profile' : 'Save Hotel Profile'}
+                    </Button>
+                  ) : (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-center gap-2 text-green-600 bg-green-50 border border-green-200 rounded-xl py-2.5">
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span className="text-sm font-semibold">Hotel profile saved successfully!</span>
+                      </div>
+                      <Button
+                        onClick={() => { setTab('qr'); setSaved(false); }}
+                        className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-xl h-11 text-sm"
+                      >
+                        <QrCode className="w-4 h-4 mr-2" /> Generate Your QR Code →
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Welcome banner */}
               <div className="relative overflow-hidden bg-primary rounded-2xl p-6 text-primary-foreground">
                 <div className="absolute right-0 top-0 w-32 h-32 bg-white/5 rounded-full -translate-y-8 translate-x-8" />
@@ -327,125 +444,6 @@ export default function HotelDashboard() {
                       </div>
                     </div>
                   ))}
-                </div>
-              </div>
-
-              {/* Hotel Profile Form */}
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-sm font-bold text-foreground">Hotel Profile</h2>
-                  {hotel && <span className="text-[10px] text-green-600 font-semibold bg-green-50 px-2 py-0.5 rounded-full">✓ Profile saved</span>}
-                </div>
-                <div className="bg-card border border-border rounded-2xl p-5 space-y-4">
-                  {/* Logo */}
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-2xl border-2 border-dashed border-border bg-muted flex items-center justify-center overflow-hidden shrink-0">
-                      {form.logo_url ? (
-                        <img src={form.logo_url} className="w-full h-full object-cover" alt="logo" />
-                      ) : (
-                        <Hotel className="w-6 h-6 text-muted-foreground" />
-                      )}
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-foreground">Hotel Logo</p>
-                      <label className="mt-1 cursor-pointer inline-flex items-center gap-1.5 text-xs text-accent font-medium hover:underline">
-                        {logoUploading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Upload className="w-3 h-3" />}
-                        {logoUploading ? 'Uploading…' : 'Upload logo'}
-                        <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <Label className="text-xs text-muted-foreground">Hotel Name *</Label>
-                      <Input value={form.name} onChange={e => update('name', e.target.value)} placeholder="Grand Hyatt Dubai" className="mt-1 h-10 text-sm" />
-                    </div>
-                    <div>
-                      <Label className="text-xs text-muted-foreground">Concierge Name</Label>
-                      <Input value={form.concierge_name} onChange={e => update('concierge_name', e.target.value)} placeholder="John Smith" className="mt-1 h-10 text-sm" />
-                    </div>
-
-                    {/* Address */}
-                    <div className="sm:col-span-2">
-                      <Label className="text-xs text-muted-foreground">Address Line 1 *</Label>
-                      <Input value={form.address_line1} onChange={e => update('address_line1', e.target.value)} placeholder="Building number & street name" className="mt-1 h-10 text-sm" />
-                    </div>
-                    <div className="sm:col-span-2">
-                      <Label className="text-xs text-muted-foreground">Address Line 2</Label>
-                      <Input value={form.address_line2} onChange={e => update('address_line2', e.target.value)} placeholder="Area, district, landmark (optional)" className="mt-1 h-10 text-sm" />
-                    </div>
-                    <div>
-                      <Label className="text-xs text-muted-foreground">City *</Label>
-                      <Input value={form.city} onChange={e => update('city', e.target.value)} placeholder="Dubai" className="mt-1 h-10 text-sm" />
-                    </div>
-                    <div>
-                      <Label className="text-xs text-muted-foreground">State / Emirate</Label>
-                      <Input value={form.state} onChange={e => update('state', e.target.value)} placeholder="Dubai" className="mt-1 h-10 text-sm" />
-                    </div>
-                    <div>
-                      <Label className="text-xs text-muted-foreground">Postal / ZIP Code</Label>
-                      <Input value={form.postal_code} onChange={e => update('postal_code', e.target.value)} placeholder="00000" className="mt-1 h-10 text-sm" />
-                    </div>
-                    <div>
-                      <Label className="text-xs text-muted-foreground">Country *</Label>
-                      <Input value={form.country} onChange={e => update('country', e.target.value)} placeholder="United Arab Emirates" className="mt-1 h-10 text-sm" />
-                    </div>
-
-                    {/* Contact */}
-                    <div>
-                      <Label className="text-xs text-muted-foreground">Contact Email</Label>
-                      <Input value={form.contact_email} onChange={e => update('contact_email', e.target.value)} placeholder="info@hotel.com" className="mt-1 h-10 text-sm" />
-                    </div>
-                    <div>
-                      <Label className="text-xs text-muted-foreground">Contact Phone</Label>
-                      <div className="flex gap-1.5 mt-1">
-                        <div className="flex items-center gap-1 bg-muted border border-input rounded-md px-2 shrink-0">
-                          <span className="text-xs font-mono text-foreground whitespace-nowrap">{form.dial_code || '+?'}</span>
-                        </div>
-                        <Input value={form.contact_phone} onChange={e => update('contact_phone', e.target.value)} placeholder="50 000 0000" className="h-10 text-sm flex-1" />
-                      </div>
-                      {form.country && COUNTRY_DIAL[form.country] && (
-                        <p className="text-[10px] text-muted-foreground mt-1">Country code auto-set for {form.country}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label className="text-xs text-muted-foreground">Star Rating</Label>
-                      <div className="flex gap-1 mt-2">
-                        {[1, 2, 3, 4, 5].map(n => (
-                          <button key={n} onClick={() => update('star_rating', n)}
-                            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${form.star_rating >= n ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground'}`}>
-                            <Star className="w-3.5 h-3.5 fill-current" />
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {!saved ? (
-                    <Button
-                      onClick={handleSave}
-                      disabled={saving || !form.name || !form.city || !form.country}
-                      className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-10"
-                    >
-                      {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                      {saving ? 'Saving…' : hotel ? 'Update Hotel Profile' : 'Save Hotel Profile'}
-                    </Button>
-                  ) : (
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-center gap-2 text-green-600 bg-green-50 border border-green-200 rounded-xl py-2.5">
-                        <CheckCircle2 className="w-4 h-4" />
-                        <span className="text-sm font-semibold">Hotel profile saved successfully!</span>
-                      </div>
-                      <Button
-                        onClick={() => { setTab('qr'); setSaved(false); }}
-                        className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-xl h-11 text-sm"
-                      >
-                        <QrCode className="w-4 h-4 mr-2" /> Generate Your QR Code →
-                      </Button>
-                    </div>
-                  )}
                 </div>
               </div>
 
