@@ -102,6 +102,7 @@ export default function HotelDashboard() {
   const [hotel, setHotel] = useState(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
   const [qrUrl, setQrUrl] = useState(null);
   const [qrLoading, setQrLoading] = useState(false);
   const [logoUploading, setLogoUploading] = useState(false);
@@ -196,6 +197,7 @@ export default function HotelDashboard() {
     }
     setSaving(false);
     setSaved(true);
+    setShowSummary(true);
   };
 
   const handleLogoUpload = async (e) => {
@@ -451,20 +453,65 @@ export default function HotelDashboard() {
                       {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
                       {saving ? 'Saving…' : hotel ? 'Update Hotel Profile' : 'Save Hotel Profile'}
                     </Button>
-                  ) : (
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-center gap-2 text-green-600 bg-green-50 border border-green-200 rounded-xl py-2.5">
-                        <CheckCircle2 className="w-4 h-4" />
-                        <span className="text-sm font-semibold">Hotel profile saved successfully!</span>
+                  ) : showSummary ? (
+                    <div className="space-y-4">
+                      {/* Success banner */}
+                      <div className="flex items-center gap-2 text-green-700 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+                        <CheckCircle2 className="w-4 h-4 shrink-0" />
+                        <span className="text-sm font-semibold">Hotel profile saved! Please review your details below.</span>
                       </div>
-                      <Button
-                        onClick={() => { setTab('qr'); setSaved(false); }}
-                        className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-xl h-11 text-sm"
-                      >
-                        <QrCode className="w-4 h-4 mr-2" /> Generate Your QR Code →
-                      </Button>
+
+                      {/* Summary card */}
+                      <div className="border border-border rounded-xl overflow-hidden text-sm">
+                        <div className="bg-muted/50 px-4 py-2 border-b border-border">
+                          <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Hotel Details</p>
+                        </div>
+                        <div className="divide-y divide-border">
+                          {[
+                            { label: 'Hotel Name', value: form.name },
+                            { label: 'Star Rating', value: '★'.repeat(form.star_rating || 0) },
+                            { label: 'Address', value: [form.address_line1, form.address_line2, form.city, form.state, form.postal_code, form.country].filter(Boolean).join(', ') },
+                            { label: 'Official Email', value: form.official_email },
+                            { label: 'Official Phone', value: form.official_phone ? `${form.dial_code} ${form.official_phone}` : '' },
+                            { label: 'Official Landline', value: form.official_landline },
+                            { label: 'Registered Email (Shipments)', value: form.registered_email },
+                          ].filter(r => r.value).map(row => (
+                            <div key={row.label} className="flex justify-between gap-4 px-4 py-2">
+                              <span className="text-muted-foreground shrink-0">{row.label}</span>
+                              <span className="font-medium text-foreground text-right">{row.value}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Key Contacts Summary */}
+                        {[{ title: 'General Manager', name: form.gm_name, email: form.gm_email, phone: form.gm_phone, whatsapp: form.gm_whatsapp },
+                          { title: 'Head of Concierge', name: form.hoc_name, email: form.hoc_email, phone: form.hoc_phone, whatsapp: form.hoc_whatsapp },
+                          { title: 'Front Desk Manager', name: form.fdm_name, email: form.fdm_email, phone: form.fdm_phone, whatsapp: form.fdm_whatsapp },
+                        ].filter(c => c.name || c.email).map(contact => (
+                          <div key={contact.title}>
+                            <div className="bg-muted/30 px-4 py-1.5 border-t border-border">
+                              <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{contact.title}</p>
+                            </div>
+                            {[{ label: 'Name', value: contact.name }, { label: 'Email', value: contact.email }, { label: 'Phone', value: contact.phone }, { label: 'WhatsApp', value: contact.whatsapp }].filter(r => r.value).map(row => (
+                              <div key={row.label} className="flex justify-between gap-4 px-4 py-2 border-t border-border">
+                                <span className="text-muted-foreground shrink-0 text-xs">{row.label}</span>
+                                <span className="font-medium text-foreground text-right text-xs">{row.value}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => { setSaved(false); setShowSummary(false); }} className="flex-1 rounded-xl h-10 text-sm">
+                          Edit Details
+                        </Button>
+                        <Button onClick={() => { setTab('qr'); setSaved(false); setShowSummary(false); }} className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-xl h-10 text-sm">
+                          <QrCode className="w-4 h-4 mr-1.5" /> Generate QR Code →
+                        </Button>
+                      </div>
                     </div>
-                  )}
+                  ) : null}
                 </div>
               </div>
 
