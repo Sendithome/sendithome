@@ -114,6 +114,7 @@ export default function HotelDashboard() {
     dial_code: '+971', contact_phone: '',
     star_rating: 5, concierge_name: '', logo_url: '', active: true,
     gm_name: '', gm_email: '', gm_phone: '', gm_whatsapp: '',
+    agm_name: '', agm_email: '', agm_phone: '', agm_whatsapp: '',
     hoc_name: '', hoc_email: '', hoc_phone: '', hoc_whatsapp: '',
     fdm_name: '', fdm_email: '', fdm_phone: '', fdm_whatsapp: '',
   });
@@ -154,6 +155,10 @@ export default function HotelDashboard() {
         gm_email: h.gm_email || '',
         gm_phone: h.gm_phone || '',
         gm_whatsapp: h.gm_whatsapp || '',
+        agm_name: h.agm_name || '',
+        agm_email: h.agm_email || '',
+        agm_phone: h.agm_phone || '',
+        agm_whatsapp: h.agm_whatsapp || '',
         hoc_name: h.hoc_name || '',
         hoc_email: h.hoc_email || '',
         hoc_phone: h.hoc_phone || '',
@@ -421,6 +426,17 @@ export default function HotelDashboard() {
                       </div>
                     </div>
 
+                    {/* Assistant General Manager */}
+                    <div className="bg-muted/40 rounded-xl p-3 space-y-2">
+                      <p className="text-xs font-semibold text-foreground">Assistant General Manager</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div><Label className="text-xs text-muted-foreground">Full Name</Label><Input value={form.agm_name} onChange={e => update('agm_name', e.target.value)} placeholder="Jane Doe" className="mt-1 h-9 text-sm" /></div>
+                        <div><Label className="text-xs text-muted-foreground">Official Email</Label><Input value={form.agm_email} onChange={e => update('agm_email', e.target.value)} placeholder="agm@hotel.com" className="mt-1 h-9 text-sm" /></div>
+                        <div><Label className="text-xs text-muted-foreground">Phone Number</Label><Input value={form.agm_phone} onChange={e => update('agm_phone', e.target.value)} placeholder="+971 50 000 0000" className="mt-1 h-9 text-sm" /></div>
+                        <div><Label className="text-xs text-muted-foreground">WhatsApp Number</Label><Input value={form.agm_whatsapp} onChange={e => update('agm_whatsapp', e.target.value)} placeholder="+971 50 000 0000" className="mt-1 h-9 text-sm" /></div>
+                      </div>
+                    </div>
+
                     {/* Head of Concierge */}
                     <div className="bg-muted/40 rounded-xl p-3 space-y-2">
                       <p className="text-xs font-semibold text-foreground">Head of Concierge</p>
@@ -485,6 +501,7 @@ export default function HotelDashboard() {
 
                         {/* Key Contacts Summary */}
                         {[{ title: 'General Manager', name: form.gm_name, email: form.gm_email, phone: form.gm_phone, whatsapp: form.gm_whatsapp },
+                          { title: 'Assistant General Manager', name: form.agm_name, email: form.agm_email, phone: form.agm_phone, whatsapp: form.agm_whatsapp },
                           { title: 'Head of Concierge', name: form.hoc_name, email: form.hoc_email, phone: form.hoc_phone, whatsapp: form.hoc_whatsapp },
                           { title: 'Front Desk Manager', name: form.fdm_name, email: form.fdm_email, phone: form.fdm_phone, whatsapp: form.fdm_whatsapp },
                         ].filter(c => c.name || c.email).map(contact => (

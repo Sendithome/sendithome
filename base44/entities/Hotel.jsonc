@@ -60,6 +60,18 @@
     "gm_whatsapp": {
       "type": "string"
     },
+    "agm_name": {
+      "type": "string"
+    },
+    "agm_email": {
+      "type": "string"
+    },
+    "agm_phone": {
+      "type": "string"
+    },
+    "agm_whatsapp": {
+      "type": "string"
+    },
     "hoc_name": {
       "type": "string"
     },
