@@ -108,8 +108,13 @@ export default function HotelDashboard() {
   const [regionFilter, setRegionFilter] = useState('All');
   const [form, setForm] = useState({
     name: '', address_line1: '', address_line2: '', city: '', state: '',
-    postal_code: '', country: '', contact_email: '', dial_code: '+971',
-    contact_phone: '', star_rating: 5, concierge_name: '', logo_url: '', active: true,
+    postal_code: '', country: '',
+    official_email: '', official_phone: '', official_landline: '', registered_email: '',
+    dial_code: '+971', contact_phone: '',
+    star_rating: 5, concierge_name: '', logo_url: '', active: true,
+    gm_name: '', gm_email: '', gm_phone: '', gm_whatsapp: '',
+    hoc_name: '', hoc_email: '', hoc_phone: '', hoc_whatsapp: '',
+    fdm_name: '', fdm_email: '', fdm_phone: '', fdm_whatsapp: '',
   });
 
   useEffect(() => {
@@ -134,13 +139,28 @@ export default function HotelDashboard() {
         state: h.state || '',
         postal_code: h.postal_code || '',
         country: h.country || '',
-        contact_email: h.contact_email || me.email,
+        official_email: h.official_email || '',
+        official_phone: h.official_phone || '',
+        official_landline: h.official_landline || '',
+        registered_email: h.registered_email || '',
         dial_code: dialMatch ? dialMatch[1] : (COUNTRY_DIAL[h.country] || '+971'),
         contact_phone: dialMatch ? dialMatch[2] : rawPhone,
         star_rating: h.star_rating || 5,
         concierge_name: h.concierge_name || '',
         logo_url: h.logo_url || '',
         active: h.active !== false,
+        gm_name: h.gm_name || '',
+        gm_email: h.gm_email || '',
+        gm_phone: h.gm_phone || '',
+        gm_whatsapp: h.gm_whatsapp || '',
+        hoc_name: h.hoc_name || '',
+        hoc_email: h.hoc_email || '',
+        hoc_phone: h.hoc_phone || '',
+        hoc_whatsapp: h.hoc_whatsapp || '',
+        fdm_name: h.fdm_name || '',
+        fdm_email: h.fdm_email || '',
+        fdm_phone: h.fdm_phone || '',
+        fdm_whatsapp: h.fdm_whatsapp || '',
       });
     } else {
       setForm(prev => ({ ...prev, contact_email: me.email }));
@@ -165,6 +185,7 @@ export default function HotelDashboard() {
       ...form,
       address: form.address_line1,
       contact_phone: form.dial_code + ' ' + form.contact_phone,
+      contact_email: form.official_email,
     };
     if (hotel) {
       const updated = await base44.entities.Hotel.update(hotel.id, payload);
@@ -336,18 +357,36 @@ export default function HotelDashboard() {
                     </div>
 
                     <div>
-                      <Label className="text-xs text-muted-foreground">Contact Email</Label>
-                      <Input value={form.contact_email} onChange={e => update('contact_email', e.target.value)} placeholder="info@hotel.com" className="mt-1 h-10 text-sm" />
+                      <Label className="text-xs text-muted-foreground">Official Hotel Email</Label>
+                      <Input value={form.official_email} onChange={e => update('official_email', e.target.value)} placeholder="info@hotel.com" className="mt-1 h-10 text-sm" />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Contact Phone</Label>
+                      <Label className="text-xs text-muted-foreground">Official Hotel Phone</Label>
+                      <div className="flex gap-1.5 mt-1">
+                        <div className="flex items-center gap-1 bg-muted border border-input rounded-md px-2 shrink-0">
+                          <span className="text-xs font-mono text-foreground whitespace-nowrap">{form.dial_code || '+?'}</span>
+                        </div>
+                        <Input value={form.official_phone} onChange={e => update('official_phone', e.target.value)} placeholder="04 000 0000" className="h-10 text-sm flex-1" />
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Official Landline Number</Label>
+                      <Input value={form.official_landline} onChange={e => update('official_landline', e.target.value)} placeholder="+971 4 000 0000" className="mt-1 h-10 text-sm" />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Registered Email <span className="text-accent">(for shipment paperwork)</span></Label>
+                      <Input value={form.registered_email} onChange={e => update('registered_email', e.target.value)} placeholder="shipments@hotel.com" className="mt-1 h-10 text-sm" />
+                      <p className="text-[10px] text-muted-foreground mt-1">Shipment details will be sent to this email for printing.</p>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Hotel Phone (with country code)</Label>
                       <div className="flex gap-1.5 mt-1">
                         <div className="flex items-center gap-1 bg-muted border border-input rounded-md px-2 shrink-0">
                           <span className="text-xs font-mono text-foreground whitespace-nowrap">{form.dial_code || '+?'}</span>
                         </div>
                         <Input value={form.contact_phone} onChange={e => update('contact_phone', e.target.value)} placeholder="50 000 0000" className="h-10 text-sm flex-1" />
                       </div>
-                      {form.country && COUNTRY_DIAL[form.country] && (
+                      {form.country && COUNTRY_DIAL[Object.keys(COUNTRY_DIAL).find(k => k.toLowerCase() === form.country.toLowerCase())] && (
                         <p className="text-[10px] text-muted-foreground mt-1">Country code auto-set for {form.country}</p>
                       )}
                     </div>
@@ -356,11 +395,49 @@ export default function HotelDashboard() {
                       <Label className="text-xs text-muted-foreground">Star Rating</Label>
                       <div className="flex gap-1 mt-2">
                         {[1, 2, 3, 4, 5].map(n => (
-                          <button key={n} onClick={() => update('star_rating', n)}
+                          <button type="button" key={n} onClick={() => update('star_rating', n)}
                             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${form.star_rating >= n ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground'}`}>
                             <Star className="w-3.5 h-3.5 fill-current" />
                           </button>
                         ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Key Contacts Section */}
+                  <div className="border-t border-border pt-4 space-y-4">
+                    <p className="text-xs font-bold text-foreground uppercase tracking-wide">Key Contacts</p>
+
+                    {/* General Manager */}
+                    <div className="bg-muted/40 rounded-xl p-3 space-y-2">
+                      <p className="text-xs font-semibold text-foreground">General Manager</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div><Label className="text-xs text-muted-foreground">Full Name</Label><Input value={form.gm_name} onChange={e => update('gm_name', e.target.value)} placeholder="Jane Doe" className="mt-1 h-9 text-sm" /></div>
+                        <div><Label className="text-xs text-muted-foreground">Official Email</Label><Input value={form.gm_email} onChange={e => update('gm_email', e.target.value)} placeholder="gm@hotel.com" className="mt-1 h-9 text-sm" /></div>
+                        <div><Label className="text-xs text-muted-foreground">Phone Number</Label><Input value={form.gm_phone} onChange={e => update('gm_phone', e.target.value)} placeholder="+971 50 000 0000" className="mt-1 h-9 text-sm" /></div>
+                        <div><Label className="text-xs text-muted-foreground">WhatsApp Number</Label><Input value={form.gm_whatsapp} onChange={e => update('gm_whatsapp', e.target.value)} placeholder="+971 50 000 0000" className="mt-1 h-9 text-sm" /></div>
+                      </div>
+                    </div>
+
+                    {/* Head of Concierge */}
+                    <div className="bg-muted/40 rounded-xl p-3 space-y-2">
+                      <p className="text-xs font-semibold text-foreground">Head of Concierge</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div><Label className="text-xs text-muted-foreground">Full Name</Label><Input value={form.hoc_name} onChange={e => update('hoc_name', e.target.value)} placeholder="John Smith" className="mt-1 h-9 text-sm" /></div>
+                        <div><Label className="text-xs text-muted-foreground">Official Email</Label><Input value={form.hoc_email} onChange={e => update('hoc_email', e.target.value)} placeholder="concierge@hotel.com" className="mt-1 h-9 text-sm" /></div>
+                        <div><Label className="text-xs text-muted-foreground">Phone Number</Label><Input value={form.hoc_phone} onChange={e => update('hoc_phone', e.target.value)} placeholder="+971 50 000 0000" className="mt-1 h-9 text-sm" /></div>
+                        <div><Label className="text-xs text-muted-foreground">WhatsApp Number</Label><Input value={form.hoc_whatsapp} onChange={e => update('hoc_whatsapp', e.target.value)} placeholder="+971 50 000 0000" className="mt-1 h-9 text-sm" /></div>
+                      </div>
+                    </div>
+
+                    {/* Front Desk Manager */}
+                    <div className="bg-muted/40 rounded-xl p-3 space-y-2">
+                      <p className="text-xs font-semibold text-foreground">Front Desk Manager</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div><Label className="text-xs text-muted-foreground">Full Name</Label><Input value={form.fdm_name} onChange={e => update('fdm_name', e.target.value)} placeholder="Sarah Johnson" className="mt-1 h-9 text-sm" /></div>
+                        <div><Label className="text-xs text-muted-foreground">Official Email</Label><Input value={form.fdm_email} onChange={e => update('fdm_email', e.target.value)} placeholder="frontdesk@hotel.com" className="mt-1 h-9 text-sm" /></div>
+                        <div><Label className="text-xs text-muted-foreground">Phone Number</Label><Input value={form.fdm_phone} onChange={e => update('fdm_phone', e.target.value)} placeholder="+971 50 000 0000" className="mt-1 h-9 text-sm" /></div>
+                        <div><Label className="text-xs text-muted-foreground">WhatsApp Number</Label><Input value={form.fdm_whatsapp} onChange={e => update('fdm_whatsapp', e.target.value)} placeholder="+971 50 000 0000" className="mt-1 h-9 text-sm" /></div>
                       </div>
                     </div>
                   </div>

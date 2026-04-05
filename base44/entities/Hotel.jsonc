@@ -1,0 +1,97 @@
+{
+  "name": "Hotel",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "star_rating": {
+      "type": "number"
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "cover_image_url": {
+      "type": "string"
+    },
+    "official_email": {
+      "type": "string",
+      "description": "Official hotel email address"
+    },
+    "official_phone": {
+      "type": "string",
+      "description": "Official hotel phone number"
+    },
+    "official_landline": {
+      "type": "string",
+      "description": "Official hotel landline number"
+    },
+    "registered_email": {
+      "type": "string",
+      "description": "Email where shipment paperwork is sent"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "contact_phone": {
+      "type": "string"
+    },
+    "concierge_name": {
+      "type": "string"
+    },
+    "gm_name": {
+      "type": "string"
+    },
+    "gm_email": {
+      "type": "string"
+    },
+    "gm_phone": {
+      "type": "string"
+    },
+    "gm_whatsapp": {
+      "type": "string"
+    },
+    "hoc_name": {
+      "type": "string"
+    },
+    "hoc_email": {
+      "type": "string"
+    },
+    "hoc_phone": {
+      "type": "string"
+    },
+    "hoc_whatsapp": {
+      "type": "string"
+    },
+    "fdm_name": {
+      "type": "string"
+    },
+    "fdm_email": {
+      "type": "string"
+    },
+    "fdm_phone": {
+      "type": "string"
+    },
+    "fdm_whatsapp": {
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "city",
+    "country"
+  ]
+}
