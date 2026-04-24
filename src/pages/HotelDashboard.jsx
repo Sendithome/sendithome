@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, Globe, QrCode, Hotel, MapPin, Save, Download, RefreshCw, CheckCircle2, Loader2, Upload, Star, Building2 } from 'lucide-react';
+import { Home, QrCode, Hotel, MapPin, Save, Download, RefreshCw, CheckCircle2, Loader2, Upload, Star, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,61 +8,7 @@ import { base44 } from '@/api/base44Client';
 
 const TABS = [
   { id: 'home', label: 'Home', icon: Home },
-  { id: 'countries', label: 'Top 50 Countries', icon: Globe },
   { id: 'qr', label: 'QR Generator', icon: QrCode },
-];
-
-const TOP_50_COUNTRIES = [
-  { name: 'United Kingdom', flag: '🇬🇧', region: 'Europe' },
-  { name: 'United States', flag: '🇺🇸', region: 'Americas' },
-  { name: 'India', flag: '🇮🇳', region: 'Asia' },
-  { name: 'Germany', flag: '🇩🇪', region: 'Europe' },
-  { name: 'France', flag: '🇫🇷', region: 'Europe' },
-  { name: 'Australia', flag: '🇦🇺', region: 'Oceania' },
-  { name: 'Canada', flag: '🇨🇦', region: 'Americas' },
-  { name: 'Saudi Arabia', flag: '🇸🇦', region: 'Middle East' },
-  { name: 'Qatar', flag: '🇶🇦', region: 'Middle East' },
-  { name: 'Kuwait', flag: '🇰🇼', region: 'Middle East' },
-  { name: 'Bahrain', flag: '🇧🇭', region: 'Middle East' },
-  { name: 'Oman', flag: '🇴🇲', region: 'Middle East' },
-  { name: 'Jordan', flag: '🇯🇴', region: 'Middle East' },
-  { name: 'Egypt', flag: '🇪🇬', region: 'Middle East' },
-  { name: 'Lebanon', flag: '🇱🇧', region: 'Middle East' },
-  { name: 'Pakistan', flag: '🇵🇰', region: 'Asia' },
-  { name: 'Bangladesh', flag: '🇧🇩', region: 'Asia' },
-  { name: 'Philippines', flag: '🇵🇭', region: 'Asia' },
-  { name: 'China', flag: '🇨🇳', region: 'Asia' },
-  { name: 'Japan', flag: '🇯🇵', region: 'Asia' },
-  { name: 'South Korea', flag: '🇰🇷', region: 'Asia' },
-  { name: 'Singapore', flag: '🇸🇬', region: 'Asia' },
-  { name: 'Malaysia', flag: '🇲🇾', region: 'Asia' },
-  { name: 'Thailand', flag: '🇹🇭', region: 'Asia' },
-  { name: 'Indonesia', flag: '🇮🇩', region: 'Asia' },
-  { name: 'Vietnam', flag: '🇻🇳', region: 'Asia' },
-  { name: 'Italy', flag: '🇮🇹', region: 'Europe' },
-  { name: 'Spain', flag: '🇪🇸', region: 'Europe' },
-  { name: 'Netherlands', flag: '🇳🇱', region: 'Europe' },
-  { name: 'Sweden', flag: '🇸🇪', region: 'Europe' },
-  { name: 'Norway', flag: '🇳🇴', region: 'Europe' },
-  { name: 'Switzerland', flag: '🇨🇭', region: 'Europe' },
-  { name: 'Belgium', flag: '🇧🇪', region: 'Europe' },
-  { name: 'Portugal', flag: '🇵🇹', region: 'Europe' },
-  { name: 'Poland', flag: '🇵🇱', region: 'Europe' },
-  { name: 'Russia', flag: '🇷🇺', region: 'Europe' },
-  { name: 'Turkey', flag: '🇹🇷', region: 'Europe' },
-  { name: 'South Africa', flag: '🇿🇦', region: 'Africa' },
-  { name: 'Nigeria', flag: '🇳🇬', region: 'Africa' },
-  { name: 'Kenya', flag: '🇰🇪', region: 'Africa' },
-  { name: 'Ghana', flag: '🇬🇭', region: 'Africa' },
-  { name: 'Brazil', flag: '🇧🇷', region: 'Americas' },
-  { name: 'Mexico', flag: '🇲🇽', region: 'Americas' },
-  { name: 'Argentina', flag: '🇦🇷', region: 'Americas' },
-  { name: 'Colombia', flag: '🇨🇴', region: 'Americas' },
-  { name: 'New Zealand', flag: '🇳🇿', region: 'Oceania' },
-  { name: 'Sri Lanka', flag: '🇱🇰', region: 'Asia' },
-  { name: 'Nepal', flag: '🇳🇵', region: 'Asia' },
-  { name: 'Ireland', flag: '🇮🇪', region: 'Europe' },
-  { name: 'Greece', flag: '🇬🇷', region: 'Europe' },
 ];
 
 const COUNTRY_DIAL = {
@@ -83,15 +29,6 @@ const COUNTRY_DIAL = {
   'South Africa': '+27', 'Nigeria': '+234', 'Kenya': '+254', 'Ghana': '+233',
 };
 
-const REGION_COLORS = {
-  'Europe': 'bg-blue-50 text-blue-700 border-blue-100',
-  'Middle East': 'bg-amber-50 text-amber-700 border-amber-100',
-  'Asia': 'bg-green-50 text-green-700 border-green-100',
-  'Americas': 'bg-purple-50 text-purple-700 border-purple-100',
-  'Africa': 'bg-orange-50 text-orange-700 border-orange-100',
-  'Oceania': 'bg-cyan-50 text-cyan-700 border-cyan-100',
-};
-
 function getQRUrl(text, size = 300) {
   return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}&margin=12&format=png`;
 }
@@ -106,7 +43,6 @@ export default function HotelDashboard() {
   const [qrUrl, setQrUrl] = useState(null);
   const [qrLoading, setQrLoading] = useState(false);
   const [logoUploading, setLogoUploading] = useState(false);
-  const [regionFilter, setRegionFilter] = useState('All');
   const [form, setForm] = useState({
     name: '', address_line1: '', address_line2: '', area: '', city: '', state: '',
     postal_code: '', country: '', floor_tower_complex: '',
@@ -238,11 +174,6 @@ export default function HotelDashboard() {
     a.click();
     URL.revokeObjectURL(url);
   };
-
-  const regions = ['All', ...Array.from(new Set(TOP_50_COUNTRIES.map(c => c.region)))];
-  const filteredCountries = regionFilter === 'All'
-    ? TOP_50_COUNTRIES
-    : TOP_50_COUNTRIES.filter(c => c.region === regionFilter);
 
   const qrLandingUrl = hotel ? `${window.location.origin}/hotel/${hotel.id}` : null;
 
@@ -535,9 +466,7 @@ export default function HotelDashboard() {
                   >
                     <QrCode className="w-3.5 h-3.5" /> {hotel ? 'Generate QR Code' : 'Complete Hotel Profile'}
                   </button>
-                  <button onClick={() => setTab('countries')} className="bg-white/10 text-white text-xs font-semibold px-4 py-2 rounded-xl hover:bg-white/20 transition-colors flex items-center gap-1.5">
-                    <Globe className="w-3.5 h-3.5" /> View Destinations
-                  </button>
+
                 </div>
               </div>
 
@@ -583,53 +512,6 @@ export default function HotelDashboard() {
                 </div>
               </div>
 
-            </motion.div>
-          )}
-
-          {/* ── COUNTRIES TAB ── */}
-          {tab === 'countries' && (
-            <motion.div key="countries" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="space-y-5">
-              <div>
-                <h2 className="text-lg font-bold text-foreground">Top 50 Shipping Destinations</h2>
-                <p className="text-sm text-muted-foreground mt-1">Your guests can ship their purchases to any of these countries directly from your hotel.</p>
-              </div>
-
-              {/* Region filter */}
-              <div className="flex flex-wrap gap-2">
-                {regions.map(r => (
-                  <button
-                    key={r}
-                    onClick={() => setRegionFilter(r)}
-                    className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${
-                      regionFilter === r ? 'bg-accent text-accent-foreground border-accent' : 'bg-background border-border text-muted-foreground hover:border-accent/50'
-                    }`}
-                  >
-                    {r}
-                  </button>
-                ))}
-              </div>
-
-              {/* Countries grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {filteredCountries.map((c, i) => (
-                  <motion.div
-                    key={c.name}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: i * 0.02 }}
-                    className="flex items-center gap-2.5 bg-card border border-border rounded-xl px-3 py-2.5 hover:border-accent/30 transition-colors"
-                  >
-                    <span className="text-2xl shrink-0">{c.flag}</span>
-                    <div className="min-w-0">
-                      <p className="text-xs font-semibold text-foreground truncate">{c.name}</p>
-                      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full border ${REGION_COLORS[c.region] || 'bg-muted text-muted-foreground'}`}>
-                        {c.region}
-                      </span>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-              <p className="text-xs text-center text-muted-foreground pb-4">Showing {filteredCountries.length} of 50 destinations · More countries available on request</p>
             </motion.div>
           )}
 
