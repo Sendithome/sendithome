@@ -422,17 +422,6 @@ export default function HotelDashboard() {
                       </div>
                     </div>
 
-                    {/* Head of Concierge */}
-                    <div className="bg-muted/40 rounded-xl p-3 space-y-2">
-                      <p className="text-xs font-semibold text-foreground">Head of Concierge</p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        <div><Label className="text-xs text-muted-foreground">Full Name *</Label><Input value={form.hoc_name} onChange={e => update('hoc_name', e.target.value)} placeholder="John Smith" className="mt-1 h-9 text-sm" /></div>
-                        <div><Label className="text-xs text-muted-foreground">Official Email *</Label><Input value={form.hoc_email} onChange={e => update('hoc_email', e.target.value)} placeholder="concierge@hotel.com" className="mt-1 h-9 text-sm" /></div>
-                        <div><Label className="text-xs text-muted-foreground">Phone Number *</Label><Input value={form.hoc_phone} onChange={e => update('hoc_phone', e.target.value)} placeholder="+971 50 000 0000" className="mt-1 h-9 text-sm" /></div>
-                        <div><Label className="text-xs text-muted-foreground">WhatsApp Number *</Label><Input value={form.hoc_whatsapp} onChange={e => update('hoc_whatsapp', e.target.value)} placeholder="+971 50 000 0000" className="mt-1 h-9 text-sm" /></div>
-                      </div>
-                    </div>
-
                     {/* Front Desk Manager */}
                     <div className="bg-muted/40 rounded-xl p-3 space-y-2">
                       <p className="text-xs font-semibold text-foreground">Front Desk Manager</p>
@@ -443,12 +432,23 @@ export default function HotelDashboard() {
                         <div><Label className="text-xs text-muted-foreground">WhatsApp Number *</Label><Input value={form.fdm_whatsapp} onChange={e => update('fdm_whatsapp', e.target.value)} placeholder="+971 50 000 0000" className="mt-1 h-9 text-sm" /></div>
                       </div>
                     </div>
+
+                    {/* Head of Concierge / Bell Captain */}
+                    <div className="bg-muted/40 rounded-xl p-3 space-y-2">
+                      <p className="text-xs font-semibold text-foreground">Head of Concierge / Bell Captain</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div><Label className="text-xs text-muted-foreground">Full Name</Label><Input value={form.hoc_name} onChange={e => update('hoc_name', e.target.value)} placeholder="John Smith" className="mt-1 h-9 text-sm" /></div>
+                        <div><Label className="text-xs text-muted-foreground">Official Email</Label><Input value={form.hoc_email} onChange={e => update('hoc_email', e.target.value)} placeholder="concierge@hotel.com" className="mt-1 h-9 text-sm" /></div>
+                        <div><Label className="text-xs text-muted-foreground">Phone Number</Label><Input value={form.hoc_phone} onChange={e => update('hoc_phone', e.target.value)} placeholder="+971 50 000 0000" className="mt-1 h-9 text-sm" /></div>
+                        <div><Label className="text-xs text-muted-foreground">WhatsApp Number</Label><Input value={form.hoc_whatsapp} onChange={e => update('hoc_whatsapp', e.target.value)} placeholder="+971 50 000 0000" className="mt-1 h-9 text-sm" /></div>
+                      </div>
+                    </div>
                   </div>
 
                   {!saved ? (
                     <Button
                       onClick={handleSave}
-                      disabled={saving || !form.name || !form.address_line1 || !form.area || !form.city || !form.state || !form.postal_code || !form.country || !form.gm_name || !form.gm_email || !form.gm_phone || !form.gm_whatsapp || !form.agm_name || !form.agm_email || !form.agm_phone || !form.agm_whatsapp || !form.hoc_name || !form.hoc_email || !form.hoc_phone || !form.hoc_whatsapp || !form.fdm_name || !form.fdm_email || !form.fdm_phone || !form.fdm_whatsapp}
+                      disabled={saving || !form.name || !form.address_line1 || !form.area || !form.city || !form.state || !form.postal_code || !form.country || !form.gm_name || !form.gm_email || !form.gm_phone || !form.gm_whatsapp || !form.agm_name || !form.agm_email || !form.agm_phone || !form.agm_whatsapp  || !form.fdm_name || !form.fdm_email || !form.fdm_phone || !form.fdm_whatsapp}
                       className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-10"
                     >
                       {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
