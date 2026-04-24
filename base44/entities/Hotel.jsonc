@@ -8,11 +8,29 @@
     "address": {
       "type": "string"
     },
+    "address_line2": {
+      "type": "string"
+    },
+    "area": {
+      "type": "string",
+      "description": "Area / District / Suburb"
+    },
     "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string",
+      "description": "State / Province / Region / Territory"
+    },
+    "postal_code": {
       "type": "string"
     },
     "country": {
       "type": "string"
+    },
+    "floor_tower_complex": {
+      "type": "string",
+      "description": "Floor / Tower / Complex name (optional)"
     },
     "star_rating": {
       "type": "number"

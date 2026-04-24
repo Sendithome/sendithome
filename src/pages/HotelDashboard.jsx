@@ -108,8 +108,8 @@ export default function HotelDashboard() {
   const [logoUploading, setLogoUploading] = useState(false);
   const [regionFilter, setRegionFilter] = useState('All');
   const [form, setForm] = useState({
-    name: '', address_line1: '', address_line2: '', city: '', state: '',
-    postal_code: '', country: '',
+    name: '', address_line1: '', address_line2: '', area: '', city: '', state: '',
+    postal_code: '', country: '', floor_tower_complex: '',
     official_email: '', official_phone: '', official_landline: '', registered_email: '',
     dial_code: '+971', contact_phone: '',
     star_rating: 5, concierge_name: '', logo_url: '', active: true,
@@ -137,10 +137,12 @@ export default function HotelDashboard() {
         name: h.name || '',
         address_line1: h.address || '',
         address_line2: h.address_line2 || '',
+        area: h.area || '',
         city: h.city || '',
         state: h.state || '',
         postal_code: h.postal_code || '',
         country: h.country || '',
+        floor_tower_complex: h.floor_tower_complex || '',
         official_email: h.official_email || '',
         official_phone: h.official_phone || '',
         official_landline: h.official_landline || '',
@@ -190,6 +192,8 @@ export default function HotelDashboard() {
     const payload = {
       ...form,
       address: form.address_line1,
+      area: form.area,
+      floor_tower_complex: form.floor_tower_complex,
       contact_phone: form.dial_code + ' ' + form.contact_phone,
       contact_email: form.official_email,
     };
@@ -339,28 +343,32 @@ export default function HotelDashboard() {
                     </div>
 
                     <div className="sm:col-span-2">
-                      <Label className="text-xs text-muted-foreground">Address Line 1 *</Label>
-                      <Input value={form.address_line1} onChange={e => update('address_line1', e.target.value)} placeholder="Building number & street name" className="mt-1 h-10 text-sm" />
+                      <Label className="text-xs text-muted-foreground">Building / Street Number + Street Name *</Label>
+                      <Input value={form.address_line1} onChange={e => update('address_line1', e.target.value)} placeholder="e.g. 15 Sheikh Zayed Road" className="mt-1 h-10 text-sm" />
                     </div>
                     <div className="sm:col-span-2">
-                      <Label className="text-xs text-muted-foreground">Address Line 2</Label>
-                      <Input value={form.address_line2} onChange={e => update('address_line2', e.target.value)} placeholder="Area, district, landmark (optional)" className="mt-1 h-10 text-sm" />
+                      <Label className="text-xs text-muted-foreground">Area / District / Suburb *</Label>
+                      <Input value={form.area} onChange={e => update('area', e.target.value)} placeholder="e.g. Downtown Dubai" className="mt-1 h-10 text-sm" />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">City *</Label>
+                      <Label className="text-xs text-muted-foreground">City / Town *</Label>
                       <Input value={form.city} onChange={e => update('city', e.target.value)} placeholder="Dubai" className="mt-1 h-10 text-sm" />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">State / Emirate</Label>
+                      <Label className="text-xs text-muted-foreground">State / Province / Region / Territory *</Label>
                       <Input value={form.state} onChange={e => update('state', e.target.value)} placeholder="Dubai" className="mt-1 h-10 text-sm" />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Postal / ZIP Code</Label>
+                      <Label className="text-xs text-muted-foreground">Postal Code / ZIP Code *</Label>
                       <Input value={form.postal_code} onChange={e => update('postal_code', e.target.value)} placeholder="00000" className="mt-1 h-10 text-sm" />
                     </div>
                     <div>
                       <Label className="text-xs text-muted-foreground">Country *</Label>
                       <Input value={form.country} onChange={e => update('country', e.target.value)} placeholder="United Arab Emirates" className="mt-1 h-10 text-sm" />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <Label className="text-xs text-muted-foreground">Floor / Tower / Complex Name <span className="text-muted-foreground/60">(optional)</span></Label>
+                      <Input value={form.floor_tower_complex} onChange={e => update('floor_tower_complex', e.target.value)} placeholder="e.g. Tower A, Floor 12 or Emirates Towers Complex" className="mt-1 h-10 text-sm" />
                     </div>
 
                     <div>
@@ -463,7 +471,7 @@ export default function HotelDashboard() {
                   {!saved ? (
                     <Button
                       onClick={handleSave}
-                      disabled={saving || !form.name || !form.city || !form.country}
+                      disabled={saving || !form.name || !form.address_line1 || !form.area || !form.city || !form.state || !form.postal_code || !form.country}
                       className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-xl h-10"
                     >
                       {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
@@ -486,7 +494,7 @@ export default function HotelDashboard() {
                           {[
                             { label: 'Hotel Name', value: form.name },
                             { label: 'Star Rating', value: '★'.repeat(form.star_rating || 0) },
-                            { label: 'Address', value: [form.address_line1, form.address_line2, form.city, form.state, form.postal_code, form.country].filter(Boolean).join(', ') },
+                            { label: 'Address', value: [form.address_line1, form.area, form.city, form.state, form.postal_code, form.country, form.floor_tower_complex].filter(Boolean).join(', ') },
                             { label: 'Official Email', value: form.official_email },
                             { label: 'Official Phone', value: form.official_phone ? `${form.dial_code} ${form.official_phone}` : '' },
                             { label: 'Official Landline', value: form.official_landline },
