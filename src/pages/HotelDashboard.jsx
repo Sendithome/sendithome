@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, Globe, QrCode, Hotel, MapPin, Phone, Mail, Hash, Save, Download, RefreshCw, CheckCircle2, Loader2, Upload, Star, Users, Package, Building2, Camera } from 'lucide-react';
+import { Home, Globe, QrCode, Hotel, MapPin, Save, Download, RefreshCw, CheckCircle2, Loader2, Upload, Star, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -333,11 +333,10 @@ export default function HotelDashboard() {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
+                    <div className="sm:col-span-2">
                       <Label className="text-xs text-muted-foreground">Hotel Name *</Label>
                       <Input value={form.name} onChange={e => update('name', e.target.value)} placeholder="Grand Hyatt Dubai" className="mt-1 h-10 text-sm" />
                     </div>
-
 
                     <div className="sm:col-span-2">
                       <Label className="text-xs text-muted-foreground">Building / Street Number + Street Name *</Label>
