@@ -390,10 +390,10 @@ export default function HotelDashboard() {
                     <div>
                       <Label className="text-xs text-muted-foreground">Star Rating</Label>
                       <div className="flex gap-1 mt-2">
-                        {[1, 2, 3, 4, 5].map(n => (
+                        {[4, 5].map(n => (
                           <button type="button" key={n} onClick={() => update('star_rating', n)}
-                            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${form.star_rating >= n ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground'}`}>
-                            <Star className="w-3.5 h-3.5 fill-current" />
+                            className={`flex items-center gap-1.5 px-3 h-8 rounded-lg text-xs font-semibold transition-colors ${form.star_rating === n ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'}`}>
+                            <Star className="w-3.5 h-3.5 fill-current" /> {n} Star
                           </button>
                         ))}
                       </div>
