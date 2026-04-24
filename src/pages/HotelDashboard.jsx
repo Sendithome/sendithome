@@ -385,18 +385,7 @@ export default function HotelDashboard() {
                       <Input value={form.registered_email} onChange={e => update('registered_email', e.target.value)} placeholder="shipments@hotel.com" className="mt-1 h-10 text-sm" />
                       <p className="text-[10px] text-muted-foreground mt-1">Shipment details will be sent to this email for printing.</p>
                     </div>
-                    <div>
-                      <Label className="text-xs text-muted-foreground">Hotel Phone (with country code)</Label>
-                      <div className="flex gap-1.5 mt-1">
-                        <div className="flex items-center gap-1 bg-muted border border-input rounded-md px-2 shrink-0">
-                          <span className="text-xs font-mono text-foreground whitespace-nowrap">{form.dial_code || '+?'}</span>
-                        </div>
-                        <Input value={form.contact_phone} onChange={e => update('contact_phone', e.target.value)} placeholder="50 000 0000" className="h-10 text-sm flex-1" />
-                      </div>
-                      {form.country && COUNTRY_DIAL[Object.keys(COUNTRY_DIAL).find(k => k.toLowerCase() === form.country.toLowerCase())] && (
-                        <p className="text-[10px] text-muted-foreground mt-1">Country code auto-set for {form.country}</p>
-                      )}
-                    </div>
+
 
                     <div>
                       <Label className="text-xs text-muted-foreground">Star Rating</Label>
