@@ -372,21 +372,13 @@ export default function HotelDashboard() {
                     </div>
 
                     <div>
-                      <Label className="text-xs text-muted-foreground">Official Hotel Email</Label>
-                      <Input value={form.official_email} onChange={e => update('official_email', e.target.value)} placeholder="info@hotel.com" className="mt-1 h-10 text-sm" />
-                    </div>
-                    <div>
-                      <Label className="text-xs text-muted-foreground">Official Hotel Phone</Label>
+                      <Label className="text-xs text-muted-foreground">Direct Hotel Phone Number</Label>
                       <div className="flex gap-1.5 mt-1">
                         <div className="flex items-center gap-1 bg-muted border border-input rounded-md px-2 shrink-0">
                           <span className="text-xs font-mono text-foreground whitespace-nowrap">{form.dial_code || '+?'}</span>
                         </div>
                         <Input value={form.official_phone} onChange={e => update('official_phone', e.target.value)} placeholder="04 000 0000" className="h-10 text-sm flex-1" />
                       </div>
-                    </div>
-                    <div>
-                      <Label className="text-xs text-muted-foreground">Official Landline Number</Label>
-                      <Input value={form.official_landline} onChange={e => update('official_landline', e.target.value)} placeholder="+971 4 000 0000" className="mt-1 h-10 text-sm" />
                     </div>
                     <div>
                       <Label className="text-xs text-muted-foreground">Registered Email <span className="text-accent">(for shipment paperwork)</span></Label>
@@ -495,9 +487,7 @@ export default function HotelDashboard() {
                             { label: 'Hotel Name', value: form.name },
                             { label: 'Star Rating', value: '★'.repeat(form.star_rating || 0) },
                             { label: 'Address', value: [form.address_line1, form.area, form.city, form.state, form.postal_code, form.country, form.floor_tower_complex].filter(Boolean).join(', ') },
-                            { label: 'Official Email', value: form.official_email },
-                            { label: 'Official Phone', value: form.official_phone ? `${form.dial_code} ${form.official_phone}` : '' },
-                            { label: 'Official Landline', value: form.official_landline },
+                            { label: 'Direct Hotel Phone', value: form.official_phone ? `${form.dial_code} ${form.official_phone}` : '' },
                             { label: 'Registered Email (Shipments)', value: form.registered_email },
                           ].filter(r => r.value).map(row => (
                             <div key={row.label} className="flex justify-between gap-4 px-4 py-2">
