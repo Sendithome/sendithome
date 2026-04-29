@@ -242,8 +242,9 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
         </div>
 
         {/* Footer */}
-        <div className="border-l border-r border-b border-gray-400 bg-gray-800 text-white p-2 text-center">
-          <p className="text-[9px] tracking-wide">Send It Home · Licensed International Courier · Powered by FedEx & DHL · 50+ Countries</p>
+        <div className="border-l border-r border-b border-gray-400 bg-gray-800 text-white p-3 text-center space-y-0.5">
+          <p className="text-[10px] font-bold tracking-wide">Vacation Logistics DMCC, Dubai — Operating as Send It Home</p>
+          <p className="text-[9px] opacity-70 tracking-wide">Licensed International Courier · Powered by FedEx & DHL · 50+ Countries</p>
         </div>
       </div>
     </div>
