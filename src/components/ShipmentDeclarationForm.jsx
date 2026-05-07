@@ -2,13 +2,33 @@ import { useState } from 'react';
 import { getShippingPrice } from '../utils/pricing';
 import { convertToLocalCurrency } from '../utils/currencyConversion';
 import SignaturePad from './SignaturePad';
+import { base44 } from '@/api/base44Client';
+import { Download, Loader2 } from 'lucide-react';
 
 export default function ShipmentDeclarationForm({ order, items, onProceed, onSignatureChange }) {
   const [signature, setSignature] = useState(null);
+  const [downloading, setDownloading] = useState(false);
 
   const handleSig = (dataUrl) => {
     setSignature(dataUrl);
     if (onSignatureChange) onSignatureChange(dataUrl);
+  };
+
+  const handleDownloadPDF = async () => {
+    setDownloading(true);
+    const response = await base44.functions.invoke(
+      'generateDeclarationPDF',
+      { order, items, signature },
+      { responseType: 'arraybuffer' }
+    );
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `customs-declaration-${order?.order_number || 'SIH'}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setDownloading(false);
   };
   const shippingDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
   const totalDeclaredValue = items.filter(i => i.eligible !== false).reduce((s, i) => s + ((i.price || 0) * (i.quantity || 1)), 0);
@@ -247,6 +267,16 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
           <p className="text-[9px] opacity-70 tracking-wide">Licensed International Courier · Powered by FedEx & DHL · 50+ Countries</p>
         </div>
       </div>
+
+      {/* Download PDF Button */}
+      <button
+        onClick={handleDownloadPDF}
+        disabled={downloading}
+        className="mt-3 w-full flex items-center justify-center gap-2 h-10 rounded-xl bg-gray-800 hover:bg-gray-700 text-white text-xs font-semibold transition-colors disabled:opacity-60"
+      >
+        {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+        {downloading ? 'Generating PDF…' : 'Download CN22/CN23 Declaration PDF'}
+      </button>
     </div>
   );
 }
