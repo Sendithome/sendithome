@@ -11,9 +11,11 @@ export default function QRLanding() {
   const [hotel, setHotel] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const [showQR, setShowQR] = useState(true);
+  const urlParams = new URLSearchParams(window.location.search);
+  const [showQR, setShowQR] = useState(!urlParams.get('start'));
 
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(window.location.href)}&margin=12&format=png`;
+  const landingUrl = `${window.location.origin}/hotel/${hotelId}?start=1`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(landingUrl)}&margin=12&format=png`;
 
   useEffect(() => {
     loadHotel();
