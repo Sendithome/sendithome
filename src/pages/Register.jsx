@@ -294,19 +294,61 @@ export default function Register() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 bg-accent/5 border border-accent/20 rounded-2xl px-4 py-3 mt-4 mb-6"
+            className="bg-accent/5 border border-accent/20 rounded-2xl p-4 mt-4 mb-6"
           >
-            <div className="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
-              <MapPin className="w-4 h-4 text-accent" />
+            <div className="flex items-center gap-3 mb-3">
+              {hotel.logo_url ? (
+                <img src={hotel.logo_url} alt={hotel.name} className="w-10 h-10 rounded-xl object-cover border border-border shrink-0" />
+              ) : (
+                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
+                  <MapPin className="w-4 h-4 text-accent" />
+                </div>
+              )}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <p className="text-sm font-bold text-foreground">{hotel.name}</p>
+                  <div className="flex items-center gap-0.5">
+                    {Array.from({ length: hotel.star_rating || 5 }).map((_, i) => (
+                      <Star key={i} className="w-3 h-3 text-accent fill-accent" />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-[10px] text-accent font-semibold uppercase tracking-wide mt-0.5">Your current hotel</p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-foreground">{hotel.name}</p>
-              <p className="text-[10px] text-muted-foreground">{hotel.city}, {hotel.country}</p>
-            </div>
-            <div className="flex items-center gap-0.5">
-              {Array.from({ length: hotel.star_rating || 5 }).map((_, i) => (
-                <Star key={i} className="w-3 h-3 text-accent fill-accent" />
-              ))}
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs border-t border-accent/20 pt-3">
+              {hotel.address && (
+                <div className="col-span-2">
+                  <span className="text-muted-foreground">Address</span>
+                  <p className="font-medium text-foreground">{hotel.address}{hotel.area ? `, ${hotel.area}` : ''}</p>
+                </div>
+              )}
+              {hotel.floor_tower_complex && (
+                <div className="col-span-2">
+                  <span className="text-muted-foreground">Building</span>
+                  <p className="font-medium text-foreground">{hotel.floor_tower_complex}</p>
+                </div>
+              )}
+              <div>
+                <span className="text-muted-foreground">City</span>
+                <p className="font-medium text-foreground">{hotel.city}{hotel.state ? `, ${hotel.state}` : ''}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Country</span>
+                <p className="font-medium text-foreground">{hotel.country}</p>
+              </div>
+              {hotel.postal_code && (
+                <div>
+                  <span className="text-muted-foreground">Postal Code</span>
+                  <p className="font-medium text-foreground">{hotel.postal_code}</p>
+                </div>
+              )}
+              {hotel.official_phone && (
+                <div>
+                  <span className="text-muted-foreground">Hotel Phone</span>
+                  <p className="font-medium text-foreground">{hotel.official_phone}</p>
+                </div>
+              )}
             </div>
           </motion.div>
         )}
