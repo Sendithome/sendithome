@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Camera, Upload, Eye, EyeOff, Loader2, Package, MapPin, Star, CheckCircle2, MessageCircle, ScanLine } from 'lucide-react';
@@ -26,9 +26,6 @@ export default function Register() {
   const [errors, setErrors] = useState({});
   const [passportVerification, setPassportVerification] = useState(null); // null=pending, object=result
   const [passportPreview, setPassportPreview] = useState(null);
-  const cameraInputRef = useRef(null);
-  const uploadInputRef = useRef(null);
-
   const [form, setForm] = useState({
     first_name: '',
     middle_name: '',
@@ -371,23 +368,6 @@ export default function Register() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Passport scan section */}
-          {/* Hidden file inputs */}
-          <input
-            ref={cameraInputRef}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            className="hidden"
-            onChange={handlePassportScan}
-          />
-          <input
-            ref={uploadInputRef}
-            type="file"
-            accept="image/*,.pdf"
-            className="hidden"
-            onChange={handlePassportScan}
-          />
-
           <div className="rounded-2xl overflow-hidden border-2 border-accent/30 bg-gradient-to-br from-primary/95 to-primary">
             {scanningPassport ? (
               <div className="flex flex-col items-center gap-3 py-10 px-6 text-center">
@@ -415,13 +395,10 @@ export default function Register() {
                   </div>
                   <p className="text-xs text-white/60 mt-0.5">Details auto-filled below. Review and confirm.</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => cameraInputRef.current?.click()}
-                  className="text-xs text-accent font-semibold hover:underline shrink-0"
-                >
+                <label className="text-xs text-accent font-semibold hover:underline shrink-0 cursor-pointer">
                   Rescan
-                </button>
+                  <input type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePassportScan} />
+                </label>
               </div>
             ) : (
               <div className="p-6 text-center">
@@ -432,22 +409,16 @@ export default function Register() {
                 <p className="text-xs text-white/60 mb-5 max-w-xs mx-auto">
                   Point your camera at the photo page. Our AI instantly reads and fills all your details.
                 </p>
-                <button
-                  type="button"
-                  onClick={() => cameraInputRef.current?.click()}
-                  className="w-full max-w-xs mx-auto flex items-center justify-center gap-2 h-12 rounded-2xl bg-accent text-accent-foreground font-bold text-sm hover:bg-accent/90 transition-colors"
-                >
+                <label className="w-full max-w-xs mx-auto flex items-center justify-center gap-2 h-12 rounded-2xl bg-accent text-accent-foreground font-bold text-sm hover:bg-accent/90 transition-colors cursor-pointer">
                   <Camera className="w-5 h-5" />
                   Open Camera & Scan
-                </button>
-                <button
-                  type="button"
-                  onClick={() => uploadInputRef.current?.click()}
-                  className="mt-3 w-full max-w-xs mx-auto flex items-center justify-center gap-2 h-10 rounded-2xl border border-white/20 text-white/70 text-xs font-medium hover:bg-white/10 transition-colors"
-                >
+                  <input type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePassportScan} />
+                </label>
+                <label className="mt-3 w-full max-w-xs mx-auto flex items-center justify-center gap-2 h-10 rounded-2xl border border-white/20 text-white/70 text-xs font-medium hover:bg-white/10 transition-colors cursor-pointer">
                   <Upload className="w-4 h-4" />
                   Upload from Gallery / Files
-                </button>
+                  <input type="file" accept="image/*,.pdf" className="hidden" onChange={handlePassportScan} />
+                </label>
                 <p className="text-[10px] text-white/40 mt-4">Or fill in the details manually below</p>
               </div>
             )}
