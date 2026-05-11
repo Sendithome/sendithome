@@ -371,9 +371,9 @@ export default function Register() {
         </p>
 
         {/* Hidden file inputs — outside form flow for reliable mobile camera access */}
-        <input ref={cameraInputRef} type="file" accept="image/*" capture className="hidden" onChange={handlePassportScan} />
+        <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePassportScan} />
         <input ref={galleryInputRef} type="file" accept="image/*,.pdf" className="hidden" onChange={handlePassportScan} />
-        <input ref={rescanInputRef} type="file" accept="image/*" capture className="hidden" onChange={handlePassportScan} />
+        <input ref={rescanInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePassportScan} />
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Passport scan section */}
