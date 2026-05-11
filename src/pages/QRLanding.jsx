@@ -98,8 +98,15 @@ export default function QRLanding() {
             className="w-full max-w-xs h-12 bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-2xl text-sm"
             onClick={() => setShowQR(false)}
           >
-            Continue to Register
+            Get Started — Register Now
             <ArrowRight className="w-4 h-4 ml-2" />
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full max-w-xs mt-3 rounded-2xl border-white/20 text-white bg-white/10 hover:bg-white/20"
+            onClick={() => base44.auth.redirectToLogin(`/hotel/${hotelId}`)}
+          >
+            I already have an account
           </Button>
         </motion.div>
       </AnimatePresence>
