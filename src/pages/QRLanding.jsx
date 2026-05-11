@@ -11,8 +11,9 @@ export default function QRLanding() {
   const [hotel, setHotel] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const urlParams = new URLSearchParams(window.location.search);
-  const [showQR, setShowQR] = useState(!urlParams.get('start'));
+
+  const hasStart = new URLSearchParams(window.location.search).get('start') === '1';
+  const [showQR, setShowQR] = useState(!hasStart);
 
   const landingUrl = `${window.location.origin}/hotel/${hotelId}?start=1`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(landingUrl)}&margin=12&format=png`;
@@ -195,7 +196,7 @@ export default function QRLanding() {
           <Button
             variant="outline"
             className="w-full rounded-2xl"
-            onClick={() => navigate(`/login?hotelId=${hotelId}`)}
+            onClick={() => base44.auth.redirectToLogin(`/hotel/${hotelId}?start=1`)}
           >
             I already have an account
           </Button>
