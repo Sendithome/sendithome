@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Package, MapPin, Star, ArrowRight, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Package, MapPin, Star, ArrowRight, Loader2, QrCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 
@@ -11,6 +11,9 @@ export default function QRLanding() {
   const [hotel, setHotel] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [showQR, setShowQR] = useState(true);
+
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(window.location.href)}&margin=12&format=png`;
 
   useEffect(() => {
     loadHotel();
@@ -41,6 +44,65 @@ export default function QRLanding() {
         <h1 className="text-xl font-bold text-foreground">Hotel not found</h1>
         <p className="text-sm text-muted-foreground mt-2">Please scan the QR code at your hotel reception.</p>
       </div>
+    );
+  }
+
+  if (showQR) {
+    return (
+      <AnimatePresence>
+        <motion.div
+          key="qr-splash"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="min-h-screen flex flex-col items-center justify-center bg-primary px-6 text-center"
+        >
+          {/* Branding */}
+          <div className="mb-8">
+            {hotel?.logo_url ? (
+              <img src={hotel.logo_url} alt={hotel.name} className="h-14 mx-auto mb-4 rounded-xl object-contain" />
+            ) : (
+              <div className="w-16 h-16 rounded-2xl bg-accent/20 flex items-center justify-center mx-auto mb-4">
+                <Package className="w-8 h-8 text-accent" />
+              </div>
+            )}
+            <p className="text-[11px] font-black tracking-[0.3em] text-white/50 uppercase mb-1">
+              SEND<span className="text-accent">IT</span>HOME
+            </p>
+            <h1 className="text-xl font-bold text-white">{hotel?.name}</h1>
+            {hotel && (
+              <div className="flex items-center justify-center gap-1 mt-1">
+                <MapPin className="w-3 h-3 text-white/40" />
+                <p className="text-xs text-white/50">{hotel.city}, {hotel.country}</p>
+              </div>
+            )}
+          </div>
+
+          {/* QR Code */}
+          <div className="bg-white rounded-3xl p-5 shadow-2xl mb-6">
+            <img
+              src={qrUrl}
+              alt="Hotel QR Code"
+              className="w-56 h-56 rounded-xl"
+            />
+            <p className="text-[9px] font-bold text-muted-foreground text-center mt-3 tracking-widest uppercase">
+              Scan to Ship Your Shopping Home
+            </p>
+          </div>
+
+          <p className="text-xs text-white/50 mb-8 max-w-xs leading-relaxed">
+            Show this QR code to hotel concierge or scan to start your shipment registration.
+          </p>
+
+          <Button
+            className="w-full max-w-xs h-12 bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-2xl text-sm"
+            onClick={() => setShowQR(false)}
+          >
+            Continue to Register
+            <ArrowRight className="w-4 h-4 ml-2" />
+          </Button>
+        </motion.div>
+      </AnimatePresence>
     );
   }
 
