@@ -11,6 +11,7 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [scanning, setScanning] = useState(false);
   const [form, setForm] = useState({
     nationality: '',
     passport_number: '',
@@ -56,7 +57,7 @@ export default function Profile() {
     const file = e.target.files[0];
     if (!file) return;
 
-    setSaving(true);
+    setScanning(true);
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
 
     const result = await base44.integrations.Core.InvokeLLM({
@@ -80,7 +81,7 @@ export default function Profile() {
       passport_number: result.passport_number || prev.passport_number,
       passport_expiry: result.expiry_date || prev.passport_expiry,
     }));
-    setSaving(false);
+    setScanning(false);
   };
 
   if (loading) {
@@ -109,8 +110,12 @@ export default function Profile() {
 
         <label className="block cursor-pointer mb-4">
           <div className="border-2 border-dashed border-accent/30 rounded-xl p-4 text-center hover:border-accent/60 transition-all">
-            <Camera className="w-5 h-5 text-accent mx-auto mb-2" />
-            <p className="text-xs font-medium">Scan or upload your passport</p>
+            {scanning ? (
+              <Loader2 className="w-5 h-5 text-accent mx-auto mb-2 animate-spin" />
+            ) : (
+              <Camera className="w-5 h-5 text-accent mx-auto mb-2" />
+            )}
+            <p className="text-xs font-medium">{scanning ? 'Scanning passport...' : 'Scan or upload your passport'}</p>
             <p className="text-[10px] text-muted-foreground mt-0.5">AI will auto-fill your details</p>
           </div>
           <input type="file" accept="image/*" className="hidden" onChange={handlePassportScan} />

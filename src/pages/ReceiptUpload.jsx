@@ -35,12 +35,12 @@ export default function ReceiptUpload() {
   }, [orderId]);
 
   const loadData = async () => {
-    const [orders, existingReceipts, existingItems] = await Promise.all([
-      base44.entities.Order.filter({ id: orderId }),
+    const [order, existingReceipts, existingItems] = await Promise.all([
+      base44.entities.Order.get(orderId),
       base44.entities.Receipt.filter({ order_id: orderId }),
       base44.entities.OrderItem.filter({ order_id: orderId }),
     ]);
-    if (orders.length > 0) setOrder(orders[0]);
+    if (order) setOrder(order);
     setSavedReceipts(existingReceipts);
     setSavedItems(existingItems);
     setReviewSelectedIds(new Set(existingItems.map(i => i.id)));

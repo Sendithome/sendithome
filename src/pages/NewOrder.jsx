@@ -143,6 +143,7 @@ export default function NewOrder() {
       currency: 'USD',
       payment_status: 'unpaid',
     });
+    setLoading(false);
     navigate(`/order/${order.id}/receipts`);
   };
 

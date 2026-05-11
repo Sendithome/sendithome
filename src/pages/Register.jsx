@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Camera, Upload, Eye, EyeOff, Loader2, Package, MapPin, Star, CheckCircle2, MessageCircle, ScanLine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -621,9 +621,13 @@ export default function Register() {
 
           <p className="text-center text-xs text-muted-foreground">
             Already have an account?{' '}
-            <Link to={hotelId ? `/login?hotelId=${hotelId}` : '/login'} className="text-accent font-medium hover:underline">
+            <button
+              type="button"
+              onClick={() => base44.auth.redirectToLogin(hotelId ? `/hotel/${hotelId}` : '/')}
+              className="text-accent font-medium hover:underline"
+            >
               Log In
-            </Link>
+            </button>
           </p>
         </form>
 
