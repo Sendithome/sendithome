@@ -223,7 +223,7 @@ export default function ReceiptUpload() {
                       <label className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 rounded-xl text-xs font-semibold bg-accent text-accent-foreground hover:bg-accent/90 transition-colors">
                         <Camera className="w-3.5 h-3.5" />
                         Open Camera
-                        <input type="file" accept="image/*" capture="environment" className="hidden" onChange={handleFileUpload} disabled={uploading || processing} />
+                        <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} disabled={uploading || processing} />
                       </label>
                       <label className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 rounded-xl text-xs font-semibold border border-input bg-background hover:bg-muted transition-colors">
                         <Upload className="w-3.5 h-3.5" />
