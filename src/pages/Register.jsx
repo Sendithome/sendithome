@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Camera, Upload, Eye, EyeOff, Loader2, Package, MapPin, Star, CheckCircle2, MessageCircle } from 'lucide-react';
+import { Camera, Upload, Eye, EyeOff, Loader2, Package, MapPin, Star, CheckCircle2, MessageCircle, ScanLine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,6 +25,9 @@ export default function Register() {
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
   const [passportVerification, setPassportVerification] = useState(null); // null=pending, object=result
+  const [passportPreview, setPassportPreview] = useState(null);
+  const cameraInputRef = useRef(null);
+  const uploadInputRef = useRef(null);
 
   const [form, setForm] = useState({
     first_name: '',
@@ -201,6 +204,11 @@ export default function Register() {
     e.target.value = '';
     setScanningPassport(true);
 
+    // Show preview immediately
+    const reader = new FileReader();
+    reader.onload = (ev) => setPassportPreview(ev.target.result);
+    reader.readAsDataURL(file);
+
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
     const result = await base44.integrations.Core.InvokeLLM({
       prompt: `Extract the following details from this passport image: first name, middle name (if any), last name, nationality (as a country name), passport number, and expiry date (in YYYY-MM-DD format). If a field is not visible or unclear, return an empty string.`,
@@ -363,34 +371,85 @@ export default function Register() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Passport scan section */}
-          <div className="border-2 border-dashed border-border rounded-2xl p-6 text-center">
+          {/* Hidden file inputs */}
+          <input
+            ref={cameraInputRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            onChange={handlePassportScan}
+          />
+          <input
+            ref={uploadInputRef}
+            type="file"
+            accept="image/*,.pdf"
+            className="hidden"
+            onChange={handlePassportScan}
+          />
+
+          <div className="rounded-2xl overflow-hidden border-2 border-accent/30 bg-gradient-to-br from-primary/95 to-primary">
             {scanningPassport ? (
-              <div className="flex flex-col items-center gap-3 py-2">
+              <div className="flex flex-col items-center gap-3 py-10 px-6 text-center">
+                {passportPreview && (
+                  <div className="relative w-48 h-28 rounded-xl overflow-hidden border-2 border-white/20 mb-2">
+                    <img src={passportPreview} alt="Passport" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-primary/60 flex items-center justify-center">
+                      <ScanLine className="w-10 h-10 text-accent animate-pulse" />
+                    </div>
+                  </div>
+                )}
                 <Loader2 className="w-8 h-8 text-accent animate-spin" />
-                <p className="text-sm font-medium">AI is reading your passport...</p>
-                <p className="text-xs text-muted-foreground">This takes a few seconds</p>
+                <p className="text-sm font-bold text-white">AI is reading your passport…</p>
+                <p className="text-xs text-white/60">Extracting your details automatically</p>
+              </div>
+            ) : passportPreview && form.first_name ? (
+              <div className="flex items-center gap-4 p-4">
+                <div className="w-16 h-10 rounded-lg overflow-hidden border-2 border-white/20 shrink-0">
+                  <img src={passportPreview} alt="Passport" className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" />
+                    <p className="text-sm font-bold text-white">Passport scanned successfully</p>
+                  </div>
+                  <p className="text-xs text-white/60 mt-0.5">Details auto-filled below. Review and confirm.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => cameraInputRef.current?.click()}
+                  className="text-xs text-accent font-semibold hover:underline shrink-0"
+                >
+                  Rescan
+                </button>
               </div>
             ) : (
-              <>
-                <Camera className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-                <p className="text-sm font-semibold text-foreground">Scan Your Passport</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Take a photo or upload your passport. Our AI will automatically extract your details.
-                </p>
-                <div className="flex gap-3 justify-center mt-4">
-                  <label className="cursor-pointer inline-flex items-center gap-1.5 h-8 px-3 rounded-xl text-xs font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
-                    <Camera className="w-3.5 h-3.5" />
-                    Scan Passport
-                    <input type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePassportScan} />
-                  </label>
-                  <label className="cursor-pointer inline-flex items-center gap-1.5 h-8 px-3 rounded-xl text-xs font-medium border border-input bg-background hover:bg-muted transition-colors">
-                    <Upload className="w-3.5 h-3.5" />
-                    Upload Photo
-                    <input type="file" accept="image/*,.pdf" className="hidden" onChange={handlePassportScan} />
-                  </label>
+              <div className="p-6 text-center">
+                <div className="w-16 h-16 rounded-2xl bg-accent/20 border-2 border-accent/40 flex items-center justify-center mx-auto mb-4">
+                  <ScanLine className="w-8 h-8 text-accent" />
                 </div>
-                <p className="text-[10px] text-muted-foreground mt-3">Or fill in the details manually below</p>
-              </>
+                <p className="text-base font-bold text-white mb-1">Scan Your Passport</p>
+                <p className="text-xs text-white/60 mb-5 max-w-xs mx-auto">
+                  Point your camera at the photo page. Our AI instantly reads and fills all your details.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => cameraInputRef.current?.click()}
+                  className="w-full max-w-xs mx-auto flex items-center justify-center gap-2 h-12 rounded-2xl bg-accent text-accent-foreground font-bold text-sm hover:bg-accent/90 transition-colors"
+                >
+                  <Camera className="w-5 h-5" />
+                  Open Camera & Scan
+                </button>
+                <button
+                  type="button"
+                  onClick={() => uploadInputRef.current?.click()}
+                  className="mt-3 w-full max-w-xs mx-auto flex items-center justify-center gap-2 h-10 rounded-2xl border border-white/20 text-white/70 text-xs font-medium hover:bg-white/10 transition-colors"
+                >
+                  <Upload className="w-4 h-4" />
+                  Upload from Gallery / Files
+                </button>
+                <p className="text-[10px] text-white/40 mt-4">Or fill in the details manually below</p>
+              </div>
             )}
           </div>
 
