@@ -443,7 +443,7 @@ export default function HotelDashboard() {
                 <div className="absolute right-0 top-0 w-32 h-32 bg-white/5 rounded-full -translate-y-8 translate-x-8" />
                 <div className="absolute right-12 bottom-0 w-20 h-20 bg-accent/20 rounded-full translate-y-6" />
                 <p className="text-[10px] font-bold uppercase tracking-widest opacity-60 mb-1">Hotel Partner Portal</p>
-                <h1 className="text-xl font-black">Welcome to Send It Home</h1>
+                <h1 className="text-xl font-black text-accent">Welcome to Send It Home</h1>
                 <p className="text-sm opacity-80 mt-1 max-w-md">Enable your hotel guests to ship their purchases directly home. Generate your unique QR code and place it at concierge.</p>
                 <div className="flex gap-2 mt-4">
                   <button
