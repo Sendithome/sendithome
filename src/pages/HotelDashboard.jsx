@@ -197,7 +197,7 @@ export default function HotelDashboard() {
           <div className="flex items-center gap-2">
             <div className="text-right hidden sm:block">
               <p className="text-xs font-semibold text-foreground">{user.full_name || user.email}</p>
-              <p className="text-[10px] text-muted-foreground">{hotel ? hotel.name : 'No hotel linked'}</p>
+              {hotel && <p className="text-[10px] text-muted-foreground">{hotel.name}</p>}
             </div>
             {form.logo_url ? (
               <img src={form.logo_url} className="w-8 h-8 rounded-full object-cover border border-border" alt="logo" />
