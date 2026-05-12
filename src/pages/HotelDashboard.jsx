@@ -190,7 +190,7 @@ export default function HotelDashboard() {
           </div>
           <div>
             <p className="text-xs font-black text-foreground leading-none">SEND<span className="text-accent">IT</span>HOME</p>
-            <p className="text-[9px] text-muted-foreground">Hotel Partner Portal</p>
+
           </div>
         </div>
         {user && (
