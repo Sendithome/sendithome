@@ -1,0 +1,68 @@
+{
+  "name": "HotelApplication",
+  "type": "object",
+  "properties": {
+    "hotel_id": {
+      "type": "string",
+      "description": "Reference to Hotel entity"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the hotel account that submitted"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "pending_approval",
+        "approved",
+        "rejected"
+      ],
+      "default": "draft",
+      "description": "Approval workflow status"
+    },
+    "trade_license_url": {
+      "type": "string",
+      "description": "Trade license document URL"
+    },
+    "trade_license_number": {
+      "type": "string"
+    },
+    "trade_license_expiry": {
+      "type": "string",
+      "format": "date"
+    },
+    "gm_employment_card_url": {
+      "type": "string",
+      "description": "GM employment/ID card document URL"
+    },
+    "agm_employment_card_url": {
+      "type": "string"
+    },
+    "fdm_employment_card_url": {
+      "type": "string"
+    },
+    "hoc_employment_card_url": {
+      "type": "string"
+    },
+    "admin_notes": {
+      "type": "string",
+      "description": "Notes from admin during review"
+    },
+    "submitted_at": {
+      "type": "string",
+      "description": "ISO timestamp when sent for approval"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "description": "ISO timestamp when admin reviewed"
+    },
+    "reviewed_by": {
+      "type": "string",
+      "description": "Admin email who reviewed"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

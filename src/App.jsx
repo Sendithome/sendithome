@@ -18,6 +18,8 @@ import TrackingPage from './pages/TrackingPage';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import DevDocs from './pages/DevDocs';
 import HotelDashboard from './pages/HotelDashboard';
+import HotelPartnerLanding from './pages/HotelPartnerLanding';
+import HotelSignup from './pages/HotelSignup';
 import BrandDirectory from './pages/BrandDirectory';
 import OxfordOverview from './pages/OxfordOverview';
 // Add page imports here
@@ -62,6 +64,8 @@ const AuthenticatedApp = () => {
         <Route path="/docs" element={<DevDocs />} />
         <Route path="/hotel-dashboard" element={<HotelDashboard />} />
       </Route>
+      <Route path="/hotel-partner" element={<HotelPartnerLanding />} />
+      <Route path="/hotel-signup" element={<HotelSignup />} />
       <Route path="/brand-directory" element={<BrandDirectory />} />
       <Route path="/oxford-overview" element={<OxfordOverview />} />
       <Route path="*" element={<PageNotFound />} />
