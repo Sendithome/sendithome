@@ -1,0 +1,81 @@
+{
+  "name": "Retailer",
+  "type": "object",
+  "properties": {
+    "store_name": {
+      "type": "string"
+    },
+    "store_location": {
+      "type": "string"
+    },
+    "trade_license_number": {
+      "type": "string"
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "contact_phone": {
+      "type": "string"
+    },
+    "store_category": {
+      "type": "string",
+      "enum": [
+        "Fashion",
+        "Footwear",
+        "Bags & Accessories",
+        "Sportswear",
+        "Souvenirs & Gifts",
+        "Toys",
+        "Baby & Kids",
+        "Department Store",
+        "Other"
+      ]
+    },
+    "branches_count": {
+      "type": "number",
+      "default": 1
+    },
+    "trade_license_url": {
+      "type": "string"
+    },
+    "partner_code": {
+      "type": "string",
+      "description": "Unique retailer partner code e.g. RTL-00123"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "suspended"
+      ],
+      "default": "pending"
+    },
+    "commission_rate": {
+      "type": "number",
+      "default": 2.5,
+      "description": "Commission percentage"
+    },
+    "notification_preference": {
+      "type": "string",
+      "enum": [
+        "email",
+        "sms",
+        "both"
+      ],
+      "default": "email"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Linked user account email"
+    }
+  },
+  "required": [
+    "store_name",
+    "contact_email"
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "name": "RetailerVerification",
+  "type": "object",
+  "properties": {
+    "shipment_id": {
+      "type": "string",
+      "description": "e.g. SIH-2026-00123"
+    },
+    "retailer_id": {
+      "type": "string"
+    },
+    "retailer_email": {
+      "type": "string"
+    },
+    "tourist_name": {
+      "type": "string"
+    },
+    "tourist_passport_country": {
+      "type": "string"
+    },
+    "hotel_name": {
+      "type": "string"
+    },
+    "receipt_url": {
+      "type": "string"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "hs_code": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "eligible": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "total_value": {
+      "type": "number"
+    },
+    "commission_amount": {
+      "type": "number"
+    },
+    "destination_country": {
+      "type": "string"
+    },
+    "customs_ref": {
+      "type": "string"
+    },
+    "shipment_date": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "queried",
+        "overdue",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "deadline_at": {
+      "type": "string",
+      "description": "ISO timestamp \u2014 24h after creation"
+    },
+    "approved_at": {
+      "type": "string"
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "query_reason": {
+      "type": "string"
+    },
+    "query_type": {
+      "type": "string"
+    },
+    "query_submitted_at": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "shipment_id",
+    "retailer_id"
+  ]
+}

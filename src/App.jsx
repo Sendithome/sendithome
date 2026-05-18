@@ -23,6 +23,10 @@ import HotelSignup from './pages/HotelSignup';
 import NdaSigning from './pages/NdaSigning';
 import BrandDirectory from './pages/BrandDirectory';
 import OxfordOverview from './pages/OxfordOverview';
+import RetailerRegistration from './pages/RetailerRegistration';
+import RetailerPortal from './pages/RetailerPortal';
+import RetailerDashboard from './pages/RetailerDashboard';
+import RetailerSettings from './pages/RetailerSettings';
 // Add page imports here
 
 const AuthenticatedApp = () => {
@@ -68,6 +72,10 @@ const AuthenticatedApp = () => {
       <Route path="/hotel-onboarding" element={<HotelPartnerLanding />} />
       <Route path="/hotel-signup" element={<HotelSignup />} />
       <Route path="/nda-signing" element={<NdaSigning />} />
+      <Route path="/retailer-registration" element={<RetailerRegistration />} />
+      <Route path="/retailer-portal" element={<RetailerPortal />} />
+      <Route path="/retailer-dashboard" element={<RetailerDashboard />} />
+      <Route path="/retailer-settings" element={<RetailerSettings />} />
       <Route path="/brand-directory" element={<BrandDirectory />} />
       <Route path="/oxford-overview" element={<OxfordOverview />} />
       <Route path="*" element={<PageNotFound />} />
