@@ -52,13 +52,13 @@ export default function HotelSignup() {
           </div>
           <h2 className="text-xl font-black text-foreground mb-2">Account Created!</h2>
           <p className="text-sm text-muted-foreground mb-6">
-            We've sent a verification link to <strong>{form.email}</strong>. Please check your inbox to activate your account, then log in to complete your hotel registration.
+            We've sent a verification link to <strong>{form.email}</strong>. Please check your inbox and verify your email, then log in to sign your NDA and activate your account.
           </p>
           <Button
             className="w-full bg-accent hover:bg-accent/90 text-white font-bold rounded-2xl h-11"
-            onClick={() => base44.auth.redirectToLogin('/hotel-dashboard')}
+            onClick={() => base44.auth.redirectToLogin('/nda-signing')}
           >
-            Go to Login
+            Log In & Sign NDA
           </Button>
           <p className="text-xs text-muted-foreground mt-4">Didn't receive the email? Check your spam folder.</p>
         </motion.div>

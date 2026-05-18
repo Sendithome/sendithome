@@ -21,6 +21,15 @@
       "default": "draft",
       "description": "Approval workflow status"
     },
+    "nda_signed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether NDA has been signed"
+    },
+    "nda_id": {
+      "type": "string",
+      "description": "Reference to the NDA record"
+    },
     "trade_license_url": {
       "type": "string",
       "description": "Trade license document URL"

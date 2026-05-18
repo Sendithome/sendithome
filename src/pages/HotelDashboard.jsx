@@ -3,17 +3,25 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home, QrCode, Hotel, MapPin, Save, Download, RefreshCw,
   CheckCircle2, Loader2, Upload, Star, Building2, Clock,
-  FileText, Shield, AlertCircle, ChevronRight, Users, X
+  FileText, Shield, AlertCircle, ChevronRight, Users, X, PenLine
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { base44 } from '@/api/base44Client';
+import { useNavigate } from 'react-router-dom';
 
 const TABS = [
   { id: 'profile', label: 'Hotel Profile', icon: Hotel },
   { id: 'documents', label: 'Documents', icon: FileText },
   { id: 'qr', label: 'QR Code', icon: QrCode },
+];
+
+const FLOW_STEPS = [
+  { n: 1, label: 'Registration' },
+  { n: 2, label: 'NDA Signing' },
+  { n: 3, label: 'Hotel Profile' },
+  { n: 4, label: 'QR Approval' },
 ];
 
 const COUNTRY_DIAL = {
@@ -75,6 +83,7 @@ function UploadField({ label, value, onChange, uploading, note }) {
 }
 
 export default function HotelDashboard() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState('profile');
   const [user, setUser] = useState(null);
   const [hotel, setHotel] = useState(null);
@@ -86,6 +95,8 @@ export default function HotelDashboard() {
   const [uploading, setUploading] = useState({});
 
   // All hotel applications (admin only)
+  const [nda, setNda] = useState(null);
+
   const [allApplications, setAllApplications] = useState([]);
   const [adminView, setAdminView] = useState(false);
   const [adminNotes, setAdminNotes] = useState('');
@@ -141,6 +152,10 @@ export default function HotelDashboard() {
         fdm_name: h.fdm_name || '', fdm_email: h.fdm_email || '', fdm_phone: h.fdm_phone || '', fdm_whatsapp: h.fdm_whatsapp || '',
       });
     }
+
+    // Load NDA
+    const ndas = await base44.entities.NDA.filter({ user_email: me.email });
+    if (ndas.length > 0) setNda(ndas[0]);
 
     // Load application for this user
     const apps = await base44.entities.HotelApplication.filter({ user_email: me.email });
@@ -276,8 +291,9 @@ export default function HotelDashboard() {
   const isApproved = application?.status === 'approved';
   const isPending = application?.status === 'pending_approval';
   const isRejected = application?.status === 'rejected';
+  const ndaSigned = nda?.status === 'signed' || application?.nda_signed;
 
-  const canSubmit = hotel && docs.trade_license_url && docs.gm_employment_card_url && !isPending;
+  const canSubmit = ndaSigned && hotel && docs.trade_license_url && docs.gm_employment_card_url && !isPending;
 
   const qrLandingUrl = hotel ? `${window.location.origin}/hotel/${hotel.id}` : null;
 
@@ -409,6 +425,52 @@ export default function HotelDashboard() {
           {/* ── PROFILE TAB ── */}
           {tab === 'profile' && (
             <motion.div key="profile" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="space-y-6">
+
+              {/* Onboarding progress */}
+              <div className="bg-card border border-border rounded-2xl p-4">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-3">Onboarding Progress</p>
+                <div className="flex items-center gap-1">
+                  {FLOW_STEPS.map((s, i) => {
+                    const done = (s.n === 1) || (s.n === 2 && ndaSigned) || (s.n === 3 && !!hotel) || (s.n === 4 && isApproved);
+                    const active = (s.n === 2 && !ndaSigned) || (s.n === 3 && ndaSigned && !hotel) || (s.n === 4 && hotel && !isApproved);
+                    return (
+                      <div key={s.n} className="flex items-center gap-1 flex-1 min-w-0">
+                        <div className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${done ? 'bg-green-500 text-white' : active ? 'bg-accent text-white' : 'bg-muted text-muted-foreground'}`}>
+                          {done ? <CheckCircle2 className="w-3.5 h-3.5" /> : s.n}
+                        </div>
+                        <span className={`text-[10px] truncate hidden sm:block ${done ? 'text-green-700 font-semibold' : active ? 'text-accent font-semibold' : 'text-muted-foreground'}`}>{s.label}</span>
+                        {i < FLOW_STEPS.length - 1 && <div className={`flex-1 h-px mx-1 ${done ? 'bg-green-300' : 'bg-border'}`} />}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* NDA Banner */}
+              {!ndaSigned && (
+                <div className="bg-accent/5 border-2 border-accent/30 rounded-2xl p-5 flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
+                    <PenLine className="w-5 h-5 text-accent" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-black text-foreground">Step 2: Sign the NDA</p>
+                    <p className="text-xs text-muted-foreground mt-1">Before you can submit documents or access full onboarding, you must review and electronically sign the Non-Disclosure Agreement with Sandit.</p>
+                  </div>
+                  <Button size="sm" onClick={() => navigate('/nda-signing')} className="bg-accent hover:bg-accent/90 text-white rounded-xl text-xs gap-1 shrink-0">
+                    <PenLine className="w-3.5 h-3.5" /> Sign NDA
+                  </Button>
+                </div>
+              )}
+
+              {ndaSigned && !isApproved && !isPending && (
+                <div className="bg-green-50 border border-green-200 rounded-2xl p-4 flex items-center gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0" />
+                  <div>
+                    <p className="text-sm font-bold text-green-800">NDA Signed — Account Active</p>
+                    <p className="text-xs text-green-700">Complete your hotel profile and upload documents to proceed.</p>
+                  </div>
+                </div>
+              )}
 
               {/* Status banner */}
               {isApproved && (
@@ -615,15 +677,29 @@ export default function HotelDashboard() {
                 </p>
               </div>
 
-              {isPending && (
+              {/* NDA Gate */}
+              {!ndaSigned && (
+                <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center">
+                  <div className="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center mx-auto mb-4">
+                    <PenLine className="w-7 h-7 text-amber-600" />
+                  </div>
+                  <p className="text-sm font-bold text-amber-800 mb-2">NDA Required First</p>
+                  <p className="text-xs text-amber-700 mb-4">You must sign the Non-Disclosure Agreement before you can submit documents for verification.</p>
+                  <Button size="sm" onClick={() => navigate('/nda-signing')} className="bg-accent hover:bg-accent/90 text-white rounded-xl gap-2">
+                    <PenLine className="w-3.5 h-3.5" /> Sign NDA Now
+                  </Button>
+                </div>
+              )}
+
+              {ndaSigned && isPending && (
                 <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-center gap-3">
                   <Clock className="w-5 h-5 text-amber-600 shrink-0" />
                   <p className="text-sm text-amber-800">Your application is under review. Documents are locked during review.</p>
                 </div>
               )}
 
-              {/* Trade License */}
-              <div className="bg-card border border-border rounded-2xl p-5 space-y-4">
+              {/* Document forms — only visible once NDA is signed */}
+              {ndaSigned && <div className="bg-card border border-border rounded-2xl p-5 space-y-4">
                 <div className="flex items-center gap-2 mb-1">
                   <div className="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center">
                     <FileText className="w-4 h-4 text-blue-600" />
@@ -654,10 +730,10 @@ export default function HotelDashboard() {
                   onChange={e => handleUpload('trade_license_url', e)}
                   note="Upload a clear copy of your valid trade license."
                 />
-              </div>
+              </div>}
 
               {/* Employee Cards */}
-              <div className="bg-card border border-border rounded-2xl p-5 space-y-5">
+              {ndaSigned && <div className="bg-card border border-border rounded-2xl p-5 space-y-5">
                 <div className="flex items-center gap-2 mb-1">
                   <div className="w-8 h-8 rounded-xl bg-purple-50 flex items-center justify-center">
                     <Users className="w-4 h-4 text-purple-600" />
@@ -693,10 +769,10 @@ export default function HotelDashboard() {
                   uploading={uploading.hoc_employment_card_url}
                   onChange={e => handleUpload('hoc_employment_card_url', e)}
                 />
-              </div>
+              </div>}
 
               {/* Checklist */}
-              <div className="bg-muted/40 rounded-2xl p-4">
+              {ndaSigned && <div className="bg-muted/40 rounded-2xl p-4">
                 <p className="text-xs font-bold text-foreground mb-3 uppercase tracking-wide">Submission Checklist</p>
                 <div className="space-y-2">
                   {[
@@ -714,10 +790,10 @@ export default function HotelDashboard() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div>}
 
               {/* Send for Approval */}
-              {!isApproved && (
+              {ndaSigned && !isApproved && (
                 <Button
                   onClick={handleSendForApproval}
                   disabled={!canSubmit || submitting}
@@ -728,7 +804,7 @@ export default function HotelDashboard() {
                 </Button>
               )}
 
-              {isApproved && (
+              {ndaSigned && isApproved && (
                 <div className="bg-green-50 border border-green-200 rounded-2xl p-5 text-center">
                   <CheckCircle2 className="w-8 h-8 text-green-600 mx-auto mb-2" />
                   <p className="font-bold text-green-800">Application Approved!</p>

@@ -1,0 +1,57 @@
+{
+  "name": "NDA",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the hotel account"
+    },
+    "hotel_id": {
+      "type": "string",
+      "description": "Reference to Hotel entity"
+    },
+    "hotel_name": {
+      "type": "string"
+    },
+    "hotel_address": {
+      "type": "string"
+    },
+    "hotel_phone": {
+      "type": "string"
+    },
+    "authorized_signatory_name": {
+      "type": "string",
+      "description": "GM / CEO / Hotel Authority Name"
+    },
+    "authorized_signatory_title": {
+      "type": "string"
+    },
+    "official_email": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "sent",
+        "signed"
+      ],
+      "default": "pending",
+      "description": "NDA lifecycle status"
+    },
+    "signature_data": {
+      "type": "string",
+      "description": "Base64 PNG of the drawn signature"
+    },
+    "signed_at": {
+      "type": "string",
+      "description": "ISO timestamp when hotel signed"
+    },
+    "ip_address": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

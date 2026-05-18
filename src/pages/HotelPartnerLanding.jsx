@@ -13,10 +13,10 @@ const BENEFITS = [
 ];
 
 const STEPS = [
-  { n: '01', title: 'Register Your Hotel', desc: 'Submit your hotel details and documents for verification.' },
-  { n: '02', title: 'Get Approved', desc: 'Our team reviews and approves your hotel within 1–2 business days.' },
-  { n: '03', title: 'Place Your QR Code', desc: 'Download your branded QR code and place it at the concierge desk.' },
-  { n: '04', title: 'Guests Ship Home', desc: 'Guests scan → register → pay → done. We do the rest.' },
+  { n: '01', title: 'Register Your Hotel', desc: 'Create your account using your official hotel email address.' },
+  { n: '02', title: 'Sign the NDA', desc: 'Review and electronically sign the Non-Disclosure Agreement to activate your account.' },
+  { n: '03', title: 'Submit Documents', desc: 'Upload your trade license and staff employment cards for verification.' },
+  { n: '04', title: 'Get Approved & Go Live', desc: 'Once verified, download your QR code and start offering the service to guests.' },
 ];
 
 const TESTIMONIALS = [

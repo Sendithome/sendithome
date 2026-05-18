@@ -20,6 +20,7 @@ import DevDocs from './pages/DevDocs';
 import HotelDashboard from './pages/HotelDashboard';
 import HotelPartnerLanding from './pages/HotelPartnerLanding';
 import HotelSignup from './pages/HotelSignup';
+import NdaSigning from './pages/NdaSigning';
 import BrandDirectory from './pages/BrandDirectory';
 import OxfordOverview from './pages/OxfordOverview';
 // Add page imports here
@@ -66,6 +67,7 @@ const AuthenticatedApp = () => {
       </Route>
       <Route path="/hotel-partner" element={<HotelPartnerLanding />} />
       <Route path="/hotel-signup" element={<HotelSignup />} />
+      <Route path="/nda-signing" element={<NdaSigning />} />
       <Route path="/brand-directory" element={<BrandDirectory />} />
       <Route path="/oxford-overview" element={<OxfordOverview />} />
       <Route path="*" element={<PageNotFound />} />
