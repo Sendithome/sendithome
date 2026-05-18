@@ -52,8 +52,8 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route element={<AppLayout />}>
-        <Route path="/" element={<Navigate to="/hotel/69c10e96d7e89842ae433412" replace />} />
-        <Route path="/hotel/:hotelId" element={<QRLanding />} />
+        <Route path="/" element={<Navigate to="/guest-onboarding/69c10e96d7e89842ae433412" replace />} />
+        <Route path="/guest-onboarding/:hotelId" element={<QRLanding />} />
         <Route path="/register" element={<Register />} />
         <Route path="/new-order" element={<NewOrder />} />
         <Route path="/order/:id/receipts" element={<ReceiptUpload />} />
@@ -65,7 +65,7 @@ const AuthenticatedApp = () => {
         <Route path="/docs" element={<DevDocs />} />
         <Route path="/hotel-dashboard" element={<HotelDashboard />} />
       </Route>
-      <Route path="/hotel-partner" element={<HotelPartnerLanding />} />
+      <Route path="/hotel-onboarding" element={<HotelPartnerLanding />} />
       <Route path="/hotel-signup" element={<HotelSignup />} />
       <Route path="/nda-signing" element={<NdaSigning />} />
       <Route path="/brand-directory" element={<BrandDirectory />} />
