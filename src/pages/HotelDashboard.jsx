@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home, QrCode, Hotel, MapPin, Save, Download, RefreshCw,
   CheckCircle2, Loader2, Upload, Star, Building2, Clock,
-  FileText, Shield, AlertCircle, ChevronRight, Users, X, PenLine
+  FileText, Shield, AlertCircle, ChevronRight, Users, X, PenLine,
+  Truck, Activity
 } from 'lucide-react';
+import OnboardingPipeline from '@/components/hotel/OnboardingPipeline';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,6 +17,7 @@ const TABS = [
   { id: 'profile', label: 'Hotel Profile', icon: Hotel },
   { id: 'documents', label: 'Documents', icon: FileText },
   { id: 'qr', label: 'QR Code', icon: QrCode },
+  { id: 'status', label: 'Onboarding Status', icon: Activity },
 ];
 
 const FLOW_STEPS = [
@@ -94,12 +97,15 @@ export default function HotelDashboard() {
   const [qrLoading, setQrLoading] = useState(false);
   const [uploading, setUploading] = useState({});
 
-  // All hotel applications (admin only)
   const [nda, setNda] = useState(null);
+  const [onboardingStatus, setOnboardingStatus] = useState(null);
 
+  // Admin
   const [allApplications, setAllApplications] = useState([]);
+  const [allOnboardingStatuses, setAllOnboardingStatuses] = useState([]);
   const [adminView, setAdminView] = useState(false);
   const [adminNotes, setAdminNotes] = useState('');
+  const [logisticsStageUpdating, setLogisticsStageUpdating] = useState(null);
 
   const [form, setForm] = useState({
     name: '', address_line1: '', address_line2: '', area: '', city: '', state: '',
@@ -124,10 +130,12 @@ export default function HotelDashboard() {
     const me = await base44.auth.me();
     setUser(me);
 
-    // Admin: load all applications
+    // Admin: load all applications + onboarding statuses
     if (me.role === 'admin') {
       const apps = await base44.entities.HotelApplication.list('-created_date', 100);
       setAllApplications(apps);
+      const statuses = await base44.entities.HotelOnboardingStatus.list('-created_date', 100);
+      setAllOnboardingStatuses(statuses);
     }
 
     // Load this user's hotel
@@ -156,6 +164,10 @@ export default function HotelDashboard() {
     // Load NDA
     const ndas = await base44.entities.NDA.filter({ user_email: me.email });
     if (ndas.length > 0) setNda(ndas[0]);
+
+    // Load onboarding status
+    const statuses = await base44.entities.HotelOnboardingStatus.filter({ user_email: me.email });
+    if (statuses.length > 0) setOnboardingStatus(statuses[0]);
 
     // Load application for this user
     const apps = await base44.entities.HotelApplication.filter({ user_email: me.email });
@@ -252,8 +264,8 @@ export default function HotelDashboard() {
     setSubmitting(false);
   };
 
-  const handleAdminAction = async (appId, action, hotelId) => {
-    const update = {
+  const handleAdminAction = async (appId, action, hotelId, appUserEmail, appHotelName) => {
+    const updateData = {
       status: action,
       reviewed_at: new Date().toISOString(),
       reviewed_by: user.email,
@@ -262,10 +274,57 @@ export default function HotelDashboard() {
     if (action === 'approved' && hotelId) {
       await base44.entities.Hotel.update(hotelId, { active: true });
     }
-    await base44.entities.HotelApplication.update(appId, update);
+    await base44.entities.HotelApplication.update(appId, updateData);
+
+    // On approval, create an onboarding status record if it doesn't exist
+    if (action === 'approved') {
+      const existing = await base44.entities.HotelOnboardingStatus.filter({ application_id: appId });
+      if (existing.length === 0) {
+        await base44.entities.HotelOnboardingStatus.create({
+          hotel_id: hotelId || '',
+          application_id: appId,
+          user_email: appUserEmail,
+          hotel_name: appHotelName || '',
+          logistics_stage: 'pending_dispatch',
+          qr_approved_at: new Date().toISOString(),
+        });
+      }
+    }
+
     const apps = await base44.entities.HotelApplication.list('-created_date', 100);
+    const statuses = await base44.entities.HotelOnboardingStatus.list('-created_date', 100);
     setAllApplications(apps);
+    setAllOnboardingStatuses(statuses);
     setAdminNotes('');
+  };
+
+  const handleDispatchToLogistics = async (statusId, hotelName) => {
+    setLogisticsStageUpdating(statusId);
+    // Add 10 working days (14 calendar days approx)
+    const target = new Date();
+    target.setDate(target.getDate() + 14);
+    await base44.entities.HotelOnboardingStatus.update(statusId, {
+      logistics_stage: 'dispatched_to_logistics',
+      dispatched_at: new Date().toISOString(),
+      target_completion_date: target.toISOString().split('T')[0],
+      stage_updated_at: new Date().toISOString(),
+      stage_updated_by: user.email,
+    });
+    const statuses = await base44.entities.HotelOnboardingStatus.list('-created_date', 100);
+    setAllOnboardingStatuses(statuses);
+    setLogisticsStageUpdating(null);
+  };
+
+  const handleUpdateLogisticsStage = async (statusId, newStage) => {
+    setLogisticsStageUpdating(statusId);
+    await base44.entities.HotelOnboardingStatus.update(statusId, {
+      logistics_stage: newStage,
+      stage_updated_at: new Date().toISOString(),
+      stage_updated_by: user.email,
+    });
+    const statuses = await base44.entities.HotelOnboardingStatus.list('-created_date', 100);
+    setAllOnboardingStatuses(statuses);
+    setLogisticsStageUpdating(null);
   };
 
   const generateQR = () => {
@@ -347,50 +406,116 @@ export default function HotelDashboard() {
                 <p className="text-sm text-muted-foreground text-center py-4">No applications yet.</p>
               ) : (
                 <div className="space-y-3">
-                  {allApplications.map(app => (
-                    <div key={app.id} className="bg-card border border-border rounded-2xl p-4">
-                      <div className="flex items-start justify-between gap-3 flex-wrap">
-                        <div>
-                          <p className="text-sm font-bold text-foreground">{app.user_email}</p>
-                          <p className="text-xs text-muted-foreground mt-0.5">Hotel ID: {app.hotel_id || '—'}</p>
-                          <div className="mt-1"><StatusBadge status={app.status} /></div>
-                          {app.submitted_at && (
-                            <p className="text-[10px] text-muted-foreground mt-1">Submitted: {new Date(app.submitted_at).toLocaleString()}</p>
-                          )}
-                          {app.admin_notes && (
-                            <p className="text-xs text-muted-foreground mt-1 italic">Notes: {app.admin_notes}</p>
-                          )}
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          {/* Document links */}
-                          <div className="flex flex-wrap gap-1.5">
-                            {app.trade_license_url && <a href={app.trade_license_url} target="_blank" rel="noopener noreferrer" className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded-lg px-2 py-0.5 font-medium">Trade License</a>}
-                            {app.gm_employment_card_url && <a href={app.gm_employment_card_url} target="_blank" rel="noopener noreferrer" className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded-lg px-2 py-0.5 font-medium">GM Card</a>}
-                            {app.agm_employment_card_url && <a href={app.agm_employment_card_url} target="_blank" rel="noopener noreferrer" className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded-lg px-2 py-0.5 font-medium">AGM Card</a>}
-                            {app.fdm_employment_card_url && <a href={app.fdm_employment_card_url} target="_blank" rel="noopener noreferrer" className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded-lg px-2 py-0.5 font-medium">FDM Card</a>}
+                  {allApplications.map(app => {
+                    const appOnboarding = allOnboardingStatuses.find(s => s.application_id === app.id);
+                    const LOGISTICS_STAGE_LABELS = {
+                      pending_dispatch: 'Pending Dispatch',
+                      dispatched_to_logistics: 'Dispatched to Logistics',
+                      logistics_contacted: 'Logistics Contacted Hotel',
+                      site_visit_scheduled: 'Site Visit Scheduled',
+                      site_visit_done: 'Site Visit Done',
+                      materials_delivered: 'Materials Delivered',
+                      fully_onboarded: 'Fully Onboarded',
+                    };
+                    const NEXT_STAGES = {
+                      dispatched_to_logistics: 'logistics_contacted',
+                      logistics_contacted: 'site_visit_scheduled',
+                      site_visit_scheduled: 'site_visit_done',
+                      site_visit_done: 'materials_delivered',
+                      materials_delivered: 'fully_onboarded',
+                    };
+                    return (
+                      <div key={app.id} className="bg-card border border-border rounded-2xl p-4 space-y-3">
+                        <div className="flex items-start justify-between gap-3 flex-wrap">
+                          <div>
+                            <p className="text-sm font-bold text-foreground">{app.user_email}</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">Hotel ID: {app.hotel_id || '—'}</p>
+                            <div className="flex items-center gap-2 mt-1 flex-wrap">
+                              <StatusBadge status={app.status} />
+                              {app.nda_signed && (
+                                <span className="text-[10px] bg-green-50 text-green-700 border border-green-200 rounded-full px-2 py-0.5 font-semibold flex items-center gap-1">
+                                  <PenLine className="w-2.5 h-2.5" /> NDA Signed
+                                </span>
+                              )}
+                            </div>
+                            {app.submitted_at && (
+                              <p className="text-[10px] text-muted-foreground mt-1">Submitted: {new Date(app.submitted_at).toLocaleString()}</p>
+                            )}
+                            {app.admin_notes && (
+                              <p className="text-xs text-muted-foreground mt-1 italic">Notes: {app.admin_notes}</p>
+                            )}
                           </div>
-                          {app.status === 'pending_approval' && (
-                            <>
-                              <Input
-                                placeholder="Admin notes (optional)"
-                                value={adminNotes}
-                                onChange={e => setAdminNotes(e.target.value)}
-                                className="h-8 text-xs rounded-lg"
-                              />
-                              <div className="flex gap-2">
-                                <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs h-8 gap-1" onClick={() => handleAdminAction(app.id, 'approved', app.hotel_id)}>
-                                  <CheckCircle2 className="w-3.5 h-3.5" /> Approve
-                                </Button>
-                                <Button size="sm" variant="destructive" className="rounded-lg text-xs h-8 gap-1" onClick={() => handleAdminAction(app.id, 'rejected', app.hotel_id)}>
-                                  <X className="w-3.5 h-3.5" /> Reject
-                                </Button>
-                              </div>
-                            </>
-                          )}
+                          <div className="flex flex-col gap-2">
+                            <div className="flex flex-wrap gap-1.5">
+                              {app.trade_license_url && <a href={app.trade_license_url} target="_blank" rel="noopener noreferrer" className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded-lg px-2 py-0.5 font-medium">Trade License</a>}
+                              {app.gm_employment_card_url && <a href={app.gm_employment_card_url} target="_blank" rel="noopener noreferrer" className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded-lg px-2 py-0.5 font-medium">GM Card</a>}
+                              {app.agm_employment_card_url && <a href={app.agm_employment_card_url} target="_blank" rel="noopener noreferrer" className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded-lg px-2 py-0.5 font-medium">AGM Card</a>}
+                              {app.fdm_employment_card_url && <a href={app.fdm_employment_card_url} target="_blank" rel="noopener noreferrer" className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded-lg px-2 py-0.5 font-medium">FDM Card</a>}
+                            </div>
+                            {app.status === 'pending_approval' && (
+                              <>
+                                <Input
+                                  placeholder="Admin notes (optional)"
+                                  value={adminNotes}
+                                  onChange={e => setAdminNotes(e.target.value)}
+                                  className="h-8 text-xs rounded-lg"
+                                />
+                                <div className="flex gap-2">
+                                  <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs h-8 gap-1" onClick={() => handleAdminAction(app.id, 'approved', app.hotel_id, app.user_email, app.hotel_name)}>
+                                    <CheckCircle2 className="w-3.5 h-3.5" /> Approve & Issue QR
+                                  </Button>
+                                  <Button size="sm" variant="destructive" className="rounded-lg text-xs h-8 gap-1" onClick={() => handleAdminAction(app.id, 'rejected', app.hotel_id, app.user_email)}>
+                                    <X className="w-3.5 h-3.5" /> Reject
+                                  </Button>
+                                </div>
+                              </>
+                            )}
+                          </div>
                         </div>
+
+                        {/* Logistics Onboarding Controls — only for approved hotels */}
+                        {app.status === 'approved' && (
+                          <div className="border-t border-border pt-3">
+                            <p className="text-xs font-bold text-foreground mb-2 flex items-center gap-1.5">
+                              <Truck className="w-3.5 h-3.5 text-blue-500" /> Logistics Onboarding
+                            </p>
+                            {!appOnboarding || appOnboarding.logistics_stage === 'pending_dispatch' ? (
+                              <Button
+                                size="sm"
+                                className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs h-8 gap-1"
+                                disabled={logisticsStageUpdating === (appOnboarding?.id)}
+                                onClick={() => appOnboarding && handleDispatchToLogistics(appOnboarding.id, app.hotel_name)}
+                              >
+                                {logisticsStageUpdating === appOnboarding?.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Truck className="w-3 h-3" />}
+                                Push to Logistics Company
+                              </Button>
+                            ) : (
+                              <div className="flex items-center gap-3 flex-wrap">
+                                <span className="text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2.5 py-1">
+                                  {LOGISTICS_STAGE_LABELS[appOnboarding.logistics_stage] || appOnboarding.logistics_stage}
+                                </span>
+                                {appOnboarding.logistics_stage !== 'fully_onboarded' && NEXT_STAGES[appOnboarding.logistics_stage] && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="rounded-lg text-xs h-7 gap-1"
+                                    disabled={logisticsStageUpdating === appOnboarding.id}
+                                    onClick={() => handleUpdateLogisticsStage(appOnboarding.id, NEXT_STAGES[appOnboarding.logistics_stage])}
+                                  >
+                                    {logisticsStageUpdating === appOnboarding.id ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
+                                    → Mark: {LOGISTICS_STAGE_LABELS[NEXT_STAGES[appOnboarding.logistics_stage]]}
+                                  </Button>
+                                )}
+                                {appOnboarding.logistics_stage === 'fully_onboarded' && (
+                                  <span className="text-xs text-green-700 font-semibold">✓ Fully Onboarded</span>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -812,6 +937,42 @@ export default function HotelDashboard() {
                   <Button onClick={() => setTab('qr')} className="bg-green-600 hover:bg-green-700 text-white rounded-xl gap-2">
                     <QrCode className="w-4 h-4" /> Generate QR Code
                   </Button>
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {/* ── STATUS TAB ── */}
+          {tab === 'status' && (
+            <motion.div key="status" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="space-y-6">
+              <div>
+                <h2 className="text-lg font-bold text-foreground">Onboarding Status</h2>
+                <p className="text-sm text-muted-foreground mt-1">Live view of your full onboarding pipeline — from registration to hotel going live.</p>
+              </div>
+              <div className="bg-card border border-border rounded-2xl p-5">
+                <OnboardingPipeline
+                  application={application}
+                  onboardingStatus={onboardingStatus}
+                  ndaSigned={ndaSigned}
+                />
+              </div>
+              {isApproved && onboardingStatus?.logistics_stage !== 'fully_onboarded' && (
+                <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-start gap-3">
+                  <Truck className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-bold text-blue-800">Logistics Onboarding in Progress</p>
+                    <p className="text-xs text-blue-700 mt-1">Our logistics partner has been notified and will contact your hotel within 1–2 business days to arrange staff briefing, signage placement, and setup. Target: 10 working days.</p>
+                  </div>
+                </div>
+              )}
+              {onboardingStatus?.logistics_stage === 'fully_onboarded' && (
+                <div className="bg-green-50 border border-green-200 rounded-2xl p-4 flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-bold text-green-800">Your hotel is fully onboarded!</p>
+                    <p className="text-xs text-green-700 mt-1">Your QR code is live, staff have been briefed, and materials are in place. Guests can now scan and ship.</p>
+                    <p className="text-xs text-green-700 mt-1">Tourist shipping link: <span className="font-mono font-semibold">{qrLandingUrl}</span></p>
+                  </div>
                 </div>
               )}
             </motion.div>

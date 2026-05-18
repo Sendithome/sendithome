@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Package, QrCode, Globe, Zap, Shield, Star, ArrowRight, CheckCircle2, Users, TrendingUp, Clock } from 'lucide-react';
+import { Package, QrCode, Globe, Zap, Shield, Star, ArrowRight, CheckCircle2, Users, TrendingUp, Clock, Truck, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const BENEFITS = [
@@ -13,10 +13,12 @@ const BENEFITS = [
 ];
 
 const STEPS = [
-  { n: '01', title: 'Register Your Hotel', desc: 'Create your account using your official hotel email address.' },
-  { n: '02', title: 'Sign the NDA', desc: 'Review and electronically sign the Non-Disclosure Agreement to activate your account.' },
-  { n: '03', title: 'Submit Documents', desc: 'Upload your trade license and staff employment cards for verification.' },
-  { n: '04', title: 'Get Approved & Go Live', desc: 'Once verified, download your QR code and start offering the service to guests.' },
+  { n: '01', title: 'Private Registration', desc: 'Create your account via the hotel partner portal using your official hotel email. Open by invitation only.', phase: 'Hotel' },
+  { n: '02', title: 'Sign the NDA', desc: 'Review and electronically sign the Non-Disclosure Agreement within 5 days to activate your account.', phase: 'Hotel', deadline: '5 Days' },
+  { n: '03', title: 'Submit Documents', desc: 'Upload your trade license and staff employment ID cards for identity verification.', phase: 'Hotel' },
+  { n: '04', title: 'Admin Verification', desc: 'Our team reviews your submitted documents and hotel profile for compliance.', phase: 'SendITHome' },
+  { n: '05', title: 'QR Code & Final Approval', desc: 'Approved hotels receive their unique QR code. A permanent, dedicated guest shipping link is activated.', phase: 'SendITHome' },
+  { n: '06', title: 'Logistics Onboarding', desc: 'Our logistics partner contacts your hotel within 1–2 business days for staff briefing, signage setup, and kit delivery. Completed within 10 working days.', phase: 'Logistics', deadline: '10 Working Days' },
 ];
 
 const TESTIMONIALS = [
@@ -137,26 +139,52 @@ export default function HotelPartnerLanding() {
 
       {/* How It Works */}
       <section id="how-it-works" className="bg-muted/40 py-20">
-        <div className="max-w-6xl mx-auto px-5">
+        <div className="max-w-4xl mx-auto px-5">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-black text-foreground">How the Partnership Works</h2>
-            <p className="text-muted-foreground mt-3">From sign-up to your first guest shipment in days.</p>
+            <p className="text-muted-foreground mt-3">A structured onboarding process — transparent, trackable, and completed within 10 working days.</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {STEPS.map((s, i) => (
-              <motion.div
-                key={s.n}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-card border border-border rounded-2xl p-6 relative"
-              >
-                <div className="text-4xl font-black text-accent/20 mb-3">{s.n}</div>
-                <h3 className="font-bold text-foreground mb-2">{s.title}</h3>
-                <p className="text-sm text-muted-foreground">{s.desc}</p>
-              </motion.div>
-            ))}
+          <div className="space-y-4">
+            {STEPS.map((s, i) => {
+              const phaseIcon = s.phase === 'Logistics' ? Truck : s.phase === 'SendITHome' ? Shield : Building2;
+              const PhaseIcon = phaseIcon;
+              const phaseColor = s.phase === 'Logistics' ? 'bg-blue-50 border-blue-200 text-blue-700' : s.phase === 'SendITHome' ? 'bg-purple-50 border-purple-200 text-purple-700' : 'bg-secondary border-border text-secondary-foreground';
+              return (
+                <motion.div
+                  key={s.n}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08 }}
+                  className="bg-card border border-border rounded-2xl p-5 flex gap-4 items-start"
+                >
+                  <div className="text-3xl font-black text-accent/20 leading-none shrink-0 w-10 text-center">{s.n}</div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                      <h3 className="font-bold text-foreground">{s.title}</h3>
+                      <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full border ${phaseColor}`}>
+                        <PhaseIcon className="w-2.5 h-2.5" /> {s.phase}
+                      </span>
+                      {s.deadline && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700">
+                          <Clock className="w-2.5 h-2.5" /> {s.deadline}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Separator: guest shipping is separate */}
+          <div className="mt-8 bg-accent/5 border-2 border-accent/20 rounded-2xl p-5 flex gap-4 items-start">
+            <QrCode className="w-8 h-8 text-accent shrink-0 mt-0.5" />
+            <div>
+              <p className="font-bold text-foreground">After Onboarding: Guest Shipping Portal</p>
+              <p className="text-sm text-muted-foreground mt-1">Once live, your hotel receives a dedicated, permanent guest-facing link (e.g. <span className="font-mono text-accent text-xs">sendithomedxb.com/hotel/your-id</span>). Guests access it by scanning your QR code — it is completely separate from the hotel management system.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -193,7 +221,7 @@ export default function HotelPartnerLanding() {
             Register Your Hotel Now <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
           <div className="flex items-center justify-center gap-5 mt-8 flex-wrap">
-            {['Free to join', 'Approved in 1–2 days', 'Dedicated support'].map(f => (
+            {['Free to join', 'NDA within 5 days', 'Live in 10 working days'].map(f => (
               <div key={f} className="flex items-center gap-1.5 text-white/50 text-sm">
                 <CheckCircle2 className="w-4 h-4 text-accent" />
                 <span>{f}</span>

@@ -1,0 +1,61 @@
+{
+  "name": "HotelOnboardingStatus",
+  "type": "object",
+  "properties": {
+    "hotel_id": {
+      "type": "string",
+      "description": "Reference to Hotel entity"
+    },
+    "application_id": {
+      "type": "string",
+      "description": "Reference to HotelApplication entity"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "hotel_name": {
+      "type": "string"
+    },
+    "logistics_stage": {
+      "type": "string",
+      "enum": [
+        "pending_dispatch",
+        "dispatched_to_logistics",
+        "logistics_contacted",
+        "site_visit_scheduled",
+        "site_visit_done",
+        "materials_delivered",
+        "fully_onboarded"
+      ],
+      "default": "pending_dispatch",
+      "description": "Current logistics onboarding stage"
+    },
+    "qr_approved_at": {
+      "type": "string",
+      "description": "ISO timestamp when QR was approved"
+    },
+    "dispatched_at": {
+      "type": "string",
+      "description": "ISO timestamp when admin dispatched to logistics"
+    },
+    "target_completion_date": {
+      "type": "string",
+      "description": "Target date for full onboarding (10 working days from dispatch)"
+    },
+    "logistics_notes": {
+      "type": "string",
+      "description": "Admin/logistics notes"
+    },
+    "stage_updated_at": {
+      "type": "string",
+      "description": "ISO timestamp of last stage update"
+    },
+    "stage_updated_by": {
+      "type": "string",
+      "description": "Email of who updated the stage"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}
