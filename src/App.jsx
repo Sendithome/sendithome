@@ -27,6 +27,8 @@ import RetailerRegistration from './pages/RetailerRegistration';
 import RetailerPortal from './pages/RetailerPortal';
 import RetailerDashboard from './pages/RetailerDashboard';
 import RetailerSettings from './pages/RetailerSettings';
+import GovernmentLogin from './pages/GovernmentLogin';
+import GovernmentDashboard from './pages/GovernmentDashboard';
 // Add page imports here
 
 const AuthenticatedApp = () => {
@@ -78,6 +80,8 @@ const AuthenticatedApp = () => {
       <Route path="/retailer-settings" element={<RetailerSettings />} />
       <Route path="/brand-directory" element={<BrandDirectory />} />
       <Route path="/oxford-overview" element={<OxfordOverview />} />
+      <Route path="/government-login" element={<GovernmentLogin />} />
+      <Route path="/government-dashboard" element={<GovernmentDashboard />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
