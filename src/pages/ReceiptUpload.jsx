@@ -154,7 +154,11 @@ export default function ReceiptUpload() {
     loadData();
   };
 
-  const handleProceedToBoxSelect = () => setStep(1);
+  const handleProceedToBoxSelect = async () => {
+    // Background: trigger per-retailer verification creation (fire and forget)
+    base44.functions.invoke('createRetailerVerifications', { order_id: orderId }).catch(() => {});
+    setStep(1);
+  };
 
   const handleProceedToDeclaration = () => setStep(2);
 

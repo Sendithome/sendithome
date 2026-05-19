@@ -2,16 +2,18 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Shield, LogOut, RefreshCw, Loader2, BarChart3, ClipboardList,
-  CheckCircle2, Eye
+  CheckCircle2, Eye, Package
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
 import ReviewModal from '@/components/government/ReviewModal';
 import GovAnalyticsTab from '@/components/government/GovAnalyticsTab';
 import AuditTrailTab from '@/components/government/AuditTrailTab';
+import ConsolidatedShipmentsTab from '@/components/government/ConsolidatedShipmentsTab';
 
 const TABS = [
   { id: 'clearance', label: 'Clearance Queue', icon: Shield },
+  { id: 'consolidated', label: 'Consolidated Shipments', icon: Package },
   { id: 'analytics', label: 'Economic Impact', icon: BarChart3 },
   { id: 'audit', label: 'Audit Trail', icon: ClipboardList },
 ];
@@ -29,6 +31,7 @@ export default function GovernmentDashboard() {
   const [tab, setTab] = useState('clearance');
   const [loading, setLoading] = useState(true);
   const [verifications, setVerifications] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [hotels, setHotels] = useState([]);
   const [retailers, setRetailers] = useState([]);
   const [reviewingShipment, setReviewingShipment] = useState(null);
@@ -43,12 +46,17 @@ export default function GovernmentDashboard() {
 
   const loadData = async () => {
     setLoading(true);
-    const [allVerifications, allHotels, allRetailers] = await Promise.all([
+    const [allVerifications, allOrders, allHotels, allRetailers] = await Promise.all([
       base44.entities.RetailerVerification.list('-created_date', 500),
+      base44.entities.Order.filter({ multi_retailer_status: 'pending_retailer_approvals' }, '-created_date', 200)
+        .then(r => r).catch(() => []),
       base44.entities.Hotel.list('-created_date', 200),
       base44.entities.Retailer.list('-created_date', 200),
     ]);
     setVerifications(allVerifications);
+    // Also fetch consolidated orders
+    const consolidatedOrders = await base44.entities.Order.filter({ multi_retailer_status: 'consolidated' }, '-consolidated_at', 200).catch(() => []);
+    setOrders([...allOrders, ...consolidatedOrders]);
     setHotels(allHotels);
     setRetailers(allRetailers);
     setLoading(false);
@@ -72,6 +80,8 @@ export default function GovernmentDashboard() {
   const approvedRetailers = retailers.filter(r => r.status === 'approved').length;
 
   const clearanceQueue = verifications.filter(v => v.status === 'approved' || v.status === 'pending');
+  const consolidatedCount = orders.filter(o => o.multi_retailer_status === 'consolidated').length;
+  const pendingConsolidationCount = orders.filter(o => o.multi_retailer_status === 'pending_retailer_approvals').length;
 
   if (loading) {
     return (
@@ -146,6 +156,9 @@ export default function GovernmentDashboard() {
                 {t.id === 'clearance' && clearanceQueue.length > 0 && (
                   <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-accent/15 text-accent">{clearanceQueue.length}</span>
                 )}
+                {t.id === 'consolidated' && (consolidatedCount + pendingConsolidationCount) > 0 && (
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">{consolidatedCount + pendingConsolidationCount}</span>
+                )}
               </button>
             );
           })}
@@ -211,6 +224,16 @@ export default function GovernmentDashboard() {
                   </div>
                 </div>
               )}
+            </motion.div>
+          )}
+
+          {tab === 'consolidated' && (
+            <motion.div key="consolidated" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <div className="mb-4">
+                <h2 className="text-base font-bold text-foreground">Multi-Retailer Consolidated Shipments</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">Shipments spanning multiple retail stores — automatically consolidated once all retailers approve</p>
+              </div>
+              <ConsolidatedShipmentsTab orders={orders} />
             </motion.div>
           )}
 

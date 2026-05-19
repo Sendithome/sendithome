@@ -6,11 +6,19 @@
       "type": "string",
       "description": "e.g. SIH-2026-00123"
     },
+    "order_id": {
+      "type": "string",
+      "description": "Reference to the Order entity"
+    },
     "retailer_id": {
       "type": "string"
     },
     "retailer_email": {
       "type": "string"
+    },
+    "store_name": {
+      "type": "string",
+      "description": "Store name as extracted from receipt"
     },
     "tourist_name": {
       "type": "string"
