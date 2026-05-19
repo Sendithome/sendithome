@@ -54,17 +54,32 @@ Deno.serve(async (req) => {
     storeGroups[storeName].items.push(item);
   }
 
-  // Fuzzy match store name to a registered Retailer
-  function fuzzyMatch(storeName, retailers) {
-    const normalize = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
-    const target = normalize(storeName);
-    // Exact match first
-    let match = retailers.find(r => normalize(r.store_name) === target);
+  // Fuzzy match store/brand name from receipt to a registered Retailer.
+  // Priority: brand_name (printed on receipt) → store_name (legal name)
+  function fuzzyMatch(receiptStoreName, retailers) {
+    const normalize = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const target = normalize(receiptStoreName);
+
+    // 1. Exact brand_name match
+    let match = retailers.find(r => r.brand_name && normalize(r.brand_name) === target);
     if (match) return match;
-    // Contains match
+
+    // 2. Brand name contains / contained-in match
     match = retailers.find(r => {
-      const rn = normalize(r.store_name);
-      return rn.includes(target) || target.includes(rn);
+      if (!r.brand_name) return false;
+      const bn = normalize(r.brand_name);
+      return bn.includes(target) || target.includes(bn);
+    });
+    if (match) return match;
+
+    // 3. Exact store_name match
+    match = retailers.find(r => normalize(r.store_name) === target);
+    if (match) return match;
+
+    // 4. Store name contains / contained-in match
+    match = retailers.find(r => {
+      const sn = normalize(r.store_name);
+      return sn.includes(target) || target.includes(sn);
     });
     return match || null;
   }
@@ -87,7 +102,8 @@ Deno.serve(async (req) => {
       order_id: order_id,
       retailer_id: retailer?.id || 'unmatched',
       retailer_email: retailer?.contact_email || '',
-      store_name: storeName,
+      // Use the retailer's brand_name if matched, otherwise use what the AI extracted from the receipt
+      store_name: retailer?.brand_name || retailer?.store_name || storeName,
       tourist_name: order.recipient_name || user.full_name || '',
       tourist_passport_country: user.nationality || '',
       hotel_name: order.hotel_name || '',

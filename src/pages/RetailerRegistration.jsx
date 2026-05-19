@@ -11,7 +11,7 @@ const CATEGORIES = [
 
 export default function RetailerRegistration() {
   const [form, setForm] = useState({
-    store_name: '', store_location: '', trade_license_number: '',
+    store_name: '', brand_name: '', store_location: '', trade_license_number: '',
     contact_name: '', contact_email: '', contact_phone: '',
     store_category: '', branches_count: 1, trade_license_url: ''
   });
@@ -39,7 +39,7 @@ export default function RetailerRegistration() {
     setSubmitted(true);
   };
 
-  const canSubmit = form.store_name && form.contact_email && form.trade_license_number && form.store_category && agreed;
+  const canSubmit = form.store_name && form.brand_name && form.contact_email && form.trade_license_number && form.store_category && agreed;
 
   if (submitted) {
     return (
@@ -71,9 +71,22 @@ export default function RetailerRegistration() {
         </div>
 
         <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
-          <Field label="Store / Brand Name *">
-            <input value={form.store_name} onChange={e => update('store_name', e.target.value)} placeholder="e.g. Paris Gallery" className={inputCls} />
-          </Field>
+
+          {/* Store Name vs Brand Name explanation */}
+          <div className="bg-secondary/60 border border-border rounded-xl px-4 py-3 text-xs text-muted-foreground leading-relaxed">
+            <p className="font-semibold text-foreground mb-1">📋 Two different name fields:</p>
+            <p><span className="font-semibold text-foreground">Store Name</span> — Your legal registered business name (as on trade license).</p>
+            <p className="mt-0.5"><span className="font-semibold text-foreground">Brand Name</span> — The name printed on shopping receipts issued to customers (e.g. Gucci, Prada, Nike). This is used to auto-match receipts to your store.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Field label="Legal Store Name *" hint="As on your trade license">
+              <input value={form.store_name} onChange={e => update('store_name', e.target.value)} placeholder="e.g. Al Tayer Retail LLC" className={inputCls} />
+            </Field>
+            <Field label="Brand Name on Receipts *" hint="As printed on customer receipts">
+              <input value={form.brand_name} onChange={e => update('brand_name', e.target.value)} placeholder="e.g. Gucci" className={inputCls} />
+            </Field>
+          </div>
           <Field label="Store Location (Mall / Area) *">
             <input value={form.store_location} onChange={e => update('store_location', e.target.value)} placeholder="e.g. Dubai Mall, Downtown" className={inputCls} />
           </Field>
@@ -150,10 +163,13 @@ export default function RetailerRegistration() {
 
 const inputCls = "w-full h-10 bg-background border border-input rounded-xl px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent transition-colors";
 
-function Field({ label, children }) {
+function Field({ label, hint, children }) {
   return (
     <div>
-      <label className="text-xs text-muted-foreground font-medium block mb-1">{label}</label>
+      <label className="text-xs text-muted-foreground font-medium block mb-1">
+        {label}
+        {hint && <span className="text-[10px] text-muted-foreground/70 ml-1 font-normal">({hint})</span>}
+      </label>
       {children}
     </div>
   );

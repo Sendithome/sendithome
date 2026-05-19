@@ -3,7 +3,12 @@
   "type": "object",
   "properties": {
     "store_name": {
-      "type": "string"
+      "type": "string",
+      "description": "Legal registered store name (as on trade license)"
+    },
+    "brand_name": {
+      "type": "string",
+      "description": "Brand name as it appears on shopping receipts (e.g. Gucci, Prada, Nike)"
     },
     "store_location": {
       "type": "string"
