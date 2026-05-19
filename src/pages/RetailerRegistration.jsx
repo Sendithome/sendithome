@@ -13,7 +13,7 @@ export default function RetailerRegistration() {
   const [form, setForm] = useState({
     store_name: '', brand_name: '', store_location: '', trade_license_number: '',
     contact_name: '', contact_email: '', contact_phone: '',
-    store_category: '', branches_count: 1, trade_license_url: ''
+    store_category: '', branches_count: 1
   });
   const [agreed, setAgreed] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -22,15 +22,7 @@ export default function RetailerRegistration() {
 
   const update = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
-  const handleUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    e.target.value = '';
-    setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    update('trade_license_url', file_url);
-    setUploading(false);
-  };
+
 
   const handleSubmit = async () => {
     setSubmitting(true);
@@ -114,25 +106,7 @@ export default function RetailerRegistration() {
             <input type="number" min="1" value={form.branches_count} onChange={e => update('branches_count', parseInt(e.target.value) || 1)} className={inputCls} />
           </Field>
 
-          {/* Upload */}
-          <Field label="Trade License Document *">
-            <div className="flex items-center gap-3">
-              {form.trade_license_url ? (
-                <a href={form.trade_license_url} target="_blank" rel="noopener noreferrer" className="flex-1 text-xs text-accent bg-accent/10 border border-accent/30 rounded-xl px-3 py-2 flex items-center gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Document uploaded — tap to view
-                </a>
-              ) : (
-                <div className="flex-1 h-10 border-2 border-dashed border-border rounded-xl flex items-center justify-center text-xs text-muted-foreground">
-                  No document uploaded
-                </div>
-              )}
-              <label className="cursor-pointer shrink-0 flex items-center gap-1.5 text-xs text-accent font-semibold hover:underline">
-                {uploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
-                {uploading ? 'Uploading…' : form.trade_license_url ? 'Replace' : 'Upload'}
-                <input type="file" accept="image/*,.pdf" className="hidden" onChange={handleUpload} disabled={uploading} />
-              </label>
-            </div>
-          </Field>
+
 
           {/* Terms */}
           <label className="flex items-start gap-3 cursor-pointer">
