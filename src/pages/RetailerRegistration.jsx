@@ -43,16 +43,16 @@ export default function RetailerRegistration() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#0B1120] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
         <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="max-w-md w-full text-center">
-          <div className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="w-10 h-10 text-green-500" />
+          <div className="w-20 h-20 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
+            <CheckCircle2 className="w-10 h-10 text-accent" />
           </div>
-          <h2 className="text-2xl font-bold text-[#D4A855] mb-3">Registration Submitted!</h2>
-          <p className="text-slate-300 text-sm leading-relaxed">
-            Thank you! Your registration is under review. You will receive your <strong className="text-green-400">Retailer Partner Code</strong> within 2 business days.
+          <h2 className="text-2xl font-bold text-primary mb-3">Registration Submitted!</h2>
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            Thank you! Your registration is under review. You will receive your <strong className="text-accent">Retailer Partner Code</strong> within 2 business days.
           </p>
-          <Link to="/retailer-portal" className="mt-6 inline-block text-sm text-green-400 hover:underline">
+          <Link to="/retailer-portal" className="mt-6 inline-block text-sm text-accent hover:underline">
             → Back to Retailer Login
           </Link>
         </motion.div>
@@ -61,16 +61,16 @@ export default function RetailerRegistration() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B1120] px-4 py-10">
+    <div className="min-h-screen bg-background px-4 py-10">
       <div className="max-w-lg mx-auto">
         {/* Logo */}
         <div className="text-center mb-8">
-          <p className="text-xs font-black tracking-widest text-white">SEND<span className="text-[#FF007F]">IT</span>HOME</p>
-          <h1 className="text-2xl font-bold text-[#D4A855] mt-4">Retailer Partner Registration</h1>
-          <p className="text-slate-400 text-sm mt-1">Join the Send It Home certified retail network</p>
+          <p className="text-xs font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
+          <h1 className="text-2xl font-bold text-primary mt-4">Retailer Partner Registration</h1>
+          <p className="text-muted-foreground text-sm mt-1">Join the Send It Home certified retail network</p>
         </div>
 
-        <div className="bg-[#111827] border border-slate-700 rounded-2xl p-6 space-y-4">
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
           <Field label="Store / Brand Name *">
             <input value={form.store_name} onChange={e => update('store_name', e.target.value)} placeholder="e.g. Paris Gallery" className={inputCls} />
           </Field>
@@ -105,15 +105,15 @@ export default function RetailerRegistration() {
           <Field label="Trade License Document *">
             <div className="flex items-center gap-3">
               {form.trade_license_url ? (
-                <a href={form.trade_license_url} target="_blank" rel="noopener noreferrer" className="flex-1 text-xs text-green-400 bg-green-500/10 border border-green-500/30 rounded-xl px-3 py-2 flex items-center gap-2">
+                <a href={form.trade_license_url} target="_blank" rel="noopener noreferrer" className="flex-1 text-xs text-accent bg-accent/10 border border-accent/30 rounded-xl px-3 py-2 flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5" /> Document uploaded — tap to view
                 </a>
               ) : (
-                <div className="flex-1 h-10 border-2 border-dashed border-slate-600 rounded-xl flex items-center justify-center text-xs text-slate-500">
+                <div className="flex-1 h-10 border-2 border-dashed border-border rounded-xl flex items-center justify-center text-xs text-muted-foreground">
                   No document uploaded
                 </div>
               )}
-              <label className="cursor-pointer shrink-0 flex items-center gap-1.5 text-xs text-green-400 font-semibold hover:underline">
+              <label className="cursor-pointer shrink-0 flex items-center gap-1.5 text-xs text-accent font-semibold hover:underline">
                 {uploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
                 {uploading ? 'Uploading…' : form.trade_license_url ? 'Replace' : 'Upload'}
                 <input type="file" accept="image/*,.pdf" className="hidden" onChange={handleUpload} disabled={uploading} />
@@ -123,24 +123,24 @@ export default function RetailerRegistration() {
 
           {/* Terms */}
           <label className="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} className="mt-1 accent-green-500" />
-            <span className="text-xs text-slate-400 leading-relaxed">
-              I agree to the <span className="text-green-400 font-semibold">Send It Home Retailer Partnership Terms</span> including 24-hour verification SLA and commission structure.
+            <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} className="mt-1 accent-accent" />
+            <span className="text-xs text-muted-foreground leading-relaxed">
+              I agree to the <span className="text-accent font-semibold">Send It Home Retailer Partnership Terms</span> including 24-hour verification SLA and commission structure.
             </span>
           </label>
 
           <button
             onClick={handleSubmit}
             disabled={!canSubmit || submitting}
-            className="w-full h-12 bg-green-500 hover:bg-green-600 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors"
+            className="w-full h-12 bg-accent hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed text-accent-foreground font-bold rounded-xl flex items-center justify-center gap-2 transition-colors"
           >
             {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <ChevronRight className="w-4 h-4" />}
             {submitting ? 'Submitting…' : 'Submit Registration'}
           </button>
 
-          <p className="text-center text-xs text-slate-500">
+          <p className="text-center text-xs text-muted-foreground">
             Already registered?{' '}
-            <Link to="/retailer-portal" className="text-green-400 hover:underline">Sign in here</Link>
+            <Link to="/retailer-portal" className="text-accent hover:underline">Sign in here</Link>
           </p>
         </div>
       </div>
@@ -148,12 +148,12 @@ export default function RetailerRegistration() {
   );
 }
 
-const inputCls = "w-full h-10 bg-[#0B1120] border border-slate-700 rounded-xl px-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-green-500 transition-colors";
+const inputCls = "w-full h-10 bg-background border border-input rounded-xl px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent transition-colors";
 
 function Field({ label, children }) {
   return (
     <div>
-      <label className="text-xs text-slate-400 font-medium block mb-1">{label}</label>
+      <label className="text-xs text-muted-foreground font-medium block mb-1">{label}</label>
       {children}
     </div>
   );

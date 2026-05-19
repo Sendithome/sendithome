@@ -41,19 +41,19 @@ export default function RetailerSettings() {
   };
 
   if (!retailer) return (
-    <div className="min-h-screen bg-[#0B1120] flex items-center justify-center">
-      <Loader2 className="w-6 h-6 text-green-500 animate-spin" />
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <Loader2 className="w-6 h-6 text-accent animate-spin" />
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#0B1120] px-4 py-8">
+    <div className="min-h-screen bg-background px-4 py-8">
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center gap-3 mb-6">
-          <Link to="/retailer-dashboard" className="text-slate-400 hover:text-white transition-colors">
+          <Link to="/retailer-dashboard" className="text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <h1 className="text-xl font-bold text-[#D4A855]">Settings</h1>
+          <h1 className="text-xl font-bold text-primary">Settings</h1>
         </div>
 
         <div className="space-y-5">
@@ -87,46 +87,46 @@ export default function RetailerSettings() {
 
           {/* Notifications */}
           <Section icon={<Bell className="w-4 h-4" />} title="Notification Preferences">
-            <p className="text-xs text-slate-500 mb-3">How should we notify you of new verification requests?</p>
-            <div className="flex gap-3">
-              {['email', 'sms', 'both'].map(opt => (
-                <button key={opt} onClick={() => update('notification_preference', opt)}
-                  className={`px-4 h-9 rounded-xl text-xs font-semibold border transition-colors capitalize ${form.notification_preference === opt ? 'bg-green-500/20 border-green-500 text-green-400' : 'border-slate-700 text-slate-400 hover:border-slate-500'}`}>
-                  {opt}
-                </button>
-              ))}
-            </div>
+           <p className="text-xs text-muted-foreground mb-3">How should we notify you of new verification requests?</p>
+           <div className="flex gap-3">
+             {['email', 'sms', 'both'].map(opt => (
+               <button key={opt} onClick={() => update('notification_preference', opt)}
+                 className={`px-4 h-9 rounded-xl text-xs font-semibold border transition-colors capitalize ${form.notification_preference === opt ? 'bg-accent/15 border-accent text-accent' : 'border-border text-muted-foreground hover:border-border'}`}>
+                 {opt}
+               </button>
+             ))}
+           </div>
           </Section>
 
           {/* Commission Rate — view only */}
           <Section icon={<Percent className="w-4 h-4" />} title="Commission Rate">
-            <div className="bg-[#0B1120] rounded-xl p-4 flex items-center justify-between">
+            <div className="bg-muted/40 rounded-xl p-4 flex items-center justify-between">
               <div>
-                <p className="text-xs text-slate-500">Agreed Commission Rate</p>
-                <p className="text-2xl font-bold text-[#D4A855] mt-1">{retailer.commission_rate || 2.5}%</p>
+                <p className="text-xs text-muted-foreground">Agreed Commission Rate</p>
+                <p className="text-2xl font-bold text-primary mt-1">{retailer.commission_rate || 2.5}%</p>
               </div>
-              <p className="text-xs text-slate-500 max-w-xs text-right">Rate is set by Send It Home admin and cannot be changed here. Contact partnerships to renegotiate.</p>
+              <p className="text-xs text-muted-foreground max-w-xs text-right">Rate is set by Send It Home admin and cannot be changed here. Contact partnerships to renegotiate.</p>
             </div>
           </Section>
 
           {/* Support */}
           <Section icon={<HelpCircle className="w-4 h-4" />} title="Support">
-            <div className="bg-[#0B1120] rounded-xl p-4 space-y-2 text-xs text-slate-400">
+            <div className="bg-muted/40 rounded-xl p-4 space-y-2 text-xs text-muted-foreground">
               <p>For support with your retailer account, please contact:</p>
-              <p className="text-green-400 font-semibold">retail-partnerships@senditehome.com</p>
-              <p className="text-slate-500">Response time: within 1 business day</p>
+              <p className="text-accent font-semibold">retail-partnerships@senditehome.com</p>
+              <p className="text-muted-foreground">Response time: within 1 business day</p>
             </div>
           </Section>
 
           {saved && (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-              className="bg-green-500/10 border border-green-500/40 rounded-xl px-4 py-3 text-sm text-green-400 font-semibold text-center">
+              className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-sm text-green-700 font-semibold text-center">
               Settings saved successfully ✓
             </motion.div>
           )}
 
           <button onClick={handleSave} disabled={saving}
-            className="w-full h-12 bg-green-500 hover:bg-green-600 disabled:opacity-50 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors">
+            className="w-full h-12 bg-accent hover:bg-accent/90 disabled:opacity-50 text-accent-foreground font-bold rounded-xl flex items-center justify-center gap-2 transition-colors">
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
             {saving ? 'Saving…' : 'Save Changes'}
           </button>
@@ -136,13 +136,13 @@ export default function RetailerSettings() {
   );
 }
 
-const inputCls = "w-full h-10 bg-[#0B1120] border border-slate-700 rounded-xl px-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-green-500 transition-colors";
+const inputCls = "w-full h-10 bg-background border border-input rounded-xl px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent transition-colors";
 
 function Section({ icon, title, children }) {
   return (
-    <div className="bg-[#111827] border border-slate-700 rounded-2xl p-5">
-      <h2 className="text-sm font-bold text-white flex items-center gap-2 mb-4 text-[#D4A855]">
-        {icon}{title}
+    <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+      <h2 className="text-sm font-bold text-foreground flex items-center gap-2 mb-4">
+        {icon}<span className="text-primary">{title}</span>
       </h2>
       {children}
     </div>
@@ -152,7 +152,7 @@ function Section({ icon, title, children }) {
 function Field({ label, children }) {
   return (
     <div>
-      <label className="text-xs text-slate-400 block mb-1">{label}</label>
+      <label className="text-xs text-muted-foreground block mb-1">{label}</label>
       {children}
     </div>
   );
