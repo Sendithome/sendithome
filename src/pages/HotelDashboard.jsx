@@ -106,6 +106,9 @@ export default function HotelDashboard() {
   const [adminView, setAdminView] = useState(false);
   const [adminNotes, setAdminNotes] = useState('');
   const [logisticsStageUpdating, setLogisticsStageUpdating] = useState(null);
+  const [allRetailers, setAllRetailers] = useState([]);
+  const [approvingRetailer, setApprovingRetailer] = useState(null);
+  const [adminTab, setAdminTab] = useState('hotels');
 
   const [form, setForm] = useState({
     name: '', address_line1: '', address_line2: '', area: '', city: '', state: '',
@@ -130,12 +133,16 @@ export default function HotelDashboard() {
     const me = await base44.auth.me();
     setUser(me);
 
-    // Admin: load all applications + onboarding statuses
+    // Admin: load all applications + onboarding statuses + retailers
     if (me.role === 'admin') {
-      const apps = await base44.entities.HotelApplication.list('-created_date', 100);
+      const [apps, statuses, retailers] = await Promise.all([
+        base44.entities.HotelApplication.list('-created_date', 100),
+        base44.entities.HotelOnboardingStatus.list('-created_date', 100),
+        base44.entities.Retailer.list('-created_date', 200),
+      ]);
       setAllApplications(apps);
-      const statuses = await base44.entities.HotelOnboardingStatus.list('-created_date', 100);
       setAllOnboardingStatuses(statuses);
+      setAllRetailers(retailers);
     }
 
     // Load this user's hotel
@@ -298,6 +305,20 @@ export default function HotelDashboard() {
     setAdminNotes('');
   };
 
+  const handleApproveRetailer = async (retailerId) => {
+    setApprovingRetailer(retailerId);
+    await base44.functions.invoke('approveRetailer', { retailer_id: retailerId });
+    const retailers = await base44.entities.Retailer.list('-created_date', 200);
+    setAllRetailers(retailers);
+    setApprovingRetailer(null);
+  };
+
+  const handleRejectRetailer = async (retailerId) => {
+    await base44.entities.Retailer.update(retailerId, { status: 'rejected' });
+    const retailers = await base44.entities.Retailer.list('-created_date', 200);
+    setAllRetailers(retailers);
+  };
+
   const handleDispatchToLogistics = async (statusId, hotelName) => {
     setLogisticsStageUpdating(statusId);
     // Add 10 working days (14 calendar days approx)
@@ -398,10 +419,83 @@ export default function HotelDashboard() {
             <div className="max-w-4xl mx-auto px-4 py-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-accent" /> Admin — Hotel Applications
+                  <Shield className="w-4 h-4 text-accent" /> Admin Panel
                 </h3>
                 <button onClick={() => setAdminView(false)}><X className="w-4 h-4 text-muted-foreground" /></button>
               </div>
+
+              {/* Admin sub-tabs */}
+              <div className="flex gap-1 border-b border-border mb-4">
+                {[
+                  { id: 'hotels', label: `Hotels (${allApplications.length})` },
+                  { id: 'retailers', label: `Retailers (${allRetailers.filter(r => r.status === 'pending').length} pending)` },
+                ].map(t => (
+                  <button key={t.id} onClick={() => setAdminTab(t.id)}
+                    className={`px-3 py-2 text-xs font-semibold border-b-2 transition-colors ${adminTab === t.id ? 'border-accent text-accent' : 'border-transparent text-muted-foreground'}`}>
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Retailers admin tab */}
+              {adminTab === 'retailers' && (
+                <div className="space-y-3">
+                  {allRetailers.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-4">No retailer registrations yet.</p>
+                  ) : (
+                    allRetailers.map(retailer => (
+                      <div key={retailer.id} className="bg-card border border-border rounded-2xl p-4 space-y-2">
+                        <div className="flex items-start justify-between gap-3 flex-wrap">
+                          <div>
+                            <p className="text-sm font-bold text-foreground">{retailer.store_name}</p>
+                            {retailer.brand_name && <p className="text-xs text-muted-foreground">Brand: {retailer.brand_name}</p>}
+                            <p className="text-xs text-muted-foreground">{retailer.contact_email} · {retailer.store_category}</p>
+                            <p className="text-xs text-muted-foreground">{retailer.store_location}</p>
+                            {retailer.partner_code && (
+                              <p className="text-xs font-mono text-accent mt-1">Code: {retailer.partner_code}</p>
+                            )}
+                            <div className="mt-1">
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                                retailer.status === 'approved' ? 'bg-green-50 text-green-700 border-green-200' :
+                                retailer.status === 'rejected' ? 'bg-red-50 text-red-700 border-red-200' :
+                                retailer.status === 'suspended' ? 'bg-orange-50 text-orange-700 border-orange-200' :
+                                'bg-amber-50 text-amber-700 border-amber-200'
+                              }`}>{retailer.status}</span>
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-2 shrink-0">
+                            {retailer.trade_license_url && (
+                              <a href={retailer.trade_license_url} target="_blank" rel="noopener noreferrer"
+                                className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded-lg px-2 py-0.5 font-medium">
+                                Trade License
+                              </a>
+                            )}
+                            {retailer.status === 'pending' && (
+                              <div className="flex gap-2">
+                                <Button size="sm"
+                                  className="bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs h-8 gap-1"
+                                  disabled={approvingRetailer === retailer.id}
+                                  onClick={() => handleApproveRetailer(retailer.id)}>
+                                  {approvingRetailer === retailer.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+                                  Approve & Send Credentials
+                                </Button>
+                                <Button size="sm" variant="destructive" className="rounded-lg text-xs h-8 gap-1"
+                                  onClick={() => handleRejectRetailer(retailer.id)}>
+                                  <X className="w-3.5 h-3.5" /> Reject
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+
+              {/* Hotels admin tab */}
+              {adminTab === 'hotels' && (
+              <div>
               {allApplications.length === 0 ? (
                 <p className="text-sm text-muted-foreground text-center py-4">No applications yet.</p>
               ) : (
@@ -518,6 +612,9 @@ export default function HotelDashboard() {
                   })}
                 </div>
               )}
+              </div>
+              )}
+
             </div>
           </motion.div>
         )}

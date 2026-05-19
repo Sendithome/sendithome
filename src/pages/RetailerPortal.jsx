@@ -26,6 +26,11 @@ export default function RetailerPortal() {
       setLoading(false);
       return;
     }
+    if (retailer.login_password && retailer.login_password !== form.password) {
+      setError('Incorrect password. Please check the credentials sent to your email.');
+      setLoading(false);
+      return;
+    }
     sessionStorage.setItem('retailer_id', retailer.id);
     sessionStorage.setItem('retailer_name', retailer.store_name);
     setLoading(false);

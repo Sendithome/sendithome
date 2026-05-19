@@ -50,6 +50,10 @@
       "type": "string",
       "description": "Unique retailer partner code e.g. RTL-00123"
     },
+    "login_password": {
+      "type": "string",
+      "description": "Auto-generated login password sent to retailer on approval"
+    },
     "status": {
       "type": "string",
       "enum": [
