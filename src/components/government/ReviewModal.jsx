@@ -2,9 +2,42 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X, Shield, CheckCircle2, AlertTriangle, Loader2, FileText,
-  User, Package, Building2, ChevronDown, ChevronUp
+  User, Package, Building2, ChevronDown, ChevronUp, Download
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+
+async function downloadDeclarationPDF(shipment) {
+  const order = {
+    order_number: shipment.shipment_id,
+    recipient_name: shipment.tourist_name,
+    hotel_name: shipment.hotel_name,
+    hotel_country: 'United Arab Emirates',
+    nationality: shipment.tourist_passport_country,
+    destination_country: shipment.destination_country,
+    destination_address: '',
+    destination_city: '',
+    destination_postal_code: '',
+    recipient_phone: '',
+    passport_number: '',
+  };
+  const items = (shipment.items || []).map(i => ({
+    item_name: i.description || i.item_name || 'Item',
+    category: i.category || '',
+    quantity: 1,
+    price: i.price || 0,
+    currency: 'USD',
+    eligible: i.eligible !== false,
+  }));
+  const response = await base44.functions.invoke('generateDeclarationPDF', { order, items, signature: null });
+  // response.data is the PDF ArrayBuffer via axios
+  const blob = new Blob([response.data], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `customs-declaration-${shipment.shipment_id}.pdf`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 const HOLD_REASONS = [
   'Additional documentation needed',
@@ -36,6 +69,13 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
   const [rejectReason, setRejectReason] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownloadPDF = async () => {
+    setDownloading(true);
+    await downloadDeclarationPDF(shipment);
+    setDownloading(false);
+  };
 
   const totalValue = shipment.total_value || 0;
   const items = shipment.items || [];
@@ -149,7 +189,17 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
 
           {/* Customs Declaration */}
           <section className="bg-[#060D1F] rounded-xl p-4 space-y-2">
-            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold flex items-center gap-1.5"><FileText className="w-3 h-3" /> Customs Declaration</p>
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold flex items-center gap-1.5"><FileText className="w-3 h-3" /> Customs Declaration</p>
+              <button
+                onClick={handleDownloadPDF}
+                disabled={downloading}
+                className="flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1.5 bg-[#8B5CF6]/20 hover:bg-[#8B5CF6]/30 text-[#8B5CF6] rounded-lg transition-colors disabled:opacity-50"
+              >
+                {downloading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
+                {downloading ? 'Generating…' : 'Download PDF'}
+              </button>
+            </div>
             <div className="grid grid-cols-2 gap-2">
               <KV k="Customs Ref" v={shipment.customs_ref || 'Pending Clearance'} />
               <KV k="Submitted" v={shipment.created_date ? new Date(shipment.created_date).toLocaleDateString() : '—'} />

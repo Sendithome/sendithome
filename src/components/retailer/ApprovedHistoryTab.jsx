@@ -1,5 +1,40 @@
 import { useState } from 'react';
-import { Download, ChevronDown, ChevronUp } from 'lucide-react';
+import { Download, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+
+async function downloadDeclarationPDF(v, setDownloading) {
+  setDownloading(v.id);
+  const order = {
+    order_number: v.shipment_id,
+    recipient_name: v.tourist_name,
+    hotel_name: v.hotel_name,
+    hotel_country: 'United Arab Emirates',
+    nationality: v.tourist_passport_country,
+    destination_country: v.destination_country,
+    destination_address: '',
+    destination_city: '',
+    destination_postal_code: '',
+    recipient_phone: '',
+    passport_number: '',
+  };
+  const items = (v.items || []).map(i => ({
+    item_name: i.description || i.item_name || 'Item',
+    category: i.category || '',
+    quantity: 1,
+    price: i.price || 0,
+    currency: 'USD',
+    eligible: i.eligible !== false,
+  }));
+  const response = await base44.functions.invoke('generateDeclarationPDF', { order, items, signature: null });
+  const blob = new Blob([response.data], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `customs-declaration-${v.shipment_id}.pdf`;
+  a.click();
+  URL.revokeObjectURL(url);
+  setDownloading(null);
+}
 
 export default function ApprovedHistoryTab({ verifications }) {
   const [sortField, setSortField] = useState('approved_at');
@@ -7,6 +42,7 @@ export default function ApprovedHistoryTab({ verifications }) {
   const [filterFrom, setFilterFrom] = useState('');
   const [filterTo, setFilterTo] = useState('');
   const [expandedId, setExpandedId] = useState(null);
+  const [downloadingId, setDownloadingId] = useState(null);
 
   const toggleSort = (field) => {
     if (sortField === field) setSortDir(d => -d);
@@ -95,9 +131,19 @@ export default function ApprovedHistoryTab({ verifications }) {
                     <td className="py-2.5 pr-3 text-[#D4A855] font-semibold">${v.commission_amount?.toFixed(2)}</td>
                     <td className="py-2.5 pr-3">{v.destination_country}</td>
                     <td className="py-2.5">
-                      <button onClick={() => setExpandedId(expandedId === v.id ? null : v.id)} className="text-slate-500 hover:text-slate-300">
-                        {expandedId === v.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                      </button>
+                     <div className="flex items-center gap-2">
+                       <button
+                         onClick={() => downloadDeclarationPDF(v, setDownloadingId)}
+                         disabled={downloadingId === v.id}
+                         title="Download Customs Declaration PDF"
+                         className="text-green-500 hover:text-green-400 disabled:opacity-40 transition-colors"
+                       >
+                         {downloadingId === v.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                       </button>
+                       <button onClick={() => setExpandedId(expandedId === v.id ? null : v.id)} className="text-slate-500 hover:text-slate-300">
+                         {expandedId === v.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                       </button>
+                     </div>
                     </td>
                   </tr>
                   {expandedId === v.id && (
