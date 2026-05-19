@@ -85,7 +85,7 @@ export default function VerificationCard({ verification, retailer, onApproved, o
         className="bg-green-500/10 border border-green-500/40 rounded-2xl p-4 flex items-center gap-3">
         <CheckCircle2 className="w-5 h-5 text-green-400 shrink-0" />
         <p className="text-sm text-green-300 font-semibold">
-          Approved ✓ — Shipment {verification.shipment_id} verified. Commission of ${verification.commission_amount?.toFixed(2)} recorded.
+          Approved ✓ — Shipment {verification.shipment_id} verified. Govt. commission (10%*): ${((verification.total_value || 0) * 0.10).toFixed(2)} recorded.
         </p>
       </motion.div>
     );
@@ -163,15 +163,18 @@ export default function VerificationCard({ verification, retailer, onApproved, o
                         </tbody>
                       </table>
                     </div>
-                    <div className="flex justify-between mt-3 pt-2 border-t border-slate-700">
-                      <div>
-                        <span className="text-xs text-slate-400">Total value from your store: </span>
-                        <span className="text-sm font-bold text-white">${verification.total_value?.toFixed(2)}</span>
+                    <div className="mt-3 pt-2 border-t border-slate-700 space-y-2">
+                      <div className="flex justify-between">
+                        <div>
+                          <span className="text-xs text-slate-400">Total value (shipped items): </span>
+                          <span className="text-sm font-bold text-white">${verification.total_value?.toFixed(2)}</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-xs text-slate-400">Govt. commission (10%*): </span>
+                          <span className="text-sm font-bold text-[#D4A855]">${((verification.total_value || 0) * 0.10).toFixed(2)}</span>
+                        </div>
                       </div>
-                      <div>
-                        <span className="text-xs text-slate-400">Commission payable: </span>
-                        <span className="text-sm font-bold text-[#D4A855]">${verification.commission_amount?.toFixed(2)}</span>
-                      </div>
+                      <p className="text-[10px] text-slate-500 italic">* 10% commission applies only to declared items being shipped internationally through the platform. VAT is calculated separately. Final rate subject to approval by economic &amp; government authorities.</p>
                     </div>
                   </div>
                 )}
@@ -212,9 +215,10 @@ export default function VerificationCard({ verification, retailer, onApproved, o
                 <li>These items were genuinely purchased at <strong className="text-white">{retailer?.store_name}</strong> on {verification.shipment_date ? new Date(verification.shipment_date).toLocaleDateString() : '—'}.</li>
                 <li>The receipt is authentic.</li>
                 <li>You approve the export of these goods through the Send It Home certified channel.</li>
-                <li>Commission of <strong className="text-[#D4A855]">${verification.commission_amount?.toFixed(2)}</strong> is payable.</li>
+                <li>A government commission of <strong className="text-[#D4A855]">10%*</strong> (<strong className="text-[#D4A855]">${((verification.total_value || 0) * 0.10).toFixed(2)}</strong>) applies on the declared shipped items only — not on items retained by the tourist. VAT is excluded.</li>
               </ol>
-              <p className="text-slate-500 italic mt-2">This confirmation is legally binding and forms part of the export documentation.</p>
+              <p className="text-[10px] text-slate-500 italic mt-2">* 10% government commission rate shown as a demo/reference model. Final rate subject to approval by relevant authorities. VAT calculated separately.</p>
+              <p className="text-slate-500 italic mt-1">This confirmation is legally binding and forms part of the export documentation.</p>
             </div>
             <label className="flex items-start gap-2 cursor-pointer mb-4">
               <input type="checkbox" checked={confirmed} onChange={e => setConfirmed(e.target.checked)} className="mt-0.5 accent-green-500" />

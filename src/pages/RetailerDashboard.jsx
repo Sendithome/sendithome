@@ -131,10 +131,11 @@ export default function RetailerDashboard() {
           />
           <StatCard
             icon={<DollarSign className="w-5 h-5" />}
-            label="Commission Payable"
-            value={`$${monthCommission.toLocaleString('en', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
+            label="Govt. Commission (10%*)"
+            value={`$${(approved.filter(v => v.approved_at?.startsWith(thisMonthStr)).reduce((s, v) => s + (v.total_value || 0), 0) * 0.10).toLocaleString('en', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
             colorCls="text-amber-600"
             bgCls="bg-amber-50 border-amber-200"
+            footnote="on shipped items only"
           />
         </div>
 
@@ -198,7 +199,7 @@ export default function RetailerDashboard() {
   );
 }
 
-function StatCard({ icon, label, value, colorCls, bgCls, pulse }) {
+function StatCard({ icon, label, value, colorCls, bgCls, pulse, footnote }) {
   return (
     <div className={`rounded-2xl border p-4 flex items-center gap-4 shadow-sm ${bgCls} ${pulse ? 'animate-pulse' : ''}`}>
       <div className={`w-10 h-10 rounded-xl bg-white/60 flex items-center justify-center ${colorCls}`}>
@@ -207,6 +208,7 @@ function StatCard({ icon, label, value, colorCls, bgCls, pulse }) {
       <div>
         <p className="text-xs text-muted-foreground">{label}</p>
         <p className={`text-xl font-bold mt-0.5 ${colorCls}`}>{value}</p>
+        {footnote && <p className="text-[10px] text-muted-foreground/70 italic mt-0.5">{footnote}</p>}
       </div>
     </div>
   );
