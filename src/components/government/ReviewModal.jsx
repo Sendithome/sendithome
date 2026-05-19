@@ -1,10 +1,17 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   X, Shield, CheckCircle2, AlertTriangle, Loader2, FileText,
-  User, Package, Building2, ChevronDown, ChevronUp, Download
+  User, Package, Building2, Download
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+
+const HOLD_REASONS = [
+  'Additional documentation needed',
+  'Value verification required',
+  'Compliance concern',
+  'Random audit selection',
+];
 
 async function downloadDeclarationPDF(shipment) {
   const order = {
@@ -29,7 +36,6 @@ async function downloadDeclarationPDF(shipment) {
     eligible: i.eligible !== false,
   }));
   const response = await base44.functions.invoke('generateDeclarationPDF', { order, items, signature: null });
-  // response.data is the PDF ArrayBuffer via axios
   const blob = new Blob([response.data], { type: 'application/pdf' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -39,24 +45,17 @@ async function downloadDeclarationPDF(shipment) {
   URL.revokeObjectURL(url);
 }
 
-const HOLD_REASONS = [
-  'Additional documentation needed',
-  'Value verification required',
-  'Compliance concern',
-  'Random audit selection',
-];
-
 function ComplianceCheck({ label, passed, detail }) {
   return (
-    <div className="flex items-start gap-2.5 py-2 border-b border-slate-800 last:border-0">
+    <div className="flex items-start gap-2.5 py-2 border-b border-border last:border-0">
       {passed
-        ? <CheckCircle2 className="w-4 h-4 text-green-400 shrink-0 mt-0.5" />
-        : <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />}
+        ? <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
+        : <AlertTriangle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />}
       <div>
-        <p className="text-xs font-semibold text-white">{label}</p>
-        {detail && <p className="text-[10px] text-slate-400 mt-0.5">{detail}</p>}
+        <p className="text-xs font-semibold text-foreground">{label}</p>
+        {detail && <p className="text-[10px] text-muted-foreground mt-0.5">{detail}</p>}
       </div>
-      <span className={`ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${passed ? 'bg-green-500/15 text-green-400' : 'bg-red-500/15 text-red-400'}`}>
+      <span className={`ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${passed ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-destructive/10 text-destructive border border-destructive/20'}`}>
         {passed ? 'PASSED' : 'FAILED'}
       </span>
     </div>
@@ -64,18 +63,11 @@ function ComplianceCheck({ label, passed, detail }) {
 }
 
 export default function ReviewModal({ shipment, onClose, onAction }) {
-  const [action, setAction] = useState(null); // 'approve' | 'hold' | 'reject'
+  const [action, setAction] = useState(null);
   const [holdReason, setHoldReason] = useState('');
   const [rejectReason, setRejectReason] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
   const [downloading, setDownloading] = useState(false);
-
-  const handleDownloadPDF = async () => {
-    setDownloading(true);
-    await downloadDeclarationPDF(shipment);
-    setDownloading(false);
-  };
 
   const totalValue = shipment.total_value || 0;
   const items = shipment.items || [];
@@ -104,19 +96,9 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
         customs_ref: `GCLEAR-${Date.now()}`,
       };
     } else if (action === 'hold') {
-      updateData = {
-        status: 'queried',
-        query_reason: holdReason,
-        query_type: 'government_hold',
-        query_submitted_at: new Date().toISOString(),
-      };
+      updateData = { status: 'queried', query_reason: holdReason, query_type: 'government_hold', query_submitted_at: new Date().toISOString() };
     } else if (action === 'reject') {
-      updateData = {
-        status: 'cancelled',
-        query_reason: rejectReason,
-        query_type: 'government_reject',
-        query_submitted_at: new Date().toISOString(),
-      };
+      updateData = { status: 'cancelled', query_reason: rejectReason, query_type: 'government_reject', query_submitted_at: new Date().toISOString() };
     }
     await base44.entities.RetailerVerification.update(shipment.id, updateData);
     setSubmitting(false);
@@ -124,29 +106,35 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
     onClose();
   };
 
+  const handleDownloadPDF = async () => {
+    setDownloading(true);
+    await downloadDeclarationPDF(shipment);
+    setDownloading(false);
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/70 backdrop-blur-sm overflow-y-auto p-4">
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 backdrop-blur-sm overflow-y-auto p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.97 }}
-        className="w-full max-w-2xl bg-[#0D1526] border border-slate-700/50 rounded-2xl my-4"
+        className="w-full max-w-2xl bg-card border border-border rounded-2xl my-4 shadow-xl"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <div>
-            <p className="text-xs text-slate-500 uppercase tracking-widest">Government Review</p>
-            <h2 className="text-lg font-bold text-white mt-0.5">{shipment.shipment_id}</h2>
+            <p className="text-xs text-muted-foreground uppercase tracking-widest">Government Review</p>
+            <h2 className="text-lg font-bold text-foreground mt-0.5">{shipment.shipment_id}</h2>
           </div>
-          <button onClick={onClose} className="p-2 text-slate-500 hover:text-white transition-colors">
+          <button onClick={onClose} className="p-2 text-muted-foreground hover:text-foreground transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="p-6 space-y-5">
           {/* Tourist Info */}
-          <section className="bg-[#060D1F] rounded-xl p-4 space-y-2">
-            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold flex items-center gap-1.5"><User className="w-3 h-3" /> Tourist Details</p>
+          <section className="bg-muted/40 rounded-xl p-4 space-y-2">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-1.5"><User className="w-3 h-3" /> Tourist Details</p>
             <div className="grid grid-cols-2 gap-2">
               <KV k="Name" v={shipment.tourist_name || '—'} />
               <KV k="Passport Country" v={shipment.tourist_passport_country || '—'} />
@@ -155,46 +143,46 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
             </div>
           </section>
 
-          {/* Retailer Confirmations */}
-          <section className="bg-[#060D1F] rounded-xl p-4 space-y-2">
-            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold flex items-center gap-1.5"><Building2 className="w-3 h-3" /> Retailer Confirmation</p>
+          {/* Retailer Confirmation */}
+          <section className="bg-muted/40 rounded-xl p-4 space-y-2">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-1.5"><Building2 className="w-3 h-3" /> Retailer Confirmation</p>
             <div className="flex items-center gap-2 py-2">
-              <CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
               <div className="flex-1">
-                <p className="text-xs font-semibold text-white">{shipment.retailer_email || 'Retailer'}</p>
-                <p className="text-[10px] text-slate-400">Total Value: ${totalValue.toLocaleString()} · {itemCount} item{itemCount !== 1 ? 's' : ''} · {shipment.approved_at ? new Date(shipment.approved_at).toLocaleString() : 'Pending'}</p>
+                <p className="text-xs font-semibold text-foreground">{shipment.retailer_email || 'Retailer'}</p>
+                <p className="text-[10px] text-muted-foreground">Total Value: ${totalValue.toLocaleString()} · {itemCount} item{itemCount !== 1 ? 's' : ''} · {shipment.approved_at ? new Date(shipment.approved_at).toLocaleString() : 'Pending'}</p>
               </div>
-              <span className="text-[10px] font-bold text-green-400 bg-green-500/10 px-2 py-1 rounded-full">✓ APPROVED</span>
+              <span className="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-1 rounded-full">✓ APPROVED</span>
             </div>
           </section>
 
           {/* Items */}
           {items.length > 0 && (
-            <section className="bg-[#060D1F] rounded-xl p-4 space-y-2">
-              <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold flex items-center gap-1.5"><Package className="w-3 h-3" /> Declared Items</p>
+            <section className="bg-muted/40 rounded-xl p-4 space-y-2">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-1.5"><Package className="w-3 h-3" /> Declared Items</p>
               <div className="space-y-1.5">
                 {items.map((item, i) => (
-                  <div key={i} className="flex items-center justify-between text-xs py-1.5 border-b border-slate-800 last:border-0">
-                    <span className="text-white">{item.description || item.item_name || `Item ${i + 1}`}</span>
-                    <span className="text-[#D4A855] font-semibold">${(item.price || 0).toLocaleString()}</span>
+                  <div key={i} className="flex items-center justify-between text-xs py-1.5 border-b border-border last:border-0">
+                    <span className="text-foreground">{item.description || item.item_name || `Item ${i + 1}`}</span>
+                    <span className="text-amber-600 font-semibold">${(item.price || 0).toLocaleString()}</span>
                   </div>
                 ))}
                 <div className="flex justify-between text-sm font-bold pt-1">
-                  <span className="text-slate-300">Total</span>
-                  <span className="text-[#D4A855]">${totalValue.toLocaleString()}</span>
+                  <span className="text-muted-foreground">Total</span>
+                  <span className="text-amber-600">${totalValue.toLocaleString()}</span>
                 </div>
               </div>
             </section>
           )}
 
           {/* Customs Declaration */}
-          <section className="bg-[#060D1F] rounded-xl p-4 space-y-2">
+          <section className="bg-muted/40 rounded-xl p-4 space-y-2">
             <div className="flex items-center justify-between">
-              <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold flex items-center gap-1.5"><FileText className="w-3 h-3" /> Customs Declaration</p>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-1.5"><FileText className="w-3 h-3" /> Customs Declaration</p>
               <button
                 onClick={handleDownloadPDF}
                 disabled={downloading}
-                className="flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1.5 bg-[#8B5CF6]/20 hover:bg-[#8B5CF6]/30 text-[#8B5CF6] rounded-lg transition-colors disabled:opacity-50"
+                className="flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1.5 bg-accent/10 hover:bg-accent/20 text-accent rounded-lg transition-colors disabled:opacity-50"
               >
                 {downloading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
                 {downloading ? 'Generating…' : 'Download PDF'}
@@ -207,17 +195,17 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
               <KV k="Status" v={shipment.status?.toUpperCase() || '—'} highlight />
             </div>
             {shipment.receipt_url && (
-              <a href={shipment.receipt_url} target="_blank" rel="noopener noreferrer" className="text-xs text-[#8B5CF6] hover:underline flex items-center gap-1 mt-1">
+              <a href={shipment.receipt_url} target="_blank" rel="noopener noreferrer" className="text-xs text-accent hover:underline flex items-center gap-1 mt-1">
                 <FileText className="w-3 h-3" /> View Receipt Document
               </a>
             )}
           </section>
 
           {/* Compliance Checks */}
-          <section className="bg-[#060D1F] rounded-xl p-4">
-            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-3 flex items-center gap-1.5"><Shield className="w-3 h-3" /> Compliance Verification</p>
+          <section className="bg-muted/40 rounded-xl p-4">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-3 flex items-center gap-1.5"><Shield className="w-3 h-3" /> Compliance Verification</p>
             {complianceChecks.map((c, i) => <ComplianceCheck key={i} {...c} />)}
-            <div className={`mt-3 rounded-lg px-3 py-2 text-xs font-bold flex items-center gap-2 ${allPassed ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+            <div className={`mt-3 rounded-lg px-3 py-2 text-xs font-bold flex items-center gap-2 ${allPassed ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-destructive/10 text-destructive border border-destructive/20'}`}>
               {allPassed ? <CheckCircle2 className="w-3.5 h-3.5" /> : <AlertTriangle className="w-3.5 h-3.5" />}
               {allPassed ? 'All compliance checks passed — shipment eligible for clearance' : 'One or more compliance checks failed — review required'}
             </div>
@@ -225,26 +213,26 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
 
           {/* Payment Checkpoints */}
           {shipment.status === 'approved' && (
-            <section className="bg-[#060D1F] rounded-xl p-4">
-              <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-3">Payment Checkpoints</p>
+            <section className="bg-muted/40 rounded-xl p-4">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-3">Payment Checkpoints</p>
               {[
-                { label: 'Retailer Approved', time: shipment.approved_at, cleared: true },
-                { label: 'Government Cleared', time: shipment.approved_at, cleared: true },
-                { label: 'Shipment Validated', time: shipment.approved_at, cleared: true },
+                { label: 'Retailer Approved', time: shipment.approved_at },
+                { label: 'Government Cleared', time: shipment.approved_at },
+                { label: 'Shipment Validated', time: shipment.approved_at },
               ].map((cp, i) => (
-                <div key={i} className="flex items-center gap-3 py-2 border-b border-slate-800 last:border-0">
-                  <CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" />
+                <div key={i} className="flex items-center gap-3 py-2 border-b border-border last:border-0">
+                  <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
                   <div className="flex-1">
-                    <p className="text-xs font-semibold text-white">Checkpoint {i + 1}: {cp.label}</p>
-                    {cp.time && <p className="text-[10px] text-slate-500">{new Date(cp.time).toLocaleString()}</p>}
+                    <p className="text-xs font-semibold text-foreground">Checkpoint {i + 1}: {cp.label}</p>
+                    {cp.time && <p className="text-[10px] text-muted-foreground">{new Date(cp.time).toLocaleString()}</p>}
                   </div>
-                  <span className="text-[10px] font-bold text-green-400">CLEARED</span>
+                  <span className="text-[10px] font-bold text-green-700">CLEARED</span>
                 </div>
               ))}
-              <div className="mt-3 bg-green-500/10 border border-green-500/20 rounded-lg px-3 py-2 text-xs text-green-400 font-bold text-center">
+              <div className="mt-3 bg-green-50 border border-green-200 rounded-lg px-3 py-2 text-xs text-green-700 font-bold text-center">
                 All Three Checkpoints Met — Payment Release Authorised
               </div>
-              <p className="text-[10px] text-slate-500 text-center mt-2">
+              <p className="text-[10px] text-muted-foreground text-center mt-2">
                 Payment of $60 released to FedEx/DHL for shipment {shipment.shipment_id}
               </p>
             </section>
@@ -255,62 +243,62 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
             <div className="space-y-3">
               {!action ? (
                 <div className="grid grid-cols-3 gap-3">
-                  <button onClick={() => setAction('approve')} className="h-11 bg-green-600 hover:bg-green-500 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-colors">
+                  <button onClick={() => setAction('approve')} className="h-11 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-colors">
                     <CheckCircle2 className="w-4 h-4" /> Approve & Clear
                   </button>
-                  <button onClick={() => setAction('hold')} className="h-11 bg-yellow-600 hover:bg-yellow-500 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-colors">
+                  <button onClick={() => setAction('hold')} className="h-11 bg-yellow-500 hover:bg-yellow-600 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-colors">
                     ⏸️ Hold for Review
                   </button>
-                  <button onClick={() => setAction('reject')} className="h-11 bg-red-700 hover:bg-red-600 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-colors">
+                  <button onClick={() => setAction('reject')} className="h-11 bg-destructive hover:bg-destructive/90 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-colors">
                     ❌ Reject
                   </button>
                 </div>
               ) : action === 'approve' ? (
-                <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4 space-y-3">
-                  <p className="text-xs text-green-300 font-semibold">⚠️ Confirm Approval</p>
-                  <p className="text-xs text-slate-400">Approving this shipment authorises payment release to the logistics provider and certifies this as a legitimate tourism retail export.</p>
+                <div className="bg-green-50 border border-green-200 rounded-xl p-4 space-y-3">
+                  <p className="text-xs text-green-800 font-semibold">⚠️ Confirm Approval</p>
+                  <p className="text-xs text-green-700">Approving this shipment authorises payment release to the logistics provider and certifies this as a legitimate tourism retail export.</p>
                   <div className="flex gap-2">
-                    <button onClick={handleConfirm} disabled={submitting} className="flex-1 h-10 bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5">
+                    <button onClick={handleConfirm} disabled={submitting} className="flex-1 h-10 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5">
                       {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
                       {submitting ? 'Processing…' : 'Confirm Approval'}
                     </button>
-                    <button onClick={() => setAction(null)} className="px-4 h-10 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded-xl">Cancel</button>
+                    <button onClick={() => setAction(null)} className="px-4 h-10 bg-muted hover:bg-muted/80 text-foreground text-xs font-bold rounded-xl">Cancel</button>
                   </div>
                 </div>
               ) : action === 'hold' ? (
-                <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 space-y-3">
-                  <p className="text-xs text-yellow-300 font-semibold">Hold for Review — Select Reason</p>
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 space-y-3">
+                  <p className="text-xs text-yellow-800 font-semibold">Hold for Review — Select Reason</p>
                   <div className="grid grid-cols-1 gap-2">
                     {HOLD_REASONS.map(r => (
-                      <button key={r} onClick={() => setHoldReason(r)} className={`text-left text-xs px-3 py-2 rounded-lg border transition-colors ${holdReason === r ? 'border-yellow-500 bg-yellow-500/20 text-yellow-300' : 'border-slate-700 bg-slate-800 text-slate-400 hover:border-yellow-500/50'}`}>
+                      <button key={r} onClick={() => setHoldReason(r)} className={`text-left text-xs px-3 py-2 rounded-lg border transition-colors ${holdReason === r ? 'border-yellow-500 bg-yellow-100 text-yellow-800 font-semibold' : 'border-border bg-background text-muted-foreground hover:border-yellow-300'}`}>
                         {r}
                       </button>
                     ))}
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={handleConfirm} disabled={!holdReason || submitting} className="flex-1 h-10 bg-yellow-600 hover:bg-yellow-500 disabled:opacity-40 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5">
+                    <button onClick={handleConfirm} disabled={!holdReason || submitting} className="flex-1 h-10 bg-yellow-500 hover:bg-yellow-600 disabled:opacity-40 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5">
                       {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                       Confirm Hold
                     </button>
-                    <button onClick={() => setAction(null)} className="px-4 h-10 bg-slate-700 text-white text-xs font-bold rounded-xl">Cancel</button>
+                    <button onClick={() => setAction(null)} className="px-4 h-10 bg-muted hover:bg-muted/80 text-foreground text-xs font-bold rounded-xl">Cancel</button>
                   </div>
                 </div>
               ) : (
-                <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 space-y-3">
-                  <p className="text-xs text-red-300 font-semibold">Reject Shipment — Provide Reason</p>
+                <div className="bg-destructive/5 border border-destructive/20 rounded-xl p-4 space-y-3">
+                  <p className="text-xs text-destructive font-semibold">Reject Shipment — Provide Reason</p>
                   <textarea
                     value={rejectReason}
                     onChange={e => setRejectReason(e.target.value)}
                     placeholder="Provide detailed reason for rejection..."
-                    className="w-full h-24 bg-[#060D1F] border border-red-500/30 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-red-500 resize-none"
+                    className="w-full h-24 bg-background border border-input rounded-xl px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-destructive resize-none"
                   />
-                  <p className="text-[10px] text-slate-500">This will trigger notification to Send It Home compliance team and the tourist.</p>
+                  <p className="text-[10px] text-muted-foreground">This will trigger notification to Send It Home compliance team and the tourist.</p>
                   <div className="flex gap-2">
-                    <button onClick={handleConfirm} disabled={!rejectReason.trim() || submitting} className="flex-1 h-10 bg-red-700 hover:bg-red-600 disabled:opacity-40 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5">
+                    <button onClick={handleConfirm} disabled={!rejectReason.trim() || submitting} className="flex-1 h-10 bg-destructive hover:bg-destructive/90 disabled:opacity-40 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5">
                       {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                       Confirm Rejection
                     </button>
-                    <button onClick={() => setAction(null)} className="px-4 h-10 bg-slate-700 text-white text-xs font-bold rounded-xl">Cancel</button>
+                    <button onClick={() => setAction(null)} className="px-4 h-10 bg-muted hover:bg-muted/80 text-foreground text-xs font-bold rounded-xl">Cancel</button>
                   </div>
                 </div>
               )}
@@ -318,7 +306,7 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
           )}
 
           {(shipment.status === 'approved' || shipment.status === 'cancelled') && (
-            <div className={`text-center py-3 rounded-xl text-sm font-bold ${shipment.status === 'approved' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+            <div className={`text-center py-3 rounded-xl text-sm font-bold ${shipment.status === 'approved' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-destructive/10 text-destructive border border-destructive/20'}`}>
               {shipment.status === 'approved' ? '✅ Shipment Cleared' : '❌ Shipment Rejected'}
             </div>
           )}
@@ -331,8 +319,8 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
 function KV({ k, v, highlight }) {
   return (
     <div>
-      <p className="text-[10px] text-slate-500">{k}</p>
-      <p className={`text-xs font-semibold mt-0.5 ${highlight ? 'text-[#8B5CF6]' : 'text-white'}`}>{v}</p>
+      <p className="text-[10px] text-muted-foreground">{k}</p>
+      <p className={`text-xs font-semibold mt-0.5 ${highlight ? 'text-accent' : 'text-foreground'}`}>{v}</p>
     </div>
   );
 }

@@ -4,18 +4,17 @@ import { Shield, Eye, EyeOff, Loader2, Lock, AlertTriangle } from 'lucide-react'
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
 
-const inputCls = "w-full h-11 bg-[#060D1F] border border-[#8B5CF6]/30 rounded-xl px-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-[#8B5CF6] transition-colors";
+const inputCls = "w-full h-11 bg-background border border-input rounded-xl px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent transition-colors";
 
 function Field({ label, children }) {
   return (
     <div>
-      <label className="text-xs text-slate-400 font-medium block mb-1.5">{label}</label>
+      <label className="text-xs text-muted-foreground font-medium block mb-1.5">{label}</label>
       {children}
     </div>
   );
 }
 
-// Mock departments
 const DEPARTMENTS = [
   { code: 'UAE-CUST-001', name: 'UAE Federal Customs Authority', email: 'officer@customs.gov.ae' },
   { code: 'UAE-TCA-002', name: 'Tourism & Commerce Authority', email: 'officer@tca.gov.ae' },
@@ -26,7 +25,7 @@ export default function GovernmentLogin() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ dept_code: '', email: '', password: '', tfa: '' });
   const [showPwd, setShowPwd] = useState(false);
-  const [step, setStep] = useState(1); // 1 = credentials, 2 = 2FA
+  const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -62,28 +61,25 @@ export default function GovernmentLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B1120] flex items-center justify-center px-4">
-      {/* Background gradient */}
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(139,92,246,0.12),transparent_60%)] pointer-events-none" />
-
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md relative z-10">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#8B5CF6]/10 border border-[#8B5CF6]/30 rounded-2xl mb-5">
-            <Shield className="w-8 h-8 text-[#8B5CF6]" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-accent/10 border border-accent/30 rounded-2xl mb-5">
+            <Shield className="w-8 h-8 text-accent" />
           </div>
-          <p className="text-[10px] font-black tracking-[0.2em] text-slate-500 uppercase mb-2">Send It Home</p>
-          <h1 className="text-2xl font-black text-white">Government Oversight Portal</h1>
-          <p className="text-slate-400 text-sm mt-2 leading-relaxed">Tourism Retail Export — Clearing House & Verification Authority</p>
+          <p className="text-[10px] font-black tracking-[0.2em] text-muted-foreground uppercase mb-2">Send It Home</p>
+          <h1 className="text-2xl font-black text-foreground">Government Oversight Portal</h1>
+          <p className="text-muted-foreground text-sm mt-2 leading-relaxed">Tourism Retail Export — Clearing House & Verification Authority</p>
         </div>
 
         {/* Classification Banner */}
-        <div className="bg-[#8B5CF6]/10 border border-[#8B5CF6]/30 rounded-xl px-4 py-2.5 flex items-center gap-2 mb-5">
-          <Lock className="w-3.5 h-3.5 text-[#8B5CF6] shrink-0" />
-          <p className="text-[10px] font-bold text-[#8B5CF6] tracking-widest uppercase">Classified — Government Use Only</p>
+        <div className="bg-accent/5 border border-accent/20 rounded-xl px-4 py-2.5 flex items-center gap-2 mb-5">
+          <Lock className="w-3.5 h-3.5 text-accent shrink-0" />
+          <p className="text-[10px] font-bold text-accent tracking-widest uppercase">Classified — Government Use Only</p>
         </div>
 
-        <div className="bg-[#0D1526] border border-slate-700/50 rounded-2xl p-6 space-y-4">
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
           {step === 1 ? (
             <>
               <Field label="Department Code">
@@ -113,14 +109,14 @@ export default function GovernmentLogin() {
                     className={inputCls + ' pr-10'}
                     onKeyDown={e => e.key === 'Enter' && handleCredentials()}
                   />
-                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300">
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                     {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </Field>
 
               {error && (
-                <div className="flex items-center gap-2 text-xs text-red-400 bg-red-500/10 border border-red-500/30 rounded-xl px-3 py-2">
+                <div className="flex items-center gap-2 text-xs text-destructive bg-destructive/10 border border-destructive/30 rounded-xl px-3 py-2">
                   <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
                   {error}
                 </div>
@@ -129,24 +125,24 @@ export default function GovernmentLogin() {
               <button
                 onClick={handleCredentials}
                 disabled={!form.dept_code || !form.email || !form.password || loading}
-                className="w-full h-12 bg-[#8B5CF6] hover:bg-[#7C3AED] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors mt-2"
+                className="w-full h-12 bg-accent hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed text-accent-foreground font-bold rounded-xl flex items-center justify-center gap-2 transition-colors mt-2"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
                 {loading ? 'Verifying…' : 'Continue to 2FA'}
               </button>
 
-              <div className="text-center">
-                <p className="text-[10px] text-slate-600 mt-2">Demo: Code <span className="text-slate-400 font-mono">UAE-CUST-001</span> · Email <span className="text-slate-400 font-mono">officer@customs.gov.ae</span> · Any password</p>
-              </div>
+              <p className="text-center text-[10px] text-muted-foreground mt-2">
+                Demo: Code <span className="text-foreground font-mono">UAE-CUST-001</span> · Email <span className="text-foreground font-mono">officer@customs.gov.ae</span> · Any password
+              </p>
             </>
           ) : (
             <>
               <div className="text-center py-2">
-                <div className="w-12 h-12 bg-[#8B5CF6]/10 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <Lock className="w-6 h-6 text-[#8B5CF6]" />
+                <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <Lock className="w-6 h-6 text-accent" />
                 </div>
-                <p className="text-sm font-bold text-white">Two-Factor Authentication</p>
-                <p className="text-xs text-slate-400 mt-1">Enter the 6-digit code from your authenticator app</p>
+                <p className="text-sm font-bold text-foreground">Two-Factor Authentication</p>
+                <p className="text-xs text-muted-foreground mt-1">Enter the 6-digit code from your authenticator app</p>
               </div>
 
               <Field label="Authentication Code">
@@ -161,7 +157,7 @@ export default function GovernmentLogin() {
               </Field>
 
               {error && (
-                <div className="flex items-center gap-2 text-xs text-red-400 bg-red-500/10 border border-red-500/30 rounded-xl px-3 py-2">
+                <div className="flex items-center gap-2 text-xs text-destructive bg-destructive/10 border border-destructive/30 rounded-xl px-3 py-2">
                   <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
                   {error}
                 </div>
@@ -170,22 +166,21 @@ export default function GovernmentLogin() {
               <button
                 onClick={handleTFA}
                 disabled={form.tfa.length < 6 || loading}
-                className="w-full h-12 bg-[#8B5CF6] hover:bg-[#7C3AED] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors"
+                className="w-full h-12 bg-accent hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed text-accent-foreground font-bold rounded-xl flex items-center justify-center gap-2 transition-colors"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
                 {loading ? 'Authenticating…' : 'Secure Sign In'}
               </button>
 
-              <p className="text-center text-[10px] text-slate-600">Demo code: <span className="text-slate-400 font-mono">123456</span></p>
-
-              <button onClick={() => setStep(1)} className="w-full text-xs text-slate-500 hover:text-slate-300 transition-colors">← Back</button>
+              <p className="text-center text-[10px] text-muted-foreground">Demo code: <span className="text-foreground font-mono">123456</span></p>
+              <button onClick={() => setStep(1)} className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors">← Back</button>
             </>
           )}
         </div>
 
-        <div className="mt-5 flex items-start gap-2 bg-red-500/5 border border-red-500/20 rounded-xl px-4 py-3">
-          <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
-          <p className="text-[10px] text-red-400/70">This portal contains classified economic data. Unauthorised access is a criminal offence under UAE Federal Cybercrime Law No. 5 of 2012.</p>
+        <div className="mt-5 flex items-start gap-2 bg-destructive/5 border border-destructive/20 rounded-xl px-4 py-3">
+          <AlertTriangle className="w-3.5 h-3.5 text-destructive shrink-0 mt-0.5" />
+          <p className="text-[10px] text-destructive/70">This portal contains classified economic data. Unauthorised access is a criminal offence under UAE Federal Cybercrime Law No. 5 of 2012.</p>
         </div>
       </motion.div>
     </div>

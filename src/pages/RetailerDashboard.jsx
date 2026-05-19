@@ -52,9 +52,6 @@ export default function RetailerDashboard() {
   const now = new Date();
   const overdueCount = pending.filter(v => v.deadline_at && new Date(v.deadline_at) < now).length;
 
-  const totalCommission = approved.reduce((s, v) => s + (v.commission_amount || 0), 0);
-
-  // Commission this month
   const thisMonthStr = new Date().toISOString().slice(0, 7);
   const monthCommission = approved
     .filter(v => v.approved_at?.startsWith(thisMonthStr))
@@ -70,30 +67,30 @@ export default function RetailerDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0B1120] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-green-500 animate-spin" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-accent animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0B1120]">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-20 bg-[#111827] border-b border-slate-700 px-4 py-3 flex items-center justify-between">
+      <header className="sticky top-0 z-20 bg-card border-b border-border px-4 py-3 flex items-center justify-between shadow-sm">
         <div>
-          <p className="text-[10px] font-black tracking-widest text-white">SEND<span className="text-[#FF007F]">IT</span>HOME</p>
-          <p className="text-sm font-bold text-[#D4A855] mt-0.5">
+          <p className="text-[10px] font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
+          <p className="text-sm font-bold text-primary mt-0.5">
             {retailer?.store_name} — Retailer Partner Portal
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => loadData()} className="p-2 text-slate-500 hover:text-white transition-colors">
+          <button onClick={() => loadData()} className="p-2 text-muted-foreground hover:text-foreground transition-colors">
             <RefreshCw className="w-4 h-4" />
           </button>
-          <Link to="/retailer-settings" className="p-2 text-slate-500 hover:text-white transition-colors">
+          <Link to="/retailer-settings" className="p-2 text-muted-foreground hover:text-foreground transition-colors">
             <Settings className="w-4 h-4" />
           </Link>
-          <button onClick={handleLogout} className="p-2 text-slate-500 hover:text-[#FF007F] transition-colors">
+          <button onClick={handleLogout} className="p-2 text-muted-foreground hover:text-accent transition-colors">
             <LogOut className="w-4 h-4" />
           </button>
         </div>
@@ -105,10 +102,10 @@ export default function RetailerDashboard() {
           <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`rounded-2xl px-5 py-4 flex items-center gap-3 border ${overdueCount > 0 ? 'bg-red-500/10 border-red-500/40 animate-pulse' : 'bg-yellow-500/10 border-yellow-500/40'}`}
+            className={`rounded-2xl px-5 py-4 flex items-center gap-3 border ${overdueCount > 0 ? 'bg-destructive/10 border-destructive/40 animate-pulse' : 'bg-yellow-50 border-yellow-200'}`}
           >
-            <AlertTriangle className={`w-5 h-5 shrink-0 ${overdueCount > 0 ? 'text-red-400' : 'text-yellow-400'}`} />
-            <p className={`text-sm font-bold ${overdueCount > 0 ? 'text-red-300' : 'text-yellow-300'}`}>
+            <AlertTriangle className={`w-5 h-5 shrink-0 ${overdueCount > 0 ? 'text-destructive' : 'text-yellow-600'}`} />
+            <p className={`text-sm font-bold ${overdueCount > 0 ? 'text-destructive' : 'text-yellow-700'}`}>
               ⚠️ You have {pending.length} shipment verification{pending.length !== 1 ? 's' : ''} awaiting your approval
               {overdueCount > 0 ? ` — ${overdueCount} OVERDUE` : ' — respond within 24 hours'}
             </p>
@@ -121,39 +118,39 @@ export default function RetailerDashboard() {
             icon={<Clock className="w-5 h-5" />}
             label="Pending Approvals"
             value={pending.length}
-            color="text-yellow-400"
-            bg="bg-yellow-500/10 border-yellow-500/30"
+            colorCls="text-yellow-600"
+            bgCls="bg-yellow-50 border-yellow-200"
             pulse={overdueCount > 0}
           />
           <StatCard
             icon={<CheckCircle2 className="w-5 h-5" />}
             label="Approved This Month"
             value={approved.filter(v => v.approved_at?.startsWith(thisMonthStr)).length}
-            color="text-green-400"
-            bg="bg-green-500/10 border-green-500/30"
+            colorCls="text-green-600"
+            bgCls="bg-green-50 border-green-200"
           />
           <StatCard
             icon={<DollarSign className="w-5 h-5" />}
             label="Commission Payable"
             value={`$${monthCommission.toLocaleString('en', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
-            color="text-[#D4A855]"
-            bg="bg-yellow-900/20 border-yellow-700/30"
+            colorCls="text-amber-600"
+            bgCls="bg-amber-50 border-amber-200"
           />
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 border-b border-slate-700">
+        <div className="flex gap-1 border-b border-border">
           {TABS.map(t => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
               className={`px-4 py-3 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 ${
-                tab === t.id ? 'border-green-500 text-green-400' : 'border-transparent text-slate-500 hover:text-slate-300'
+                tab === t.id ? 'border-accent text-accent' : 'border-transparent text-muted-foreground hover:text-foreground'
               }`}
             >
               {t.label}
               {t.id === 'pending' && pending.length > 0 && (
-                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${overdueCount > 0 ? 'bg-red-500 text-white' : 'bg-yellow-500/30 text-yellow-400'}`}>
+                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${overdueCount > 0 ? 'bg-destructive text-white' : 'bg-yellow-100 text-yellow-700 border border-yellow-200'}`}>
                   {pending.length}
                 </span>
               )}
@@ -165,8 +162,8 @@ export default function RetailerDashboard() {
           {tab === 'pending' && (
             <motion.div key="pending" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-3">
               {pending.length === 0 ? (
-                <div className="text-center py-16 text-slate-500">
-                  <CheckCircle2 className="w-10 h-10 mx-auto mb-3 text-green-500/40" />
+                <div className="text-center py-16 text-muted-foreground">
+                  <CheckCircle2 className="w-10 h-10 mx-auto mb-3 text-green-400/40" />
                   <p className="font-semibold">All clear — no pending verifications</p>
                   <p className="text-xs mt-1">New shipments will appear here automatically</p>
                 </div>
@@ -201,15 +198,15 @@ export default function RetailerDashboard() {
   );
 }
 
-function StatCard({ icon, label, value, color, bg, pulse }) {
+function StatCard({ icon, label, value, colorCls, bgCls, pulse }) {
   return (
-    <div className={`rounded-2xl border p-4 flex items-center gap-4 ${bg} ${pulse ? 'animate-pulse' : ''}`}>
-      <div className={`w-10 h-10 rounded-xl bg-black/20 flex items-center justify-center ${color}`}>
+    <div className={`rounded-2xl border p-4 flex items-center gap-4 shadow-sm ${bgCls} ${pulse ? 'animate-pulse' : ''}`}>
+      <div className={`w-10 h-10 rounded-xl bg-white/60 flex items-center justify-center ${colorCls}`}>
         {icon}
       </div>
       <div>
-        <p className="text-xs text-slate-400">{label}</p>
-        <p className={`text-xl font-bold mt-0.5 ${color}`}>{value}</p>
+        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className={`text-xl font-bold mt-0.5 ${colorCls}`}>{value}</p>
       </div>
     </div>
   );
