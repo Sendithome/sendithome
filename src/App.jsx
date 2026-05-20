@@ -30,6 +30,7 @@ import RetailerSettings from './pages/RetailerSettings';
 import GovernmentLogin from './pages/GovernmentLogin';
 import GovernmentDashboard from './pages/GovernmentDashboard';
 import AdminRetailers from './pages/AdminRetailers';
+import AdminDashboard from './pages/AdminDashboard';
 // Add page imports here
 
 const AuthenticatedApp = () => {
@@ -84,6 +85,7 @@ const AuthenticatedApp = () => {
       <Route path="/government-login" element={<GovernmentLogin />} />
       <Route path="/government-dashboard" element={<GovernmentDashboard />} />
       <Route path="/admin-retailers" element={<AdminRetailers />} />
+      <Route path="/admin-dashboard" element={<AdminDashboard />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

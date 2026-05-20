@@ -164,17 +164,22 @@ export default function VerificationCard({ verification, retailer, onApproved, o
                       </table>
                     </div>
                     <div className="mt-3 pt-2 border-t border-slate-700 space-y-2">
-                      <div className="flex justify-between">
-                        <div>
-                          <span className="text-xs text-slate-400">Total value (shipped items): </span>
-                          <span className="text-sm font-bold text-white">${verification.total_value?.toFixed(2)}</span>
+                      {/* Clarify: selected shipment items vs full receipt */}
+                      <div className="bg-[#0B1120] rounded-xl p-3 text-xs space-y-1.5 border border-slate-700">
+                        <div className="flex justify-between text-slate-400">
+                          <span>Items on receipt (all purchases):</span>
+                          <span className="text-slate-300">{verification.items?.length || 0} items</span>
                         </div>
-                        <div className="text-right">
-                          <span className="text-xs text-slate-400">Govt. commission (10%*): </span>
-                          <span className="text-sm font-bold text-[#D4A855]">${((verification.total_value || 0) * 0.10).toFixed(2)}</span>
+                        <div className="flex justify-between font-semibold">
+                          <span className="text-slate-300">✓ Selected for shipment (tourist chose):</span>
+                          <span className="text-white">${verification.total_value?.toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between border-t border-slate-700 pt-1.5">
+                          <span className="text-slate-400">Govt. commission (10%*) on shipment only:</span>
+                          <span className="text-[#D4A855] font-bold">${((verification.total_value || 0) * 0.10).toFixed(2)}</span>
                         </div>
                       </div>
-                      <p className="text-[10px] text-slate-500 italic">* 10% commission applies only to declared items being shipped internationally through the platform. VAT is calculated separately. Final rate subject to approval by economic &amp; government authorities.</p>
+                      <p className="text-[10px] text-slate-500 italic">* Commission applies ONLY on the declared shipped items — not on the full receipt total. Items the tourist did not select for shipping are excluded. VAT calculated separately. Rate subject to regulatory approval.</p>
                     </div>
                   </div>
                 )}
@@ -215,7 +220,7 @@ export default function VerificationCard({ verification, retailer, onApproved, o
                 <li>These items were genuinely purchased at <strong className="text-white">{retailer?.store_name}</strong> on {verification.shipment_date ? new Date(verification.shipment_date).toLocaleDateString() : '—'}.</li>
                 <li>The receipt is authentic.</li>
                 <li>You approve the export of these goods through the Send It Home certified channel.</li>
-                <li>A government commission of <strong className="text-[#D4A855]">10%*</strong> (<strong className="text-[#D4A855]">${((verification.total_value || 0) * 0.10).toFixed(2)}</strong>) applies on the declared shipped items only — not on items retained by the tourist. VAT is excluded.</li>
+                <li>A government commission of <strong className="text-[#D4A855]">10%*</strong> (<strong className="text-[#D4A855]">${((verification.total_value || 0) * 0.10).toFixed(2)}</strong>) applies <strong>only on the {verification.items?.length || 0} selected shipment items</strong> valued at <strong className="text-white">${(verification.total_value || 0).toFixed(2)}</strong> — NOT on the full receipt total. Items not selected for shipment by the tourist are excluded.</li>
               </ol>
               <p className="text-[10px] text-slate-500 italic mt-2">* 10% government commission rate shown as a demo/reference model. Final rate subject to approval by relevant authorities. VAT calculated separately.</p>
               <p className="text-slate-500 italic mt-1">This confirmation is legally binding and forms part of the export documentation.</p>
