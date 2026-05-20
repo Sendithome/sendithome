@@ -8,9 +8,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import VerificationCard from '@/components/retailer/VerificationCard';
 import ApprovedHistoryTab from '@/components/retailer/ApprovedHistoryTab';
 import AnalyticsTab from '@/components/retailer/AnalyticsTab';
+import ShipmentsTab from '@/components/retailer/ShipmentsTab';
 
 const TABS = [
   { id: 'pending', label: 'Pending Approvals' },
+  { id: 'shipments', label: 'Shipments' },
   { id: 'history', label: 'Approved History' },
   { id: 'analytics', label: 'Analytics & Reports' },
 ];
@@ -179,6 +181,12 @@ export default function RetailerDashboard() {
                   />
                 ))
               )}
+            </motion.div>
+          )}
+
+          {tab === 'shipments' && (
+            <motion.div key="shipments" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <ShipmentsTab verifications={verifications} retailer={retailer} />
             </motion.div>
           )}
 
