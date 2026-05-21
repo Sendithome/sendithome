@@ -97,6 +97,10 @@ Deno.serve(async (req) => {
     const commissionRate = retailer?.commission_rate || 2.5;
     const commissionAmount = (totalValue * commissionRate) / 100;
 
+    // Get ALL items from this receipt (not just eligible/selected) for full receipt visibility
+    const receiptUrl = group.receipt_url;
+    const allReceiptItems = allItems.filter(i => i.receipt_url === receiptUrl);
+
     verificationsToCreate.push({
       shipment_id: shipmentId,
       order_id: order_id,
@@ -108,11 +112,13 @@ Deno.serve(async (req) => {
       tourist_passport_country: user.nationality || '',
       hotel_name: order.hotel_name || '',
       receipt_url: group.receipt_url,
-      items: group.items.map(i => ({
+      // ALL items from this store's receipt — selected=true means tourist chose to ship it
+      items: allReceiptItems.map(i => ({
         description: i.item_name,
         category: i.category,
         price: i.price || 0,
-        eligible: true,
+        eligible: i.eligible !== false,
+        selected: group.items.some(si => si.id === i.id), // true = selected for shipment
       })),
       total_value: totalValue,
       commission_amount: commissionAmount,

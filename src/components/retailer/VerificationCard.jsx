@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, ChevronUp, Clock, CheckCircle2, AlertTriangle, ExternalLink, Loader2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Clock, CheckCircle2, AlertTriangle, ExternalLink, Loader2, FileDown } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 function useCountdown(deadline) {
@@ -50,6 +50,21 @@ export default function VerificationCard({ verification, retailer, onApproved, o
   const [queryType, setQueryType] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [approved, setApproved] = useState(false);
+  const [downloadingPDF, setDownloadingPDF] = useState(false);
+
+  const handleDownloadDeclaration = async () => {
+    setDownloadingPDF(true);
+    const response = await base44.functions.invoke('generateRetailerDeclarationPDF', { verification_id: verification.id });
+    // response.data is an ArrayBuffer
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `declaration-${verification.store_name?.replace(/\s+/g, '-')}-${verification.shipment_id}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setDownloadingPDF(false);
+  };
 
   const isOverdue = verification.deadline_at && new Date(verification.deadline_at) < new Date();
 
@@ -134,28 +149,46 @@ export default function VerificationCard({ verification, retailer, onApproved, o
                 {/* Items table */}
                 {verification.items?.length > 0 && (
                   <div>
-                    <p className="text-xs text-slate-500 mb-2">Items Purchased at Your Store</p>
-                    <div className="overflow-x-auto">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs text-slate-500">Full Receipt — All Items Purchased at Your Store</p>
+                      <div className="flex gap-3 text-[10px]">
+                        <span className="flex items-center gap-1 text-green-400"><span className="w-2 h-2 rounded-full bg-green-500 inline-block" />Shipping ({verification.items.filter(i => i.selected).length})</span>
+                        <span className="flex items-center gap-1 text-slate-500"><span className="w-2 h-2 rounded-full bg-slate-600 inline-block" />Not shipping ({verification.items.filter(i => !i.selected).length})</span>
+                      </div>
+                    </div>
+                    <div className="overflow-x-auto rounded-xl border border-slate-700">
                       <table className="w-full text-xs">
                         <thead>
-                          <tr className="text-slate-500 border-b border-slate-700">
-                            <th className="text-left py-1.5 pr-3">Item Description</th>
-                            <th className="text-left py-1.5 pr-3">Category</th>
-                            <th className="text-left py-1.5 pr-3">HS Code</th>
-                            <th className="text-right py-1.5 pr-3">Price</th>
-                            <th className="text-left py-1.5">Status</th>
+                          <tr className="text-slate-500 border-b border-slate-700 bg-slate-800/50">
+                            <th className="text-left py-2 px-3">Item Description</th>
+                            <th className="text-left py-2 px-3">Category</th>
+                            <th className="text-right py-2 px-3">Price</th>
+                            <th className="text-center py-2 px-3">Shipment Status</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {verification.items.map((item, i) => (
-                            <tr key={i} className="border-b border-slate-800 text-slate-300">
-                              <td className="py-2 pr-3 font-medium">{item.description}</td>
-                              <td className="py-2 pr-3">{item.category}</td>
-                              <td className="py-2 pr-3 font-mono">{item.hs_code || '—'}</td>
-                              <td className="py-2 pr-3 text-right">${item.price?.toFixed(2)}</td>
-                              <td className="py-2">
-                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${item.eligible ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
-                                  {item.eligible ? 'Eligible' : 'Ineligible'}
+                          {/* Selected for shipment first */}
+                          {verification.items.filter(i => i.selected).map((item, i) => (
+                            <tr key={`sel-${i}`} className="border-b border-slate-800 bg-green-500/5">
+                              <td className="py-2 px-3 font-semibold text-white">{item.description}</td>
+                              <td className="py-2 px-3 text-slate-300">{item.category}</td>
+                              <td className="py-2 px-3 text-right text-white font-semibold">${(item.price || 0).toFixed(2)}</td>
+                              <td className="py-2 px-3 text-center">
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-500/25 text-green-400 border border-green-500/30">
+                                  ✓ Shipping
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                          {/* Not selected — dimmed */}
+                          {verification.items.filter(i => !i.selected).map((item, i) => (
+                            <tr key={`notsel-${i}`} className="border-b border-slate-800/50 opacity-40">
+                              <td className="py-2 px-3 text-slate-400 line-through">{item.description}</td>
+                              <td className="py-2 px-3 text-slate-500">{item.category}</td>
+                              <td className="py-2 px-3 text-right text-slate-500">${(item.price || 0).toFixed(2)}</td>
+                              <td className="py-2 px-3 text-center">
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-700 text-slate-500">
+                                  Not Shipping
                                 </span>
                               </td>
                             </tr>
@@ -164,22 +197,25 @@ export default function VerificationCard({ verification, retailer, onApproved, o
                       </table>
                     </div>
                     <div className="mt-3 pt-2 border-t border-slate-700 space-y-2">
-                      {/* Clarify: selected shipment items vs full receipt */}
                       <div className="bg-[#0B1120] rounded-xl p-3 text-xs space-y-1.5 border border-slate-700">
                         <div className="flex justify-between text-slate-400">
-                          <span>Items on receipt (all purchases):</span>
-                          <span className="text-slate-300">{verification.items?.length || 0} items</span>
+                          <span>Total items on receipt (all purchases):</span>
+                          <span className="text-slate-300">{verification.items.length} items</span>
                         </div>
                         <div className="flex justify-between font-semibold">
-                          <span className="text-slate-300">✓ Selected for shipment (tourist chose):</span>
-                          <span className="text-white">${verification.total_value?.toFixed(2)}</span>
+                          <span className="text-green-400">✓ Selected for shipment (tourist chose):</span>
+                          <span className="text-white">{verification.items.filter(i => i.selected).length} items · ${(verification.total_value || 0).toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between opacity-50">
+                          <span className="text-slate-400">Not shipping (kept by tourist):</span>
+                          <span className="text-slate-400">{verification.items.filter(i => !i.selected).length} items · ${verification.items.filter(i => !i.selected).reduce((s, i) => s + (i.price || 0), 0).toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between border-t border-slate-700 pt-1.5">
-                          <span className="text-slate-400">Govt. commission (10%*) on shipment only:</span>
+                          <span className="text-slate-400">Govt. commission (10%*) on shipped items only:</span>
                           <span className="text-[#D4A855] font-bold">${((verification.total_value || 0) * 0.10).toFixed(2)}</span>
                         </div>
                       </div>
-                      <p className="text-[10px] text-slate-500 italic">* Commission applies ONLY on the declared shipped items — not on the full receipt total. Items the tourist did not select for shipping are excluded. VAT calculated separately. Rate subject to regulatory approval.</p>
+                      <p className="text-[10px] text-slate-500 italic">* Commission applies ONLY on the {verification.items.filter(i => i.selected).length} shipped items — not on the full receipt total. VAT calculated separately. Rate subject to regulatory approval.</p>
                     </div>
                   </div>
                 )}
@@ -192,14 +228,19 @@ export default function VerificationCard({ verification, retailer, onApproved, o
                 </div>
 
                 {/* Actions */}
-                <div className="flex gap-3 pt-2">
+                <div className="flex gap-3 pt-2 flex-wrap">
                   <button onClick={() => setShowApproveModal(true)}
-                    className="flex-1 h-11 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 transition-colors">
+                    className="flex-1 h-11 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 transition-colors min-w-[130px]">
                     <CheckCircle2 className="w-4 h-4" /> Approve Export
                   </button>
                   <button onClick={() => setShowQueryModal(true)}
-                    className="flex-1 h-11 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 border border-yellow-500/40 font-bold rounded-xl text-sm flex items-center justify-center gap-2 transition-colors">
+                    className="flex-1 h-11 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 border border-yellow-500/40 font-bold rounded-xl text-sm flex items-center justify-center gap-2 transition-colors min-w-[130px]">
                     ❓ Query / Dispute
+                  </button>
+                  <button onClick={handleDownloadDeclaration} disabled={downloadingPDF}
+                    className="h-11 px-4 bg-slate-700 hover:bg-slate-600 disabled:opacity-40 text-slate-200 font-semibold rounded-xl text-sm flex items-center justify-center gap-2 transition-colors">
+                    {downloadingPDF ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileDown className="w-3.5 h-3.5" />}
+                    My Declaration
                   </button>
                 </div>
               </div>
