@@ -42,8 +42,7 @@ export default function ShipmentsTab({ verifications, retailer }) {
   const [generatingPDF, setGeneratingPDF] = useState(false);
 
   const ongoing = useMemo(() =>
-    verifications.filter(v => ['pending', 'queried', 'overdue'].includes(v.status) ||
-      (v.status === 'pending' && v.deadline_at && new Date(v.deadline_at) > new Date())),
+    verifications.filter(v => v.status === 'pending' || v.status === 'queried' || v.status === 'overdue'),
     [verifications]
   );
 

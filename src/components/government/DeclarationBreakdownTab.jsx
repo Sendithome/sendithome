@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ChevronDown, ChevronUp, Search, Download, FileText, FileSpreadsheet, Loader2, Store, Package, User, Receipt } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
@@ -378,9 +378,8 @@ function DeclarationCard({ declaration: d, isExpanded, onToggle, expandedRetaile
                       const retailerKey = `${d.shipment_id}-${v.id}`;
                       const isRetailerExpanded = expandedRetailer === retailerKey;
                       return (
-                        <>
+                        <React.Fragment key={v.id}>
                           <tr
-                            key={v.id}
                             className="hover:bg-muted/20 transition-colors cursor-pointer"
                             onClick={() => setExpandedRetailer(isRetailerExpanded ? null : retailerKey)}
                           >
@@ -449,7 +448,7 @@ function DeclarationCard({ declaration: d, isExpanded, onToggle, expandedRetaile
                               </td>
                             </tr>
                           )}
-                        </>
+                        </React.Fragment>
                       );
                     })}
                   </tbody>

@@ -54,16 +54,20 @@ export default function VerificationCard({ verification, retailer, onApproved, o
 
   const handleDownloadDeclaration = async () => {
     setDownloadingPDF(true);
-    const response = await base44.functions.invoke('generateRetailerDeclarationPDF', { verification_id: verification.id });
-    // response.data is an ArrayBuffer
-    const blob = new Blob([response.data], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `declaration-${verification.store_name?.replace(/\s+/g, '-')}-${verification.shipment_id}.pdf`;
-    a.click();
-    URL.revokeObjectURL(url);
-    setDownloadingPDF(false);
+    try {
+      const response = await base44.functions.invoke('generateRetailerDeclarationPDF', { verification_id: verification.id });
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `declaration-${verification.store_name?.replace(/\s+/g, '-')}-${verification.shipment_id}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('PDF download failed', err);
+    } finally {
+      setDownloadingPDF(false);
+    }
   };
 
   const isOverdue = verification.deadline_at && new Date(verification.deadline_at) < new Date();

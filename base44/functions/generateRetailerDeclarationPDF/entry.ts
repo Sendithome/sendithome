@@ -24,9 +24,13 @@ Deno.serve(async (req) => {
       : null;
 
     // Load ALL verifications for this shipment (to know how many other retailers are redacted)
-    const allVerificationsForShipment = verification.order_id
-      ? await base44.asServiceRole.entities.RetailerVerification.filter({ order_id: verification.order_id })
-      : [verification];
+    // Prefer order_id lookup, fall back to shipment_id for records without an order_id
+    let allVerificationsForShipment = [verification];
+    if (verification.order_id) {
+      allVerificationsForShipment = await base44.asServiceRole.entities.RetailerVerification.filter({ order_id: verification.order_id });
+    } else if (verification.shipment_id) {
+      allVerificationsForShipment = await base44.asServiceRole.entities.RetailerVerification.filter({ shipment_id: verification.shipment_id });
+    }
 
     const otherRetailers = allVerificationsForShipment.filter(v => v.id !== verification_id);
 
