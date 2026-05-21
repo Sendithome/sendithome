@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Shield, LogOut, RefreshCw, Loader2, BarChart3, ClipboardList,
-  CheckCircle2, Eye, Package
+  CheckCircle2, Eye, Package, FileSearch
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
@@ -10,10 +10,12 @@ import ReviewModal from '@/components/government/ReviewModal';
 import GovAnalyticsTab from '@/components/government/GovAnalyticsTab';
 import AuditTrailTab from '@/components/government/AuditTrailTab';
 import ConsolidatedShipmentsTab from '@/components/government/ConsolidatedShipmentsTab';
+import DeclarationBreakdownTab from '@/components/government/DeclarationBreakdownTab';
 
 const TABS = [
   { id: 'clearance', label: 'Clearance Queue', icon: Shield },
   { id: 'consolidated', label: 'Consolidated Shipments', icon: Package },
+  { id: 'declarations', label: 'Declaration Breakdown', icon: FileSearch },
   { id: 'analytics', label: 'Economic Impact', icon: BarChart3 },
   { id: 'audit', label: 'Audit Trail', icon: ClipboardList },
 ];
@@ -234,6 +236,12 @@ export default function GovernmentDashboard() {
                 <p className="text-xs text-muted-foreground mt-0.5">Shipments spanning multiple retail stores — automatically consolidated once all retailers approve</p>
               </div>
               <ConsolidatedShipmentsTab orders={orders} />
+            </motion.div>
+          )}
+
+          {tab === 'declarations' && (
+            <motion.div key="declarations" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <DeclarationBreakdownTab verifications={verifications} retailers={retailers} />
             </motion.div>
           )}
 

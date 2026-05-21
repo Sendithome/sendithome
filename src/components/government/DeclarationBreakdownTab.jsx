@@ -1,0 +1,475 @@
+import { useState, useMemo } from 'react';
+import { ChevronDown, ChevronUp, Search, Download, FileText, FileSpreadsheet, Loader2, Store, Package, User, Receipt } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { base44 } from '@/api/base44Client';
+
+const COMMISSION_RATE = 0.10;
+
+// Groups verifications by order/shipment — one "declaration" per tourist per shipment
+function buildDeclarations(verifications, retailers) {
+  const retailerMap = {};
+  retailers.forEach(r => { retailerMap[r.id] = r; });
+
+  // Group by shipment_id + tourist
+  const shipmentMap = {};
+  for (const v of verifications) {
+    const key = v.shipment_id || v.id;
+    if (!shipmentMap[key]) {
+      shipmentMap[key] = {
+        shipment_id: v.shipment_id,
+        order_id: v.order_id,
+        tourist_name: v.tourist_name,
+        tourist_passport_country: v.tourist_passport_country,
+        hotel_name: v.hotel_name,
+        destination_country: v.destination_country,
+        created_date: v.created_date,
+        retailer_verifications: [],
+      };
+    }
+    shipmentMap[key].retailer_verifications.push({ ...v, retailer: retailerMap[v.retailer_id] });
+  }
+  return Object.values(shipmentMap).sort((a, b) => new Date(b.created_date || 0) - new Date(a.created_date || 0));
+}
+
+export default function DeclarationBreakdownTab({ verifications, retailers }) {
+  const [search, setSearch] = useState('');
+  const [expandedKey, setExpandedKey] = useState(null);
+  const [expandedRetailer, setExpandedRetailer] = useState(null); // `${shipmentId}-${retailerId}`
+  const [exporting, setExporting] = useState(false);
+
+  const declarations = useMemo(() => buildDeclarations(verifications, retailers), [verifications, retailers]);
+
+  const filtered = useMemo(() => {
+    if (!search) return declarations;
+    const q = search.toLowerCase();
+    return declarations.filter(d =>
+      d.tourist_name?.toLowerCase().includes(q) ||
+      d.shipment_id?.toLowerCase().includes(q) ||
+      d.tourist_passport_country?.toLowerCase().includes(q) ||
+      d.destination_country?.toLowerCase().includes(q)
+    );
+  }, [declarations, search]);
+
+  const exportCSV = () => {
+    const rows = [
+      ['Declaration ID', 'Tourist Name', 'Nationality', 'Destination', 'Hotel', 'Date', 'Retailer Name', 'Retailer ID', 'Items Count', 'Purchase Value', `Commission (${COMMISSION_RATE * 100}%)`, 'Receivable Amount', 'Receipt Ref'],
+    ];
+    for (const d of declarations) {
+      for (const v of d.retailer_verifications) {
+        const selectedItems = (v.items || []).filter(i => i.selected !== false);
+        rows.push([
+          d.shipment_id,
+          d.tourist_name,
+          d.tourist_passport_country,
+          d.destination_country,
+          d.hotel_name,
+          d.created_date ? new Date(d.created_date).toLocaleDateString() : '',
+          v.store_name,
+          v.retailer_id,
+          selectedItems.length,
+          (v.total_value || 0).toFixed(2),
+          COMMISSION_RATE * 100 + '%',
+          ((v.total_value || 0) * COMMISSION_RATE).toFixed(2),
+          v.shipment_id,
+        ]);
+      }
+    }
+    const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `SIH-Declaration-Report-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportExcel = () => {
+    // Build simple HTML table — opens correctly in Excel
+    const rows = declarations.flatMap(d =>
+      d.retailer_verifications.map(v => {
+        const selectedItems = (v.items || []).filter(i => i.selected !== false);
+        return [
+          d.shipment_id, d.tourist_name, d.tourist_passport_country, d.destination_country, d.hotel_name,
+          d.created_date ? new Date(d.created_date).toLocaleDateString() : '',
+          v.store_name, v.retailer_id, selectedItems.length,
+          (v.total_value || 0).toFixed(2),
+          ((v.total_value || 0) * COMMISSION_RATE).toFixed(2),
+          v.shipment_id,
+        ];
+      })
+    );
+    const headers = ['Declaration ID', 'Tourist', 'Nationality', 'Destination', 'Hotel', 'Date', 'Retailer', 'Retailer ID', 'Items', 'Purchase Value', 'Receivable (10%)', 'Receipt Ref'];
+    const tableHtml = `<table><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</table>`;
+    const blob = new Blob([`<html><body>${tableHtml}</body></html>`], { type: 'application/vnd.ms-excel' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `SIH-Declaration-Report-${new Date().toISOString().slice(0, 10)}.xls`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportPDF = async () => {
+    setExporting(true);
+    try {
+      const { jsPDF } = await import('jspdf');
+      const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+      const W = 297; const margin = 12; const cW = W - margin * 2;
+      let y = margin;
+
+      // Header
+      doc.setFillColor(20, 20, 20); doc.rect(margin, y, cW, 14, 'F');
+      doc.setFontSize(12); doc.setFont('helvetica', 'bold'); doc.setTextColor(255, 255, 255);
+      doc.text('SEND IT HOME — GOVERNMENT DECLARATION BREAKDOWN REPORT', margin + cW / 2, y + 6, { align: 'center' });
+      doc.setFontSize(8); doc.setFont('helvetica', 'normal'); doc.setTextColor(200, 200, 200);
+      doc.text(`Generated: ${new Date().toLocaleString()} — CONFIDENTIAL — Government Use Only`, margin + cW / 2, y + 11, { align: 'center' });
+      y += 17;
+
+      // Summary
+      const totalDecl = declarations.length;
+      const totalRetailers = declarations.reduce((s, d) => s + d.retailer_verifications.length, 0);
+      const totalVal = declarations.reduce((s, d) => s + d.retailer_verifications.reduce((ss, v) => ss + (v.total_value || 0), 0), 0);
+      const totalReceivable = totalVal * COMMISSION_RATE;
+
+      doc.setFillColor(248, 248, 248); doc.setDrawColor(200, 200, 200);
+      doc.rect(margin, y, cW, 12, 'FD');
+      doc.setFontSize(7.5); doc.setFont('helvetica', 'bold'); doc.setTextColor(80, 80, 80);
+      const sumCols = [`Total Declarations: ${totalDecl}`, `Total Retailer Lines: ${totalRetailers}`, `Total Purchase Value: $${totalVal.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, `Total Govt. Receivable (10%): $${totalReceivable.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`];
+      sumCols.forEach((s, i) => doc.text(s, margin + 4 + i * (cW / 4), y + 7.5));
+      y += 15;
+
+      // Table headers
+      const cols = [
+        { label: 'Declaration ID', w: 32 },
+        { label: 'Tourist', w: 34 },
+        { label: 'Nationality', w: 22 },
+        { label: 'Destination', w: 24 },
+        { label: 'Hotel', w: 30 },
+        { label: 'Retailer', w: 34 },
+        { label: 'Items', w: 12 },
+        { label: 'Purchase Value', w: 26 },
+        { label: 'Receivable (10%)', w: 26 },
+        { label: 'Date', w: 24 },
+      ];
+
+      doc.setFillColor(40, 40, 40); doc.rect(margin, y, cW, 6, 'F');
+      let cx = margin;
+      cols.forEach(c => {
+        doc.setFontSize(6); doc.setFont('helvetica', 'bold'); doc.setTextColor(255, 255, 255);
+        doc.text(c.label.toUpperCase(), cx + 1.5, y + 4.2);
+        cx += c.w;
+      });
+      y += 6;
+
+      const rowData = declarations.flatMap(d =>
+        d.retailer_verifications.map(v => {
+          const selectedItems = (v.items || []).filter(i => i.selected !== false);
+          return [
+            d.shipment_id || '—',
+            (d.tourist_name || '—').substring(0, 18),
+            (d.tourist_passport_country || '—').substring(0, 10),
+            (d.destination_country || '—').substring(0, 12),
+            (d.hotel_name || '—').substring(0, 16),
+            (v.store_name || '—').substring(0, 18),
+            String(selectedItems.length),
+            `$${(v.total_value || 0).toFixed(2)}`,
+            `$${((v.total_value || 0) * COMMISSION_RATE).toFixed(2)}`,
+            d.created_date ? new Date(d.created_date).toLocaleDateString('en-GB') : '—',
+          ];
+        })
+      );
+
+      rowData.forEach((row, ri) => {
+        if (y > 175) { doc.addPage(); y = margin; }
+        doc.setFillColor(ri % 2 === 0 ? 255 : 248, ri % 2 === 0 ? 255 : 248, ri % 2 === 0 ? 255 : 252);
+        doc.rect(margin, y, cW, 5.5, 'F');
+        doc.setDrawColor(230, 230, 230); doc.rect(margin, y, cW, 5.5, 'D');
+        let rx = margin;
+        row.forEach((cell, ci) => {
+          doc.setFontSize(6.5); doc.setFont('helvetica', ci === 7 || ci === 8 ? 'bold' : 'normal');
+          doc.setTextColor(ci === 8 ? 180 : ci === 7 ? 120 : 40, ci === 8 ? 100 : ci === 7 ? 80 : 40, ci === 8 ? 0 : 40);
+          doc.text(cell, rx + 1.5, y + 4);
+          rx += cols[ci].w;
+        });
+        y += 5.5;
+      });
+
+      // Footer
+      doc.setFillColor(20, 20, 20); doc.rect(margin, y + 4, cW, 8, 'F');
+      doc.setFontSize(6.5); doc.setFont('helvetica', 'normal'); doc.setTextColor(180, 180, 180);
+      doc.text('Send It Home — Vacation Logistics DMCC, Dubai | support@sendithomedxb.com | GOVERNMENT CONFIDENTIAL', margin + cW / 2, y + 10, { align: 'center' });
+
+      doc.save(`SIH-Declaration-Report-${new Date().toISOString().slice(0, 10)}.pdf`);
+    } catch (err) {
+      console.error(err);
+    }
+    setExporting(false);
+  };
+
+  return (
+    <div className="space-y-5">
+      {/* Header + Actions */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-base font-bold text-foreground">Tourist Declaration Breakdown</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">Drill-down: Tourist → Retailers → Receipts → Items · Commission receivable per retailer</p>
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          <button onClick={exportCSV} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-colors shadow-sm">
+            <Download className="w-3.5 h-3.5" /> CSV
+          </button>
+          <button onClick={exportExcel} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl transition-colors shadow-sm">
+            <FileSpreadsheet className="w-3.5 h-3.5" /> Excel
+          </button>
+          <button onClick={exportPDF} disabled={exporting} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white rounded-xl transition-colors shadow-sm">
+            {exporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileText className="w-3.5 h-3.5" />} PDF
+          </button>
+        </div>
+      </div>
+
+      {/* Summary Totals */}
+      <TotalsBar declarations={filtered} />
+
+      {/* Search */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+        <input
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search by tourist name, shipment ID, nationality, destination…"
+          className="w-full h-9 pl-9 pr-3 bg-card border border-input rounded-xl text-xs text-foreground focus:outline-none focus:border-accent transition-colors"
+        />
+      </div>
+
+      {/* Declaration Cards */}
+      {filtered.length === 0 ? (
+        <div className="text-center py-16 text-muted-foreground">
+          <Package className="w-10 h-10 mx-auto mb-3 opacity-20" />
+          <p className="font-semibold">No declarations found</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {filtered.map(d => (
+            <DeclarationCard
+              key={d.shipment_id}
+              declaration={d}
+              isExpanded={expandedKey === d.shipment_id}
+              onToggle={() => setExpandedKey(expandedKey === d.shipment_id ? null : d.shipment_id)}
+              expandedRetailer={expandedRetailer}
+              setExpandedRetailer={setExpandedRetailer}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TotalsBar({ declarations }) {
+  const totalDecl = declarations.length;
+  const totalValue = declarations.reduce((s, d) => s + d.retailer_verifications.reduce((ss, v) => ss + (v.total_value || 0), 0), 0);
+  const totalReceivable = totalValue * COMMISSION_RATE;
+  const totalRetailerLines = declarations.reduce((s, d) => s + d.retailer_verifications.length, 0);
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {[
+        { label: 'Total Declarations', value: totalDecl.toLocaleString(), color: 'text-primary' },
+        { label: 'Retailer Records', value: totalRetailerLines.toLocaleString(), color: 'text-blue-600' },
+        { label: 'Total Purchase Value', value: `$${totalValue.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, color: 'text-amber-600' },
+        { label: 'Total Govt. Receivable (10%)', value: `$${totalReceivable.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, color: 'text-green-600' },
+      ].map(s => (
+        <div key={s.label} className="bg-card border border-border rounded-xl p-3 shadow-sm">
+          <p className="text-[10px] text-muted-foreground uppercase tracking-wide">{s.label}</p>
+          <p className={`text-lg font-black mt-1 ${s.color}`}>{s.value}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function DeclarationCard({ declaration: d, isExpanded, onToggle, expandedRetailer, setExpandedRetailer }) {
+  const totalValue = d.retailer_verifications.reduce((s, v) => s + (v.total_value || 0), 0);
+  const totalReceivable = totalValue * COMMISSION_RATE;
+  const totalItems = d.retailer_verifications.reduce((s, v) => s + (v.items || []).filter(i => i.selected !== false).length, 0);
+
+  return (
+    <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
+      {/* Tourist Header — Level 1 */}
+      <div
+        className="px-5 py-4 flex items-center justify-between gap-4 cursor-pointer hover:bg-muted/20 transition-colors"
+        onClick={onToggle}
+      >
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+            <User className="w-4 h-4 text-primary" />
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="text-sm font-bold text-foreground">{d.tourist_name || '—'}</p>
+              <span className="text-[10px] font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded-full">{d.tourist_passport_country || '—'}</span>
+              <span className="text-[10px] font-mono text-accent">{d.shipment_id}</span>
+            </div>
+            <div className="flex items-center gap-3 mt-0.5 text-[11px] text-muted-foreground flex-wrap">
+              <span>→ {d.destination_country}</span>
+              {d.hotel_name && <span>🏨 {d.hotel_name}</span>}
+              <span>{d.created_date ? new Date(d.created_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</span>
+              <span className="text-foreground font-semibold">{d.retailer_verifications.length} retailer{d.retailer_verifications.length !== 1 ? 's' : ''} · {totalItems} items</span>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-5 shrink-0">
+          <div className="hidden md:block text-right">
+            <p className="text-[10px] text-muted-foreground">Total Purchase Value</p>
+            <p className="text-sm font-bold text-amber-600">${totalValue.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+          </div>
+          <div className="hidden md:block text-right">
+            <p className="text-[10px] text-muted-foreground">Govt. Receivable (10%)</p>
+            <p className="text-sm font-bold text-green-600">${totalReceivable.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+          </div>
+          {isExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+        </div>
+      </div>
+
+      {/* Expanded — Retailer Level (Level 2) */}
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="border-t border-border overflow-hidden"
+          >
+            <div className="p-4 space-y-3 bg-muted/10">
+
+              {/* Tourist Info Summary */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-1">
+                {[
+                  { label: 'Tourist Name', value: d.tourist_name },
+                  { label: 'Nationality', value: d.tourist_passport_country },
+                  { label: 'Declaration ID', value: d.shipment_id },
+                  { label: 'Declaration Date', value: d.created_date ? new Date(d.created_date).toLocaleDateString('en-GB') : '—' },
+                ].map(f => (
+                  <div key={f.label} className="bg-card border border-border rounded-xl p-2.5">
+                    <p className="text-[9px] text-muted-foreground uppercase tracking-wide">{f.label}</p>
+                    <p className="text-xs font-bold text-foreground mt-0.5">{f.value || '—'}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Retailer Summary Table (Level 2) */}
+              <div className="bg-card border border-border rounded-xl overflow-hidden">
+                <div className="px-3 py-2 bg-muted/40 border-b border-border flex items-center gap-2">
+                  <Store className="w-3.5 h-3.5 text-muted-foreground" />
+                  <p className="text-xs font-bold text-foreground">Retailer-wise Purchase Breakdown</p>
+                </div>
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/20">
+                      {['Retailer', 'Reg. ID', 'Items', 'Purchase Value', `Comm. Rate`, 'Receivable Amount', 'Receipt Ref', ''].map(h => (
+                        <th key={h} className="text-left px-3 py-2 text-[10px] font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {d.retailer_verifications.map(v => {
+                      const selectedItems = (v.items || []).filter(i => i.selected !== false);
+                      const retailerKey = `${d.shipment_id}-${v.id}`;
+                      const isRetailerExpanded = expandedRetailer === retailerKey;
+                      return (
+                        <>
+                          <tr
+                            key={v.id}
+                            className="hover:bg-muted/20 transition-colors cursor-pointer"
+                            onClick={() => setExpandedRetailer(isRetailerExpanded ? null : retailerKey)}
+                          >
+                            <td className="px-3 py-2.5 font-bold text-foreground">{v.store_name || '—'}</td>
+                            <td className="px-3 py-2.5 font-mono text-muted-foreground text-[10px]">{v.retailer_id !== 'unmatched' ? v.retailer_id?.slice(0, 12) + '…' : '—'}</td>
+                            <td className="px-3 py-2.5 text-center">
+                              <span className="bg-muted text-foreground font-bold px-2 py-0.5 rounded-full text-[10px]">{selectedItems.length}</span>
+                            </td>
+                            <td className="px-3 py-2.5 font-bold text-amber-600">${(v.total_value || 0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            <td className="px-3 py-2.5 text-muted-foreground">10%</td>
+                            <td className="px-3 py-2.5 font-bold text-green-600">${((v.total_value || 0) * COMMISSION_RATE).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            <td className="px-3 py-2.5 font-mono text-muted-foreground text-[10px]">{v.shipment_id}</td>
+                            <td className="px-3 py-2.5">
+                              <button className="text-[10px] text-accent hover:underline flex items-center gap-0.5">
+                                {isRetailerExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />} Items
+                              </button>
+                            </td>
+                          </tr>
+                          {/* Level 3 — Item Drill-Down */}
+                          {isRetailerExpanded && (
+                            <tr key={`items-${v.id}`}>
+                              <td colSpan={8} className="bg-muted/30 px-6 py-3">
+                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide mb-2 flex items-center gap-1.5">
+                                  <Receipt className="w-3 h-3" /> {v.store_name} — Item Detail (Selected for Shipment)
+                                </p>
+                                {selectedItems.length === 0 ? (
+                                  <p className="text-xs text-muted-foreground italic">No items selected for shipment.</p>
+                                ) : (
+                                  <table className="w-full text-xs rounded-xl overflow-hidden border border-border">
+                                    <thead>
+                                      <tr className="bg-muted text-muted-foreground">
+                                        <th className="text-left px-3 py-1.5 font-semibold">#</th>
+                                        <th className="text-left px-3 py-1.5 font-semibold">Item Description</th>
+                                        <th className="text-left px-3 py-1.5 font-semibold">Category</th>
+                                        <th className="text-center px-3 py-1.5 font-semibold">Qty</th>
+                                        <th className="text-right px-3 py-1.5 font-semibold">Item Value</th>
+                                        <th className="text-right px-3 py-1.5 font-semibold">Receivable (10%)</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody className="bg-card divide-y divide-border">
+                                      {selectedItems.map((item, idx) => (
+                                        <tr key={idx}>
+                                          <td className="px-3 py-2 text-muted-foreground">{idx + 1}</td>
+                                          <td className="px-3 py-2 font-medium text-foreground">{item.description || '—'}</td>
+                                          <td className="px-3 py-2 text-muted-foreground">{item.category || '—'}</td>
+                                          <td className="px-3 py-2 text-center">1</td>
+                                          <td className="px-3 py-2 text-right font-semibold text-foreground">${(item.price || 0).toFixed(2)}</td>
+                                          <td className="px-3 py-2 text-right font-bold text-green-600">${((item.price || 0) * COMMISSION_RATE).toFixed(2)}</td>
+                                        </tr>
+                                      ))}
+                                      <tr className="bg-muted/50 font-bold">
+                                        <td colSpan={3} className="px-3 py-2 text-foreground">TOTAL ({selectedItems.length} items)</td>
+                                        <td className="px-3 py-2 text-center">{selectedItems.length}</td>
+                                        <td className="px-3 py-2 text-right text-amber-600">${(v.total_value || 0).toFixed(2)}</td>
+                                        <td className="px-3 py-2 text-right text-green-600">${((v.total_value || 0) * COMMISSION_RATE).toFixed(2)}</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                )}
+                                {v.receipt_url && (
+                                  <a href={v.receipt_url} target="_blank" rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1 mt-2 text-[10px] text-accent hover:underline">
+                                    <Receipt className="w-3 h-3" /> View Original Receipt
+                                  </a>
+                                )}
+                              </td>
+                            </tr>
+                          )}
+                        </>
+                      );
+                    })}
+                  </tbody>
+                  {/* Summary Totals Row */}
+                  <tfoot>
+                    <tr className="bg-muted/60 border-t-2 border-border font-bold">
+                      <td className="px-3 py-2.5 text-foreground" colSpan={2}>DECLARATION TOTAL</td>
+                      <td className="px-3 py-2.5 text-center text-foreground">{totalItems}</td>
+                      <td className="px-3 py-2.5 font-black text-amber-600">${totalValue.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className="px-3 py-2.5"></td>
+                      <td className="px-3 py-2.5 font-black text-green-600">${totalReceivable.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td colSpan={2}></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
