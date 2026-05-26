@@ -155,8 +155,6 @@ export default function ReceiptUpload() {
   };
 
   const handleProceedToBoxSelect = async () => {
-    // Background: trigger per-retailer verification creation (fire and forget)
-    base44.functions.invoke('createRetailerVerifications', { order_id: orderId }).catch(() => {});
     setStep(1);
   };
 
@@ -165,6 +163,8 @@ export default function ReceiptUpload() {
   const handleProceedToPayment = async () => {
     setSavingBox(true);
     await base44.entities.Order.update(orderId, { box_size: boxSize });
+    // Trigger retailer verifications now that tourist has signed the customs declaration
+    base44.functions.invoke('createRetailerVerifications', { order_id: orderId }).catch(() => {});
     navigate(`/order/${orderId}/payment`);
   };
 
