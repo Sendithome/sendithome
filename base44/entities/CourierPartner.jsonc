@@ -1,0 +1,41 @@
+{
+  "name": "CourierPartner",
+  "type": "object",
+  "properties": {
+    "company_name": {
+      "type": "string",
+      "description": "Courier company name"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Primary contact person"
+    },
+    "email": {
+      "type": "string",
+      "description": "Login email"
+    },
+    "password": {
+      "type": "string",
+      "description": "Portal login password"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "company_name",
+    "email",
+    "password"
+  ]
+}

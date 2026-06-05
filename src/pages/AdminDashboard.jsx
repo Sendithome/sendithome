@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Store, Hotel, ShoppingBag, Package,
   CheckCircle2, Clock, AlertTriangle, TrendingUp, DollarSign,
-  FileText, RefreshCw, Loader2, Activity, Globe, Star
+  FileText, RefreshCw, Loader2, Activity, Globe, Star, Truck
 } from 'lucide-react';
 import AdminOverviewTab from '@/components/admin/AdminOverviewTab';
 import AdminOrdersTab from '@/components/admin/AdminOrdersTab';
@@ -18,6 +18,7 @@ import AdminShipmentAnalyticsTab from '@/components/admin/AdminShipmentAnalytics
 import AdminRetailerAnalyticsTab from '@/components/admin/AdminRetailerAnalyticsTab';
 import AdminFinancialTab from '@/components/admin/AdminFinancialTab';
 import AdminOperationalTab from '@/components/admin/AdminOperationalTab';
+import AdminCourierTab from '@/components/admin/AdminCourierTab';
 
 const TABS = [
   { id: 'executive', label: 'Executive', icon: Star },
@@ -32,6 +33,7 @@ const TABS = [
   { id: 'retailer-analytics', label: 'Retailer Analytics', icon: TrendingUp },
   { id: 'financial', label: 'Financial', icon: DollarSign },
   { id: 'operational', label: 'Operational', icon: Activity },
+  { id: 'courier', label: 'Courier Partners', icon: Truck },
 ];
 
 export default function AdminDashboard() {
@@ -39,7 +41,7 @@ export default function AdminDashboard() {
   const [tab, setTab] = useState('executive');
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
-    orders: [], verifications: [], retailers: [], hotels: [], users: []
+    orders: [], verifications: [], retailers: [], hotels: [], users: [], onboardings: []
   });
 
   useEffect(() => {
@@ -48,13 +50,14 @@ export default function AdminDashboard() {
 
   const loadAll = async () => {
     setLoading(true);
-    const [orders, verifications, retailers, hotels] = await Promise.all([
+    const [orders, verifications, retailers, hotels, onboardings] = await Promise.all([
       base44.entities.Order.list('-created_date', 200),
       base44.entities.RetailerVerification.list('-created_date', 200),
       base44.entities.Retailer.list('-created_date', 200),
       base44.entities.Hotel.list('-created_date', 100),
+      base44.entities.HotelOnboardingStatus.list('-stage_updated_at', 200),
     ]);
-    setData({ orders, verifications, retailers, hotels });
+    setData({ orders, verifications, retailers, hotels, onboardings });
     setLoading(false);
   };
 
@@ -89,6 +92,9 @@ export default function AdminDashboard() {
           </a>
           <a href="/government-dashboard" className="text-xs text-accent hover:underline px-2 py-1">
             Gov Portal →
+          </a>
+          <a href="/courier-login" className="text-xs text-accent hover:underline px-2 py-1">
+            Courier Portal →
           </a>
         </div>
       </header>
@@ -135,6 +141,7 @@ export default function AdminDashboard() {
         {tab === 'retailer-analytics' && <AdminRetailerAnalyticsTab data={data} />}
         {tab === 'financial' && <AdminFinancialTab data={data} />}
         {tab === 'operational' && <AdminOperationalTab data={data} />}
+        {tab === 'courier' && <AdminCourierTab onboardings={data.onboardings} hotels={data.hotels} onRefresh={loadAll} />}
       </div>
     </div>
   );
