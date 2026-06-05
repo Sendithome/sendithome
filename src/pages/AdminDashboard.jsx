@@ -4,25 +4,39 @@ import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Store, Hotel, ShoppingBag, Package,
   CheckCircle2, Clock, AlertTriangle, TrendingUp, DollarSign,
-  FileText, RefreshCw, Loader2, LogOut, ChevronRight, Eye
+  FileText, RefreshCw, Loader2, Activity, Globe, Star
 } from 'lucide-react';
 import AdminOverviewTab from '@/components/admin/AdminOverviewTab';
 import AdminOrdersTab from '@/components/admin/AdminOrdersTab';
 import AdminRetailersTab from '@/components/admin/AdminRetailersTab';
 import AdminHotelsTab from '@/components/admin/AdminHotelsTab';
 import AdminShipmentsTab from '@/components/admin/AdminShipmentsTab';
+import AdminExecutiveTab from '@/components/admin/AdminExecutiveTab';
+import AdminHotelAnalyticsTab from '@/components/admin/AdminHotelAnalyticsTab';
+import AdminTouristAnalyticsTab from '@/components/admin/AdminTouristAnalyticsTab';
+import AdminShipmentAnalyticsTab from '@/components/admin/AdminShipmentAnalyticsTab';
+import AdminRetailerAnalyticsTab from '@/components/admin/AdminRetailerAnalyticsTab';
+import AdminFinancialTab from '@/components/admin/AdminFinancialTab';
+import AdminOperationalTab from '@/components/admin/AdminOperationalTab';
 
 const TABS = [
+  { id: 'executive', label: 'Executive', icon: Star },
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
   { id: 'orders', label: 'Orders', icon: ShoppingBag },
   { id: 'shipments', label: 'Verifications', icon: Package },
   { id: 'retailers', label: 'Retailers', icon: Store },
   { id: 'hotels', label: 'Hotels', icon: Hotel },
+  { id: 'hotel-analytics', label: 'Hotel Analytics', icon: Hotel },
+  { id: 'tourist-analytics', label: 'Tourist Analytics', icon: Users },
+  { id: 'shipment-analytics', label: 'Shipment Analytics', icon: Globe },
+  { id: 'retailer-analytics', label: 'Retailer Analytics', icon: TrendingUp },
+  { id: 'financial', label: 'Financial', icon: DollarSign },
+  { id: 'operational', label: 'Operational', icon: Activity },
 ];
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const [tab, setTab] = useState('overview');
+  const [tab, setTab] = useState('executive');
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
     orders: [], verifications: [], retailers: [], hotels: [], users: []
@@ -109,11 +123,18 @@ export default function AdminDashboard() {
           })}
         </div>
 
+        {tab === 'executive' && <AdminExecutiveTab data={data} />}
         {tab === 'overview' && <AdminOverviewTab data={data} />}
         {tab === 'orders' && <AdminOrdersTab orders={data.orders} />}
         {tab === 'shipments' && <AdminShipmentsTab verifications={data.verifications} retailers={data.retailers} onRefresh={loadAll} />}
         {tab === 'retailers' && <AdminRetailersTab retailers={data.retailers} onRefresh={loadAll} />}
         {tab === 'hotels' && <AdminHotelsTab hotels={data.hotels} />}
+        {tab === 'hotel-analytics' && <AdminHotelAnalyticsTab data={data} />}
+        {tab === 'tourist-analytics' && <AdminTouristAnalyticsTab data={data} />}
+        {tab === 'shipment-analytics' && <AdminShipmentAnalyticsTab data={data} />}
+        {tab === 'retailer-analytics' && <AdminRetailerAnalyticsTab data={data} />}
+        {tab === 'financial' && <AdminFinancialTab data={data} />}
+        {tab === 'operational' && <AdminOperationalTab data={data} />}
       </div>
     </div>
   );

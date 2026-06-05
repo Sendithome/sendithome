@@ -1,0 +1,43 @@
+{
+  "name": "Receipt",
+  "type": "object",
+  "properties": {
+    "order_id": {
+      "type": "string",
+      "description": "Reference to Order"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "store_name": {
+      "type": "string"
+    },
+    "total_amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string"
+    },
+    "purchase_date": {
+      "type": "string"
+    },
+    "processing_status": {
+      "type": "string",
+      "enum": [
+        "uploading",
+        "processing",
+        "completed",
+        "failed"
+      ],
+      "default": "uploading"
+    },
+    "extracted_items_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "order_id",
+    "file_url"
+  ]
+}
