@@ -82,8 +82,6 @@ export default function CourierDashboard() {
   const courierEmail = sessionStorage.getItem('courier_email') || '';
 
   useEffect(() => {
-    const id = sessionStorage.getItem('courier_id');
-    if (!id) { navigate('/courier-login'); return; }
     loadData();
   }, []);
 

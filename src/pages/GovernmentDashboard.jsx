@@ -43,8 +43,6 @@ export default function GovernmentDashboard() {
   const deptName = sessionStorage.getItem('gov_dept_name') || 'Government Department';
 
   useEffect(() => {
-    const code = sessionStorage.getItem('gov_dept_code');
-    if (!code) { navigate('/government-login'); return; }
     loadData();
   }, []);
 

@@ -131,6 +131,18 @@ export default function GovernmentLogin() {
                 {loading ? 'Verifying…' : 'Continue to 2FA'}
               </button>
 
+              <button
+                onClick={() => {
+                  sessionStorage.setItem('gov_dept_code', 'UAE-CUST-001');
+                  sessionStorage.setItem('gov_dept_name', 'UAE Federal Customs Authority');
+                  sessionStorage.setItem('gov_email', 'officer@customs.gov.ae');
+                  navigate('/government-dashboard');
+                }}
+                className="w-full h-10 border border-accent/40 text-accent hover:bg-accent/5 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors"
+              >
+                🚀 Enter Demo (Skip Login)
+              </button>
+
               <p className="text-center text-[10px] text-muted-foreground mt-2">
                 Demo: Code <span className="text-foreground font-mono">UAE-CUST-001</span> · Email <span className="text-foreground font-mono">officer@customs.gov.ae</span> · Any password
               </p>

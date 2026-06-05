@@ -28,19 +28,28 @@ export default function RetailerDashboard() {
 
   useEffect(() => {
     const id = sessionStorage.getItem('retailer_id');
-    if (!id) { navigate('/retailer-portal'); return; }
     loadData(id);
   }, []);
 
   const loadData = async (id) => {
     setLoading(true);
     const retailerId = id || sessionStorage.getItem('retailer_id');
-    const [retailers, allVerifications] = await Promise.all([
-      base44.entities.Retailer.filter({ id: retailerId }),
-      base44.entities.RetailerVerification.filter({ retailer_id: retailerId }, '-created_date', 200)
-    ]);
-    if (retailers.length > 0) setRetailer(retailers[0]);
-    setVerifications(allVerifications);
+    if (retailerId) {
+      const [retailers, allVerifications] = await Promise.all([
+        base44.entities.Retailer.filter({ id: retailerId }),
+        base44.entities.RetailerVerification.filter({ retailer_id: retailerId }, '-created_date', 200)
+      ]);
+      if (retailers.length > 0) setRetailer(retailers[0]);
+      setVerifications(allVerifications);
+    } else {
+      // Demo mode: load first available retailer
+      const retailers = await base44.entities.Retailer.list('-created_date', 1);
+      if (retailers.length > 0) {
+        setRetailer(retailers[0]);
+        const allVerifications = await base44.entities.RetailerVerification.filter({ retailer_id: retailers[0].id }, '-created_date', 200);
+        setVerifications(allVerifications);
+      }
+    }
     setLoading(false);
   };
 

@@ -91,11 +91,18 @@ export default function RetailerPortal() {
 
           <button
             onClick={handleLogin}
-            disabled={!form.partner_code || !form.email || !form.password || loading}
+            disabled={loading}
             className="w-full h-12 bg-accent hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed text-accent-foreground font-bold rounded-xl flex items-center justify-center gap-2 transition-colors"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogIn className="w-4 h-4" />}
             {loading ? 'Signing In…' : 'Sign In'}
+          </button>
+
+          <button
+            onClick={() => { navigate('/retailer-dashboard'); }}
+            className="w-full h-10 border border-accent/40 text-accent hover:bg-accent/5 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors"
+          >
+            🚀 Enter Demo (Skip Login)
           </button>
 
           <p className="text-center text-xs text-muted-foreground">

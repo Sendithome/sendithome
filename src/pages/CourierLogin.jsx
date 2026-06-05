@@ -95,7 +95,14 @@ export default function CourierLogin() {
           </button>
         </form>
 
-        <p className="text-center text-xs text-muted-foreground mt-4">
+        <button
+          onClick={() => navigate('/courier-dashboard')}
+          className="w-full mt-3 h-10 border border-blue-300 text-blue-600 hover:bg-blue-50 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors"
+        >
+          🚀 Enter Demo (Skip Login)
+        </button>
+
+        <p className="text-center text-xs text-muted-foreground mt-3">
           Logistics partners only · Contact admin for credentials
         </p>
       </div>
