@@ -4,7 +4,7 @@ import {
   Home, QrCode, Hotel, MapPin, Save, Download, RefreshCw,
   CheckCircle2, Loader2, Upload, Star, Building2, Clock,
   FileText, Shield, AlertCircle, ChevronRight, Users, X, PenLine,
-  Truck, Activity
+  Truck, Activity, Package
 } from 'lucide-react';
 import OnboardingPipeline from '@/components/hotel/OnboardingPipeline';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ const TABS = [
   { id: 'documents', label: 'Documents', icon: FileText },
   { id: 'qr', label: 'QR Code', icon: QrCode },
   { id: 'status', label: 'Onboarding Status', icon: Activity },
+  { id: 'inventory', label: 'Box Inventory', icon: Package },
 ];
 
 const FLOW_STEPS = [
@@ -1036,6 +1037,29 @@ export default function HotelDashboard() {
                   </Button>
                 </div>
               )}
+            </motion.div>
+          )}
+
+          {/* ── INVENTORY TAB ── */}
+          {tab === 'inventory' && (
+            <motion.div key="inventory" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="space-y-4">
+              <div>
+                <h2 className="text-lg font-bold text-foreground">Box Inventory</h2>
+                <p className="text-sm text-muted-foreground mt-1">Track your allocated 10 KG and 20 KG box stock, replenishment orders, and usage history.</p>
+              </div>
+              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+                  <Package className="w-5 h-5 text-blue-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-blue-800">Full Inventory Dashboard</p>
+                  <p className="text-xs text-blue-700 mt-1">View your current stock levels, replenishment history, and usage analytics on the dedicated inventory page.</p>
+                  <button onClick={() => navigate('/hotel-inventory')}
+                    className="mt-3 flex items-center gap-1.5 px-4 h-8 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-colors">
+                    <Package className="w-3.5 h-3.5" /> Open Inventory Dashboard
+                  </button>
+                </div>
+              </div>
             </motion.div>
           )}
 

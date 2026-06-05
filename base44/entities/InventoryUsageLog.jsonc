@@ -1,0 +1,47 @@
+{
+  "name": "InventoryUsageLog",
+  "type": "object",
+  "properties": {
+    "hotel_id": {
+      "type": "string"
+    },
+    "hotel_name": {
+      "type": "string"
+    },
+    "box_type": {
+      "type": "string",
+      "enum": [
+        "10kg",
+        "20kg"
+      ]
+    },
+    "quantity_used": {
+      "type": "number"
+    },
+    "quantity_remaining": {
+      "type": "number"
+    },
+    "date": {
+      "type": "string",
+      "description": "YYYY-MM-DD"
+    },
+    "recorded_by": {
+      "type": "string",
+      "enum": [
+        "system",
+        "courier",
+        "admin",
+        "hotel"
+      ],
+      "default": "system"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "hotel_id",
+    "box_type",
+    "quantity_used"
+  ]
+}

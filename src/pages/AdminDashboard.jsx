@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Store, Hotel, ShoppingBag, Package,
   CheckCircle2, Clock, AlertTriangle, TrendingUp, DollarSign,
-  FileText, RefreshCw, Loader2, Activity, Globe, Star, Truck
+  FileText, RefreshCw, Loader2, Activity, Globe, Star, Truck, Box
 } from 'lucide-react';
 import AdminOverviewTab from '@/components/admin/AdminOverviewTab';
 import AdminOrdersTab from '@/components/admin/AdminOrdersTab';
@@ -19,6 +19,7 @@ import AdminRetailerAnalyticsTab from '@/components/admin/AdminRetailerAnalytics
 import AdminFinancialTab from '@/components/admin/AdminFinancialTab';
 import AdminOperationalTab from '@/components/admin/AdminOperationalTab';
 import AdminCourierTab from '@/components/admin/AdminCourierTab';
+import AdminInventoryTab from '@/components/admin/AdminInventoryTab';
 
 const TABS = [
   { id: 'executive', label: 'Executive', icon: Star },
@@ -34,6 +35,7 @@ const TABS = [
   { id: 'financial', label: 'Financial', icon: DollarSign },
   { id: 'operational', label: 'Operational', icon: Activity },
   { id: 'courier', label: 'Courier Partners', icon: Truck },
+  { id: 'inventory', label: 'Box Inventory', icon: Package },
 ];
 
 export default function AdminDashboard() {
@@ -142,6 +144,7 @@ export default function AdminDashboard() {
         {tab === 'financial' && <AdminFinancialTab data={data} />}
         {tab === 'operational' && <AdminOperationalTab data={data} />}
         {tab === 'courier' && <AdminCourierTab onboardings={data.onboardings} hotels={data.hotels} onRefresh={loadAll} />}
+        {tab === 'inventory' && <AdminInventoryTab hotels={data.hotels} onRefresh={loadAll} />}
       </div>
     </div>
   );

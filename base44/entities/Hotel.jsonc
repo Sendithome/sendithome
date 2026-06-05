@@ -35,6 +35,10 @@
     "star_rating": {
       "type": "number"
     },
+    "number_of_rooms": {
+      "type": "number",
+      "description": "Number of hotel keys/rooms \u2014 used for inventory tier allocation"
+    },
     "logo_url": {
       "type": "string"
     },

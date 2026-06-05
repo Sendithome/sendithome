@@ -1,0 +1,59 @@
+{
+  "name": "ReplenishmentOrder",
+  "type": "object",
+  "properties": {
+    "hotel_id": {
+      "type": "string"
+    },
+    "hotel_name": {
+      "type": "string"
+    },
+    "box_type": {
+      "type": "string",
+      "enum": [
+        "10kg",
+        "20kg"
+      ]
+    },
+    "quantity_requested": {
+      "type": "number"
+    },
+    "quantity_delivered": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "acknowledged",
+        "in_transit",
+        "delivered",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "triggered_at": {
+      "type": "string",
+      "description": "ISO timestamp when auto-triggered"
+    },
+    "delivered_at": {
+      "type": "string"
+    },
+    "courier_notes": {
+      "type": "string"
+    },
+    "trigger_level_at_time": {
+      "type": "number",
+      "description": "Reorder threshold at time of trigger"
+    },
+    "stock_at_trigger": {
+      "type": "number",
+      "description": "Stock level when trigger fired"
+    }
+  },
+  "required": [
+    "hotel_id",
+    "box_type",
+    "quantity_requested"
+  ]
+}

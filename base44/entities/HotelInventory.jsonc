@@ -1,0 +1,78 @@
+{
+  "name": "HotelInventory",
+  "type": "object",
+  "properties": {
+    "hotel_id": {
+      "type": "string",
+      "description": "Reference to Hotel entity"
+    },
+    "hotel_name": {
+      "type": "string"
+    },
+    "number_of_rooms": {
+      "type": "number",
+      "description": "Number of hotel keys/rooms"
+    },
+    "tier": {
+      "type": "number",
+      "description": "Inventory tier 1-5 based on room count"
+    },
+    "allocated_10kg": {
+      "type": "number",
+      "description": "Standard allocation of 10kg boxes"
+    },
+    "allocated_20kg": {
+      "type": "number",
+      "description": "Standard allocation of 20kg boxes"
+    },
+    "current_10kg": {
+      "type": "number",
+      "description": "Current available 10kg boxes",
+      "default": 0
+    },
+    "current_20kg": {
+      "type": "number",
+      "description": "Current available 20kg boxes",
+      "default": 0
+    },
+    "reorder_trigger_level": {
+      "type": "number",
+      "description": "Stock level that triggers replenishment"
+    },
+    "status_10kg": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "low",
+        "replenishment_in_progress",
+        "critical"
+      ],
+      "default": "ok"
+    },
+    "status_20kg": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "low",
+        "replenishment_in_progress",
+        "critical"
+      ],
+      "default": "ok"
+    },
+    "last_replenishment_10kg_at": {
+      "type": "string",
+      "description": "ISO timestamp of last 10kg replenishment"
+    },
+    "last_replenishment_20kg_at": {
+      "type": "string",
+      "description": "ISO timestamp of last 20kg replenishment"
+    },
+    "last_updated": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "hotel_id",
+    "number_of_rooms"
+  ]
+}

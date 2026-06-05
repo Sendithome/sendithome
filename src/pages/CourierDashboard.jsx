@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Truck, CheckCircle2, Clock, AlertTriangle, LogOut, RefreshCw,
-  Loader2, MapPin, ChevronRight, Phone, Mail, Bell
+  Loader2, MapPin, ChevronRight, Phone, Mail, Bell, Package
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
@@ -73,7 +73,9 @@ export default function CourierDashboard() {
   const [loading, setLoading] = useState(true);
   const [onboardings, setOnboardings] = useState([]);
   const [hotels, setHotels] = useState([]);
+  const [repOrders, setRepOrders] = useState([]);
   const [updating, setUpdating] = useState(null);
+  const [updatingOrder, setUpdatingOrder] = useState(null);
   const [notes, setNotes] = useState({});
 
   const courierCompany = sessionStorage.getItem('courier_company') || 'Courier Partner';
@@ -87,13 +89,47 @@ export default function CourierDashboard() {
 
   const loadData = async () => {
     setLoading(true);
-    const [allOnboardings, allHotels] = await Promise.all([
+    const [allOnboardings, allHotels, orders] = await Promise.all([
       base44.entities.HotelOnboardingStatus.list('-stage_updated_at', 300),
       base44.entities.Hotel.list('-created_date', 300),
+      base44.entities.ReplenishmentOrder.filter({ status: 'pending' }, '-created_date', 100),
     ]);
     setOnboardings(allOnboardings.filter(o => o.logistics_stage && o.logistics_stage !== 'pending_dispatch'));
     setHotels(allHotels);
+    setRepOrders(orders);
     setLoading(false);
+  };
+
+  const handleReplenishmentAction = async (orderId, newStatus) => {
+    setUpdatingOrder(orderId);
+    const updates = { status: newStatus };
+    if (newStatus === 'delivered') {
+      updates.delivered_at = new Date().toISOString();
+      const order = repOrders.find(o => o.id === orderId);
+      if (order) {
+        const invs = await base44.entities.HotelInventory.filter({ hotel_id: order.hotel_id });
+        if (invs.length > 0) {
+          const inv = invs[0];
+          const now = new Date().toISOString();
+          const invUpdates = { last_updated: now };
+          if (order.box_type === '10kg') {
+            const newVal = (inv.current_10kg || 0) + (order.quantity_requested || 0);
+            invUpdates.current_10kg = newVal;
+            invUpdates.status_10kg = newVal <= inv.reorder_trigger_level ? 'low' : 'ok';
+            invUpdates.last_replenishment_10kg_at = now;
+          } else {
+            const newVal = (inv.current_20kg || 0) + (order.quantity_requested || 0);
+            invUpdates.current_20kg = newVal;
+            invUpdates.status_20kg = newVal <= inv.reorder_trigger_level ? 'low' : 'ok';
+            invUpdates.last_replenishment_20kg_at = now;
+          }
+          await base44.entities.HotelInventory.update(inv.id, invUpdates);
+        }
+      }
+    }
+    await base44.entities.ReplenishmentOrder.update(orderId, updates);
+    await loadData();
+    setUpdatingOrder(null);
   };
 
   const updateStage = async (ob, newStage) => {
@@ -194,6 +230,43 @@ export default function CourierDashboard() {
             <p className="text-sm font-bold text-destructive">
               ⚠️ {overdue.length} hotel{overdue.length !== 1 ? 's are' : ' is'} overdue — immediate action required
             </p>
+          </motion.div>
+        )}
+
+        {/* Replenishment Orders Alert */}
+        {repOrders.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+            className="bg-amber-50 border border-amber-300 rounded-2xl px-5 py-4 space-y-3">
+            <div className="flex items-center gap-3">
+              <Package className="w-5 h-5 text-amber-600 shrink-0" />
+              <p className="text-sm font-bold text-amber-800">
+                📦 {repOrders.length} Box Replenishment Request{repOrders.length > 1 ? 's' : ''} Pending
+              </p>
+            </div>
+            <div className="space-y-2">
+              {repOrders.map(order => (
+                <div key={order.id} className="bg-white/70 rounded-xl px-3 py-2.5 flex items-center gap-3 flex-wrap">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-foreground">{order.hotel_name}</p>
+                    <p className="text-[10px] text-muted-foreground">
+                      {order.quantity_requested}× {order.box_type} boxes · Stock at trigger: {order.stock_at_trigger ?? '—'}
+                    </p>
+                  </div>
+                  <div className="flex gap-1.5">
+                    <button disabled={updatingOrder === order.id}
+                      onClick={() => handleReplenishmentAction(order.id, 'in_transit')}
+                      className="px-3 h-7 text-[10px] font-bold bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                      In Transit
+                    </button>
+                    <button disabled={updatingOrder === order.id}
+                      onClick={() => handleReplenishmentAction(order.id, 'delivered')}
+                      className="px-3 h-7 text-[10px] font-bold bg-green-600 text-white rounded-lg hover:bg-green-700">
+                      {updatingOrder === order.id ? '…' : '✓ Delivered'}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </motion.div>
         )}
 
