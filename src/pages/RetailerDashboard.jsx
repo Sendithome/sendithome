@@ -9,12 +9,14 @@ import VerificationCard from '@/components/retailer/VerificationCard';
 import ApprovedHistoryTab from '@/components/retailer/ApprovedHistoryTab';
 import AnalyticsTab from '@/components/retailer/AnalyticsTab';
 import ShipmentsTab from '@/components/retailer/ShipmentsTab';
+import CommissionTab from '@/components/retailer/CommissionTab';
 
 const TABS = [
   { id: 'pending', label: 'Pending Approvals' },
   { id: 'shipments', label: 'Shipments' },
   { id: 'history', label: 'Approved History' },
   { id: 'analytics', label: 'Analytics & Reports' },
+  { id: 'commission', label: '💰 Commission' },
 ];
 
 export default function RetailerDashboard() {
@@ -199,6 +201,12 @@ export default function RetailerDashboard() {
           {tab === 'analytics' && (
             <motion.div key="analytics" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
               <AnalyticsTab verifications={verifications} />
+            </motion.div>
+          )}
+
+          {tab === 'commission' && (
+            <motion.div key="commission" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <CommissionTab verifications={verifications} />
             </motion.div>
           )}
         </AnimatePresence>

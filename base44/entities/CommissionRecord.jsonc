@@ -1,0 +1,62 @@
+{
+  "name": "CommissionRecord",
+  "type": "object",
+  "properties": {
+    "retailer_id": {
+      "type": "string"
+    },
+    "retailer_name": {
+      "type": "string"
+    },
+    "verification_id": {
+      "type": "string"
+    },
+    "shipment_id": {
+      "type": "string"
+    },
+    "shipment_value": {
+      "type": "number"
+    },
+    "commission_tier": {
+      "type": "number",
+      "description": "1, 2, 3, or 4"
+    },
+    "commission_rate": {
+      "type": "number",
+      "description": "e.g. 0.10 for 10%"
+    },
+    "commission_amount": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "overdue"
+      ],
+      "default": "pending"
+    },
+    "due_date": {
+      "type": "string"
+    },
+    "paid_at": {
+      "type": "string"
+    },
+    "period_month": {
+      "type": "string",
+      "description": "YYYY-MM"
+    },
+    "destination_country": {
+      "type": "string"
+    },
+    "tourist_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "retailer_id",
+    "shipment_value",
+    "commission_amount"
+  ]
+}

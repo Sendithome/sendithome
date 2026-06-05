@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Shield, LogOut, RefreshCw, Loader2, BarChart3, ClipboardList,
-  CheckCircle2, Eye, Package, FileSearch
+  CheckCircle2, Eye, Package, FileSearch, DollarSign
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
@@ -11,12 +11,14 @@ import GovAnalyticsTab from '@/components/government/GovAnalyticsTab';
 import AuditTrailTab from '@/components/government/AuditTrailTab';
 import ConsolidatedShipmentsTab from '@/components/government/ConsolidatedShipmentsTab';
 import DeclarationBreakdownTab from '@/components/government/DeclarationBreakdownTab';
+import GovCommissionTab from '@/components/government/GovCommissionTab';
 
 const TABS = [
   { id: 'clearance', label: 'Clearance Queue', icon: Shield },
   { id: 'consolidated', label: 'Consolidated Shipments', icon: Package },
   { id: 'declarations', label: 'Declaration Breakdown', icon: FileSearch },
   { id: 'analytics', label: 'Economic Impact', icon: BarChart3 },
+  { id: 'commission', label: 'Commission Revenue', icon: DollarSign },
   { id: 'audit', label: 'Audit Trail', icon: ClipboardList },
 ];
 
@@ -248,6 +250,12 @@ export default function GovernmentDashboard() {
           {tab === 'analytics' && (
             <motion.div key="analytics" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
               <GovAnalyticsTab verifications={verifications} hotels={hotels} retailers={retailers} />
+            </motion.div>
+          )}
+
+          {tab === 'commission' && (
+            <motion.div key="commission" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <GovCommissionTab verifications={verifications} retailers={retailers} />
             </motion.div>
           )}
 
