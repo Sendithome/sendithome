@@ -102,24 +102,24 @@ export default function HotelPartnerLanding() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen" style={{ background: '#000000', color: '#FFD700' }}>
+    <div className="min-h-screen" style={{ background: '#0F1B2E', color: '#D4AF37' }}>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b" style={{ background: '#000000', borderColor: '#FFD700', backdropFilter: 'blur(12px)' }}>
+      <header className="sticky top-0 z-50 border-b" style={{ background: '#0F1B2E', borderColor: '#D4AF37', backdropFilter: 'blur(12px)' }}>
         <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: '#FFD700' }}>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: '#D4AF37' }}>
               <Package className="w-4 h-4 text-black" />
             </div>
-            <span className="font-black text-sm tracking-wide" style={{ color: '#FFD700' }}>
-              SEND<span style={{ color: '#FFD700' }}>IT</span>HOME
+            <span className="font-black text-sm tracking-wide" style={{ color: '#D4AF37' }}>
+              SEND<span style={{ color: '#D4AF37' }}>IT</span>HOME
             </span>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate('/hotel-signup')}
               className="text-sm font-medium transition-colors"
-              style={{ color: '#FFD700' }}
+              style={{ color: '#D4AF37' }}
               onMouseOver={e => e.target.style.opacity = '0.8'}
               onMouseOut={e => e.target.style.opacity = '1'}
             >
@@ -128,7 +128,7 @@ export default function HotelPartnerLanding() {
             <button
               onClick={() => navigate('/hotel-signup')}
               className="font-bold rounded-xl h-9 px-5 text-sm transition-all"
-              style={{ background: '#FFD700', color: '#000' }}
+              style={{ background: '#D4AF37', color: '#000' }}
             >
               Partner With Us
             </button>
@@ -137,35 +137,35 @@ export default function HotelPartnerLanding() {
       </header>
 
       {/* Hero */}
-      <section className="relative overflow-hidden" style={{ background: '#000000' }}>
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 70% 30%, rgba(255,215,0,0.08) 0%, transparent 60%)' }} />
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 20% 80%, rgba(255,215,0,0.04) 0%, transparent 60%)' }} />
+      <section className="relative overflow-hidden" style={{ background: '#0F1B2E' }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 70% 30%, rgba(212,175,55,0.1) 0%, transparent 60%)' }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 20% 80%, rgba(212,175,55,0.05) 0%, transparent 60%)' }} />
 
         <div className="relative max-w-6xl mx-auto px-5 py-24 md:py-32 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-6 border" style={{ background: '#000000', borderColor: '#FFD700' }}>
-              <QrCode className="w-3.5 h-3.5" style={{ color: '#FFD700' }} />
-              <span className="text-xs font-bold uppercase tracking-wide" style={{ color: '#FFD700' }}>Hotel Partner Programme</span>
+            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-6 border" style={{ background: 'transparent', borderColor: '#D4AF37' }}>
+              <QrCode className="w-3.5 h-3.5" style={{ color: '#D4AF37' }} />
+              <span className="text-xs font-bold uppercase tracking-wide" style={{ color: '#D4AF37' }}>Hotel Partner Programme</span>
             </div>
 
-            <h1 className="text-4xl md:text-6xl font-black leading-tight mb-4" style={{ color: '#FFD700' }}>
+            <h1 className="text-4xl md:text-6xl font-black leading-tight mb-4" style={{ color: '#D4AF37' }}>
               SendITHome
             </h1>
-            <h2 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: '#FFD700' }}>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: '#D4AF37' }}>
               Hotel Partner Portal
             </h2>
-            <p className="text-lg mb-3" style={{ color: '#FFD700', fontStyle: 'italic', letterSpacing: '0.05em' }}>
+            <p className="text-lg mb-3" style={{ color: '#D4AF37', fontStyle: 'italic', letterSpacing: '0.05em' }}>
               Convenience Delivered Seamlessly.
             </p>
 
             <div className="max-w-3xl mx-auto mb-10">
-              <p className="text-base leading-relaxed mb-4" style={{ color: '#FFD700' }}>
+              <p className="text-base leading-relaxed mb-4" style={{ color: '#D4AF37' }}>
                 We provide an AI-powered platform that transforms the tourism economy and serves as the{' '}
-                <span style={{ color: '#FFD700', fontWeight: 700 }}>Economic Architecture of Tourism Retail Mobility</span>.
+                <span style={{ color: '#D4AF37', fontWeight: 700 }}>Economic Architecture of Tourism Retail Mobility</span>.
               </p>
-              <p className="text-base leading-relaxed" style={{ color: '#FFD700' }}>
+              <p className="text-base leading-relaxed" style={{ color: '#D4AF37' }}>
                 By creating a controlled international shopping corridor — a reciprocal tourism spending ecosystem — we connect high-net-worth visitors with local luxury retail within a{' '}
-                <span style={{ color: '#FFD700' }}>Government-Aligned Tourism Retail Ecosystem</span>.
+                <span style={{ color: '#D4AF37' }}>Government-Aligned Tourism Retail Ecosystem</span>.
               </p>
             </div>
 
@@ -173,14 +173,14 @@ export default function HotelPartnerLanding() {
               <button
                 onClick={() => navigate('/hotel-signup')}
                 className="font-bold rounded-2xl text-base px-8 py-4 flex items-center justify-center gap-2 transition-all"
-                style={{ background: '#FFD700', color: '#000' }}
+                style={{ background: '#D4AF37', color: '#000' }}
               >
                 Sign NDA & Register <ArrowRight className="w-5 h-5" />
               </button>
               <button
                 onClick={() => document.getElementById('how-it-works').scrollIntoView({ behavior: 'smooth' })}
                 className="font-semibold rounded-2xl text-base px-8 py-4 border transition-colors"
-                style={{ borderColor: '#FFD700', color: '#FFD700' }}
+                style={{ borderColor: '#D4AF37', color: '#D4AF37' }}
               >
                 How It Works
               </button>
@@ -199,9 +199,9 @@ export default function HotelPartnerLanding() {
               { value: '100%', label: 'Zero Overhead' },
               { value: '24h', label: 'Courier Pickup' },
             ].map(stat => (
-              <div key={stat.label} className="rounded-2xl py-5 px-3 text-center border" style={{ background: '#000000', borderColor: '#FFD700' }}>
-                <p className="text-2xl font-black" style={{ color: '#FFD700' }}>{stat.value}</p>
-                <p className="text-xs mt-1 font-medium" style={{ color: '#FFD700' }}>{stat.label}</p>
+              <div key={stat.label} className="rounded-2xl py-5 px-3 text-center border" style={{ background: '#0F1B2E', borderColor: '#D4AF37' }}>
+                <p className="text-2xl font-black" style={{ color: '#D4AF37' }}>{stat.value}</p>
+                <p className="text-xs mt-1 font-medium" style={{ color: '#D4AF37' }}>{stat.label}</p>
               </div>
             ))}
           </motion.div>
@@ -209,10 +209,10 @@ export default function HotelPartnerLanding() {
       </section>
 
       {/* Benefits */}
-      <section className="py-20 max-w-6xl mx-auto px-5" style={{ background: '#000000' }}>
+      <section className="py-20 max-w-6xl mx-auto px-5" style={{ background: '#0F1B2E' }}>
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-black mb-3" style={{ color: '#FFD700' }}>Why Join the SendITHome Ecosystem?</h2>
-          <p style={{ color: '#FFD700' }}>A premium service that enhances your guest experience with zero operational burden on your team.</p>
+          <h2 className="text-3xl font-black mb-3" style={{ color: '#D4AF37' }}>Why Join the SendITHome Ecosystem?</h2>
+          <p style={{ color: '#D4AF37' }}>A premium service that enhances your guest experience with zero operational burden on your team.</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {BENEFITS.map((b, i) => (
@@ -223,13 +223,13 @@ export default function HotelPartnerLanding() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
               className="rounded-2xl p-6 border"
-              style={{ background: '#000000', borderColor: '#FFD700' }}
+              style={{ background: '#0F1B2E', borderColor: '#D4AF37' }}
             >
               <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{ background: 'transparent' }}>
-                <b.icon className="w-5 h-5" style={{ color: '#FFD700' }} />
+                <b.icon className="w-5 h-5" style={{ color: '#D4AF37' }} />
               </div>
-              <h3 className="font-bold mb-2" style={{ color: '#FFD700' }}>{b.title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: '#FFD700' }}>{b.desc}</p>
+              <h3 className="font-bold mb-2" style={{ color: '#D4AF37' }}>{b.title}</h3>
+              <p className="text-sm leading-relaxed" style={{ color: '#D4AF37' }}>{b.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -237,15 +237,15 @@ export default function HotelPartnerLanding() {
 
       {/* Divider */}
       <div className="max-w-6xl mx-auto px-5">
-        <div className="h-px" style={{ background: '#FFD700' }} />
+        <div className="h-px" style={{ background: '#D4AF37' }} />
       </div>
 
       {/* How It Works */}
-      <section id="how-it-works" className="py-20" style={{ background: '#000000' }}>
+      <section id="how-it-works" className="py-20" style={{ background: '#0F1B2E' }}>
         <div className="max-w-4xl mx-auto px-5">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-black mb-3" style={{ color: '#FFD700' }}>The Operational Flow: How It Works</h2>
-            <p style={{ color: '#FFD700' }}>
+            <h2 className="text-3xl font-black mb-3" style={{ color: '#D4AF37' }}>The Operational Flow: How It Works</h2>
+            <p style={{ color: '#D4AF37' }}>
               Once your property is registered and trained, the seamless guest experience is managed via our AI platform.
             </p>
           </div>
@@ -258,12 +258,12 @@ export default function HotelPartnerLanding() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
                 className="rounded-2xl p-5 flex gap-4 items-start border"
-                style={{ background: '#000000', borderColor: '#FFD700' }}
+                style={{ background: '#0F1B2E', borderColor: '#D4AF37' }}
               >
-                <div className="text-3xl font-black leading-none shrink-0 w-10 text-center" style={{ color: '#FFD700' }}>{s.n}</div>
+                <div className="text-3xl font-black leading-none shrink-0 w-10 text-center" style={{ color: '#D4AF37' }}>{s.n}</div>
                 <div className="flex-1">
-                  <h3 className="font-bold mb-1" style={{ color: '#FFD700' }}>{s.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: '#FFD700' }}>{s.desc}</p>
+                  <h3 className="font-bold mb-1" style={{ color: '#D4AF37' }}>{s.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: '#D4AF37' }}>{s.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -272,25 +272,25 @@ export default function HotelPartnerLanding() {
       </section>
 
       {/* Onboarding Dashboard / Status Tracker */}
-      <section className="py-20 max-w-4xl mx-auto px-5" style={{ background: '#000000' }}>
+      <section className="py-20 max-w-4xl mx-auto px-5" style={{ background: '#0F1B2E' }}>
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-black mb-2" style={{ color: '#FFD700' }}>Your Onboarding Dashboard</h2>
-          <p style={{ color: '#FFD700' }}>This is the secure, real-time interface for your hotel management team.</p>
+          <h2 className="text-3xl font-black mb-2" style={{ color: '#D4AF37' }}>Your Onboarding Dashboard</h2>
+          <p style={{ color: '#D4AF37' }}>This is the secure, real-time interface for your hotel management team.</p>
         </div>
-        <div className="rounded-2xl border overflow-hidden" style={{ background: '#000000', borderColor: '#FFD700' }}>
-          <div className="px-6 py-4 border-b" style={{ borderColor: '#FFD700', background: '#000000' }}>
-            <p className="text-sm font-bold" style={{ color: '#FFD700' }}>Status Tracker — Hotel Partner Milestones</p>
+        <div className="rounded-2xl border overflow-hidden" style={{ background: '#0F1B2E', borderColor: '#D4AF37' }}>
+          <div className="px-6 py-4 border-b" style={{ borderColor: '#D4AF37', background: '#0F1B2E' }}>
+            <p className="text-sm font-bold" style={{ color: '#D4AF37' }}>Status Tracker — Hotel Partner Milestones</p>
           </div>
-          <div className="divide-y" style={{ borderColor: '#FFD700' }}>
+          <div className="divide-y" style={{ borderColor: '#D4AF37' }}>
             {MILESTONES.map((m, i) => (
               <div key={i} className="flex items-center justify-between px-6 py-3.5">
-                <span className="text-sm font-medium" style={{ color: '#FFD700' }}>{m.label}</span>
+                <span className="text-sm font-medium" style={{ color: '#D4AF37' }}>{m.label}</span>
                 {m.status === 'done' ? (
-                  <span className="flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full border" style={{ color: '#4ade80', background: '#000000', borderColor: '#4ade80' }}>
+                  <span className="flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full border" style={{ color: '#4ade80', background: '#0F1B2E', borderColor: '#4ade80' }}>
                     <CheckCircle2 className="w-3 h-3" /> Completed
                   </span>
                 ) : (
-                  <span className="flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full border" style={{ color: '#FFD700', background: '#000000', borderColor: '#FFD700' }}>
+                  <span className="flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full border" style={{ color: '#D4AF37', background: '#0F1B2E', borderColor: '#D4AF37' }}>
                     <Clock className="w-3 h-3" /> Pending
                   </span>
                 )}
@@ -315,22 +315,22 @@ export default function HotelPartnerLanding() {
       </section>
 
       {/* Welcome / Next Steps */}
-      <section className="py-20" style={{ background: '#000000' }}>
+      <section className="py-20" style={{ background: '#0F1B2E' }}>
         <div className="max-w-4xl mx-auto px-5">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-black mb-3" style={{ color: '#FFD700' }}>Welcome to the SendITHome Ecosystem</h2>
-            <p style={{ color: '#FFD700' }}>
+            <h2 className="text-3xl font-black mb-3" style={{ color: '#D4AF37' }}>Welcome to the SendITHome Ecosystem</h2>
+            <p style={{ color: '#D4AF37' }}>
               Once registered, your dedicated portal unlocks the full operational suite — designed to integrate seamlessly into your existing operations.
             </p>
           </div>
 
-          <div className="rounded-2xl border p-6 mb-8" style={{ background: '#000000', borderColor: '#FFD700' }}>
-            <p className="text-sm leading-relaxed mb-4" style={{ color: '#FFD700' }}>
-              Your registration and Non-Disclosure Agreement (NDA) will be successfully processed and verified. You will then gain exclusive access to the <strong style={{ color: '#FFD700' }}>SendITHome Hotel Partner Portal</strong> — enabling you to offer a high-end shipping service to your guests while capturing a recurring, zero-cost revenue stream.
+          <div className="rounded-2xl border p-6 mb-8" style={{ background: '#0F1B2E', borderColor: '#D4AF37' }}>
+            <p className="text-sm leading-relaxed mb-4" style={{ color: '#D4AF37' }}>
+              Your registration and Non-Disclosure Agreement (NDA) will be successfully processed and verified. You will then gain exclusive access to the <strong style={{ color: '#D4AF37' }}>SendITHome Hotel Partner Portal</strong> — enabling you to offer a high-end shipping service to your guests while capturing a recurring, zero-cost revenue stream.
             </p>
           </div>
 
-          <h3 className="text-lg font-black mb-5" style={{ color: '#FFD700' }}>Your Immediate Next Steps</h3>
+          <h3 className="text-lg font-black mb-5" style={{ color: '#D4AF37' }}>Your Immediate Next Steps</h3>
           <div className="space-y-4 mb-10">
             {NEXT_STEPS.map((step, i) => (
               <motion.div
@@ -340,29 +340,29 @@ export default function HotelPartnerLanding() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 className="flex gap-4 items-start rounded-2xl p-5 border"
-                style={{ background: '#000000', borderColor: '#FFD700' }}
+                style={{ background: '#0F1B2E', borderColor: '#D4AF37' }}
               >
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'transparent' }}>
-                  <step.icon className="w-5 h-5" style={{ color: '#FFD700' }} />
+                  <step.icon className="w-5 h-5" style={{ color: '#D4AF37' }} />
                 </div>
                 <div>
-                  <h4 className="font-bold mb-1" style={{ color: '#FFD700' }}>{step.title}</h4>
-                  <p className="text-sm leading-relaxed" style={{ color: '#FFD700' }}>{step.desc}</p>
+                  <h4 className="font-bold mb-1" style={{ color: '#D4AF37' }}>{step.title}</h4>
+                  <p className="text-sm leading-relaxed" style={{ color: '#D4AF37' }}>{step.desc}</p>
                 </div>
               </motion.div>
             ))}
           </div>
 
           {/* What to Expect */}
-          <div className="rounded-2xl border p-6" style={{ background: '#000000', borderColor: '#FFD700' }}>
+          <div className="rounded-2xl border p-6" style={{ background: '#0F1B2E', borderColor: '#D4AF37' }}>
             <div className="flex items-center gap-2 mb-3">
-              <Truck className="w-5 h-5" style={{ color: '#FFD700' }} />
-              <h4 className="font-bold" style={{ color: '#FFD700' }}>What to Expect Next</h4>
+              <Truck className="w-5 h-5" style={{ color: '#D4AF37' }} />
+              <h4 className="font-bold" style={{ color: '#D4AF37' }}>What to Expect Next</h4>
             </div>
-            <p className="text-sm leading-relaxed" style={{ color: '#FFD700' }}>
-              Once your team is certified, we will immediately provision your property with your initial stock of <strong style={{ color: '#FFD700' }}>10kg and 20kg flat-pack shipping boxes at no cost</strong>. Our system will then automatically manage your replenishment, ensuring you never run out of inventory during peak tourism seasons.
+            <p className="text-sm leading-relaxed" style={{ color: '#D4AF37' }}>
+              Once your team is certified, we will immediately provision your property with your initial stock of <strong style={{ color: '#D4AF37' }}>10kg and 20kg flat-pack shipping boxes at no cost</strong>. Our system will then automatically manage your replenishment, ensuring you never run out of inventory during peak tourism seasons.
             </p>
-            <p className="text-sm mt-3" style={{ color: '#FFD700' }}>
+            <p className="text-sm mt-3" style={{ color: '#D4AF37' }}>
               Our dedicated Partner Success Manager will contact your team shortly after certification.
             </p>
           </div>
@@ -370,28 +370,28 @@ export default function HotelPartnerLanding() {
       </section>
 
       {/* CTA */}
-      <section className="py-20" style={{ background: '#000000' }}>
+      <section className="py-20" style={{ background: '#0F1B2E' }}>
         <div className="max-w-2xl mx-auto px-5 text-center">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ background: '#FFD700' }}>
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ background: '#D4AF37' }}>
             <Star className="w-8 h-8 text-black" />
           </div>
-          <h2 className="text-3xl font-black mb-4" style={{ color: '#FFD700' }}>
+          <h2 className="text-3xl font-black mb-4" style={{ color: '#D4AF37' }}>
             Ready to elevate your guest experience?
           </h2>
-          <p className="mb-8" style={{ color: '#FFD700' }}>
+          <p className="mb-8" style={{ color: '#D4AF37' }}>
             Register your hotel today and join the government-aligned, AI-powered tourist retail ecosystem.
           </p>
           <button
             onClick={() => navigate('/hotel-signup')}
             className="font-bold rounded-2xl text-base px-10 py-4 flex items-center gap-2 mx-auto transition-all"
-            style={{ background: '#FFD700', color: '#000' }}
+            style={{ background: '#D4AF37', color: '#000' }}
           >
             Register Your Hotel Now <ArrowRight className="w-5 h-5" />
           </button>
           <div className="flex items-center justify-center gap-5 mt-8 flex-wrap">
             {['Free to join', 'Zero overhead', 'AI-managed inventory'].map(f => (
-              <div key={f} className="flex items-center gap-1.5 text-sm" style={{ color: '#FFD700' }}>
-                <CheckCircle2 className="w-4 h-4" style={{ color: '#FFD700' }} />
+              <div key={f} className="flex items-center gap-1.5 text-sm" style={{ color: '#D4AF37' }}>
+                <CheckCircle2 className="w-4 h-4" style={{ color: '#D4AF37' }} />
                 <span>{f}</span>
               </div>
             ))}
@@ -400,11 +400,11 @@ export default function HotelPartnerLanding() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t py-6 text-center" style={{ borderColor: '#FFD700', background: '#000000' }}>
-        <p className="text-xs" style={{ color: '#FFD700' }}>
+      <footer className="border-t py-6 text-center" style={{ borderColor: '#D4AF37', background: '#0F1B2E' }}>
+        <p className="text-xs" style={{ color: '#D4AF37' }}>
           © 2025 SendITHome · Powered by FedEx & DHL · All rights reserved
         </p>
-        <p className="text-xs mt-1" style={{ color: '#FFD700', fontStyle: 'italic' }}>
+        <p className="text-xs mt-1" style={{ color: '#D4AF37', fontStyle: 'italic' }}>
           Convenience, delivered seamlessly.
         </p>
       </footer>
