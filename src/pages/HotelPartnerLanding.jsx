@@ -8,6 +8,8 @@ import {
 const IMG_TARMAC = 'https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/a908c7761_generated_image.png';
 const IMG_LOBBY = 'https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/dddc46e94_generated_image.png';
 const IMG_GOODS = 'https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/964d3d20a_generated_image.png';
+const IMG_SHOPPING = 'https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/5385eef0f_IMG_2772.png';
+const IMG_DELIVERY = 'https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/0f1134639_IMG_2774.png';
 
 const GOLD = '#C9A84C';
 const NAVY = '#0D1422';
@@ -176,19 +178,17 @@ export default function HotelPartnerLanding() {
         </div>
       </section>
 
-      {/* Image Break 1 — Lobby scene */}
-      <section className="relative overflow-hidden" style={{ height: '480px' }}>
-        <img src={IMG_LOBBY} alt="Luxury hotel concierge service" className="w-full h-full object-cover" />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(13,20,34,0.5) 0%, rgba(13,20,34,0.15) 50%, rgba(13,20,34,0.7) 100%)' }} />
-        <div className="absolute inset-0 flex items-center justify-center text-center px-6">
-          <div>
-            <p className="text-3xl md:text-4xl font-black mb-2" style={{ color: GOLD, fontFamily: 'Georgia, serif' }}>
-              Elevate Every Guest Departure.
-            </p>
-            <p className="text-base md:text-lg font-medium" style={{ color: '#fff' }}>
-              Premium concierge shipping — seamlessly integrated into your hotel experience.
-            </p>
-          </div>
+      {/* Image Break 1 — Shop Freely */}
+      <section className="relative overflow-hidden" style={{ height: '520px' }}>
+        <img src={IMG_SHOPPING} alt="Shop freely — luxury concierge logistics" className="w-full h-full object-cover object-center" />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(13,20,34,0.3) 0%, rgba(13,20,34,0.1) 40%, rgba(13,20,34,0.75) 100%)' }} />
+        <div className="absolute bottom-10 left-0 right-0 text-center px-6">
+          <p className="text-3xl md:text-4xl font-black mb-2" style={{ color: GOLD, fontFamily: 'Georgia, serif' }}>
+            Shop Freely. We Handle the Rest.
+          </p>
+          <p className="text-base md:text-lg font-medium" style={{ color: '#fff' }}>
+            Your guests shop without limits — we ship every purchase directly to their door.
+          </p>
         </div>
       </section>
 
@@ -223,19 +223,17 @@ export default function HotelPartnerLanding() {
         </div>
       </section>
 
-      {/* Image Break 2 — Luxury goods */}
-      <section className="relative overflow-hidden" style={{ height: '420px' }}>
-        <img src={IMG_GOODS} alt="Luxury goods being prepared for shipping" className="w-full h-full object-cover" />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(13,20,34,0.88) 40%, rgba(13,20,34,0.3) 100%)' }} />
-        <div className="absolute inset-0 flex items-center px-8 md:px-20 max-w-6xl mx-auto" style={{ left: '50%', transform: 'translateX(-50%)', right: 'auto', width: '100%', maxWidth: '72rem' }}>
-          <div className="max-w-lg">
-            <p className="text-2xl md:text-3xl font-black mb-3" style={{ color: GOLD, fontFamily: 'Georgia, serif' }}>
-              White-Glove Handling for Every Purchase.
-            </p>
-            <p className="text-base leading-relaxed" style={{ color: CREAM }}>
-              From luxury watches to designer handbags — every item is carefully documented, declared, and shipped with the precision your guests expect.
-            </p>
-          </div>
+      {/* Image Break 2 — Delivered Seamlessly */}
+      <section className="relative overflow-hidden" style={{ height: '520px' }}>
+        <img src={IMG_DELIVERY} alt="Delivered seamlessly to your door" className="w-full h-full object-cover object-center" />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(13,20,34,0.45) 0%, rgba(13,20,34,0.1) 40%, rgba(13,20,34,0.8) 100%)' }} />
+        <div className="absolute bottom-10 left-0 right-0 text-center px-6">
+          <p className="text-3xl md:text-4xl font-black mb-2" style={{ color: GOLD, fontFamily: 'Georgia, serif' }}>
+            Delivered Seamlessly.
+          </p>
+          <p className="text-base md:text-lg font-medium" style={{ color: '#fff' }}>
+            Every purchase shipped door-to-door — from their hotel stay, straight home.
+          </p>
         </div>
       </section>
 
