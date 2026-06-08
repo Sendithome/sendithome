@@ -13,21 +13,19 @@ const NAVY2 = '#111C30';
 const CREAM = 'rgba(255,245,220,0.82)';
 
 const BENEFITS = [
-  { icon: DollarSign, title: 'Zero-Cost Revenue Stream', desc: 'Charge a $20 USD service fee per box, billed directly to the guest\'s room — with zero operational cost.' },
-  { icon: Zap, title: 'Operational Excellence', desc: 'Eliminate post-checkout luggage bottlenecks. We turn a liability into a premium concierge service.' },
-  { icon: Box, title: 'Zero Overhead', desc: 'High-quality flat-pack 10kg and 20kg shipping boxes are provided to your property at no charge.' },
-  { icon: Shield, title: 'Government-Aligned', desc: 'Endorsed by regional ministries to drive foreign currency inflows and luxury retail growth.' },
-  { icon: Globe, title: 'International Reach', desc: 'Connect high-net-worth visitors with local luxury retail across 58+ destination countries.' },
-  { icon: Users, title: 'AI-Powered Platform', desc: 'Our AI manages inventory, customs, and logistics — your team simply facilitates the drop-off.' },
+  { icon: DollarSign, title: 'Zero-Cost Revenue Stream', desc: 'Empower your property to charge a $20 USD service fee per box, billed directly to the guest\'s room.' },
+  { icon: Zap, title: 'Operational Excellence', desc: 'Eliminate post-checkout luggage storage bottlenecks. We turn a liability into a premium concierge service.' },
+  { icon: Box, title: 'Zero Overhead', desc: 'High-quality, flat-pack 10kg and 20kg shipping boxes are provided to your property at no charge.' },
+  { icon: Shield, title: 'Government-Aligned', desc: 'A turnkey program endorsed by regional ministries to drive foreign currency inflows and luxury retail growth.' },
 ];
 
 const STEPS = [
   { n: '01', title: 'In-Room Discovery', desc: 'Guests scan a bespoke QR code provided by your hotel to access the SendITHome portal.' },
-  { n: '02', title: 'Government-Backed Marketing', desc: 'In-room marketing materials backed by regional tourism authorities are provided to your hotel.' },
-  { n: '03', title: 'Inventory Management', desc: 'SendITHome\'s AI manages your box stock automatically — flat-pack inventory provided at no cost.' },
-  { n: '04', title: 'Guest Fulfilment', desc: 'The guest registers via the app, collects their box, and prepares their luxury purchases for shipping.' },
-  { n: '05', title: 'Digital Logistics', desc: 'Guest pays the $20 USD platform fee, completes digital customs declaration, and prints shipping labels.' },
-  { n: '06', title: 'Secure Handover', desc: 'Box sealed and dropped at your designated lobby location. Our courier handles the rest within 24h (Mon–Fri).' },
+  { n: '02', title: 'Marketing Integration', desc: 'Government-backed in-room marketing materials are provided to your hotel at no cost.' },
+  { n: '03', title: 'Inventory Management', desc: 'SendITHome\'s AI manages your box stock — you are provided with 10kg and 20kg flat-pack inventory at no cost.' },
+  { n: '04', title: 'Guest Fulfilment', desc: 'The guest registers via the app, collects their box, and uses your provided packing materials to prepare their luxury purchases.' },
+  { n: '05', title: 'Digital Logistics', desc: 'The guest pays the $20 USD platform fee, completes the digital customs declaration, and prints the shipping labels emailed directly to your hotel\'s nominated address.' },
+  { n: '06', title: 'Security Assurance — Secure Handover', desc: 'The guest seals the box and drops it at your designated secure lobby location. Our courier partner handles the rest within 24 hours (Mon–Fri).' },
 ];
 
 const MILESTONES = [
@@ -40,9 +38,21 @@ const MILESTONES = [
 ];
 
 const NEXT_STEPS = [
-  { icon: FileText, title: 'Document Upload', desc: 'Upload your property\'s authorised point-of-contact details.' },
-  { icon: Users, title: 'Schedule Onboarding Training', desc: 'Our team conducts a training session covering staff workflow, in-room integration, and platform management.' },
-  { icon: Box, title: 'Inventory Provisioning', desc: 'Once certified, your property receives initial stock with automatic AI-managed replenishment.' },
+  {
+    icon: FileText,
+    title: 'Document Upload',
+    desc: 'Upload your property\'s authorised point-of-contact details.',
+  },
+  {
+    icon: Users,
+    title: 'Schedule Onboarding Training',
+    desc: 'Our Implementation Team will conduct a training session with your key personnel covering: Staff Workflow (integrating the SendITHome box-handling process into your concierge/lobby operations), In-Room Integration (optimising display of government-aligned in-room marketing and guest QR codes), and Platform Management (accessing your real-time inventory management and revenue reporting tools).',
+  },
+  {
+    icon: Box,
+    title: 'Inventory Provisioning',
+    desc: 'Once your team is certified, we immediately provision your property with initial stock of 10kg and 20kg flat-pack shipping boxes at no cost. Our system automatically manages replenishment, ensuring you never run out during peak tourism seasons.',
+  },
 ];
 
 export default function HotelPartnerLanding() {
@@ -93,13 +103,16 @@ export default function HotelPartnerLanding() {
             </div>
 
             <h1 className="font-black leading-tight mb-3" style={{ fontSize: 'clamp(2.5rem,6vw,4.5rem)', color: GOLD, fontFamily: 'Georgia, serif' }}>
-              Luxury Without Limits.
+              Convenience Delivered Seamlessly.
             </h1>
             <h2 className="text-xl md:text-2xl font-semibold mb-6 tracking-wide" style={{ color: '#fff' }}>
-              We'll Ship Your Guests' Purchases Home.
+              Hotel Partner Portal
             </h2>
-            <p className="text-base leading-relaxed mb-8" style={{ color: CREAM }}>
-              An AI-powered logistics platform that transforms the tourism economy — connecting high-net-worth visitors with local luxury retail through a <span style={{ color: GOLD, fontWeight: 600 }}>Government-Aligned Tourism Retail Ecosystem</span>.
+            <p className="text-base leading-relaxed mb-4" style={{ color: CREAM }}>
+              Our mission: provide an AI-powered platform that transforms the tourism economy and serves as the <span style={{ color: GOLD, fontWeight: 600 }}>Economic Architecture of Tourism Retail Mobility</span>.
+            </p>
+            <p className="text-sm leading-relaxed mb-8" style={{ color: CREAM }}>
+              By creating a controlled international shopping corridor — a reciprocal tourism spending ecosystem — we connect high-net-worth visitors with local luxury retail, within a multilateral economic framework: a <span style={{ color: GOLD, fontWeight: 600 }}>Government-Aligned Tourism Retail Ecosystem</span>.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">
@@ -146,7 +159,6 @@ export default function HotelPartnerLanding() {
       <section className="py-20 max-w-6xl mx-auto px-5">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-black mb-3" style={{ color: GOLD, fontFamily: 'Georgia, serif' }}>Why Join the SendITHome Ecosystem?</h2>
-          <p style={{ color: CREAM }}>A premium service that enhances your guest experience with zero operational burden on your team.</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {BENEFITS.map((b, i) => (
@@ -175,9 +187,9 @@ export default function HotelPartnerLanding() {
       <section id="how-it-works" className="py-20" style={{ background: NAVY2 }}>
         <div className="max-w-4xl mx-auto px-5">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-black mb-3" style={{ color: GOLD, fontFamily: 'Georgia, serif' }}>The Operational Flow</h2>
+            <h2 className="text-3xl font-black mb-3" style={{ color: GOLD, fontFamily: 'Georgia, serif' }}>The Operational Flow: How It Works</h2>
             <p style={{ color: CREAM }}>
-              Once registered and trained, the seamless guest experience is fully managed via our AI platform.
+              Once your property is registered and trained, the seamless guest experience is managed via our AI platform.
             </p>
           </div>
           <div className="space-y-4">
@@ -208,7 +220,7 @@ export default function HotelPartnerLanding() {
       <section className="py-20 max-w-4xl mx-auto px-5">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-black mb-2" style={{ color: GOLD, fontFamily: 'Georgia, serif' }}>Your Onboarding Dashboard</h2>
-          <p style={{ color: CREAM }}>A real-time interface for your hotel management team, tracking every milestone.</p>
+          <p style={{ color: CREAM }}>The secure, real-time interface for your hotel management team.</p>
         </div>
         <div className="rounded-2xl border overflow-hidden" style={{ background: NAVY2, borderColor: 'rgba(201,168,76,0.35)' }}>
           <div className="px-6 py-4 border-b" style={{ borderColor: 'rgba(201,168,76,0.25)', background: 'rgba(201,168,76,0.06)' }}>
@@ -247,15 +259,15 @@ export default function HotelPartnerLanding() {
       <section className="py-20" style={{ background: NAVY2 }}>
         <div className="max-w-4xl mx-auto px-5">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-black mb-3" style={{ color: GOLD, fontFamily: 'Georgia, serif' }}>Welcome to the Ecosystem</h2>
+            <h2 className="text-3xl font-black mb-3" style={{ color: GOLD, fontFamily: 'Georgia, serif' }}>Welcome to the SendITHome Ecosystem</h2>
             <p style={{ color: CREAM }}>
-              Once registered, your dedicated portal unlocks the full operational suite — designed to integrate seamlessly into your existing operations.
+              Your registration and NDA have been successfully processed and verified. You now have exclusive access to the <strong style={{ color: GOLD }}>SendITHome Hotel Partner Portal</strong>.
             </p>
           </div>
 
           <div className="rounded-2xl border p-6 mb-8" style={{ background: NAVY, borderColor: 'rgba(201,168,76,0.3)' }}>
             <p className="text-sm leading-relaxed" style={{ color: CREAM }}>
-              Your registration and Non-Disclosure Agreement (NDA) will be processed and verified. You will then gain exclusive access to the <strong style={{ color: GOLD }}>SendITHome Hotel Partner Portal</strong> — enabling you to offer a high-end shipping service to your guests while capturing a recurring, zero-cost revenue stream.
+              This platform is designed to integrate seamlessly into your existing operations, enabling you to offer a high-end shipping service to your guests while capturing a recurring, zero-cost revenue stream. To finalise your property's onboarding and unlock the full operational manual, please complete the following final requirements within your Hotel Portal Dashboard.
             </p>
           </div>
 
@@ -284,14 +296,11 @@ export default function HotelPartnerLanding() {
 
           <div className="rounded-2xl border p-6" style={{ background: NAVY, borderColor: 'rgba(201,168,76,0.3)' }}>
             <div className="flex items-center gap-2 mb-3">
-              <Truck className="w-5 h-5" style={{ color: GOLD }} />
-              <h4 className="font-bold" style={{ color: GOLD }}>What to Expect Next</h4>
+              <Star className="w-5 h-5" style={{ color: GOLD }} />
+              <h4 className="font-bold" style={{ color: GOLD }}>Convenience, delivered seamlessly.</h4>
             </div>
             <p className="text-sm leading-relaxed" style={{ color: CREAM }}>
-              Once your team is certified, we immediately provision your property with initial stock of <strong style={{ color: GOLD }}>10kg and 20kg flat-pack shipping boxes at no cost</strong>. Our system automatically manages replenishment, ensuring you never run out during peak seasons.
-            </p>
-            <p className="text-sm mt-3" style={{ color: CREAM }}>
-              Your dedicated Partner Success Manager will contact your team shortly after certification.
+              We are excited to have your property at the forefront of this government-aligned, AI-powered tourist retail ecosystem. Our dedicated Partner Success Manager will contact your team shortly.
             </p>
           </div>
         </div>
@@ -305,7 +314,7 @@ export default function HotelPartnerLanding() {
             Ready to Elevate Your Guest Experience?
           </h2>
           <p className="mb-8 text-base leading-relaxed" style={{ color: CREAM }}>
-            Register your hotel today and join the government-aligned, AI-powered tourist retail ecosystem.
+            Register your hotel today and join the government-aligned, AI-powered tourist retail ecosystem. Convenience, delivered seamlessly.
           </p>
           <button
             onClick={() => navigate('/hotel-signup')}
@@ -331,7 +340,7 @@ export default function HotelPartnerLanding() {
           © 2025 SendITHome · Powered by FedEx & DHL · All rights reserved
         </p>
         <p className="text-xs mt-1" style={{ color: GOLD, fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>
-          Luxury Delivered Beyond Stay.
+          Convenience, Delivered Seamlessly.
         </p>
       </footer>
     </div>
