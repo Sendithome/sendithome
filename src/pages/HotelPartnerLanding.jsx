@@ -159,7 +159,7 @@ export default function HotelPartnerLanding() {
       </section>
 
       {/* Benefits */}
-      <section className="py-24" style={{ background: `linear-gradient(180deg, ${BLACK} 0%, ${BLACK2} 100%)` }}>
+      <section className="py-12" style={{ background: `linear-gradient(180deg, ${BLACK} 0%, ${BLACK2} 100%)` }}>
         <div className="max-w-6xl mx-auto px-5">
           <div className="text-center mb-14">
             <h2 className="text-3xl font-black mb-3" style={{ fontFamily: 'Georgia, serif', background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
@@ -189,7 +189,7 @@ export default function HotelPartnerLanding() {
       </section>
 
       {/* How It Works */}
-      <section id="how-it-works" className="py-24" style={{ background: `linear-gradient(180deg, ${BLACK2} 0%, #0f0800 50%, ${BLACK2} 100%)` }}>
+      <section id="how-it-works" className="py-12" style={{ background: `linear-gradient(180deg, ${BLACK2} 0%, #0f0800 50%, ${BLACK2} 100%)` }}>
         <div className="max-w-4xl mx-auto px-5">
           <div className="text-center mb-14">
             <h2 className="text-3xl font-black mb-3" style={{ fontFamily: 'Georgia, serif', background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
@@ -222,7 +222,7 @@ export default function HotelPartnerLanding() {
       </section>
 
       {/* Onboarding Status Tracker */}
-      <section className="py-24" style={{ background: `linear-gradient(180deg, ${BLACK2} 0%, ${BLACK} 100%)` }}>
+      <section className="py-12" style={{ background: `linear-gradient(180deg, ${BLACK2} 0%, ${BLACK} 100%)` }}>
         <div className="max-w-4xl mx-auto px-5">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-black mb-2" style={{ fontFamily: 'Georgia, serif', background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
@@ -265,7 +265,7 @@ export default function HotelPartnerLanding() {
       </section>
 
       {/* Welcome / Next Steps */}
-      <section className="py-24" style={{ background: `linear-gradient(180deg, ${BLACK} 0%, #0f0800 50%, ${BLACK} 100%)` }}>
+      <section className="py-12" style={{ background: `linear-gradient(180deg, ${BLACK} 0%, #0f0800 50%, ${BLACK} 100%)` }}>
         <div className="max-w-4xl mx-auto px-5">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-black mb-4" style={{ fontFamily: 'Georgia, serif', background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
@@ -321,7 +321,7 @@ export default function HotelPartnerLanding() {
       </section>
 
       {/* CTA */}
-      <section className="relative py-28 overflow-hidden" style={{ background: `linear-gradient(160deg, #1c1400 0%, ${BLACK} 40%, #0f0a00 100%)` }}>
+      <section className="relative py-16 overflow-hidden" style={{ background: `linear-gradient(160deg, #1c1400 0%, ${BLACK} 40%, #0f0a00 100%)` }}>
         <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.12) 0%, transparent 65%)` }} />
         <div className="relative max-w-2xl mx-auto px-5 text-center">
           <Star className="w-10 h-10 mx-auto mb-5" style={{ color: GOLD }} />
