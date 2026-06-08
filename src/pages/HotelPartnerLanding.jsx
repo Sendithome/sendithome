@@ -5,11 +5,7 @@ import {
   DollarSign, Shield, Star, Zap, Box, Globe, Users, FileText
 } from 'lucide-react';
 
-const IMG_TARMAC = 'https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/a908c7761_generated_image.png';
-const IMG_LOBBY = 'https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/dddc46e94_generated_image.png';
-const IMG_GOODS = 'https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/964d3d20a_generated_image.png';
-const IMG_SHOPPING = 'https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/5385eef0f_IMG_2772.png';
-const IMG_DELIVERY = 'https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/0f1134639_IMG_2774.png';
+
 
 const GOLD = '#C9A84C';
 const NAVY = '#0D1422';
@@ -85,14 +81,9 @@ export default function HotelPartnerLanding() {
         </div>
       </header>
 
-      {/* Hero — full-bleed image with text overlay */}
+      {/* Hero */}
       <section className="relative overflow-hidden" style={{ minHeight: '85vh' }}>
-        <img
-          src={IMG_TARMAC}
-          alt="Luxury shipping service"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(13,20,34,0.92) 45%, rgba(13,20,34,0.4) 100%)' }} />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 70% 30%, rgba(201,168,76,0.1) 0%, transparent 60%)' }} />
 
         <div className="relative max-w-6xl mx-auto px-5 py-32 md:py-40 flex flex-col justify-center" style={{ minHeight: '85vh' }}>
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="max-w-2xl">
@@ -178,19 +169,7 @@ export default function HotelPartnerLanding() {
         </div>
       </section>
 
-      {/* Image Break 1 — Shop Freely */}
-      <section className="relative overflow-hidden" style={{ height: '520px' }}>
-        <img src={IMG_SHOPPING} alt="Shop freely — luxury concierge logistics" className="w-full h-full object-cover object-center" />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(13,20,34,0.3) 0%, rgba(13,20,34,0.1) 40%, rgba(13,20,34,0.75) 100%)' }} />
-        <div className="absolute bottom-10 left-0 right-0 text-center px-6">
-          <p className="text-3xl md:text-4xl font-black mb-2" style={{ color: GOLD, fontFamily: 'Georgia, serif' }}>
-            Shop Freely. We Handle the Rest.
-          </p>
-          <p className="text-base md:text-lg font-medium" style={{ color: '#fff' }}>
-            Your guests shop without limits — we ship every purchase directly to their door.
-          </p>
-        </div>
-      </section>
+
 
       {/* How It Works */}
       <section id="how-it-works" className="py-20" style={{ background: NAVY2 }}>
@@ -223,19 +202,7 @@ export default function HotelPartnerLanding() {
         </div>
       </section>
 
-      {/* Image Break 2 — Delivered Seamlessly */}
-      <section className="relative overflow-hidden" style={{ height: '520px' }}>
-        <img src={IMG_DELIVERY} alt="Delivered seamlessly to your door" className="w-full h-full object-cover object-center" />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(13,20,34,0.45) 0%, rgba(13,20,34,0.1) 40%, rgba(13,20,34,0.8) 100%)' }} />
-        <div className="absolute bottom-10 left-0 right-0 text-center px-6">
-          <p className="text-3xl md:text-4xl font-black mb-2" style={{ color: GOLD, fontFamily: 'Georgia, serif' }}>
-            Delivered Seamlessly.
-          </p>
-          <p className="text-base md:text-lg font-medium" style={{ color: '#fff' }}>
-            Every purchase shipped door-to-door — from their hotel stay, straight home.
-          </p>
-        </div>
-      </section>
+
 
       {/* Onboarding Status Tracker */}
       <section className="py-20 max-w-4xl mx-auto px-5">
@@ -331,10 +298,8 @@ export default function HotelPartnerLanding() {
       </section>
 
       {/* CTA */}
-      <section className="relative py-24 overflow-hidden">
-        <img src={IMG_TARMAC} alt="" className="absolute inset-0 w-full h-full object-cover" />
-        <div className="absolute inset-0" style={{ background: 'rgba(13,20,34,0.88)' }} />
-        <div className="relative max-w-2xl mx-auto px-5 text-center">
+      <section className="relative py-24 overflow-hidden" style={{ background: NAVY2 }}>
+        <div className="max-w-2xl mx-auto px-5 text-center">
           <Star className="w-10 h-10 mx-auto mb-5" style={{ color: GOLD }} />
           <h2 className="text-3xl md:text-4xl font-black mb-4" style={{ color: GOLD, fontFamily: 'Georgia, serif' }}>
             Ready to Elevate Your Guest Experience?
