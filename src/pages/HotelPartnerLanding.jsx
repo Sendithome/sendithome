@@ -188,7 +188,9 @@ export default function HotelPartnerLanding() {
       </section>
 
       {/* How It Works */}
-      <section id="how-it-works" className="py-12" style={{ background: `linear-gradient(180deg, ${BLACK2} 0%, #0f0800 50%, ${BLACK2} 100%)` }}>
+      <section id="how-it-works" className="relative py-12 overflow-hidden" style={{ backgroundImage: 'url(https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/94e976d94_ChatGPTImageJun9202611_54_03AM.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(10,10,10,0.75) 0%, rgba(10,10,10,0.8) 100%)' }} />
+        <div className="relative">
         <div className="max-w-4xl mx-auto px-5">
           <div className="text-center mb-14">
             <h2 className="text-3xl font-black mb-3" style={{ fontFamily: 'Georgia, serif', background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
@@ -217,6 +219,7 @@ export default function HotelPartnerLanding() {
               </motion.div>
             ))}
           </div>
+        </div>
         </div>
       </section>
 
