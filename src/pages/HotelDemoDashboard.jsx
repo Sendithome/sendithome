@@ -15,12 +15,12 @@ const GOLD_LIGHT = '#E8C96A';
 
 // ── DEMO DATA ──────────────────────────────────────────────────────────────
 const HOTEL = {
-  name: 'Burj Al Arab Jumeirah',
-  location: 'Jumeirah Beach Road, Dubai',
-  stars: 7,
-  rooms: 202,
-  logo: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=80&h=80&fit=crop&crop=center',
-  cover: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=1200&h=300&fit=crop',
+  name: 'Grand Hyatt Dubai',
+  location: 'Baniyas Road, Deira, Dubai',
+  stars: 5,
+  rooms: 710,
+  logo: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=80&h=80&fit=crop&crop=center',
+  cover: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&h=300&fit=crop',
 };
 
 const STATS = [
@@ -70,8 +70,8 @@ const RECENT_SHIPMENTS = [
 ];
 
 const INVENTORY = [
-  { type: '10 kg', allocated: 40, current: 26, reorder: 10, status: 'ok' },
-  { type: '20 kg', allocated: 20, current: 12, reorder: 5, status: 'ok' },
+  { type: '10 kg', allocated: 50, current: 34, reorder: 45, status: 'ok' },
+  { type: '20 kg', allocated: 25, current: 18, reorder: 22, status: 'ok' },
 ];
 
 const REPLENISHMENTS = [
@@ -173,7 +173,7 @@ export default function HotelDemoDashboard() {
           </div>
           <div className="ml-auto hidden sm:flex items-center gap-1.5 bg-green-500/20 border border-green-400/40 rounded-full px-3 py-1.5">
             <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
-            <span className="text-[11px] font-bold text-green-300">Fully Onboarded</span>
+            <span className="text-[11px] font-bold text-green-300">Fully Onboarded · 710 Keys</span>
           </div>
         </div>
       </div>
@@ -290,7 +290,7 @@ export default function HotelDemoDashboard() {
                         </div>
                       ))}
                       <div className="bg-muted/40 rounded-xl px-3 py-2">
-                        <p className="text-[10px] text-muted-foreground">10kg = {Math.round(812/1284*100)}% · 20kg = {Math.round(472/1284*100)}%</p>
+                        <p className="text-[10px] text-muted-foreground">Tier 4 · 500–799 Keys · 50 boxes allocated</p>
                       </div>
                     </div>
                   </div>
