@@ -94,9 +94,8 @@ export default function HotelPartnerLanding() {
       </header>
 
       {/* Hero */}
-      <section className="relative overflow-hidden" style={{ minHeight: '90vh', background: `linear-gradient(160deg, #1a1200 0%, ${BLACK} 40%, #0f0800 100%)` }}>
-        <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 60% 20%, rgba(201,168,76,0.18) 0%, transparent 65%)` }} />
-        <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 10% 80%, rgba(201,168,76,0.07) 0%, transparent 50%)` }} />
+      <section className="relative overflow-hidden" style={{ minHeight: '90vh', backgroundImage: 'url(https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/67d854caf_ChatGPTImageJun9202610_54_23AM.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(10,10,10,0.4) 0%, rgba(10,10,10,0.7) 100%)' }} />
 
         <div className="relative max-w-6xl mx-auto px-5 py-32 md:py-44 flex flex-col justify-center" style={{ minHeight: '90vh' }}>
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="max-w-3xl">
