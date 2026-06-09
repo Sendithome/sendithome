@@ -100,17 +100,19 @@ export default function OrderDetail() {
         </div>
       )}
 
-      {/* Tracking */}
+      {/* Tourist Portal CTA for active shipments */}
       {['paid', 'packed', 'picked_up', 'in_transit', 'delivered'].includes(order.status) && (
-        <div className="bg-card rounded-2xl border border-border p-5 mb-4">
-          <div className="flex items-center gap-2 mb-5">
-            <Truck className="w-4 h-4 text-accent" />
-            <span className="text-sm font-semibold">Tracking</span>
-            {order.tracking_number && (
-              <span className="text-xs text-muted-foreground ml-auto">{order.tracking_number}</span>
-            )}
+        <div className="bg-accent/5 border border-accent/20 rounded-2xl p-4 mb-4">
+          <div className="flex items-start gap-3">
+            <Truck className="w-5 h-5 text-accent mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm font-semibold">Track your shipment</p>
+              <p className="text-xs text-muted-foreground mt-0.5">View live tracking, your items, and customs documents</p>
+              <Button asChild size="sm" className="mt-3 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium">
+                <Link to={`/shipment/${orderId}`}>Open Shipment Portal</Link>
+              </Button>
+            </div>
           </div>
-          <TrackingTimeline status={order.status} />
         </div>
       )}
 

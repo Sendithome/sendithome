@@ -15,12 +15,16 @@ const STATUS_CONFIG = {
   cancelled: { label: 'Cancelled', color: 'bg-red-50 text-red-700' },
 };
 
+const ACTIVE_STATUSES = ['paid', 'packed', 'picked_up', 'in_transit', 'delivered'];
+
 export default function OrderCard({ order }) {
   const config = STATUS_CONFIG[order.status] || STATUS_CONFIG.pending;
+  const isActive = ACTIVE_STATUSES.includes(order.status);
+  const linkTo = isActive ? `/shipment/${order.id}` : `/order/${order.id}`;
 
   return (
     <Link
-      to={`/order/${order.id}`}
+      to={linkTo}
       className="block bg-card rounded-2xl border border-border p-4 hover:border-accent/30 hover:shadow-sm transition-all"
     >
       <div className="flex items-start justify-between">
@@ -37,7 +41,11 @@ export default function OrderCard({ order }) {
             </p>
           </div>
         </div>
-        <ChevronRight className="w-4 h-4 text-muted-foreground mt-1" />
+        {isActive ? (
+          <span className="text-[9px] font-bold bg-accent/10 text-accent px-2 py-0.5 rounded-full">TRACK</span>
+        ) : (
+          <ChevronRight className="w-4 h-4 text-muted-foreground mt-1" />
+        )}
       </div>
 
       <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">

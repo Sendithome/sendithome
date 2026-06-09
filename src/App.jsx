@@ -36,6 +36,7 @@ import CourierDashboard from './pages/CourierDashboard';
 import HotelInventory from './pages/HotelInventory';
 import HotelDemoDashboard from './pages/HotelDemoDashboard';
 import DeclarationPreview from './pages/DeclarationPreview';
+import TouristPortal from './pages/TouristPortal';
 // Add page imports here
 
 const AuthenticatedApp = () => {
@@ -96,6 +97,7 @@ const AuthenticatedApp = () => {
       <Route path="/hotel-inventory" element={<HotelInventory />} />
       <Route path="/hotel-demo" element={<HotelDemoDashboard />} />
       <Route path="/declaration-preview" element={<DeclarationPreview />} />
+      <Route path="/shipment/:id" element={<TouristPortal />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
