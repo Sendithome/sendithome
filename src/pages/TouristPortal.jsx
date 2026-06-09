@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Package, MapPin, Truck, CheckCircle2, Clock, ArrowLeft,
@@ -45,8 +45,7 @@ const TABS = [
 
 export default function TouristPortal() {
   const navigate = useNavigate();
-  const pathParts = window.location.pathname.split('/');
-  const orderId = pathParts[2];
+  const { id: orderId } = useParams();
 
   const [order, setOrder] = useState(null);
   const [items, setItems] = useState([]);
