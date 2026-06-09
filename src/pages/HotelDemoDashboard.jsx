@@ -71,7 +71,7 @@ const RECENT_SHIPMENTS = [
 
 const INVENTORY = [
   { type: '10 kg', allocated: 50, current: 34, reorder: 45, status: 'ok' },
-  { type: '20 kg', allocated: 25, current: 18, reorder: 22, status: 'ok' },
+  { type: '20 kg', allocated: 50, current: 41, reorder: 45, status: 'ok' },
 ];
 
 const REPLENISHMENTS = [
