@@ -35,6 +35,7 @@ import CourierLogin from './pages/CourierLogin';
 import CourierDashboard from './pages/CourierDashboard';
 import HotelInventory from './pages/HotelInventory';
 import HotelDemoDashboard from './pages/HotelDemoDashboard';
+import PitchDeck from './pages/PitchDeck';
 // Add page imports here
 
 const AuthenticatedApp = () => {
@@ -94,6 +95,7 @@ const AuthenticatedApp = () => {
       <Route path="/courier-dashboard" element={<CourierDashboard />} />
       <Route path="/hotel-inventory" element={<HotelInventory />} />
       <Route path="/hotel-demo" element={<HotelDemoDashboard />} />
+      <Route path="/pitch-deck" element={<PitchDeck />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
