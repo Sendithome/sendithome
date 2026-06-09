@@ -1,13 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getShippingPrice } from '../utils/pricing';
-import { convertToLocalCurrency } from '../utils/currencyConversion';
+import { convertToLocalCurrency, initCurrencyRates } from '../utils/currencyConversion';
 import SignaturePad from './SignaturePad';
 import { base44 } from '@/api/base44Client';
 import { Download, Loader2 } from 'lucide-react';
 
+// AED → USD fixed rate fallback (1 AED = 0.2723 USD)
+const AED_TO_USD = 0.2723;
+
+function toUSD(price, currency) {
+  if (!price) return 0;
+  if (currency === 'USD') return price;
+  if (currency === 'AED') return price * AED_TO_USD;
+  return price; // fallback
+}
+
 export default function ShipmentDeclarationForm({ order, items, onProceed, onSignatureChange }) {
   const [signature, setSignature] = useState(null);
   const [downloading, setDownloading] = useState(false);
+
+  // Pre-load live rates so convertToLocalCurrency works
+  useEffect(() => { initCurrencyRates(); }, []);
 
   const handleSig = (dataUrl) => {
     setSignature(dataUrl);
@@ -161,55 +174,69 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
             <p className="text-[9px] font-bold uppercase tracking-wider">Section D — Description of Contents (Customs Declaration)</p>
           </div>
           {/* Table header */}
-          <div className="grid border-b border-gray-400 bg-gray-50" style={{ gridTemplateColumns: '1fr 70px 70px 50px 75px 75px' }}>
-            {['Description of Goods', 'Category', 'HS Code', 'Qty', 'Unit Value', 'Total'].map(h => (
+          <div className="grid border-b border-gray-400 bg-gray-50" style={{ gridTemplateColumns: '1fr 65px 65px 40px 100px 100px' }}>
+            {['Description of Goods', 'Category', 'HS Code', 'Qty', 'Unit Value', 'Total Value'].map(h => (
               <div key={h} className="px-2 py-1 border-r last:border-r-0 border-gray-300">
                 <p className="text-[8px] font-bold uppercase text-gray-500">{h}</p>
               </div>
             ))}
           </div>
           {/* Items */}
-          {items.filter(i => i.eligible !== false).map((item, idx) => (
-            <div key={item.id || idx} className={`grid border-b border-gray-200 ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`} style={{ gridTemplateColumns: '1fr 70px 70px 50px 75px 75px' }}>
-              <div className="px-2 py-1.5 border-r border-gray-300">
-                <p className="font-medium text-[10px]">{item.item_name}</p>
+          {items.filter(i => i.eligible !== false).map((item, idx) => {
+            const unitUSD = toUSD(item.price || 0, currency);
+            const totalUSD = unitUSD * (item.quantity || 1);
+            const showLocal = currency !== 'USD';
+            return (
+              <div key={item.id || idx} className={`grid border-b border-gray-200 ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`} style={{ gridTemplateColumns: '1fr 65px 65px 40px 100px 100px' }}>
+                <div className="px-2 py-1.5 border-r border-gray-300">
+                  <p className="font-medium text-[10px]">{item.item_name}</p>
+                </div>
+                <div className="px-2 py-1.5 border-r border-gray-300">
+                  <p className="text-[9px] text-gray-600">{item.category || '—'}</p>
+                </div>
+                <div className="px-2 py-1.5 border-r border-gray-300">
+                  {item.hs_code ? (
+                    <div className="flex items-center gap-0.5">
+                      <p className="font-mono text-[9px] text-blue-800 font-bold">{item.hs_code}</p>
+                      {item.hs_code_flagged && <span className="text-[8px] text-amber-600">⚠</span>}
+                    </div>
+                  ) : (
+                    <p className="text-[9px] text-gray-400 italic">Pending</p>
+                  )}
+                </div>
+                <div className="px-2 py-1.5 border-r border-gray-300 text-center">
+                  <p className="font-bold text-[10px]">{item.quantity || 1}</p>
+                </div>
+                <div className="px-2 py-1.5 border-r border-gray-300 text-right">
+                  {showLocal && <p className="text-[9px] text-gray-500">{currency} {(item.price || 0).toFixed(2)}</p>}
+                  <p className="font-bold text-[10px] text-green-800">$ {unitUSD.toFixed(2)}</p>
+                </div>
+                <div className="px-2 py-1.5 text-right">
+                  {showLocal && <p className="text-[9px] text-gray-500">{currency} {((item.price || 0) * (item.quantity || 1)).toFixed(2)}</p>}
+                  <p className="font-bold text-[10px] text-green-800">$ {totalUSD.toFixed(2)}</p>
+                </div>
               </div>
-              <div className="px-2 py-1.5 border-r border-gray-300">
-                <p className="text-[9px] text-gray-600">{item.category || '—'}</p>
-              </div>
-              <div className="px-2 py-1.5 border-r border-gray-300">
-                {item.hs_code ? (
-                  <div className="flex items-center gap-0.5">
-                    <p className="font-mono text-[9px] text-blue-800 font-bold">{item.hs_code}</p>
-                    {item.hs_code_flagged && <span className="text-[8px] text-amber-600">⚠</span>}
-                  </div>
-                ) : (
-                  <p className="text-[9px] text-gray-400 italic">Pending</p>
-                )}
-              </div>
-              <div className="px-2 py-1.5 border-r border-gray-300 text-center">
-                <p className="font-bold text-[10px]">{item.quantity || 1}</p>
-              </div>
-              <div className="px-2 py-1.5 border-r border-gray-300 text-right">
-                <p className="text-[10px]">{currency} {(item.price || 0).toFixed(2)}</p>
-              </div>
-              <div className="px-2 py-1.5 text-right">
-                <p className="font-bold text-[10px]">{currency} {((item.price || 0) * (item.quantity || 1)).toFixed(2)}</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
           {/* Totals */}
-          <div className="grid bg-gray-100 border-t border-gray-400" style={{ gridTemplateColumns: '1fr 70px 70px 50px 75px 75px' }}>
-            <div className="px-2 py-2 border-r border-gray-400 col-span-4">
-              <p className="text-[9px] font-bold uppercase">Total Items: {items.filter(i => i.eligible !== false).length}</p>
-            </div>
-            <div className="px-2 py-2 border-r border-gray-400 text-right">
-              <p className="text-[9px] font-bold uppercase">Total Value</p>
-            </div>
-            <div className="px-2 py-2 text-right">
-              <p className="text-[10px] font-bold">{currency} {totalDeclaredValue.toFixed(2)}</p>
-            </div>
-          </div>
+          {(() => {
+            const totalUSD = items.filter(i => i.eligible !== false).reduce((s, i) => s + toUSD(i.price || 0, currency) * (i.quantity || 1), 0);
+            const showLocal = currency !== 'USD';
+            return (
+              <div className="grid bg-gray-100 border-t border-gray-400" style={{ gridTemplateColumns: '1fr 65px 65px 40px 100px 100px' }}>
+                <div className="px-2 py-2 border-r border-gray-400 col-span-4">
+                  <p className="text-[9px] font-bold uppercase">Total Items: {items.filter(i => i.eligible !== false).length}</p>
+                </div>
+                <div className="px-2 py-2 border-r border-gray-400 text-right">
+                  <p className="text-[9px] font-bold uppercase text-gray-500">Total Declared</p>
+                </div>
+                <div className="px-2 py-2 text-right">
+                  {showLocal && <p className="text-[9px] text-gray-500">{currency} {totalDeclaredValue.toFixed(2)}</p>}
+                  <p className="text-[11px] font-black text-green-800">$ {totalUSD.toFixed(2)}</p>
+                </div>
+              </div>
+            );
+          })()}
           {/* HS Code flag note */}
           {items.some(i => i.eligible !== false && i.hs_code_flagged) && (
             <div className="px-3 py-2 bg-amber-50 border-t border-amber-200">
