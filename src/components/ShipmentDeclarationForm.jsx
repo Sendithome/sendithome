@@ -161,8 +161,8 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
             <p className="text-[9px] font-bold uppercase tracking-wider">Section D — Description of Contents (Customs Declaration)</p>
           </div>
           {/* Table header */}
-          <div className="grid border-b border-gray-400 bg-gray-50" style={{ gridTemplateColumns: '1fr 80px 60px 80px 80px' }}>
-            {['Description of Goods', 'Category', 'Qty', 'Unit Value', 'Total'].map(h => (
+          <div className="grid border-b border-gray-400 bg-gray-50" style={{ gridTemplateColumns: '1fr 70px 70px 50px 75px 75px' }}>
+            {['Description of Goods', 'Category', 'HS Code', 'Qty', 'Unit Value', 'Total'].map(h => (
               <div key={h} className="px-2 py-1 border-r last:border-r-0 border-gray-300">
                 <p className="text-[8px] font-bold uppercase text-gray-500">{h}</p>
               </div>
@@ -170,12 +170,22 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
           </div>
           {/* Items */}
           {items.filter(i => i.eligible !== false).map((item, idx) => (
-            <div key={item.id || idx} className={`grid border-b border-gray-200 ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`} style={{ gridTemplateColumns: '1fr 80px 60px 80px 80px' }}>
+            <div key={item.id || idx} className={`grid border-b border-gray-200 ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`} style={{ gridTemplateColumns: '1fr 70px 70px 50px 75px 75px' }}>
               <div className="px-2 py-1.5 border-r border-gray-300">
                 <p className="font-medium text-[10px]">{item.item_name}</p>
               </div>
               <div className="px-2 py-1.5 border-r border-gray-300">
                 <p className="text-[9px] text-gray-600">{item.category || '—'}</p>
+              </div>
+              <div className="px-2 py-1.5 border-r border-gray-300">
+                {item.hs_code ? (
+                  <div className="flex items-center gap-0.5">
+                    <p className="font-mono text-[9px] text-blue-800 font-bold">{item.hs_code}</p>
+                    {item.hs_code_flagged && <span className="text-[8px] text-amber-600">⚠</span>}
+                  </div>
+                ) : (
+                  <p className="text-[9px] text-gray-400 italic">Pending</p>
+                )}
               </div>
               <div className="px-2 py-1.5 border-r border-gray-300 text-center">
                 <p className="font-bold text-[10px]">{item.quantity || 1}</p>
@@ -189,8 +199,8 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
             </div>
           ))}
           {/* Totals */}
-          <div className="grid bg-gray-100 border-t border-gray-400" style={{ gridTemplateColumns: '1fr 80px 60px 80px 80px' }}>
-            <div className="px-2 py-2 border-r border-gray-400 col-span-3">
+          <div className="grid bg-gray-100 border-t border-gray-400" style={{ gridTemplateColumns: '1fr 70px 70px 50px 75px 75px' }}>
+            <div className="px-2 py-2 border-r border-gray-400 col-span-4">
               <p className="text-[9px] font-bold uppercase">Total Items: {items.filter(i => i.eligible !== false).length}</p>
             </div>
             <div className="px-2 py-2 border-r border-gray-400 text-right">
@@ -200,6 +210,12 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
               <p className="text-[10px] font-bold">{currency} {totalDeclaredValue.toFixed(2)}</p>
             </div>
           </div>
+          {/* HS Code flag note */}
+          {items.some(i => i.eligible !== false && i.hs_code_flagged) && (
+            <div className="px-3 py-2 bg-amber-50 border-t border-amber-200">
+              <p className="text-[9px] text-amber-700">⚠ Items marked with ⚠ have unverified HS codes and may require manual review by customs.</p>
+            </div>
+          )}
         </div>
 
         {/* Shipping Info */}
@@ -207,7 +223,11 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
           <div className="bg-gray-100 border-b border-gray-400 px-2 py-1">
             <p className="text-[9px] font-bold uppercase tracking-wider">Section E — Shipping & Service Details</p>
           </div>
-          <div className="grid grid-cols-3 divide-x divide-gray-300 p-0">
+          <div className="grid grid-cols-4 divide-x divide-gray-300 p-0">
+            <div className="p-2">
+              <p className="text-[9px] text-gray-500 uppercase">Country of Purchase</p>
+              <p className="font-bold text-[10px] mt-0.5">United Arab Emirates</p>
+            </div>
             <div className="p-2">
               <p className="text-[9px] text-gray-500 uppercase">Service Provider</p>
               <p className="font-bold text-[10px] mt-0.5">Send It Home · FedEx / DHL</p>
