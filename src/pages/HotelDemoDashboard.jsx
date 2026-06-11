@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { getCountryById, getMonthlyChartData } from '@/lib/pilotCountryData';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Package, QrCode, TrendingUp, Users, DollarSign, Truck,
@@ -23,37 +24,23 @@ const HOTEL = {
   cover: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&h=300&fit=crop',
 };
 
+const UAE = getCountryById('uae');
+const UAE_MONTHLY = getMonthlyChartData(UAE);
+
 const STATS = [
-  { label: 'Total Shipments', value: '1,284', change: '+18%', up: true, icon: Package, color: 'text-blue-600', bg: 'bg-blue-50' },
-  { label: 'Revenue Generated', value: '$25,680', change: '+22%', up: true, icon: DollarSign, color: 'text-green-600', bg: 'bg-green-50' },
+  { label: 'Total Shipments', value: '284,000', change: '+18%', up: true, icon: Package, color: 'text-blue-600', bg: 'bg-blue-50' },
+  { label: 'Revenue Generated', value: '$22.4B', change: '+22%', up: true, icon: DollarSign, color: 'text-green-600', bg: 'bg-green-50' },
   { label: 'Boxes Remaining', value: '38 / 60', change: '-12', up: false, icon: Box, color: 'text-amber-600', bg: 'bg-amber-50' },
   { label: 'Countries Served', value: '34', change: '+5', up: true, icon: Globe, color: 'text-purple-600', bg: 'bg-purple-50' },
 ];
 
-const SHIPMENT_TREND = [
-  { month: 'Jan', shipments: 68, revenue: 1360 },
-  { month: 'Feb', shipments: 84, revenue: 1680 },
-  { month: 'Mar', shipments: 112, revenue: 2240 },
-  { month: 'Apr', shipments: 98, revenue: 1960 },
-  { month: 'May', shipments: 134, revenue: 2680 },
-  { month: 'Jun', shipments: 156, revenue: 3120 },
-  { month: 'Jul', shipments: 189, revenue: 3780 },
-  { month: 'Aug', shipments: 204, revenue: 4080 },
-  { month: 'Sep', shipments: 178, revenue: 3560 },
-  { month: 'Oct', shipments: 192, revenue: 3840 },
-  { month: 'Nov', shipments: 163, revenue: 3260 },
-  { month: 'Dec', shipments: 106, revenue: 2120 },
-];
+const SHIPMENT_TREND = UAE_MONTHLY.map(m => ({ month: m.month, shipments: Math.round(m.shipments / 60), revenue: Math.round(m.revenue / 60000) }));
 
-const TOP_DESTINATIONS = [
-  { country: '🇬🇧 United Kingdom', count: 218, pct: 17 },
-  { country: '🇺🇸 United States', count: 196, pct: 15 },
-  { country: '🇨🇳 China', count: 172, pct: 13 },
-  { country: '🇩🇪 Germany', count: 148, pct: 12 },
-  { country: '🇯🇵 Japan', count: 121, pct: 9 },
-  { country: '🇦🇺 Australia', count: 103, pct: 8 },
-  { country: '🇫🇷 France', count: 94, pct: 7 },
-];
+const TOP_DESTINATIONS = UAE.touristNationalities.slice(0, 7).map((n, i) => ({
+  country: n.country,
+  count: Math.round(UAE.totalShipments * n.pct / 100),
+  pct: n.pct,
+}));
 
 const BOX_SPLIT = [
   { name: '10 kg', value: 812, color: '#6366f1' },
