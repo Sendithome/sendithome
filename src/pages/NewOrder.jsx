@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, MapPin, Package, Loader2, MessageCircle, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, MapPin, Package, Loader2, MessageCircle, CheckCircle2, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -41,6 +41,10 @@ export default function NewOrder() {
     destination_postal_code: '',
     recipient_name: '',
     recipient_phone: '',
+    recipient_email: '',
+    recipient_nationality: '',
+    recipient_passport_number: '',
+    recipient_alternate_phone: '',
   });
 
   useEffect(() => { prefill(); }, []);
@@ -62,6 +66,9 @@ export default function NewOrder() {
     if (me?.home_city) updates.destination_city = me.home_city;
     if (me?.home_postal_code) updates.destination_postal_code = me.home_postal_code;
     if (me?.phone_number) updates.recipient_phone = me.phone_number.includes('|') ? me.phone_number.split('|').join('') : me.phone_number;
+    if (me?.email) updates.recipient_email = me.email;
+    if (me?.nationality) updates.recipient_nationality = me.nationality;
+    if (me?.whatsapp_number) updates.recipient_alternate_phone = me.whatsapp_number.includes('|') ? me.whatsapp_number.split('|').join('') : me.whatsapp_number;
     const fullName = [me?.first_name, me?.last_name].filter(Boolean).join(' ');
     if (fullName) updates.recipient_name = fullName;
 
@@ -142,6 +149,9 @@ export default function NewOrder() {
       price: shippingPrice,
       currency: 'USD',
       payment_status: 'unpaid',
+      sender_email: form.email,
+      sender_phone: formatPhone(form.phone_number),
+      sender_alternate_phone: formatPhone(form.whatsapp_number),
     });
     setLoading(false);
     navigate(`/order/${order.id}/receipts`);
@@ -261,11 +271,12 @@ export default function NewOrder() {
               </div>
             )}
 
+            {/* Receiver Address (read-only from profile) */}
             <div className="bg-muted/50 rounded-2xl border border-border p-4">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Home Address</p>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Delivery Address</p>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                 <div className="col-span-2">
-                  <span className="text-muted-foreground text-xs">Recipient Name</span>
+                  <span className="text-muted-foreground text-xs">Full Name</span>
                   <p className="font-medium text-foreground">{form.recipient_name || '—'}</p>
                 </div>
                 <div className="col-span-2">
@@ -285,16 +296,40 @@ export default function NewOrder() {
                   <p className="font-medium text-foreground">{form.destination_country || '—'}</p>
                 </div>
                 <div>
-                  <span className="text-muted-foreground text-xs">Phone</span>
+                  <span className="text-muted-foreground text-xs">Primary Phone</span>
                   <p className="font-medium text-foreground">{form.recipient_phone || '—'}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Email</span>
+                  <p className="font-medium text-foreground">{form.recipient_email || '—'}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Nationality</span>
+                  <p className="font-medium text-foreground">{form.recipient_nationality || '—'}</p>
+                </div>
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-3">
+                Need to update?{' '}
+                <a href="/profile" className="text-accent font-medium hover:underline">Edit in Profile</a>
+              </p>
+            </div>
+
+            {/* Additional receiver fields that may differ from sender */}
+            <div className="border border-border rounded-2xl p-4 space-y-3">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                <User className="w-3.5 h-3.5" /> Additional Receiver Details
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-xs text-muted-foreground">Alternate Phone</Label>
+                  <Input value={form.recipient_alternate_phone} onChange={e => update('recipient_alternate_phone', e.target.value)} placeholder="+44 7xxx xxxxxx" className="mt-1 h-10" />
+                </div>
+                <div>
+                  <Label className="text-xs text-muted-foreground">Passport No. (if different)</Label>
+                  <Input value={form.recipient_passport_number} onChange={e => update('recipient_passport_number', e.target.value.toUpperCase())} placeholder="AB1234567" className="mt-1 h-10" />
                 </div>
               </div>
             </div>
-
-            <p className="text-xs text-muted-foreground text-center">
-              Need to change your home address?{' '}
-              <a href="/profile" className="text-accent font-medium hover:underline">Edit in Profile</a>
-            </p>
           </motion.div>
         )}
 

@@ -501,7 +501,7 @@ export default function Register() {
             </div>
 
             <div>
-              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">WhatsApp Number</Label>
+              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Alternate Contact / WhatsApp</Label>
               <PhoneInput value={form.whatsapp_number} onChange={(v) => update('whatsapp_number', v)} />
               <div className="flex items-start gap-2 mt-2 bg-green-50 border border-green-100 rounded-xl px-3 py-2">
                 <MessageCircle className="w-3.5 h-3.5 text-green-600 mt-0.5 shrink-0" />

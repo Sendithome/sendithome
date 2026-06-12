@@ -74,7 +74,7 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
         {/* Shipper / Sender */}
         <div className="border-l border-r border-b border-gray-400">
           <div className="bg-gray-100 border-b border-gray-400 px-2 py-1">
-            <p className="text-[9px] font-bold uppercase tracking-wider">Section A — Sender / Shipper</p>
+            <p className="text-[9px] font-bold uppercase tracking-wider">Section A — Sender / Shipper Details</p>
           </div>
           <div className="grid grid-cols-2">
             <div className="border-r border-gray-400 p-2 space-y-1.5">
@@ -83,26 +83,38 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
                 <p className="font-bold">{order?.recipient_name || '—'}</p>
               </div>
               <div>
-                <p className="text-[9px] text-gray-500 uppercase">Hotel / Collection Point</p>
-                <p className="font-bold">{order?.hotel_name || '—'}</p>
-              </div>
-              <div>
-                <p className="text-[9px] text-gray-500 uppercase">Room No.</p>
-                <p className="font-bold">{order?.hotel_room || '—'}</p>
-              </div>
-            </div>
-            <div className="p-2 space-y-1.5">
-              <div>
-                <p className="text-[9px] text-gray-500 uppercase">City / Country of Origin</p>
-                <p className="font-bold">{[order?.hotel_city, order?.hotel_country].filter(Boolean).join(', ') || 'United Arab Emirates'}</p>
-              </div>
-              <div>
                 <p className="text-[9px] text-gray-500 uppercase">Passport / ID No.</p>
                 <p className="font-bold">{order?.passport_number || '—'}</p>
               </div>
               <div>
+                <p className="text-[9px] text-gray-500 uppercase">Passport Expiry</p>
+                <p className="font-bold">{order?.passport_expiry || '—'}</p>
+              </div>
+              <div>
                 <p className="text-[9px] text-gray-500 uppercase">Nationality</p>
                 <p className="font-bold">{order?.nationality || '—'}</p>
+              </div>
+              <div>
+                <p className="text-[9px] text-gray-500 uppercase">Email Address</p>
+                <p className="font-bold">{order?.sender_email || order?.email || '—'}</p>
+              </div>
+            </div>
+            <div className="p-2 space-y-1.5">
+              <div>
+                <p className="text-[9px] text-gray-500 uppercase">Primary Contact No.</p>
+                <p className="font-bold">{order?.sender_phone || order?.phone_number || '—'}</p>
+              </div>
+              <div>
+                <p className="text-[9px] text-gray-500 uppercase">Alternate Contact No.</p>
+                <p className="font-bold">{order?.sender_alternate_phone || order?.whatsapp_number || '—'}</p>
+              </div>
+              <div>
+                <p className="text-[9px] text-gray-500 uppercase">Hotel / Collection Point</p>
+                <p className="font-bold">{order?.hotel_name || '—'}{order?.hotel_room ? ` · Room ${order.hotel_room}` : ''}</p>
+              </div>
+              <div>
+                <p className="text-[9px] text-gray-500 uppercase">City / Country of Origin</p>
+                <p className="font-bold">{[order?.hotel_city, order?.hotel_country].filter(Boolean).join(', ') || 'United Arab Emirates'}</p>
               </div>
             </div>
           </div>
@@ -111,7 +123,7 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
         {/* Consignee / Recipient */}
         <div className="border-l border-r border-b border-gray-400">
           <div className="bg-gray-100 border-b border-gray-400 px-2 py-1">
-            <p className="text-[9px] font-bold uppercase tracking-wider">Section B — Consignee / Recipient (Home Address)</p>
+            <p className="text-[9px] font-bold uppercase tracking-wider">Section B — Consignee / Receiver Details</p>
           </div>
           <div className="grid grid-cols-2">
             <div className="border-r border-gray-400 p-2 space-y-1.5">
@@ -120,26 +132,42 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
                 <p className="font-bold">{order?.recipient_name || '—'}</p>
               </div>
               <div>
-                <p className="text-[9px] text-gray-500 uppercase">Street Address</p>
+                <p className="text-[9px] text-gray-500 uppercase">Passport No. (if applicable)</p>
+                <p className="font-bold">{order?.recipient_passport_number || '—'}</p>
+              </div>
+              <div>
+                <p className="text-[9px] text-gray-500 uppercase">Nationality</p>
+                <p className="font-bold">{order?.recipient_nationality || order?.nationality || '—'}</p>
+              </div>
+              <div>
+                <p className="text-[9px] text-gray-500 uppercase">Email Address</p>
+                <p className="font-bold">{order?.recipient_email || '—'}</p>
+              </div>
+              <div>
+                <p className="text-[9px] text-gray-500 uppercase">Primary Contact No.</p>
+                <p className="font-bold">{order?.recipient_phone || '—'}</p>
+              </div>
+              <div>
+                <p className="text-[9px] text-gray-500 uppercase">Alternate Contact No.</p>
+                <p className="font-bold">{order?.recipient_alternate_phone || '—'}</p>
+              </div>
+            </div>
+            <div className="p-2 space-y-1.5">
+              <div>
+                <p className="text-[9px] text-gray-500 uppercase">Full Delivery Address</p>
                 <p className="font-bold">{order?.destination_address || '—'}</p>
               </div>
               <div>
                 <p className="text-[9px] text-gray-500 uppercase">City</p>
                 <p className="font-bold">{order?.destination_city || '—'}</p>
               </div>
-            </div>
-            <div className="p-2 space-y-1.5">
-              <div>
-                <p className="text-[9px] text-gray-500 uppercase">Postal / ZIP Code</p>
-                <p className="font-bold">{order?.destination_postal_code || '—'}</p>
-              </div>
               <div>
                 <p className="text-[9px] text-gray-500 uppercase">Country of Destination</p>
                 <p className="font-bold">{order?.destination_country || '—'}</p>
               </div>
               <div>
-                <p className="text-[9px] text-gray-500 uppercase">Phone / Contact</p>
-                <p className="font-bold">{order?.recipient_phone || '—'}</p>
+                <p className="text-[9px] text-gray-500 uppercase">Postal / ZIP Code</p>
+                <p className="font-bold">{order?.destination_postal_code || '—'}</p>
               </div>
             </div>
           </div>
@@ -304,6 +332,35 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
               {signature && (
                 <p className="text-[9px] text-green-600 mt-1">✓ Signature captured</p>
               )}
+            </div>
+          </div>
+        </div>
+
+        {/* SIH Customer Support */}
+        <div className="border-l border-r border-b border-gray-400">
+          <div className="bg-gray-100 border-b border-gray-400 px-2 py-1">
+            <p className="text-[9px] font-bold uppercase tracking-wider">Send It Home — Customer Support</p>
+          </div>
+          <div className="p-3 grid grid-cols-2 gap-x-6 gap-y-1.5">
+            <div>
+              <p className="text-[9px] text-gray-500 uppercase">Customer Support Email</p>
+              <p className="font-bold text-[10px]">customer@sendithome.com</p>
+            </div>
+            <div>
+              <p className="text-[9px] text-gray-500 uppercase">Customer Support Phone</p>
+              <p className="font-bold text-[10px] text-gray-400 italic">Coming soon</p>
+            </div>
+            <div>
+              <p className="text-[9px] text-gray-500 uppercase">WhatsApp Support</p>
+              <p className="font-bold text-[10px] text-gray-400 italic">Coming soon</p>
+            </div>
+            <div>
+              <p className="text-[9px] text-gray-500 uppercase">Website</p>
+              <p className="font-bold text-[10px] text-gray-400 italic">Coming soon</p>
+            </div>
+            <div className="col-span-2">
+              <p className="text-[9px] text-gray-500 uppercase">Emergency Shipment Assistance</p>
+              <p className="font-bold text-[10px] text-gray-400 italic">Coming soon</p>
             </div>
           </div>
         </div>

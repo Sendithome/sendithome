@@ -36,10 +36,40 @@
       "type": "string",
       "default": "USD"
     },
+    "passport_number": {
+      "type": "string",
+      "description": "Sender passport number"
+    },
+    "nationality": {
+      "type": "string",
+      "description": "Sender nationality"
+    },
+    "passport_expiry": {
+      "type": "string",
+      "description": "Sender passport expiry date"
+    },
+    "sender_email": {
+      "type": "string",
+      "description": "Sender email address"
+    },
+    "sender_phone": {
+      "type": "string",
+      "description": "Sender primary phone number"
+    },
+    "sender_alternate_phone": {
+      "type": "string",
+      "description": "Sender alternate contact / WhatsApp"
+    },
     "hotel_name": {
       "type": "string"
     },
     "hotel_room": {
+      "type": "string"
+    },
+    "hotel_city": {
+      "type": "string"
+    },
+    "hotel_country": {
       "type": "string"
     },
     "destination_country": {
@@ -59,6 +89,22 @@
     },
     "recipient_phone": {
       "type": "string"
+    },
+    "recipient_email": {
+      "type": "string",
+      "description": "Receiver email address"
+    },
+    "recipient_nationality": {
+      "type": "string",
+      "description": "Receiver nationality"
+    },
+    "recipient_passport_number": {
+      "type": "string",
+      "description": "Receiver passport number (if applicable)"
+    },
+    "recipient_alternate_phone": {
+      "type": "string",
+      "description": "Receiver alternate contact number"
     },
     "tracking_number": {
       "type": "string"
@@ -95,21 +141,17 @@
     },
     "retailer_verifications_count": {
       "type": "number",
-      "default": 0,
-      "description": "Total number of retailer verifications created for this order"
+      "default": 0
     },
     "retailer_verifications_approved": {
       "type": "number",
-      "default": 0,
-      "description": "Number of retailer verifications approved so far"
+      "default": 0
     },
     "consolidated_at": {
-      "type": "string",
-      "description": "ISO timestamp when all retailers approved and shipment was consolidated"
+      "type": "string"
     },
     "consolidated_items": {
       "type": "array",
-      "description": "Merged items from all approved retailer verifications",
       "items": {
         "type": "object",
         "properties": {
@@ -135,12 +177,10 @@
       }
     },
     "consolidated_total_value": {
-      "type": "number",
-      "description": "Total value of all approved items across all retailers"
+      "type": "number"
     },
     "consolidated_customs_ref": {
-      "type": "string",
-      "description": "Unified customs reference for the consolidated shipment"
+      "type": "string"
     },
     "shipment_id": {
       "type": "string",
