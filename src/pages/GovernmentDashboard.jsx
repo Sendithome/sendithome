@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Shield, LogOut, RefreshCw, Loader2, BarChart3, ClipboardList,
-  CheckCircle2, Eye, Package, FileSearch, DollarSign, Globe
+  CheckCircle2, Eye, Package, FileSearch, DollarSign, Globe, Users
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +13,8 @@ import AuditTrailTab from '@/components/government/AuditTrailTab';
 import ConsolidatedShipmentsTab from '@/components/government/ConsolidatedShipmentsTab';
 import DeclarationBreakdownTab from '@/components/government/DeclarationBreakdownTab';
 import GovCommissionTab from '@/components/government/GovCommissionTab';
+import PassportCopiesTab from '@/components/government/PassportCopiesTab';
+import CustomsDeclarationsTab from '@/components/government/CustomsDeclarationsTab';
 
 const TABS = [
   { id: 'clearance', label: 'Clearance Queue', icon: Shield },
@@ -20,6 +22,8 @@ const TABS = [
   { id: 'declarations', label: 'Declaration Breakdown', icon: FileSearch },
   { id: 'analytics', label: 'Economic Impact', icon: BarChart3 },
   { id: 'commission', label: 'Commission Revenue', icon: DollarSign },
+  { id: 'passports', label: 'Passport Copies', icon: Users },
+  { id: 'customs', label: 'Customs Declarations', icon: FileSearch },
   { id: 'audit', label: 'Audit Trail', icon: ClipboardList },
 ];
 
@@ -286,6 +290,18 @@ export default function GovernmentDashboard() {
           {tab === 'commission' && (
             <motion.div key="commission" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
               <GovCommissionTab verifications={verifications} retailers={retailers} />
+            </motion.div>
+          )}
+
+          {tab === 'passports' && (
+            <motion.div key="passports" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <PassportCopiesTab verifications={verifications} />
+            </motion.div>
+          )}
+
+          {tab === 'customs' && (
+            <motion.div key="customs" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <CustomsDeclarationsTab verifications={verifications} />
             </motion.div>
           )}
 
