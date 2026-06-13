@@ -39,8 +39,23 @@ import DeclarationPreview from './pages/DeclarationPreview';
 import TouristPortal from './pages/TouristPortal';
 // Add page imports here
 
+const PUBLIC_PATHS = [
+  '/hotel-demo', '/hotel-onboarding', '/hotel-signup', '/nda-signing',
+  '/retailer-registration', '/retailer-portal', '/retailer-dashboard',
+  '/retailer-settings', '/brand-directory', '/oxford-overview',
+  '/government-login', '/government-dashboard', '/admin-retailers',
+  '/admin-dashboard', '/courier-login', '/courier-dashboard',
+  '/hotel-inventory', '/declaration-preview',
+];
+
+const isPublicPath = (pathname) => {
+  return PUBLIC_PATHS.some(p => pathname === p || pathname.startsWith('/shipment/'));
+};
+
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+
+  const currentPath = window.location.pathname;
 
   // Show loading spinner while checking app public settings or auth
   if (isLoadingPublicSettings || isLoadingAuth) {
@@ -51,12 +66,11 @@ const AuthenticatedApp = () => {
     );
   }
 
-  // Handle authentication errors
-  if (authError) {
+  // Handle authentication errors — but don't block public paths
+  if (authError && !isPublicPath(currentPath)) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
       navigateToLogin();
       return null;
     }
@@ -79,6 +93,7 @@ const AuthenticatedApp = () => {
         <Route path="/docs" element={<DevDocs />} />
         <Route path="/hotel-dashboard" element={<HotelDashboard />} />
       </Route>
+      <Route path="/hotel-demo" element={<HotelDemoDashboard />} />
       <Route path="/hotel-onboarding" element={<HotelPartnerLanding />} />
       <Route path="/hotel-signup" element={<HotelSignup />} />
       <Route path="/nda-signing" element={<NdaSigning />} />
@@ -95,7 +110,6 @@ const AuthenticatedApp = () => {
       <Route path="/courier-login" element={<CourierLogin />} />
       <Route path="/courier-dashboard" element={<CourierDashboard />} />
       <Route path="/hotel-inventory" element={<HotelInventory />} />
-      <Route path="/hotel-demo" element={<HotelDemoDashboard />} />
       <Route path="/declaration-preview" element={<DeclarationPreview />} />
       <Route path="/shipment/:id" element={<TouristPortal />} />
       <Route path="*" element={<PageNotFound />} />
