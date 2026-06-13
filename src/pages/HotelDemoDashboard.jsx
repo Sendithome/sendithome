@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Package, QrCode, TrendingUp, Users, DollarSign, Truck,
   CheckCircle2, Clock, AlertCircle, BarChart3, Star, MapPin,
-  ArrowUpRight, ArrowDownRight, Box, Globe, Hotel, Activity,
+  ArrowUpRight, ArrowDownRight, Box, Globe, Activity,
   RefreshCw, Download, ChevronRight, Zap, Shield, Calendar,
   Package2
 } from 'lucide-react';
