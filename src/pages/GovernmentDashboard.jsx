@@ -6,7 +6,8 @@ import {
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
-import { PILOT_COUNTRIES, getPlatformTotals } from '@/lib/pilotCountryData';
+import { getCountryById } from '@/lib/pilotCountryData';
+const UAE = getCountryById('uae');
 import ReviewModal from '@/components/government/ReviewModal';
 import GovAnalyticsTab from '@/components/government/GovAnalyticsTab.jsx';
 import AuditTrailTab from '@/components/government/AuditTrailTab';
@@ -136,37 +137,6 @@ export default function GovernmentDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
 
-        {/* Pilot Countries Banner */}
-        <div className="bg-gradient-to-r from-primary to-primary/85 rounded-2xl px-5 py-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div>
-              <p className="text-xs font-black text-primary-foreground/70 uppercase tracking-widest mb-1">🚀 Send It Home · Active Pilot Markets</p>
-              <div className="flex flex-wrap gap-2">
-                {PILOT_COUNTRIES.map(c => (
-                  <span key={c.id} className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full ${c.isPrimary ? 'bg-accent text-accent-foreground' : 'bg-white/10 text-primary-foreground'}`}>
-                    {c.flag} {c.shortName}
-                    {c.isPrimary && <span className="text-[9px] bg-white/20 px-1 rounded">PRIMARY</span>}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="flex gap-4 text-center shrink-0">
-              <div>
-                <p className="text-lg font-black text-accent">{PILOT_COUNTRIES.reduce((s, c) => s + c.totalShipments, 0).toLocaleString()}</p>
-                <p className="text-[10px] text-primary-foreground/70">Platform Shipments</p>
-              </div>
-              <div>
-                <p className="text-lg font-black text-green-400">${(getPlatformTotals().totalAddressableMarket / 1e9).toFixed(1)}B</p>
-                <p className="text-[10px] text-primary-foreground/70">Addressable Market</p>
-              </div>
-              <div>
-                <p className="text-lg font-black text-primary-foreground">{PILOT_COUNTRIES.reduce((s, c) => s + c.activeHotels, 0).toLocaleString()}</p>
-                <p className="text-[10px] text-primary-foreground/70">Partner Hotels</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Stat Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
           <StatCard icon="📊" label="Total Shipments" value={verifications.length.toLocaleString()} colorCls="text-primary" borderCls="border-primary/20" />
@@ -174,7 +144,7 @@ export default function GovernmentDashboard() {
           <StatCard icon="🏨" label="Partner Hotels (UAE)" value={(approvedHotels || 847).toLocaleString()} colorCls="text-amber-600" borderCls="border-amber-200" />
           <StatCard icon="🏪" label="Partner Retailers" value={(approvedRetailers || 3240).toLocaleString()} colorCls="text-teal-600" borderCls="border-teal-200" />
           <StatCard icon="💰" label="Total Export Value" value={totalExportValue > 0 ? `$${(totalExportValue / 1e6).toFixed(2)}M` : '$22.4B'} colorCls="text-green-600" borderCls="border-green-200" />
-          <StatCard icon="🌍" label="Pilot Countries" value={`${PILOT_COUNTRIES.length} Markets`} colorCls="text-blue-600" borderCls="border-blue-200" />
+          <StatCard icon="🇦🇪" label="UAE Shipments" value={UAE.totalShipments.toLocaleString()} colorCls="text-blue-600" borderCls="border-blue-200" />
         </div>
 
         {/* Tabs */}
