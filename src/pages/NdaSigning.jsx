@@ -37,34 +37,44 @@ export default function NdaSigning() {
   useEffect(() => { init(); }, []);
 
   const init = async () => {
-    const me = await base44.auth.me();
-    setUser(me);
-    setForm(prev => ({ ...prev, official_email: me.email }));
-
-    // Load existing hotel
-    const hotels = await base44.entities.Hotel.filter({ contact_email: me.email });
-    if (hotels.length > 0) {
-      const h = hotels[0];
-      setHotel(h);
-      setForm(prev => ({
-        ...prev,
-        hotel_name: h.name || '',
-        hotel_address: [h.address, h.area, h.city, h.country].filter(Boolean).join(', '),
-        hotel_phone: h.official_phone || '',
-        authorized_signatory_name: h.gm_name || '',
-        authorized_signatory_title: 'General Manager',
-        official_email: h.official_email || me.email,
-      }));
-    }
-
-    // Check for existing NDA
-    const ndas = await base44.entities.NDA.filter({ user_email: me.email });
-    if (ndas.length > 0) {
-      const existing = ndas[0];
-      setNda(existing);
-      if (existing.status === 'signed') {
-        setDone(true);
+    try {
+      const me = await base44.auth.me();
+      if (!me) {
+        base44.auth.redirectToLogin(window.location.pathname);
+        return;
       }
+      setUser(me);
+      setForm(prev => ({ ...prev, official_email: me.email }));
+
+      // Load existing hotel
+      const hotels = await base44.entities.Hotel.filter({ contact_email: me.email });
+      if (hotels.length > 0) {
+        const h = hotels[0];
+        setHotel(h);
+        setForm(prev => ({
+          ...prev,
+          hotel_name: h.name || '',
+          hotel_address: [h.address, h.area, h.city, h.country].filter(Boolean).join(', '),
+          hotel_phone: h.official_phone || '',
+          authorized_signatory_name: h.gm_name || '',
+          authorized_signatory_title: 'General Manager',
+          official_email: h.official_email || me.email,
+        }));
+      }
+
+      // Check for existing NDA
+      const ndas = await base44.entities.NDA.filter({ user_email: me.email });
+      if (ndas.length > 0) {
+        const existing = ndas[0];
+        setNda(existing);
+        if (existing.status === 'signed') {
+          setDone(true);
+        }
+      }
+    } catch (err) {
+      // Not logged in — redirect to login
+      base44.auth.redirectToLogin(window.location.pathname);
+      return;
     }
 
     setLoading(false);
@@ -139,29 +149,34 @@ export default function NdaSigning() {
       signed_at: new Date().toISOString(),
     };
 
-    let savedNda;
-    if (nda) {
-      savedNda = await base44.entities.NDA.update(nda.id, payload);
-    } else {
-      savedNda = await base44.entities.NDA.create(payload);
-    }
-    setNda(savedNda);
+    try {
+      let savedNda;
+      if (nda) {
+        savedNda = await base44.entities.NDA.update(nda.id, payload);
+      } else {
+        savedNda = await base44.entities.NDA.create(payload);
+      }
+      setNda(savedNda);
 
-    // Also create/update HotelApplication to record NDA signed
-    const apps = await base44.entities.HotelApplication.filter({ user_email: user.email });
-    if (apps.length > 0) {
-      await base44.entities.HotelApplication.update(apps[0].id, { nda_signed: true, nda_id: savedNda.id });
-    } else {
-      await base44.entities.HotelApplication.create({
-        user_email: user.email,
-        hotel_id: hotel?.id || '',
-        status: 'draft',
-        nda_signed: true,
-        nda_id: savedNda.id,
-      });
+      // Also create/update HotelApplication to record NDA signed
+      const apps = await base44.entities.HotelApplication.filter({ user_email: user.email });
+      if (apps.length > 0) {
+        await base44.entities.HotelApplication.update(apps[0].id, { nda_signed: true, nda_id: savedNda.id });
+      } else {
+        await base44.entities.HotelApplication.create({
+          user_email: user.email,
+          hotel_id: hotel?.id || '',
+          status: 'draft',
+          nda_signed: true,
+          nda_id: savedNda.id,
+        });
+      }
+
+      setDone(true);
+    } catch (err) {
+      setErrors('Something went wrong: ' + err.message);
     }
 
-    setDone(true);
     setSubmitting(false);
   };
 
