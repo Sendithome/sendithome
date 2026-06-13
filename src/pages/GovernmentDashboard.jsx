@@ -121,9 +121,7 @@ export default function GovernmentDashboard() {
               <p className="text-xs font-bold text-muted-foreground truncate">{deptName} — Oversight Portal</p>
             </div>
           </div>
-          <div className="hidden md:block text-center">
-            <p className="text-xs text-foreground font-semibold">{new Date().toLocaleDateString('en-AE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-          </div>
+
           <div className="flex items-center gap-2 shrink-0">
             <button onClick={loadData} className="p-2 text-muted-foreground hover:text-foreground transition-colors">
               <RefreshCw className="w-4 h-4" />
