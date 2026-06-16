@@ -154,6 +154,23 @@ export default function HotelSignup() {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md"
         >
+          {/* Onboarding overview */}
+          <div className="flex items-center justify-center gap-2 mb-6">
+            {[
+              { step: '1', label: 'Create Account' },
+              { step: '2', label: 'Add Hotel Details' },
+              { step: '3', label: 'Go Live' },
+            ].map((s, i, arr) => (
+              <div key={s.step} className="flex items-center gap-2">
+                <div className="flex flex-col items-center">
+                  <div className="w-7 h-7 rounded-full bg-accent/10 border border-accent/30 flex items-center justify-center text-xs font-bold text-accent">{s.step}</div>
+                  <span className="text-[10px] text-muted-foreground mt-1 whitespace-nowrap">{s.label}</span>
+                </div>
+                {i < arr.length - 1 && <div className="w-8 h-px bg-border mb-3" />}
+              </div>
+            ))}
+          </div>
+
           {/* Step indicators */}
           <div className="flex items-center gap-2 mb-8">
             {STEPS.map((label, i) => (
@@ -180,8 +197,8 @@ export default function HotelSignup() {
                     <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mx-auto mb-4">
                       <KeyRound className="w-7 h-7 text-accent" />
                     </div>
-                    <h1 className="text-2xl font-black text-foreground">Create Hotel Account</h1>
-                    <p className="text-sm text-muted-foreground mt-2">Enter your login credentials to get started.</p>
+                    <h1 className="text-2xl font-black text-foreground">Register Your Hotel</h1>
+                    <p className="text-sm text-muted-foreground mt-2">Create your account to start offering Send It Home services to your guests.</p>
                   </div>
 
                   <div className="space-y-4">

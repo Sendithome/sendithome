@@ -827,7 +827,6 @@ export default function HotelDashboard() {
 
                   {[
                     { title: 'General Manager *', prefix: 'gm', required: true },
-                    { title: 'Assistant General Manager *', prefix: 'agm', required: true },
                     { title: 'Front Desk Manager *', prefix: 'fdm', required: true },
                     { title: 'Head of Concierge / Bell Captain', prefix: 'hoc', required: false },
                   ].map(({ title, prefix, required }) => (

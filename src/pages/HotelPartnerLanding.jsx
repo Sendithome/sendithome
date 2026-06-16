@@ -109,12 +109,10 @@ export default function HotelPartnerLanding() {
             </h1>
 
             <p className="text-base leading-relaxed mb-3 font-medium" style={{ color: '#fff' }}>
-              Our Mission: Provide an AI-powered platform that transforms the tourism economy and serves as the{' '}
-              <span style={{ color: GOLD, fontWeight: 700 }}>Economic Architecture of Tourism Retail Mobility</span>.
+              Generate additional revenue from every guest — with <span style={{ color: GOLD, fontWeight: 700 }}>no operational cost</span> to your hotel.
             </p>
             <p className="text-sm leading-relaxed mb-10" style={{ color: CREAM }}>
-              By creating a controlled international shopping corridor — a reciprocal tourism spending ecosystem — we connect high-net-worth visitors with local luxury retail, within a multilateral economic framework: a{' '}
-              <span style={{ color: GOLD, fontWeight: 600 }}>Government-Aligned Tourism Retail Ecosystem</span>.
+              We handle everything: the shipping, the customs paperwork, and the courier collection. Your hotel earns a service fee on every shipment while offering guests a premium, hassle-free way to send their shopping home.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">

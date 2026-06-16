@@ -193,6 +193,34 @@ export default function HotelDemoDashboard() {
           {tab === 'overview' && (
             <motion.div key="overview" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
 
+              {/* Demo disclaimer */}
+              <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+                <Zap className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                <p className="text-xs text-amber-800 leading-relaxed">
+                  <strong>Demo Data Only.</strong> All figures, shipments, and revenue shown on this dashboard are illustrative examples for demonstration purposes. They do not represent real transactions.
+                </p>
+              </div>
+
+              {/* Revenue highlight tiles */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-2">
+                    <DollarSign className="w-4 h-4 text-green-600" />
+                    <p className="text-xs font-bold text-green-700 uppercase tracking-wide">Revenue Earned This Month</p>
+                  </div>
+                  <p className="text-3xl font-black text-green-700">$6,380</p>
+                  <p className="text-xs text-green-600 mt-1">Based on 638 × $10 hotel service fee — $20 platform fee less $10 SIH fee</p>
+                </div>
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-2">
+                    <TrendingUp className="w-4 h-4 text-blue-600" />
+                    <p className="text-xs font-bold text-blue-700 uppercase tracking-wide">Projected Annual Revenue</p>
+                  </div>
+                  <p className="text-3xl font-black text-blue-700">$76,560</p>
+                  <p className="text-xs text-blue-600 mt-1">Estimated based on current monthly run rate × 12 months</p>
+                </div>
+              </div>
+
               {/* KPI cards */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {STATS.map(s => <StatCard key={s.label} stat={s} />)}

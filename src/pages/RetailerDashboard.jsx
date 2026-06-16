@@ -125,6 +125,19 @@ export default function RetailerDashboard() {
           </motion.div>
         )}
 
+        {/* Earnings highlight */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4 shadow-sm">
+            <p className="text-xs font-bold text-green-700 uppercase tracking-wide mb-1">Estimated Earnings This Month</p>
+            <p className="text-2xl font-black text-green-700">${(approved.filter(v => v.approved_at?.startsWith(thisMonthStr)).reduce((s, v) => s + (v.total_value || 0), 0) * 0.025).toLocaleString('en', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
+            <p className="text-[10px] text-green-600 mt-1">2.5% commission on approved shipment values</p>
+          </div>
+          <div className="bg-muted/40 border border-border rounded-2xl p-4 shadow-sm">
+            <p className="text-xs font-bold text-foreground mb-1">How Commission Works</p>
+            <p className="text-[11px] text-muted-foreground leading-relaxed">You earn <strong className="text-foreground">2.5% commission</strong> on the total value of each shipment you verify and approve. A separate <strong className="text-foreground">10% government contribution</strong> is automatically calculated from the declared goods value and remitted to the relevant authority — this is not deducted from your commission.</p>
+          </div>
+        </div>
+
         {/* Stat Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <StatCard
@@ -144,7 +157,7 @@ export default function RetailerDashboard() {
           />
           <StatCard
             icon={<DollarSign className="w-5 h-5" />}
-            label="Govt. Commission (10%*)"
+            label="Govt. Contribution (10%)"
             value={`$${(approved.filter(v => v.approved_at?.startsWith(thisMonthStr)).reduce((s, v) => s + (v.total_value || 0), 0) * 0.10).toLocaleString('en', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
             colorCls="text-amber-600"
             bgCls="bg-amber-50 border-amber-200"

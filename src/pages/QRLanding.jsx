@@ -89,7 +89,7 @@ export default function QRLanding() {
               className="w-56 h-56 rounded-xl"
             />
             <p className="text-[9px] font-bold text-muted-foreground text-center mt-3 tracking-widest uppercase">
-              Scan to Ship Your Shopping Home
+              Scan to start your shipment and arrange collection from your hotel
             </p>
           </div>
 
@@ -101,7 +101,7 @@ export default function QRLanding() {
             className="w-full max-w-xs h-12 bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-2xl text-sm"
             onClick={() => setShowQR(false)}
           >
-            Get Started — Register Now
+            Start My Shipment
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
           <Button
@@ -190,7 +190,7 @@ export default function QRLanding() {
             className="w-full h-13 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-2xl text-base py-4"
             onClick={() => navigate(`/register?hotelId=${hotelId}`)}
           >
-            Get Started — Register Now
+            Start My Shipment
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
           <Button
@@ -202,7 +202,13 @@ export default function QRLanding() {
           </Button>
         </motion.div>
 
-        <p className="text-center text-[10px] text-muted-foreground mt-6">
+        <div className="flex items-start gap-2 bg-green-50 border border-green-200 rounded-xl px-3 py-2.5 mt-4">
+          <span className="text-green-600 text-sm shrink-0">✓</span>
+          <p className="text-[11px] text-green-700 leading-relaxed">
+            <strong>{hotel?.name}</strong> is an official Send It Home collection point. Your parcel will be securely collected by our courier partner within 24 hours.
+          </p>
+        </div>
+        <p className="text-center text-[10px] text-muted-foreground mt-4">
           Powered by FedEx & DHL · 50+ Countries · 1–3 Day Delivery
         </p>
       </div>
