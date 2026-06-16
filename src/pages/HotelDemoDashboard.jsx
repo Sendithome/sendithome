@@ -112,7 +112,7 @@ export default function HotelDemoDashboard() {
 
       {/* Header */}
       <header className="sticky top-0 z-30 bg-white border-b border-border px-4 py-3 flex items-center gap-3 shadow-sm">
-        <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/868e3a22b_images.png" alt="SendItHome" className="h-8 object-contain" />
+        <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/5db7bf76e_images.png" alt="SendItHome" className="h-8 object-contain" />
         <div className="flex items-center gap-1.5 ml-1 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-0.5">
           <Zap className="w-3 h-3 text-amber-500" />
           <span className="text-[10px] font-bold text-amber-700">DEMO MODE</span>

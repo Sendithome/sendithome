@@ -34,7 +34,7 @@ export default function CourierLogin() {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-5">
-            <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/868e3a22b_images.png" alt="SendItHome" className="h-10 object-contain" />
+            <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/5db7bf76e_images.png" alt="SendItHome" className="h-10 object-contain" />
           </div>
           <h1 className="text-xl font-bold text-foreground mt-2">Courier Partner Portal</h1>
           <p className="text-sm text-muted-foreground mt-1">Logistics Partner Access Only</p>

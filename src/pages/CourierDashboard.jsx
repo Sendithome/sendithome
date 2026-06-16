@@ -171,7 +171,7 @@ export default function CourierDashboard() {
       {/* Header */}
       <header className="sticky top-0 z-20 bg-card border-b border-border px-4 py-3 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
-          <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/868e3a22b_images.png" alt="SendItHome" className="h-8 object-contain" />
+          <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/5db7bf76e_images.png" alt="SendItHome" className="h-8 object-contain" />
           <p className="text-xs font-bold text-muted-foreground">{courierCompany} — Logistics Portal</p>
         </div>
         <div className="flex items-center gap-2">

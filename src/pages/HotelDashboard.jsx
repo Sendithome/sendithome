@@ -383,7 +383,7 @@ export default function HotelDashboard() {
       {/* Header */}
       <header className="sticky top-0 z-20 bg-card border-b border-border px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/868e3a22b_images.png" alt="SendItHome" className="h-8 object-contain" />
+          <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/5db7bf76e_images.png" alt="SendItHome" className="h-8 object-contain" />
         </div>
         <div className="flex items-center gap-3">
           {application && <StatusBadge status={application.status} />}
