@@ -82,20 +82,24 @@ export default function QRLanding() {
           </div>
 
           {/* QR Code */}
-          <div className="bg-white rounded-3xl p-5 shadow-2xl mb-6">
+          <div className="bg-white rounded-3xl p-5 shadow-2xl mb-4 flex flex-col items-center">
+            <p className="text-xs font-semibold text-foreground text-center mb-3 leading-snug max-w-[220px]">
+              Scan to start your shipment and arrange collection from your hotel
+            </p>
             <img
               src={qrUrl}
               alt="Hotel QR Code"
               className="w-56 h-56 rounded-xl"
             />
-            <p className="text-[9px] font-bold text-muted-foreground text-center mt-3 tracking-widest uppercase">
-              Scan to start your shipment and arrange collection from your hotel
-            </p>
           </div>
 
-          <p className="text-xs text-white/50 mb-8 max-w-xs leading-relaxed">
-            Show this QR code to hotel concierge or scan to start your shipment registration.
-          </p>
+          {/* Official collection point note */}
+          <div className="flex items-center gap-1.5 bg-green-500/20 border border-green-400/30 rounded-xl px-3 py-2 max-w-xs mb-6">
+            <span className="text-green-300 text-sm shrink-0">✓</span>
+            <p className="text-[11px] text-green-200 leading-snug">
+              <strong className="text-white">{hotel?.name}</strong> is an official Send It Home collection point.
+            </p>
+          </div>
 
           <Button
             className="w-full max-w-xs h-12 bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-2xl text-sm"
