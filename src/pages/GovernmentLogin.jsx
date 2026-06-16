@@ -65,10 +65,13 @@ export default function GovernmentLogin() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-accent/10 border border-accent/30 rounded-2xl mb-5">
-            <Shield className="w-8 h-8 text-accent" />
+          {/* Brand Logo */}
+          <div className="inline-flex items-center gap-2.5 bg-primary rounded-2xl px-5 py-3 mb-5">
+            <div className="w-8 h-8 rounded-xl bg-accent/20 flex items-center justify-center shrink-0">
+              <Shield className="w-4 h-4 text-accent" />
+            </div>
+            <span className="text-sm font-black text-primary-foreground tracking-tight">SEND<span className="text-accent">IT</span>HOME</span>
           </div>
-          <p className="text-[10px] font-black tracking-[0.2em] text-muted-foreground uppercase mb-2">Send It Home</p>
           <h1 className="text-2xl font-black text-foreground">Government Oversight Portal</h1>
           <p className="text-muted-foreground text-sm mt-2 leading-relaxed">Tourism Retail Export — Clearing House & Verification Authority</p>
         </div>
