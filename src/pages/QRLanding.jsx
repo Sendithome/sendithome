@@ -157,7 +157,7 @@ export default function QRLanding() {
           <h2 className="text-xl font-bold text-foreground">Ship Your Shopping Home</h2>
           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
             Send your purchases directly from <span className="font-semibold text-foreground">{hotel.name}</span> to your home.
-            Ship your purchases home for a flat <span className="font-semibold text-accent">$50 platform fee</span> — delivered in 1–3 working days via international priority.
+            Ship your purchases home for a flat <span className="font-semibold text-accent">$50 platform fee</span> — delivered in 1–3 working days — Expedited.
           </p>
 
           <ul className="mt-5 space-y-2.5">
