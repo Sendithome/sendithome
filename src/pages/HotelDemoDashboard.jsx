@@ -577,6 +577,13 @@ export default function HotelDemoDashboard() {
         </AnimatePresence>
       </main>
 
+      {/* Confidentiality Footer */}
+      <footer className="border-t border-border bg-white mt-4 py-3 px-4 text-center">
+        <p className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase">
+          © {new Date().getFullYear()} SendItHome · Proprietary and Confidential · Authorised Partner Access Only · Unauthorised use is strictly prohibited
+        </p>
+      </footer>
+
       {/* CTA footer */}
       <div className="max-w-4xl mx-auto px-4 pb-8 pt-2">
         <div className="bg-primary rounded-2xl px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
