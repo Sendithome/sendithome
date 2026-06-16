@@ -433,7 +433,7 @@ export default function Register() {
                   <Upload className="w-4 h-4" />
                   Upload from Gallery / Files
                 </button>
-                <p className="text-[10px] text-white/40 mt-4">Or fill in the details manually below</p>
+                <p className="text-sm text-white/60 mt-4">Or fill in the details manually below</p>
               </div>
             )}
           </div>
@@ -478,7 +478,7 @@ export default function Register() {
             <div className="flex items-start gap-2.5 bg-blue-50 border border-blue-100 rounded-xl px-3 py-2.5">
               <span className="text-blue-500 text-base shrink-0">🔒</span>
               <p className="text-[11px] text-blue-700 leading-relaxed">
-                Passport details are required for <strong>international shipping and customs clearance</strong> only. Your information is stored securely and protected in accordance with data privacy regulations.
+                Passport details are required for <strong>international shipping and customs clearance</strong> only. Your information is stored securely on <strong>Amazon Web Services (AWS)</strong> infrastructure and protected in accordance with international data privacy regulations.
               </p>
             </div>
 
@@ -639,7 +639,7 @@ export default function Register() {
         </form>
 
         <p className="text-center text-[10px] text-muted-foreground mt-8 pb-4">
-          Powered by FedEx & DHL · 50+ Countries · 1–3 Day Delivery
+          Powered by SendITHome AI · Proprietary Intelligent Logistics Platform
         </p>
       </div>
 

@@ -213,7 +213,7 @@ export default function QRLanding() {
           </p>
         </div>
         <p className="text-center text-[10px] text-muted-foreground mt-4">
-          Powered by FedEx & DHL · 50+ Countries · 1–3 Day Delivery
+          Powered by SendITHome AI · Proprietary Intelligent Logistics Platform
         </p>
       </div>
     </div>
