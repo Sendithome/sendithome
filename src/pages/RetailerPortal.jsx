@@ -41,12 +41,12 @@ export default function RetailerPortal() {
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center">
-              <ShieldCheck className="w-7 h-7 text-accent" />
+          <div className="flex items-center justify-center gap-2 mb-5">
+            <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-4 h-4 text-primary-foreground" />
             </div>
+            <span className="text-sm font-black text-foreground">SEND<span className="text-accent">IT</span>HOME</span>
           </div>
-          <p className="text-xs font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
           <h1 className="text-2xl font-bold text-foreground mt-3">Retailer Verification Portal</h1>
           <p className="text-muted-foreground text-sm mt-1">Where tourism meets luxury retail mobility</p>
         </div>
