@@ -544,7 +544,6 @@ export default function HotelDashboard() {
                             <div className="flex flex-wrap gap-1.5">
                               {app.trade_license_url && <a href={app.trade_license_url} target="_blank" rel="noopener noreferrer" className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded-lg px-2 py-0.5 font-medium">Trade License</a>}
                               {app.gm_employment_card_url && <a href={app.gm_employment_card_url} target="_blank" rel="noopener noreferrer" className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded-lg px-2 py-0.5 font-medium">GM Card</a>}
-                              {app.agm_employment_card_url && <a href={app.agm_employment_card_url} target="_blank" rel="noopener noreferrer" className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded-lg px-2 py-0.5 font-medium">AGM Card</a>}
                               {app.fdm_employment_card_url && <a href={app.fdm_employment_card_url} target="_blank" rel="noopener noreferrer" className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded-lg px-2 py-0.5 font-medium">FDM Card</a>}
                             </div>
                             {app.status === 'pending_approval' && (
@@ -974,12 +973,6 @@ export default function HotelDashboard() {
                   note="Official employment ID card of the General Manager."
                 />
                 <UploadField
-                  label="Assistant General Manager — Employment Card *"
-                  value={docs.agm_employment_card_url}
-                  uploading={uploading.agm_employment_card_url}
-                  onChange={e => handleUpload('agm_employment_card_url', e)}
-                />
-                <UploadField
                   label="Front Desk Manager — Employment Card"
                   value={docs.fdm_employment_card_url}
                   uploading={uploading.fdm_employment_card_url}
@@ -1002,7 +995,6 @@ export default function HotelDashboard() {
                     { label: 'Trade license uploaded', done: !!docs.trade_license_url },
                     { label: 'Trade license number entered', done: !!docs.trade_license_number },
                     { label: 'GM employment card uploaded', done: !!docs.gm_employment_card_url },
-                    { label: 'AGM employment card uploaded', done: !!docs.agm_employment_card_url },
                   ].map(item => (
                     <div key={item.label} className="flex items-center gap-2">
                       {item.done
