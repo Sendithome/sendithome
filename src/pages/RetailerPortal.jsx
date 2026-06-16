@@ -41,11 +41,8 @@ export default function RetailerPortal() {
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-5">
-            <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-4 h-4 text-primary-foreground" />
-            </div>
-            <span className="text-sm font-black text-foreground">SEND<span className="text-accent">IT</span>HOME</span>
+          <div className="flex items-center justify-center mb-5">
+            <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/868e3a22b_images.png" alt="SendItHome" className="h-10 object-contain" />
           </div>
           <h1 className="text-2xl font-bold text-foreground mt-3">Retailer Verification Portal</h1>
           <p className="text-muted-foreground text-sm mt-1">Where tourism meets luxury retail mobility</p>

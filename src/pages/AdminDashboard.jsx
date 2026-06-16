@@ -78,7 +78,7 @@ export default function AdminDashboard() {
       {/* Header */}
       <header className="sticky top-0 z-20 bg-card border-b border-border px-4 py-3 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
-          <p className="text-sm font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
+          <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/868e3a22b_images.png" alt="SendItHome" className="h-8 object-contain" />
           <span className="text-muted-foreground text-xs">|</span>
           <p className="text-sm font-bold text-primary">Central Admin Dashboard</p>
         </div>

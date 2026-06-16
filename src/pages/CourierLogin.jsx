@@ -33,11 +33,8 @@ export default function CourierLogin() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-5">
-            <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shrink-0">
-              <Truck className="w-4 h-4 text-primary-foreground" />
-            </div>
-            <span className="text-sm font-black text-foreground">SEND<span className="text-accent">IT</span>HOME</span>
+          <div className="flex items-center justify-center mb-5">
+            <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/868e3a22b_images.png" alt="SendItHome" className="h-10 object-contain" />
           </div>
           <h1 className="text-xl font-bold text-foreground mt-2">Courier Partner Portal</h1>
           <p className="text-sm text-muted-foreground mt-1">Logistics Partner Access Only</p>
