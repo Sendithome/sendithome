@@ -261,12 +261,7 @@ export default function NewOrder() {
               <div className="flex items-center gap-2 bg-accent/5 border border-accent/20 rounded-xl px-4 py-3">
                 <Package className="w-4 h-4 text-accent shrink-0" />
                 <p className="text-sm text-foreground">
-                  Shipping to <strong>{form.destination_country}</strong>:{' '}
-                  <span className="text-accent font-bold">${shippingPrice} USD</span>
-                  {convertToLocalCurrency(shippingPrice, form.destination_country) && (
-                    <span className="text-muted-foreground text-xs"> (≈ {convertToLocalCurrency(shippingPrice, form.destination_country)})</span>
-                  )}
-                  {' '}per box
+                  Shipping to <strong>{form.destination_country}</strong> · <span className="text-accent font-bold">$50 platform fee</span>
                 </p>
               </div>
             )}
@@ -348,13 +343,8 @@ export default function NewOrder() {
               <SummaryRow label="Recipient" value={form.recipient_name} />
               <SummaryRow label="Address" value={[form.destination_address, form.destination_city, form.destination_postal_code].filter(Boolean).join(', ')} />
               <div className="px-5 py-4 flex justify-between items-center bg-accent/5">
-                <span className="font-bold text-foreground">Shipping Price</span>
-                <div className="text-right">
-                  <span className="text-xl font-bold text-accent">${shippingPrice} USD</span>
-                  {convertToLocalCurrency(shippingPrice, form.destination_country) && (
-                    <p className="text-xs text-muted-foreground">≈ {convertToLocalCurrency(shippingPrice, form.destination_country)}</p>
-                  )}
-                </div>
+                <span className="font-bold text-foreground">Platform Fee</span>
+                <span className="text-xl font-bold text-accent">$50 USD</span>
               </div>
             </div>
 

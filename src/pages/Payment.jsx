@@ -123,36 +123,26 @@ export default function Payment() {
         </div>
 
         <div className="border-t border-border pt-4 space-y-2">
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Shipping ({order.box_size})</span>
-            <div className="text-right">
-              <span>${order?.price || 60}.00 USD</span>
-              {convertToLocalCurrency(order?.price || 60, order?.destination_country) && (
-                <p className="text-xs text-muted-foreground">≈ {convertToLocalCurrency(order?.price || 60, order?.destination_country)}</p>
-              )}
-            </div>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Items</span>
-            <span>{items.length} eligible items</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Insurance</span>
-            <span className="text-green-600">Included</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Tracking</span>
-            <span className="text-green-600">Included</span>
-          </div>
-          <div className="border-t border-border pt-3 flex justify-between items-center">
-            <span className="font-semibold">Total</span>
-            <div className="text-right">
-              <span className="text-2xl font-bold text-accent">${order?.price || 60}.00 USD</span>
-              {convertToLocalCurrency(order?.price || 60, order?.destination_country) && (
-                <p className="text-sm text-muted-foreground">≈ {convertToLocalCurrency(order?.price || 60, order?.destination_country)}</p>
-              )}
-            </div>
-          </div>
+        <div className="flex justify-between text-sm">
+          <span className="text-muted-foreground">Platform Fee</span>
+          <span className="font-semibold">$50.00 USD</span>
+        </div>
+        <div className="flex justify-between text-sm">
+          <span className="text-muted-foreground">Items</span>
+          <span>{items.length} eligible items</span>
+        </div>
+        <div className="flex justify-between text-sm">
+          <span className="text-muted-foreground">Insurance</span>
+          <span className="text-green-600">Included</span>
+        </div>
+        <div className="flex justify-between text-sm">
+          <span className="text-muted-foreground">Tracking</span>
+          <span className="text-green-600">Included</span>
+        </div>
+        <div className="border-t border-border pt-3 flex justify-between items-center">
+          <span className="font-semibold">Total</span>
+          <span className="text-2xl font-bold text-accent">$50.00 USD</span>
+        </div>
         </div>
       </div>
 
@@ -245,10 +235,7 @@ export default function Payment() {
         ) : (
           <>
             <Lock className="w-5 h-5 mr-2" />
-            Pay ${order?.price || 60}.00 USD
-            {convertToLocalCurrency(order?.price || 60, order?.destination_country) && (
-              <span className="text-sm opacity-80 ml-1">(≈ {convertToLocalCurrency(order?.price || 60, order?.destination_country)})</span>
-            )}
+            Pay $50.00 USD
           </>
         )}
       </Button>

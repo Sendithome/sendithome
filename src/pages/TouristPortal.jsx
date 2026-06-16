@@ -448,8 +448,8 @@ export default function TouristPortal() {
                 </div>
                 <div className="px-4 py-3 space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Shipping Fee</span>
-                    <span className="font-semibold">${order.price || 60} {order.currency || 'USD'}</span>
+                    <span className="text-muted-foreground">Platform Fee</span>
+                    <span className="font-semibold">$50 USD</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Payment Status</span>

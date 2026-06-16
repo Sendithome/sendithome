@@ -157,12 +157,12 @@ export default function QRLanding() {
           <h2 className="text-xl font-bold text-foreground">Ship Your Shopping Home</h2>
           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
             Send your purchases directly from <span className="font-semibold text-foreground">{hotel.name}</span> to your home.
-            Just <span className="font-semibold text-accent">$60 per box</span> — delivered in 1–3 working days via international priority.
+            Ship your purchases home for a flat <span className="font-semibold text-accent">$50 platform fee</span> — delivered in 1–3 working days via international priority.
           </p>
 
           <ul className="mt-5 space-y-2.5">
             {[
-              { text: '10 kg or 20 kg — same flat rate', sub: "it's just amazing" },
+              { text: '10 kg or 20 kg — same $50 platform fee', sub: "it's just amazing" },
               { text: '50+ countries covered', sub: null },
               { text: 'Hotel pickup within 24 hours', sub: 'Day Zero' },
               { text: 'Full tracking via WhatsApp', sub: null },
