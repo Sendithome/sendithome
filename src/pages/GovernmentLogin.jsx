@@ -67,7 +67,7 @@ export default function GovernmentLogin() {
         <div className="text-center mb-8">
           {/* Brand Logo */}
           <div className="flex items-center justify-center mb-5">
-            <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/5db7bf76e_images.png" alt="SendItHome" className="h-10 object-contain" />
+            <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/868e3a22b_images.png" alt="SendItHome" className="h-10 object-contain" />
           </div>
           <h1 className="text-2xl font-black text-foreground">Government Oversight Portal</h1>
           <p className="text-muted-foreground text-sm mt-2 leading-relaxed">Tourism Retail Export — Clearing House & Verification Authority</p>

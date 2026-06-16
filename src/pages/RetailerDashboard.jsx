@@ -91,7 +91,7 @@ export default function RetailerDashboard() {
       {/* Header */}
       <header className="sticky top-0 z-20 bg-card border-b border-border px-4 py-3 flex items-center justify-between shadow-sm">
         <div>
-          <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/5db7bf76e_images.png" alt="SendItHome" className="h-7 object-contain" />
+          <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/868e3a22b_images.png" alt="SendItHome" className="h-7 object-contain" />
           <p className="text-sm font-bold text-primary mt-0.5">
             {retailer?.store_name} — Retailer Partner Portal
           </p>
