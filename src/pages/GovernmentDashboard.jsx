@@ -290,6 +290,13 @@ export default function GovernmentDashboard() {
           />
         )}
       </AnimatePresence>
+
+      {/* Confidentiality Footer */}
+      <footer className="border-t border-border bg-card mt-8 py-3 px-4 text-center">
+        <p className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase">
+          © {new Date().getFullYear()} SendItHome · Proprietary and Confidential · Authorised Government Access Only · Unauthorised use is strictly prohibited
+        </p>
+      </footer>
     </div>
   );
 }
