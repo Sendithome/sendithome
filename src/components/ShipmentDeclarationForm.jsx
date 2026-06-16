@@ -268,7 +268,7 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
           {/* HS Code flag note */}
           {items.some(i => i.eligible !== false && i.hs_code_flagged) && (
             <div className="px-3 py-2 bg-amber-50 border-t border-amber-200">
-              <p className="text-[9px] text-amber-700">⚠ Items marked with ⚠ have unverified HS codes and may require manual review by customs.</p>
+              <p className="text-[9px] text-amber-700">⚠ Some items may require additional customs review before your shipment is cleared. If so, our courier partner will call you on the phone number you provided.</p>
             </div>
           )}
         </div>
@@ -288,11 +288,8 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
               <p className="font-bold text-[10px] mt-0.5">Send It Home · FedEx / DHL</p>
             </div>
             <div className="p-2">
-              <p className="text-[9px] text-gray-500 uppercase">Shipping Fee</p>
-              <p className="font-bold text-[10px] mt-0.5">${shippingCost}.00 USD per box</p>
-              {convertToLocalCurrency(shippingCost, order?.destination_country) && (
-                <p className="text-[9px] text-gray-500 mt-0.5">≈ {convertToLocalCurrency(shippingCost, order?.destination_country)}</p>
-              )}
+              <p className="text-[9px] text-gray-500 uppercase">Platform Fee</p>
+              <p className="font-bold text-[10px] mt-0.5">$50.00 USD</p>
             </div>
             <div className="p-2">
               <p className="text-[9px] text-gray-500 uppercase">Est. Transit Time</p>
