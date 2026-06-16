@@ -171,8 +171,13 @@ export default function CourierDashboard() {
       {/* Header */}
       <header className="sticky top-0 z-20 bg-card border-b border-border px-4 py-3 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
-          <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/868e3a22b_images.png" alt="SendItHome" className="h-8 object-contain" />
-          <p className="text-xs font-bold text-muted-foreground">{courierCompany} — Logistics Portal</p>
+          <div className="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center shrink-0">
+            <Truck className="w-4 h-4 text-blue-600" />
+          </div>
+          <div>
+            <p className="text-[10px] font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
+            <p className="text-xs font-bold text-muted-foreground">{courierCompany} — Logistics Portal</p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           {newTasks.length > 0 && (

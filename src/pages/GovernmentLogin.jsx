@@ -66,8 +66,11 @@ export default function GovernmentLogin() {
         {/* Header */}
         <div className="text-center mb-8">
           {/* Brand Logo */}
-          <div className="flex items-center justify-center mb-5">
-            <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/868e3a22b_images.png" alt="SendItHome" className="h-10 object-contain" />
+          <div className="flex items-center justify-center gap-2 mb-5">
+            <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shrink-0">
+              <Shield className="w-4 h-4 text-primary-foreground" />
+            </div>
+            <span className="text-sm font-black text-foreground">SEND<span className="text-accent">IT</span>HOME</span>
           </div>
           <h1 className="text-2xl font-black text-foreground">Government Oversight Portal</h1>
           <p className="text-muted-foreground text-sm mt-2 leading-relaxed">Tourism Retail Export — Clearing House & Verification Authority</p>

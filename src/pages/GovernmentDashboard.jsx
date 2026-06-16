@@ -113,8 +113,11 @@ export default function GovernmentDashboard() {
       <header className="sticky top-0 z-20 bg-card/95 backdrop-blur border-b border-border">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <img src="https://media.base44.com/images/public/69c10418ed4e1fe65d094ced/868e3a22b_images.png" alt="SendItHome" className="h-8 object-contain" />
+            <div className="w-8 h-8 bg-accent/10 rounded-xl flex items-center justify-center shrink-0">
+              <Shield className="w-4 h-4 text-accent" />
+            </div>
             <div className="min-w-0">
+              <p className="text-[10px] font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
               <p className="text-xs font-bold text-muted-foreground truncate">{deptName} — Oversight Portal</p>
             </div>
           </div>
