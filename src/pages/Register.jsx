@@ -242,12 +242,6 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-    // Block if passport fields are filled but verification failed or still pending
-    const passportFilled = form.passport_number?.trim() && form.nationality?.trim() && form.passport_expiry && form.first_name?.trim() && form.last_name?.trim();
-    if (passportFilled && (!passportVerification || !passportVerification.verified)) {
-      setErrors(prev => ({ ...prev, passport_verification: passportVerification === null ? 'Please wait for passport verification to complete.' : 'Passport verification failed. Please check your details.' }));
-      return;
-    }
     setSubmitting(true);
 
     const formatPhone = (v) => { const p = (v || '').split('|'); return p.length === 2 ? `${p[0]}${p[1]}` : v; };
