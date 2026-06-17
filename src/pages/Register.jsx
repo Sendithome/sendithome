@@ -542,12 +542,7 @@ export default function Register() {
                       🚚 Shipping to {form.home_country}: <span className="font-bold">US$50 total</span>
                       <span className="text-muted-foreground font-normal"> (US$30 paid now + US$20 hotel bill)</span>
                     </p>
-                    <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">Choose your box size — same flat rate for both:</p>
-                    <div className="grid grid-cols-2 gap-3">
-                      <BoxCard size="10kg" selected={false} onSelect={() => {}} />
-                      <BoxCard size="20kg" selected={false} onSelect={() => {}} />
-                    </div>
-                    <p className="text-[10px] text-muted-foreground text-center">You can finalise your box size after uploading receipts.</p>
+                    <p className="text-[10px] text-muted-foreground">You can choose your box size after uploading your receipts.</p>
                   </div>
                 )}
               </div>
