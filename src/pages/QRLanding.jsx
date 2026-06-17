@@ -190,7 +190,7 @@ export default function QRLanding() {
           <ul className="mt-4 space-y-2">
             {[
               { text: '50+ countries covered' },
-              { text: 'Hotel pickup within 24 hours' },
+              { text: 'Hotel pickup within 24 hours (M-F)' },
               { text: 'Full tracking via WhatsApp' },
             ].map((item, i) => (
               <li key={i} className="flex items-start gap-2.5 text-sm text-foreground">
