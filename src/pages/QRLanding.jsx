@@ -166,7 +166,7 @@ export default function QRLanding() {
           <div className="mt-4 bg-accent/5 border border-accent/30 rounded-2xl px-4 py-3 flex items-center justify-between">
             <p className="text-sm font-bold text-foreground">Total Cost</p>
             <div className="text-right">
-              <span className="text-lg font-black text-accent">$50</span>
+              <span className="text-lg font-black text-accent">US$50</span>
               <p className="text-[10px] text-muted-foreground">plus optional insurance</p>
             </div>
           </div>
@@ -176,19 +176,19 @@ export default function QRLanding() {
               <div className="flex items-center justify-between mb-1">
                 <div>
                   <p className="text-sm font-bold text-foreground">Transit Protection &amp; Activation</p>
-                  <p className="text-[10px] text-accent font-semibold uppercase tracking-wide">$30 Paid Now</p>
+                  <p className="text-[10px] text-accent font-semibold uppercase tracking-wide">US$30 PAID NOW</p>
                 </div>
-                <span className="text-sm font-black text-accent">$30</span>
+                <span className="text-sm font-black text-accent">US$30</span>
               </div>
-              <p className="text-xs text-muted-foreground">Activates your digital customs clearance and includes complimentary <strong className="text-foreground">$2,000</strong> shipping insurance.</p>
+              <p className="text-xs text-muted-foreground">Activates your digital customs clearance and includes complimentary <strong className="text-foreground">US$2,000</strong> shipping insurance.</p>
             </div>
             <div className="bg-muted/50 border border-border rounded-2xl px-4 py-3">
               <div className="flex items-center justify-between mb-1">
                 <div>
                   <p className="text-sm font-bold text-foreground">Concierge Fulfillment</p>
-                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">$20 Added to Hotel Bill</p>
+                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">US$20 ADDED TO HOTEL BILL</p>
                 </div>
-                <span className="text-sm font-black text-accent">$20</span>
+                <span className="text-sm font-black text-accent">US$20</span>
               </div>
               <p className="text-xs text-muted-foreground">Charged directly by <strong className="text-foreground">{hotel.name}</strong> to your room bill for your premium box, secure tape, and courier handover.</p>
             </div>
@@ -197,7 +197,7 @@ export default function QRLanding() {
                 <p className="text-sm font-bold text-foreground">💼 Extended Coverage</p>
                 <span className="text-xs font-semibold text-muted-foreground">Optional</span>
               </div>
-              <p className="text-xs text-muted-foreground">High-value third-party insurance up to $20,000 available at checkout.</p>
+              <p className="text-xs text-muted-foreground">High-value third-party insurance up to US$20,000 available at checkout.</p>
             </div>
           </div>
 
