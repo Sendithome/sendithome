@@ -160,7 +160,7 @@ export default function QRLanding() {
           </div>
           <h2 className="text-xl font-bold text-foreground">Send Your Purchases Home</h2>
           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-            Deliver your items directly from <span className="font-semibold text-foreground">{hotel.name}</span> straight to your doorstep for a total fee of $50.
+            Deliver your items directly from <span className="font-semibold text-foreground">{hotel.name}</span> straight to your doorstep. Expedited delivery in 1–3 working days (M-F).
           </p>
 
           <div className="mt-4 bg-accent/5 border border-accent/30 rounded-2xl px-4 py-3 flex items-center justify-between">
