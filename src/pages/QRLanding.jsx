@@ -111,7 +111,7 @@ export default function QRLanding() {
           <Button
             variant="outline"
             className="w-full max-w-xs mt-3 rounded-2xl border-white/20 text-white bg-white/10 hover:bg-white/20"
-            onClick={() => base44.auth.redirectToLogin(`/hotel/${hotelId}`)}
+            onClick={() => window.location.href = '/login'}
           >
             I already have an account
           </Button>
@@ -233,7 +233,7 @@ export default function QRLanding() {
           <Button
             variant="outline"
             className="w-full rounded-2xl"
-            onClick={() => base44.auth.redirectToLogin(`/hotel/${hotelId}?start=1`)}
+            onClick={() => window.location.href = '/login'}
           >
             I already have an account
           </Button>

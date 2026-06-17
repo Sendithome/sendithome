@@ -6,6 +6,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import AppLayout from './components/AppLayout';
 import { Navigate } from 'react-router-dom';
+import Login from './pages/Login';
 import QRLanding from './pages/QRLanding';
 import Register from './pages/Register';
 import NewOrder from './pages/NewOrder';
@@ -111,6 +112,7 @@ const AuthenticatedApp = () => {
       <Route path="/courier-dashboard" element={<CourierDashboard />} />
       <Route path="/hotel-inventory" element={<HotelInventory />} />
       <Route path="/declaration-preview" element={<DeclarationPreview />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/shipment/:id" element={<TouristPortal />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
