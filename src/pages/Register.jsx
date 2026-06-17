@@ -478,7 +478,7 @@ export default function Register() {
             <div className="flex items-start gap-2.5 bg-blue-50 border border-blue-100 rounded-xl px-3 py-2.5">
               <span className="text-blue-500 text-base shrink-0">🔒</span>
               <p className="text-[11px] text-blue-700 leading-relaxed">
-                Passport details are required for <strong>international shipping and customs clearance</strong> only. Your information is stored securely on <strong>Amazon Web Services (AWS)</strong> infrastructure and protected in accordance with international data privacy regulations.
+                Passport details are required for <strong>international shipping and customs clearance</strong> only. Your information is stored securely and protected in accordance with international data privacy regulations.
               </p>
             </div>
 
