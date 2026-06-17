@@ -197,7 +197,7 @@ export default function QRLanding() {
                 <p className="text-sm font-bold text-foreground">💼 Extended Coverage</p>
                 <span className="text-xs font-semibold text-muted-foreground">Optional</span>
               </div>
-              <p className="text-xs text-muted-foreground">High-value third-party insurance up to $20,000 available below.</p>
+              <p className="text-xs text-muted-foreground">High-value third-party insurance up to $20,000 available at checkout.</p>
             </div>
           </div>
 
