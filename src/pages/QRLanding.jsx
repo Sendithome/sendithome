@@ -158,7 +158,7 @@ export default function QRLanding() {
           <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center mb-4">
             <Package className="w-6 h-6 text-accent" />
           </div>
-          <h2 className="text-xl font-bold text-foreground">Ship Your Shopping Home</h2>
+          <h2 className="text-xl font-bold text-foreground">Send Your Purchases Home</h2>
           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
             Send your purchases directly from <span className="font-semibold text-foreground">{hotel.name}</span> to your home — delivered in 1–3 working days, Expedited.
           </p>
