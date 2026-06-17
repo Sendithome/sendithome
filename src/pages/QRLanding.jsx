@@ -160,25 +160,44 @@ export default function QRLanding() {
           </div>
           <h2 className="text-xl font-bold text-foreground">Ship Your Shopping Home</h2>
           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-            Send your purchases directly from <span className="font-semibold text-foreground">{hotel.name}</span> to your home.
-            Ship your purchases home for a flat <span className="font-semibold text-accent">$50 platform fee</span> — delivered in 1–3 working days — Expedited.
+            Send your purchases directly from <span className="font-semibold text-foreground">{hotel.name}</span> to your home — delivered in 1–3 working days, Expedited.
           </p>
 
-          <ul className="mt-5 space-y-2.5">
+          <div className="mt-5 space-y-3">
+            <div className="bg-muted/50 border border-border rounded-2xl px-4 py-3">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-sm font-bold text-foreground">Concierge Fulfillment</p>
+                <span className="text-sm font-black text-accent">$20</span>
+              </div>
+              <p className="text-xs text-muted-foreground">Box provisioning, secure tape, and physical courier handover</p>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-2xl px-4 py-3">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-sm font-bold text-foreground">Transit Protection &amp; Activation</p>
+                <span className="text-sm font-black text-accent">$30</span>
+              </div>
+              <p className="text-xs text-muted-foreground">Digital customs clearance &amp; $2,000 shipping insurance</p>
+            </div>
+            <div className="bg-accent/5 border border-accent/20 rounded-2xl px-4 py-3">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-sm font-bold text-foreground">Extended Coverage</p>
+                <span className="text-xs font-semibold text-muted-foreground">Optional</span>
+              </div>
+              <p className="text-xs text-muted-foreground">Third-party insurance up to $20,000 available at checkout</p>
+            </div>
+          </div>
+
+          <ul className="mt-4 space-y-2">
             {[
-              { text: '10 kg or 20 kg — same $50 platform fee', sub: "it's just amazing" },
-              { text: '50+ countries covered', sub: null },
-              { text: 'Hotel pickup within 24 hours', sub: 'Day Zero' },
-              { text: 'Full tracking via WhatsApp', sub: null },
+              { text: '50+ countries covered' },
+              { text: 'Hotel pickup within 24 hours' },
+              { text: 'Full tracking via WhatsApp' },
             ].map((item, i) => (
               <li key={i} className="flex items-start gap-2.5 text-sm text-foreground">
                 <div className="w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center shrink-0 mt-0.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-accent" />
                 </div>
-                <span>
-                  {item.text}
-                  {item.sub && <span className="ml-1 text-accent font-medium italic">— {item.sub}</span>}
-                </span>
+                <span>{item.text}</span>
               </li>
             ))}
           </ul>
