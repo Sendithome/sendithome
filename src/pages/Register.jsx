@@ -254,6 +254,7 @@ export default function Register() {
       // Store data to save after OTP verification
       setPendingEmail(form.email);
       setPendingData({
+        _password: form.password,
         first_name: form.first_name,
         middle_name: form.middle_name,
         last_name: form.last_name,
@@ -287,9 +288,8 @@ export default function Register() {
     setVerifyingOtp(true);
     setOtpError('');
     try {
-      const { access_token } = await base44.auth.verifyOtp({ email: pendingEmail, otpCode });
-      base44.auth.setToken(access_token);
-      // Now save profile data
+      await base44.auth.verifyOtp({ email: pendingEmail, otpCode });
+      await base44.auth.loginViaEmailPassword(pendingEmail, pendingData._password);
       await base44.auth.updateMe(pendingData);
       window.location.href = hotelId ? `/new-order?hotelId=${hotelId}` : '/new-order';
     } catch (err) {
