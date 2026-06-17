@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Camera, Upload, Eye, EyeOff, Loader2, Package, MapPin, Star, CheckCircle2, MessageCircle, ScanLine } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,13 +26,7 @@ export default function Register() {
   const [errors, setErrors] = useState({});
   const [passportVerification, setPassportVerification] = useState(null);
   const [passportPreview, setPassportPreview] = useState(null);
-  // OTP step
-  const [otpStep, setOtpStep] = useState(false);
-  const [otpCode, setOtpCode] = useState('');
-  const [otpError, setOtpError] = useState('');
-  const [verifyingOtp, setVerifyingOtp] = useState(false);
-  const [pendingEmail, setPendingEmail] = useState('');
-  const [pendingData, setPendingData] = useState(null);
+
   const [form, setForm] = useState({
     first_name: '',
     middle_name: '',
@@ -251,10 +246,8 @@ export default function Register() {
 
     try {
       await base44.auth.register({ email: form.email, password: form.password });
-      // Store data to save after OTP verification
-      setPendingEmail(form.email);
-      setPendingData({
-        _password: form.password,
+      await base44.auth.loginViaEmailPassword(form.email, form.password);
+      await base44.auth.updateMe({
         first_name: form.first_name,
         middle_name: form.middle_name,
         last_name: form.last_name,
@@ -274,7 +267,7 @@ export default function Register() {
         hotel_city: hotel?.city || '',
         hotel_country: hotel?.country || '',
       });
-      setOtpStep(true);
+      window.location.href = hotelId ? `/new-order?hotelId=${hotelId}` : '/new-order';
     } catch (err) {
       setErrors({ submit: err.message || 'Registration failed. Please try again.' });
     } finally {
@@ -282,68 +275,6 @@ export default function Register() {
     }
   };
 
-  const handleVerifyOtp = async (e) => {
-    e.preventDefault();
-    if (!otpCode.trim()) { setOtpError('Please enter the OTP code.'); return; }
-    setVerifyingOtp(true);
-    setOtpError('');
-    try {
-      await base44.auth.verifyOtp({ email: pendingEmail, otpCode });
-      await base44.auth.loginViaEmailPassword(pendingEmail, pendingData._password);
-      await base44.auth.updateMe(pendingData);
-      window.location.href = hotelId ? `/new-order?hotelId=${hotelId}` : '/new-order';
-    } catch (err) {
-      setOtpError(err.message || 'Invalid OTP. Please try again.');
-      setVerifyingOtp(false);
-    }
-  };
-
-  const handleResendOtp = async () => {
-    await base44.auth.resendOtp(pendingEmail);
-  };
-
-  // OTP screen
-  if (otpStep) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-5 py-10 bg-background">
-        <div className="w-full max-w-sm">
-          <div className="text-center mb-8">
-            <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center mx-auto mb-4">
-              <Package className="w-7 h-7 text-primary-foreground" />
-            </div>
-            <h1 className="text-2xl font-bold text-foreground">Verify your email</h1>
-            <p className="text-sm text-muted-foreground mt-2">
-              We sent a 6-digit code to <strong className="text-foreground">{pendingEmail}</strong>
-            </p>
-          </div>
-          <form onSubmit={handleVerifyOtp} className="space-y-4">
-            <div>
-              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Enter OTP Code</Label>
-              <Input
-                value={otpCode}
-                onChange={(e) => { setOtpCode(e.target.value); setOtpError(''); }}
-                placeholder="123456"
-                maxLength={6}
-                className={`mt-1.5 h-12 text-center text-xl tracking-widest font-bold ${otpError ? 'border-destructive' : ''}`}
-                autoFocus
-              />
-              {otpError && <p className="text-xs text-destructive mt-1">{otpError}</p>}
-            </div>
-            <Button type="submit" className="w-full h-12 font-bold rounded-2xl" disabled={verifyingOtp}>
-              {verifyingOtp ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <CheckCircle2 className="w-5 h-5 mr-2" />}
-              Verify & Continue
-            </Button>
-            <p className="text-center text-xs text-muted-foreground">
-              Didn't receive it?{' '}
-              <button type="button" onClick={handleResendOtp} className="text-accent font-medium hover:underline">
-                Resend code
-              </button>
-            </p>
-          </form>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex flex-col">
