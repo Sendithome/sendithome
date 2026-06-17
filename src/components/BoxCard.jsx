@@ -47,9 +47,10 @@ export default function BoxCard({ size, selected, onSelect }) {
 
       <div className="mt-4 pt-4 border-t border-border">
         <div className="flex items-baseline gap-1">
-          <span className="text-3xl font-bold text-foreground">$60</span>
-          <span className="text-sm text-muted-foreground">/box</span>
+          <span className="text-3xl font-bold text-foreground">$50</span>
+          <span className="text-sm text-muted-foreground">total</span>
         </div>
+        <p className="text-[10px] text-muted-foreground mt-0.5">$30 paid online · $20 added to hotel bill</p>
         <p className="text-xs text-accent font-medium mt-1">1–3 day air delivery</p>
       </div>
 

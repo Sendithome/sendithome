@@ -536,14 +536,11 @@ export default function Register() {
                   <CountrySelect value={form.home_country} onChange={(v) => update('home_country', v)} />
                 </div>
                 {errors.home_country && <p className="text-xs text-destructive mt-1">{errors.home_country}</p>}
-                {form.home_country && getShippingPrice(form.home_country) && (
+                {form.home_country && (
                   <div className="mt-3 space-y-2">
                     <p className="text-xs text-accent font-semibold">
-                      🚚 Shipping to {form.home_country}:{' '}
-                      <span className="font-bold">${getShippingPrice(form.home_country)} USD per box</span>
-                      {convertToLocalCurrency(getShippingPrice(form.home_country), form.home_country) && (
-                        <span className="text-muted-foreground font-normal"> (≈ {convertToLocalCurrency(getShippingPrice(form.home_country), form.home_country)})</span>
-                      )}
+                      🚚 Shipping to {form.home_country}: <span className="font-bold">$50 USD total</span>
+                      <span className="text-muted-foreground font-normal"> ($30 online + $20 hotel bill)</span>
                     </p>
                     <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">Choose your box size — same flat rate for both:</p>
                     <div className="grid grid-cols-2 gap-3">

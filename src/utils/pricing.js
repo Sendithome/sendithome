@@ -1,16 +1,12 @@
-const GCC_MIDDLE_EAST = [
-  'United Arab Emirates', 'Saudi Arabia', 'Qatar', 'Kuwait',
-  'Bahrain', 'Oman', 'Jordan', 'Lebanon', 'Egypt', 'Turkey',
-  'Iraq', 'Syria', 'Yemen', 'Palestine', 'Israel', 'Iran',
-];
+// Flat $50 total platform fee (split: $30 paid online + $20 charged to hotel bill)
+export const PLATFORM_FEE_TOTAL = 50;
+export const PLATFORM_FEE_ONLINE = 30;
+export const PLATFORM_FEE_HOTEL = 20;
 
-// India is $60, GCC/Middle East is $60, all others are $90
-export function getShippingPrice(country) {
-  if (!country) return null;
-  if (country === 'India') return 60;
-  return GCC_MIDDLE_EAST.includes(country) ? 60 : 90;
+export function getShippingPrice() {
+  return PLATFORM_FEE_TOTAL;
 }
 
-export function getPricingTierLabel(price) {
-  return price === 60 ? 'Middle East, GCC & India' : 'International';
+export function getPricingTierLabel() {
+  return 'All Countries';
 }

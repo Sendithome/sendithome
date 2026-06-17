@@ -146,7 +146,7 @@ export default function NewOrder() {
       whatsapp_number: formatPhone(form.whatsapp_number),
       order_number: orderNum,
       status: 'pending',
-      price: shippingPrice,
+      price: 50,
       currency: 'USD',
       payment_status: 'unpaid',
       sender_email: form.email,
@@ -261,7 +261,7 @@ export default function NewOrder() {
               <div className="flex items-center gap-2 bg-accent/5 border border-accent/20 rounded-xl px-4 py-3">
                 <Package className="w-4 h-4 text-accent shrink-0" />
                 <p className="text-sm text-foreground">
-                  Shipping to <strong>{form.destination_country}</strong> · <span className="text-accent font-bold">$50 platform fee</span>
+                  Shipping to <strong>{form.destination_country}</strong> · <span className="text-accent font-bold">$50 total</span> <span className="text-muted-foreground text-xs">($30 online + $20 hotel bill)</span>
                 </p>
               </div>
             )}
@@ -342,9 +342,19 @@ export default function NewOrder() {
               <SummaryRow label="Ships To" value={form.destination_country} />
               <SummaryRow label="Recipient" value={form.recipient_name} />
               <SummaryRow label="Address" value={[form.destination_address, form.destination_city, form.destination_postal_code].filter(Boolean).join(', ')} />
-              <div className="px-5 py-4 flex justify-between items-center bg-accent/5">
-                <span className="font-bold text-foreground">Platform Fee</span>
-                <span className="text-xl font-bold text-accent">$50 USD</span>
+              <div className="px-5 py-4 bg-accent/5 space-y-1.5">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Transit Protection &amp; Activation</span>
+                  <span className="text-sm font-semibold text-foreground">$30 — paid online</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Concierge Fulfillment</span>
+                  <span className="text-sm font-semibold text-foreground">$20 — hotel bill</span>
+                </div>
+                <div className="flex justify-between items-center pt-1 border-t border-accent/20">
+                  <span className="font-bold text-foreground">Total</span>
+                  <span className="text-xl font-bold text-accent">$50 USD</span>
+                </div>
               </div>
             </div>
 
