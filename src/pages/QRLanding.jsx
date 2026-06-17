@@ -163,27 +163,41 @@ export default function QRLanding() {
             Deliver your items directly from <span className="font-semibold text-foreground">{hotel.name}</span> straight to your doorstep for a total fee of $50.
           </p>
 
-          <div className="mt-5 space-y-3">
+          <div className="mt-4 bg-accent/5 border border-accent/30 rounded-2xl px-4 py-3 flex items-center justify-between">
+            <p className="text-sm font-bold text-foreground">Total Cost</p>
+            <div className="text-right">
+              <span className="text-lg font-black text-accent">$50</span>
+              <p className="text-[10px] text-muted-foreground">plus optional insurance</p>
+            </div>
+          </div>
+
+          <div className="mt-3 space-y-3">
             <div className="bg-muted/50 border border-border rounded-2xl px-4 py-3">
               <div className="flex items-center justify-between mb-1">
-                <p className="text-sm font-bold text-foreground">Concierge Fulfillment</p>
-                <span className="text-sm font-black text-accent">$20</span>
+                <div>
+                  <p className="text-sm font-bold text-foreground">Transit Protection &amp; Activation</p>
+                  <p className="text-[10px] text-accent font-semibold uppercase tracking-wide">$30 Paid Now</p>
+                </div>
+                <span className="text-sm font-black text-accent">$30</span>
               </div>
-              <p className="text-xs text-muted-foreground">Box provisioning, secure tape, and physical courier handover</p>
+              <p className="text-xs text-muted-foreground">Activates your digital customs clearance and includes complimentary <strong className="text-foreground">$2,000</strong> shipping insurance.</p>
             </div>
             <div className="bg-muted/50 border border-border rounded-2xl px-4 py-3">
               <div className="flex items-center justify-between mb-1">
-                <p className="text-sm font-bold text-foreground">Transit Protection &amp; Activation</p>
-                <span className="text-sm font-black text-accent">$30</span>
+                <div>
+                  <p className="text-sm font-bold text-foreground">Concierge Fulfillment</p>
+                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">$20 Added to Hotel Bill</p>
+                </div>
+                <span className="text-sm font-black text-accent">$20</span>
               </div>
-              <p className="text-xs text-muted-foreground">Digital customs clearance &amp; $2,000 shipping insurance</p>
+              <p className="text-xs text-muted-foreground">Charged directly by <strong className="text-foreground">{hotel.name}</strong> to your room bill for your premium box, secure tape, and courier handover.</p>
             </div>
             <div className="bg-accent/5 border border-accent/20 rounded-2xl px-4 py-3">
               <div className="flex items-center justify-between mb-1">
-                <p className="text-sm font-bold text-foreground">Extended Coverage</p>
+                <p className="text-sm font-bold text-foreground">💼 Extended Coverage</p>
                 <span className="text-xs font-semibold text-muted-foreground">Optional</span>
               </div>
-              <p className="text-xs text-muted-foreground">Third-party insurance up to $20,000 available at checkout</p>
+              <p className="text-xs text-muted-foreground">High-value third-party insurance up to $20,000 available below.</p>
             </div>
           </div>
 
