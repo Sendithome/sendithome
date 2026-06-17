@@ -160,13 +160,30 @@ export default function QRLanding() {
           </div>
           <h2 className="text-xl font-bold text-foreground">Ship Your Shopping Home</h2>
           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-            Send your purchases directly from <span className="font-semibold text-foreground">{hotel.name}</span> to your home.
-            Ship your purchases home for a flat <span className="font-semibold text-accent">$50 platform fee</span> — delivered in 1–3 working days — Expedited.
+            Send your purchases directly from <span className="font-semibold text-foreground">{hotel.name}</span> to your home. Delivered in 1–3 working days — Expedited.
           </p>
 
-          <ul className="mt-5 space-y-2.5">
+          {/* Pricing breakdown */}
+          <div className="mt-5 space-y-2">
+            <div className="flex items-start gap-3 bg-muted/50 border border-border rounded-xl px-4 py-3">
+              <span className="text-accent font-black text-sm shrink-0 mt-0.5">$20</span>
+              <div>
+                <p className="text-sm font-semibold text-foreground">Concierge Fulfilment</p>
+                <p className="text-xs text-muted-foreground">Box provisioning, secure tape, and physical courier handover</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-muted/50 border border-border rounded-xl px-4 py-3">
+              <span className="text-accent font-black text-sm shrink-0 mt-0.5">$30</span>
+              <div>
+                <p className="text-sm font-semibold text-foreground">Transit Protection & Activation</p>
+                <p className="text-xs text-muted-foreground">Digital customs clearance & $1,500 shipping insurance</p>
+              </div>
+            </div>
+          </div>
+
+          <ul className="mt-4 space-y-2.5">
             {[
-              { text: '10 kg or 20 kg — same $50 platform fee', sub: "it's just amazing" },
+              { text: '10 kg or 20 kg box — your choice', sub: null },
               { text: '50+ countries covered', sub: null },
               { text: 'Hotel pickup within 24 hours', sub: 'Day Zero' },
               { text: 'Full tracking via WhatsApp', sub: null },
