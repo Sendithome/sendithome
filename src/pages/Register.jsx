@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Camera, Upload, Eye, EyeOff, Loader2, Package, MapPin, Star, CheckCircle2, MessageCircle, ScanLine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,12 +8,8 @@ import { base44 } from '@/api/base44Client';
 import PhoneInput from '../components/PhoneInput';
 import PassportVerification from '../components/PassportVerification';
 import CountrySelect from '../components/CountrySelect';
-import { getShippingPrice } from '../utils/pricing';
-import { convertToLocalCurrency } from '../utils/currencyConversion';
-import BoxCard from '../components/BoxCard';
 
 export default function Register() {
-  const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
   const hotelId = urlParams.get('hotelId');
 
@@ -28,8 +23,15 @@ export default function Register() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
-  const [passportVerification, setPassportVerification] = useState(null); // null=pending, object=result
+  const [passportVerification, setPassportVerification] = useState(null);
   const [passportPreview, setPassportPreview] = useState(null);
+  // OTP step
+  const [otpStep, setOtpStep] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [otpError, setOtpError] = useState('');
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState('');
+  const [pendingData, setPendingData] = useState(null);
   const [form, setForm] = useState({
     first_name: '',
     middle_name: '',
@@ -239,43 +241,109 @@ export default function Register() {
     setScanningPassport(false);
   };
 
+  const formatPhone = (v) => { const p = (v || '').split('|'); return p.length === 2 ? `${p[0]}${p[1]}` : v; };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
+    setErrors({});
 
-    const formatPhone = (v) => { const p = (v || '').split('|'); return p.length === 2 ? `${p[0]}${p[1]}` : v; };
-
-    await base44.auth.updateMe({
-      first_name: form.first_name,
-      middle_name: form.middle_name,
-      last_name: form.last_name,
-      nationality: form.nationality,
-      passport_number: form.passport_number,
-      passport_expiry: form.passport_expiry,
-      email: form.email,
-      phone_number: formatPhone(form.phone_number),
-      whatsapp_number: formatPhone(form.whatsapp_number),
-      home_address: form.home_address,
-      home_address2: form.home_address2,
-      home_city: form.home_city,
-      home_postal_code: form.home_postal_code,
-      home_country: form.home_country,
-      hotel_id: hotelId || '',
-      hotel_name: hotel?.name || '',
-      hotel_city: hotel?.city || '',
-      hotel_country: hotel?.country || '',
-    });
-
-    if (hotelId) {
-      navigate(`/new-order?hotelId=${hotelId}`);
-    } else {
-      navigate('/new-order');
+    try {
+      await base44.auth.register({ email: form.email, password: form.password });
+      // Store data to save after OTP verification
+      setPendingEmail(form.email);
+      setPendingData({
+        first_name: form.first_name,
+        middle_name: form.middle_name,
+        last_name: form.last_name,
+        nationality: form.nationality,
+        passport_number: form.passport_number,
+        passport_expiry: form.passport_expiry,
+        email: form.email,
+        phone_number: formatPhone(form.phone_number),
+        whatsapp_number: formatPhone(form.whatsapp_number),
+        home_address: form.home_address,
+        home_address2: form.home_address2,
+        home_city: form.home_city,
+        home_postal_code: form.home_postal_code,
+        home_country: form.home_country,
+        hotel_id: hotelId || '',
+        hotel_name: hotel?.name || '',
+        hotel_city: hotel?.city || '',
+        hotel_country: hotel?.country || '',
+      });
+      setOtpStep(true);
+    } catch (err) {
+      setErrors({ submit: err.message || 'Registration failed. Please try again.' });
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
-  const isFormValid = true; // validation handled in validate()
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    if (!otpCode.trim()) { setOtpError('Please enter the OTP code.'); return; }
+    setVerifyingOtp(true);
+    setOtpError('');
+    try {
+      const { access_token } = await base44.auth.verifyOtp({ email: pendingEmail, otpCode });
+      base44.auth.setToken(access_token);
+      // Now save profile data
+      await base44.auth.updateMe(pendingData);
+      window.location.href = hotelId ? `/new-order?hotelId=${hotelId}` : '/new-order';
+    } catch (err) {
+      setOtpError(err.message || 'Invalid OTP. Please try again.');
+      setVerifyingOtp(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    await base44.auth.resendOtp(pendingEmail);
+  };
+
+  // OTP screen
+  if (otpStep) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center px-5 py-10 bg-background">
+        <div className="w-full max-w-sm">
+          <div className="text-center mb-8">
+            <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center mx-auto mb-4">
+              <Package className="w-7 h-7 text-primary-foreground" />
+            </div>
+            <h1 className="text-2xl font-bold text-foreground">Verify your email</h1>
+            <p className="text-sm text-muted-foreground mt-2">
+              We sent a 6-digit code to <strong className="text-foreground">{pendingEmail}</strong>
+            </p>
+          </div>
+          <form onSubmit={handleVerifyOtp} className="space-y-4">
+            <div>
+              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Enter OTP Code</Label>
+              <Input
+                value={otpCode}
+                onChange={(e) => { setOtpCode(e.target.value); setOtpError(''); }}
+                placeholder="123456"
+                maxLength={6}
+                className={`mt-1.5 h-12 text-center text-xl tracking-widest font-bold ${otpError ? 'border-destructive' : ''}`}
+                autoFocus
+              />
+              {otpError && <p className="text-xs text-destructive mt-1">{otpError}</p>}
+            </div>
+            <Button type="submit" className="w-full h-12 font-bold rounded-2xl" disabled={verifyingOtp}>
+              {verifyingOtp ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <CheckCircle2 className="w-5 h-5 mr-2" />}
+              Verify & Continue
+            </Button>
+            <p className="text-center text-xs text-muted-foreground">
+              Didn't receive it?{' '}
+              <button type="button" onClick={handleResendOtp} className="text-accent font-medium hover:underline">
+                Resend code
+              </button>
+            </p>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -599,10 +667,14 @@ export default function Register() {
             </div>
           </div>
 
+          {errors.submit && (
+            <p className="text-sm text-destructive text-center bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3">{errors.submit}</p>
+          )}
+
           <Button
             type="submit"
             className="w-full h-13 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-2xl text-base py-4"
-            disabled={submitting || !isFormValid}
+            disabled={submitting}
           >
             {submitting ? (
               <Loader2 className="w-5 h-5 animate-spin mr-2" />
