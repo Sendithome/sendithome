@@ -51,7 +51,7 @@ export default function BoxCard({ size, selected, onSelect }) {
           <span className="text-sm text-muted-foreground">total</span>
         </div>
         <p className="text-[10px] text-muted-foreground mt-0.5">$30 paid online · $20 added to hotel bill</p>
-        <p className="text-xs text-accent font-medium mt-1">1–3 day air delivery</p>
+        <p className="text-xs text-accent font-medium mt-1">Expedited delivery in 1–3 working days (M-F)</p>
       </div>
 
       <ul className="mt-3 space-y-1.5">
