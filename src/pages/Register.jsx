@@ -277,91 +277,89 @@ export default function Register() {
 
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Left: Form */}
+    <div className="min-h-screen flex flex-col bg-[#FDFAF5]">
+      {/* ── WELCOME HERO CARD ── */}
+      <motion.div
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full"
+        style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}
+      >
+        <div className="max-w-2xl mx-auto px-6 py-10 text-center">
+          {/* Logo */}
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #E5A93B, #D4AF37)' }}>
+              <Package className="w-5 h-5 text-white" />
+            </div>
+            <p className="text-lg font-black tracking-widest text-white">
+              SEND<span style={{ color: '#E5A93B' }}>IT</span>HOME
+            </p>
+          </div>
+
+          {/* Welcome headline */}
+          <h1 className="font-bold text-white mb-4" style={{ fontSize: 'clamp(22px, 5vw, 34px)', lineHeight: 1.2 }}>
+            Welcome to Send It Home!
+          </h1>
+
+          {/* Hotel contextual greeting */}
+          {hotel ? (
+            <div className="mb-4">
+              <p className="text-white/70 mb-1" style={{ fontSize: 'clamp(14px, 3.5vw, 18px)' }}>
+                We see you're enjoying your stay at
+              </p>
+              <p className="font-bold tracking-wide mb-1" style={{ color: '#E5A93B', fontSize: 'clamp(17px, 4.5vw, 26px)' }}>
+                {hotel.name.toUpperCase()}
+              </p>
+              {hotel.city && (
+                <p className="text-white/60 text-sm mb-2">{hotel.city}{hotel.country ? `, ${hotel.country}` : ''}</p>
+              )}
+              <p className="text-white/70" style={{ fontSize: 'clamp(13px, 3vw, 17px)' }}>
+                We trust you've had an incredible holiday in {hotel.city || 'Dubai'}!
+              </p>
+            </div>
+          ) : (
+            <p className="text-white/70 mb-4" style={{ fontSize: 'clamp(14px, 3.5vw, 18px)' }}>
+              The smart way to send your holiday purchases back home.
+            </p>
+          )}
+
+          {/* Stars if available */}
+          {hotel?.star_rating && (
+            <div className="flex items-center justify-center gap-1 mb-5">
+              {Array.from({ length: hotel.star_rating }).map((_, i) => (
+                <Star key={i} className="w-4 h-4 fill-current" style={{ color: '#E5A93B' }} />
+              ))}
+            </div>
+          )}
+
+          {/* Divider */}
+          <div className="w-16 h-px mx-auto mb-5" style={{ background: 'linear-gradient(to right, transparent, #E5A93B, transparent)' }} />
+
+          {/* Subtext */}
+          <p className="text-white/80 leading-relaxed mb-2" style={{ fontSize: 'clamp(13px, 3vw, 16px)' }}>
+            Create your account below to get started in just a few clicks.
+          </p>
+          <p className="text-white/60 leading-relaxed mb-5" style={{ fontSize: 'clamp(12px, 2.5vw, 14px)' }}>
+            Our unique international courier service makes sending packages back home safe, simple, reliable and with total peace of mind.
+          </p>
+
+          {/* Tagline */}
+          <p className="font-semibold tracking-wide" style={{ color: '#E5A93B', fontSize: 'clamp(13px, 3vw, 15px)' }}>
+            ✈️ Travel light. We've got the rest covered.
+          </p>
+        </div>
+
+        {/* Bottom shadow divider */}
+        <div className="h-1 w-full" style={{ background: 'linear-gradient(to right, #D4AF37, #E5A93B, #D4AF37)' }} />
+      </motion.div>
+
+      {/* ── FORM SECTION ── */}
       <div className="flex-1 px-5 py-8 max-w-2xl mx-auto w-full">
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
-            <Package className="w-4 h-4 text-primary-foreground" />
-          </div>
-          <div>
-            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">Send It Home</p>
-            <p className="text-[9px] text-muted-foreground">Convenience Delivered Seamlessly</p>
-          </div>
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-[#1a1a2e] mb-1">Create Your Account</h2>
+          <p className="text-sm text-muted-foreground">Fill in your details below — it only takes a few minutes.</p>
         </div>
-
-        {/* Hotel badge */}
-        {hotel && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-accent/5 border border-accent/20 rounded-2xl p-4 mt-4 mb-6"
-          >
-            <div className="flex items-center gap-3 mb-3">
-              {hotel.logo_url ? (
-                <img src={hotel.logo_url} alt={hotel.name} className="w-10 h-10 rounded-xl object-cover border border-border shrink-0" />
-              ) : (
-                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
-                  <MapPin className="w-4 h-4 text-accent" />
-                </div>
-              )}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <p className="text-sm font-bold text-foreground">{hotel.name}</p>
-                  <div className="flex items-center gap-0.5">
-                    {Array.from({ length: hotel.star_rating || 5 }).map((_, i) => (
-                      <Star key={i} className="w-3 h-3 text-accent fill-accent" />
-                    ))}
-                  </div>
-                </div>
-                <p className="text-[10px] text-accent font-semibold uppercase tracking-wide mt-0.5">Your current hotel</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs border-t border-accent/20 pt-3">
-              {hotel.address && (
-                <div className="col-span-2">
-                  <span className="text-muted-foreground">Address</span>
-                  <p className="font-medium text-foreground">{hotel.address}{hotel.area ? `, ${hotel.area}` : ''}</p>
-                </div>
-              )}
-              {hotel.floor_tower_complex && (
-                <div className="col-span-2">
-                  <span className="text-muted-foreground">Building</span>
-                  <p className="font-medium text-foreground">{hotel.floor_tower_complex}</p>
-                </div>
-              )}
-              <div>
-                <span className="text-muted-foreground">City</span>
-                <p className="font-medium text-foreground">{hotel.city}{hotel.state ? `, ${hotel.state}` : ''}</p>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Country</span>
-                <p className="font-medium text-foreground">{hotel.country}</p>
-              </div>
-              {hotel.postal_code && (
-                <div>
-                  <span className="text-muted-foreground">Postal Code</span>
-                  <p className="font-medium text-foreground">{hotel.postal_code}</p>
-                </div>
-              )}
-              {hotel.official_phone && (
-                <div>
-                  <span className="text-muted-foreground">Hotel Phone</span>
-                  <p className="font-medium text-foreground">{hotel.official_phone}</p>
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
-
-        <div className="mb-2">
-          <span className="text-xs font-semibold bg-muted text-muted-foreground px-3 py-1 rounded-full">WELCOME</span>
-        </div>
-        <h1 className="text-2xl font-bold text-foreground mt-2 mb-1">Create Account</h1>
-        <p className="text-sm text-muted-foreground mb-6">
-          Fill out your details so you can <strong className="text-foreground">SENDITHOME</strong>, with our unique international courier service.
-        </p>
 
         {/* Hidden file inputs — outside form flow for reliable mobile camera access */}
         <input ref={cameraInputRef} type="file" accept="image/*" capture className="hidden" onChange={handlePassportScan} />
@@ -631,7 +629,6 @@ export default function Register() {
           Powered by SendITHome AI · Proprietary Intelligent Logistics Platform
         </p>
       </div>
-
     </div>
   );
 }
