@@ -758,7 +758,7 @@ export default function HotelDashboard() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="sm:col-span-2">
                     <Label className="text-xs text-muted-foreground">Hotel Name *</Label>
-                    <Input value={form.name} onChange={e => update('name', e.target.value)} placeholder="Grand Hyatt Dubai" className="mt-1 h-10 text-sm" />
+                    <Input value={form.name} onChange={e => update('name', e.target.value)} placeholder="Atlantis The Palm, Dubai" className="mt-1 h-10 text-sm" />
                   </div>
                   <div className="sm:col-span-2">
                     <Label className="text-xs text-muted-foreground">Street Address *</Label>

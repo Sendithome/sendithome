@@ -293,7 +293,7 @@ export default function Register() {
               <Package className="w-5 h-5 text-white" />
             </div>
             <p className="text-lg font-black tracking-widest text-white">
-              SEND<span style={{ color: '#E5A93B' }}>IT</span>HOME
+              SEND<span className="text-accent">IT</span>HOME
             </p>
           </div>
 

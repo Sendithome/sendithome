@@ -92,7 +92,7 @@ export default function HotelPartnerLanding() {
               <Package className="w-4 h-4" style={{ color: NAVY }} />
             </div>
             <span className="font-black text-sm tracking-widest" style={{ color: GOLD }}>
-              SEND<span style={{ color: '#fff' }}>IT</span>HOME
+              SEND<span className="text-accent">IT</span>HOME
             </span>
           </div>
           <div className="flex items-center gap-3">
@@ -358,7 +358,7 @@ export default function HotelPartnerLanding() {
             {[
               { label: 'Government Property License Number', hint: 'Validates against the Dubai tourism database' },
               { label: 'Corporate Hospitality Group', hint: 'Marriott, Hilton, Rotana, Independent, etc.' },
-              { label: 'Property Name', hint: 'e.g. Armani Hotel Dubai' },
+              { label: 'Property Name', hint: 'e.g. Atlantis The Palm, Dubai' },
               { label: 'Authorised Contact Person', hint: 'Typically the General Manager or Front Office Director' },
               { label: 'Secure Corporate Email', hint: 'Official property domain required' },
             ].map((f, i) => (

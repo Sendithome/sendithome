@@ -16,8 +16,8 @@ const GOLD_LIGHT = '#E8C96A';
 
 // ── DEMO DATA ──────────────────────────────────────────────────────────────
 const HOTEL = {
-  name: 'Grand Hyatt Dubai',
-  location: 'Baniyas Road, Deira, Dubai',
+  name: 'Atlantis The Palm, Dubai',
+  location: 'Crescent Road, The Palm, Dubai',
   stars: 5,
   rooms: 710,
   logo: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=80&h=80&fit=crop&crop=center',

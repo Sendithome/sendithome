@@ -6,7 +6,7 @@ import { Loader2, Globe } from 'lucide-react';
 const SAMPLE_ORDER = {
   order_number: 'SIH-2026-00847',
   recipient_name: 'Alexandra Müller',
-  hotel_name: 'Grand Hyatt Dubai',
+  hotel_name: 'Atlantis The Palm, Dubai',
   hotel_room: '1204',
   hotel_city: 'Dubai',
   hotel_country: 'United Arab Emirates',

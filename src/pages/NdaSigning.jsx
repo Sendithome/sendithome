@@ -259,7 +259,7 @@ export default function NdaSigning() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <Label className="text-xs text-muted-foreground">Hotel Name *</Label>
-              <Input value={form.hotel_name} onChange={e => setForm(p => ({ ...p, hotel_name: e.target.value }))} placeholder="Grand Hyatt Dubai" className="mt-1 h-10 text-sm" />
+              <Input value={form.hotel_name} onChange={e => setForm(p => ({ ...p, hotel_name: e.target.value }))} placeholder="Atlantis The Palm, Dubai" className="mt-1 h-10 text-sm" />
             </div>
             <div>
               <Label className="text-xs text-muted-foreground">Official Email *</Label>

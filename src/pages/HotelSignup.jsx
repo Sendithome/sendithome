@@ -277,7 +277,7 @@ export default function HotelSignup() {
                       <Input
                         value={hotelName}
                         onChange={e => { setHotelName(e.target.value); setErrors(p => ({ ...p, hotelName: '' })); }}
-                        placeholder="Grand Hyatt Dubai"
+                        placeholder="Atlantis The Palm, Dubai"
                         className={`mt-1.5 h-11 ${errors.hotelName ? 'border-destructive' : ''}`}
                       />
                       {errors.hotelName && <p className="text-xs text-destructive mt-1">{errors.hotelName}</p>}

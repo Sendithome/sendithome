@@ -59,7 +59,7 @@ export const PILOT_COUNTRIES = [
       govtCommissionEstimate: 1_450_000,
     },
     keyPartners: [
-      'Burj Al Arab Jumeirah', 'Atlantis The Palm', 'Four Seasons Dubai',
+      'Atlantis The Palm, Dubai', 'Burj Al Arab Jumeirah', 'Four Seasons Dubai',
       'Jumeirah Beach Hotel', 'Palazzo Versace Dubai', 'Address Downtown',
     ],
   },

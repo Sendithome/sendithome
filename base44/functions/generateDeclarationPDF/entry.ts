@@ -71,6 +71,11 @@ Deno.serve(async (req) => {
     // ── HEADER BANNER ──
     doc.setFillColor(20, 20, 20);
     doc.rect(margin, y, contentW, 12, 'F');
+    // Brand wordmark (SEND + pink IT + HOME)
+    doc.setFontSize(9); doc.setFont('helvetica', 'bold');
+    doc.setTextColor(255, 255, 255); doc.text('SEND', margin + 3, y + 5);
+    doc.setTextColor(255, 0, 102); doc.text('IT', margin + 3 + doc.getTextWidth('SEND'), y + 5);
+    doc.setTextColor(255, 255, 255); doc.text('HOME', margin + 3 + doc.getTextWidth('SEND') + doc.getTextWidth('IT'), y + 5);
     doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.setTextColor(255, 255, 255);
     doc.text('INTERNATIONAL SHIPMENT DECLARATION', margin + contentW / 2, y + 5, { align: 'center' });
     doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.setTextColor(200, 200, 200);
