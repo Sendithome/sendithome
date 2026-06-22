@@ -287,18 +287,8 @@ export default function Register() {
         style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}
       >
         <div className="max-w-2xl mx-auto px-6 py-10 text-center">
-          {/* Logo */}
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center">
-              <Package className="w-5 h-5 text-accent-foreground" />
-            </div>
-            <p className="text-lg font-black tracking-widest text-white">
-              SEND<span className="text-accent">IT</span>HOME
-            </p>
-          </div>
-
           {/* Welcome headline */}
-          <h1 className="font-bold text-white mb-4" style={{ fontSize: 'clamp(22px, 5vw, 34px)', lineHeight: 1.2 }}>
+          <h1 className="font-bold text-accent mb-4" style={{ fontSize: 'clamp(22px, 5vw, 34px)', lineHeight: 1.2 }}>
             Welcome to Send It Home!
           </h1>
 
