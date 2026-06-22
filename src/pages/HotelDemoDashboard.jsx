@@ -19,7 +19,7 @@ const HOTEL = {
   name: 'Atlantis The Palm, Dubai',
   location: 'Crescent Road, The Palm, Dubai',
   stars: 5,
-  rooms: 710,
+  rooms: 1544,
   logo: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=80&h=80&fit=crop&crop=center',
   cover: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&h=300&fit=crop',
 };
@@ -57,8 +57,8 @@ const RECENT_SHIPMENTS = [
 ];
 
 const INVENTORY = [
-  { type: '10 kg', allocated: 50, current: 34, reorder: 45, status: 'ok' },
-  { type: '20 kg', allocated: 50, current: 41, reorder: 45, status: 'ok' },
+  { type: '10 kg', allocated: 60, current: 38, reorder: 50, status: 'ok' },
+  { type: '20 kg', allocated: 60, current: 47, reorder: 50, status: 'ok' },
 ];
 
 const REPLENISHMENTS = [
@@ -105,7 +105,7 @@ export default function HotelDemoDashboard() {
   const [tab, setTab] = useState('overview');
   const [qrVisible, setQrVisible] = useState(false);
 
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent('https://sendit.home/guest-onboarding/burj-al-arab-demo')}&margin=12&format=png`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent('https://sendit.home/guest-onboarding/atlantis-the-palm-demo')}&margin=12&format=png`;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -151,7 +151,7 @@ export default function HotelDemoDashboard() {
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
               ))}
-              <span className="text-[10px] text-amber-300 font-bold">★ 7-star hotel</span>
+              <span className="text-[10px] text-amber-300 font-bold">★ 5-star luxury resort</span>
             </div>
             <h1 className="text-white font-black text-lg leading-tight">{HOTEL.name}</h1>
             <p className="text-white/70 text-xs flex items-center gap-1 mt-0.5">
@@ -160,7 +160,7 @@ export default function HotelDemoDashboard() {
           </div>
           <div className="ml-auto hidden sm:flex items-center gap-1.5 bg-green-500/20 border border-green-400/40 rounded-full px-3 py-1.5">
             <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
-            <span className="text-[11px] font-bold text-green-300">Fully Onboarded · 710 Keys</span>
+            <span className="text-[11px] font-bold text-green-300">Fully Onboarded · 1,544 Keys</span>
           </div>
         </div>
       </div>
@@ -305,7 +305,7 @@ export default function HotelDemoDashboard() {
                         </div>
                       ))}
                       <div className="bg-muted/40 rounded-xl px-3 py-2">
-                        <p className="text-[10px] text-muted-foreground">Tier 4 · 500–799 Keys · 50 boxes allocated</p>
+                        <p className="text-[10px] text-muted-foreground">Tier 5 · 800+ Keys · 60 boxes allocated</p>
                       </div>
                     </div>
                   </div>
