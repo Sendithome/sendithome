@@ -88,8 +88,8 @@ export default function HotelPartnerLanding() {
       <header className="sticky top-0 z-50 border-b" style={{ background: 'rgba(10,14,26,0.97)', borderColor: GOLD_BORDER, backdropFilter: 'blur(12px)' }}>
         <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})` }}>
-              <Package className="w-4 h-4" style={{ color: NAVY }} />
+            <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
+              <Package className="w-4 h-4 text-accent-foreground" />
             </div>
             <span className="font-black text-sm tracking-widest" style={{ color: GOLD }}>
               SEND<span className="text-accent">IT</span>HOME

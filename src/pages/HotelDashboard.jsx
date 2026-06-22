@@ -383,8 +383,8 @@ export default function HotelDashboard() {
       {/* Header */}
       <header className="sticky top-0 z-20 bg-card border-b border-border px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center">
-            <Building2 className="w-4 h-4 text-primary-foreground" />
+          <div className="w-8 h-8 rounded-xl bg-accent flex items-center justify-center">
+            <Package className="w-4 h-4 text-accent-foreground" />
           </div>
           <span className="text-xs font-black text-foreground">SEND<span className="text-accent">IT</span>HOME</span>
         </div>

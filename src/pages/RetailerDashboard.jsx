@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Clock, CheckCircle2, DollarSign, Settings, LogOut, AlertTriangle, RefreshCw, Loader2
+  Clock, CheckCircle2, DollarSign, Settings, LogOut, AlertTriangle, RefreshCw, Loader2, Package
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useNavigate, Link } from 'react-router-dom';
@@ -90,11 +90,16 @@ export default function RetailerDashboard() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-20 bg-card border-b border-border px-4 py-3 flex items-center justify-between shadow-sm">
-        <div>
-          <p className="text-[10px] font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
-          <p className="text-sm font-bold text-primary mt-0.5">
-            {retailer?.store_name} — Retailer Partner Portal
-          </p>
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-accent flex items-center justify-center shrink-0">
+            <Package className="w-4 h-4 text-accent-foreground" />
+          </div>
+          <div>
+            <p className="text-[10px] font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
+            <p className="text-sm font-bold text-primary mt-0.5">
+              {retailer?.store_name} — Retailer Partner Portal
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => loadData()} className="p-2 text-muted-foreground hover:text-foreground transition-colors">

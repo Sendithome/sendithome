@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { LogIn, Eye, EyeOff, Loader2, ShieldCheck } from 'lucide-react';
+import { LogIn, Eye, EyeOff, Loader2, ShieldCheck, Package } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -42,8 +42,8 @@ export default function RetailerPortal() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-5">
-            <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-4 h-4 text-primary-foreground" />
+            <div className="w-8 h-8 rounded-xl bg-accent flex items-center justify-center shrink-0">
+              <Package className="w-4 h-4 text-accent-foreground" />
             </div>
             <span className="text-sm font-black text-foreground">SEND<span className="text-accent">IT</span>HOME</span>
           </div>

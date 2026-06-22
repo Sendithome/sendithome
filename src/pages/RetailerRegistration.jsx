@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Building2, Upload, CheckCircle2, Loader2, ChevronRight } from 'lucide-react';
+import { Building2, Upload, CheckCircle2, Loader2, ChevronRight, Package } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 
@@ -57,7 +57,12 @@ export default function RetailerRegistration() {
       <div className="max-w-lg mx-auto">
         {/* Logo */}
         <div className="text-center mb-8">
-          <p className="text-xs font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <div className="w-8 h-8 rounded-xl bg-accent flex items-center justify-center shrink-0">
+              <Package className="w-4 h-4 text-accent-foreground" />
+            </div>
+            <p className="text-xs font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
+          </div>
           <h1 className="text-2xl font-bold text-primary mt-4">Retailer Partner Registration</h1>
           <p className="text-muted-foreground text-sm mt-1">Join the Send It Home certified retail network</p>
         </div>

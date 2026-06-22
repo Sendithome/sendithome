@@ -36,7 +36,9 @@ export default function Login() {
         {/* Logo */}
         <div className="text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <Package className="w-7 h-7 text-accent" />
+            <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center">
+              <Package className="w-5 h-5 text-accent-foreground" />
+            </div>
             <span className="text-xl font-black tracking-widest uppercase">
               SEND<span className="text-accent">IT</span>HOME
             </span>

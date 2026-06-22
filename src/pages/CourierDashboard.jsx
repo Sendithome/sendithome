@@ -171,8 +171,8 @@ export default function CourierDashboard() {
       {/* Header */}
       <header className="sticky top-0 z-20 bg-card border-b border-border px-4 py-3 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center shrink-0">
-            <Truck className="w-4 h-4 text-blue-600" />
+          <div className="w-8 h-8 bg-accent rounded-xl flex items-center justify-center shrink-0">
+            <Package className="w-4 h-4 text-accent-foreground" />
           </div>
           <div>
             <p className="text-[10px] font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>

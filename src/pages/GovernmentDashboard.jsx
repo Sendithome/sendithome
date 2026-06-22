@@ -113,8 +113,8 @@ export default function GovernmentDashboard() {
       <header className="sticky top-0 z-20 bg-card/95 backdrop-blur border-b border-border">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-8 h-8 bg-accent/10 rounded-xl flex items-center justify-center shrink-0">
-              <Shield className="w-4 h-4 text-accent" />
+            <div className="w-8 h-8 bg-accent rounded-xl flex items-center justify-center shrink-0">
+              <Package className="w-4 h-4 text-accent-foreground" />
             </div>
             <div className="min-w-0">
               <p className="text-[10px] font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>

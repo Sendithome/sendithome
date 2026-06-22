@@ -162,8 +162,8 @@ export default function BrandDirectory() {
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-4">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shrink-0">
-              <Package className="w-4 h-4 text-primary-foreground" />
+            <div className="w-8 h-8 rounded-xl bg-accent flex items-center justify-center shrink-0">
+              <Package className="w-4 h-4 text-accent-foreground" />
             </div>
             <div>
               <p className="text-[10px] font-black text-foreground leading-none">SEND<span className="text-accent">IT</span>HOME</p>

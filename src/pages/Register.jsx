@@ -289,8 +289,8 @@ export default function Register() {
         <div className="max-w-2xl mx-auto px-6 py-10 text-center">
           {/* Logo */}
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #E5A93B, #D4AF37)' }}>
-              <Package className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center">
+              <Package className="w-5 h-5 text-accent-foreground" />
             </div>
             <p className="text-lg font-black tracking-widest text-white">
               SEND<span className="text-accent">IT</span>HOME

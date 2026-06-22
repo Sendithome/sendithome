@@ -112,8 +112,8 @@ export default function HotelDemoDashboard() {
 
       {/* Header */}
       <header className="sticky top-0 z-30 bg-white border-b border-border px-4 py-3 flex items-center gap-3 shadow-sm">
-        <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shrink-0">
-          <Package className="w-4 h-4 text-primary-foreground" />
+        <div className="w-8 h-8 rounded-xl bg-accent flex items-center justify-center shrink-0">
+          <Package className="w-4 h-4 text-accent-foreground" />
         </div>
         <span className="text-xs font-black text-foreground">SEND<span className="text-accent">IT</span>HOME</span>
         <div className="flex items-center gap-1.5 ml-1 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-0.5">

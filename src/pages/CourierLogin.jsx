@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Truck, Lock, Mail, Loader2, Eye, EyeOff } from 'lucide-react';
+import { Truck, Lock, Mail, Loader2, Eye, EyeOff, Package } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
 
@@ -34,8 +34,8 @@ export default function CourierLogin() {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-5">
-            <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shrink-0">
-              <Truck className="w-4 h-4 text-primary-foreground" />
+            <div className="w-8 h-8 rounded-xl bg-accent flex items-center justify-center shrink-0">
+              <Package className="w-4 h-4 text-accent-foreground" />
             </div>
             <span className="text-sm font-black text-foreground">SEND<span className="text-accent">IT</span>HOME</span>
           </div>

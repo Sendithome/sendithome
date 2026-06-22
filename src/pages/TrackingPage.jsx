@@ -65,8 +65,8 @@ export default function TrackingPage() {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center mx-auto mb-4">
-            <Truck className="w-7 h-7 text-primary-foreground" />
+          <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mx-auto mb-4">
+            <Package className="w-7 h-7 text-accent-foreground" />
           </div>
           <h1 className="text-2xl font-bold text-foreground">Track Your Shipment</h1>
           <p className="text-sm text-muted-foreground mt-1">Enter your tracking or order number to get real-time updates</p>
