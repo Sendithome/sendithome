@@ -1,53 +1,48 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowLeft, X, Gift, Plane, Settings, Smile, Sparkles, Route,
+  ArrowLeft, X, Plane, Settings, Smile, Sparkles, Route,
   CheckCircle2, ShoppingBag
 } from 'lucide-react';
 
 const sections = [
   {
-    icon: Gift,
-    title: '1. What Send It Home Is',
-    body: 'Your holiday shopping, shipped from your hotel to your front door.\n\nSend It Home is a hotel-based shipping service for the things you buy on your trip. Instead of squeezing purchases into your suitcase or paying excess baggage, you register them at your hotel and we deliver them home.\n\nNo excess baggage fees. No airport queues. No customs confusion.\n\nConvenience Delivered Seamlessly.',
-  },
-  {
     icon: Settings,
-    title: '2. How It Works for You',
-    body: 'Built to be done in about 3 minutes, right from your hotel:\n\n• Scan & register your purchases from the QR code in your room or at reception.\n• Choose your box — 10kg or 20kg, same flat price (so you can size up and bring more home).\n• Pay a simple flat rate through secure Stripe checkout.\n• Hand your items + receipts to the concierge team — they pack and seal the box in front of you.\n• Stored under CCTV until FedEx or DHL collects it.\n• Track it all the way to your doorstep.',
+    title: 'How It Works',
+    body: 'Done in about 3 minutes, right from your hotel:\n\n• Scan & register your purchases from the QR code in your room or at reception.\n• Choose your box — 10kg or 20kg, same flat price (so you can size up and bring more home).\n• Pay a simple flat rate through secure checkout.\n• Hand your items + receipts to the concierge team — they pack and seal the box in front of you.\n• We collect and ship it via FedEx or DHL.\n• Track it all the way to your doorstep.',
   },
   {
     icon: Smile,
-    title: '3. Your Benefits as a Tourist',
+    title: "Why You'll Love It",
     list: [
       'Shop freely — forget the 23kg airline luggage limit.',
       'Save money — one flat box rate vs. $300+ for an extra checked bag.',
-      'Pack-free travel — walk to your gate with just your carry-on.',
+      'Travel light — walk to your gate with just your carry-on.',
       'Skip the tax-refund queue at the airport entirely.',
       'Arrives safely — professionally packed by trained hotel staff.',
-      'Always know where it is — real-time FedEx/DHL tracking.',
+      'Always know where it is — real-time FedEx/DHL tracking, hotel to home.',
     ],
   },
   {
     icon: Sparkles,
-    title: "4. Why It's Different for You",
+    title: 'Why It Beats Dragging It Home Yourself',
     list: [
-      'One flat price per box — not confusing weight-based courier pricing.',
-      'From your hotel lobby — not a courier depot across town.',
-      'Customs paperwork done for you — generated automatically from your declared items.',
-      'Personal Shopping Only — a strict policy that keeps every shipment compliant, trusted, and hassle-free at customs.',
+      'One flat price per box — no confusing weight-based courier charges.',
+      'Right from your hotel lobby — no trips to a courier depot.',
+      'Customs paperwork done for you — generated automatically from your items.',
+      'Packed and sealed in front of you — you see exactly what goes in.',
       'Same price, bigger box — more of your trip comes home for the same cost.',
     ],
   },
   {
     icon: Route,
-    title: '5. Your Step-by-Step Journey',
+    title: 'Your Step-by-Step Journey',
     steps: [
       'Scan the QR code at your hotel.',
       'Register your items and home address (~3 min).',
       'Choose your box — 10kg or 20kg, same price.',
       'Pay the flat rate via secure checkout.',
       'Drop off items + receipts at the concierge; watch them pack and seal.',
-      'We collect, ship, and track via FedEx/DHL — straight to your door.',
+      'We ship and track via FedEx/DHL — straight to your door.',
     ],
   },
 ];
