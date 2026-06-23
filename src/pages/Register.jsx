@@ -5,10 +5,12 @@ import { Camera, Upload, Eye, EyeOff, Loader2, Package, MapPin, Star, CheckCircl
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { base44 } from '@/api/base44Client';
 import PhoneInput from '../components/PhoneInput';
 import PassportVerification from '../components/PassportVerification';
 import CountrySelect from '../components/CountrySelect';
+import TermsModal from '../components/TermsModal';
 
 export default function Register() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -26,6 +28,9 @@ export default function Register() {
   const [errors, setErrors] = useState({});
   const [passportVerification, setPassportVerification] = useState(null);
   const [passportPreview, setPassportPreview] = useState(null);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [termsModalType, setTermsModalType] = useState('terms');
 
   const [form, setForm] = useState({
     first_name: '',
@@ -192,6 +197,7 @@ export default function Register() {
     else if (form.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
     if (!form.confirm_password) newErrors.confirm_password = 'Please confirm your password';
     else if (form.password !== form.confirm_password) newErrors.confirm_password = 'Passwords do not match';
+    if (!agreedToTerms) newErrors.terms = 'You must agree to the Terms & Conditions and Privacy Policy to continue';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -590,6 +596,41 @@ export default function Register() {
             <p className="text-sm text-destructive text-center bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3">{errors.submit}</p>
           )}
 
+          {/* Terms & Privacy checkbox */}
+          <div className="flex items-start gap-3">
+            <Checkbox
+              id="agree-terms"
+              checked={agreedToTerms}
+              onCheckedChange={(checked) => {
+                setAgreedToTerms(checked);
+                setErrors(prev => ({ ...prev, terms: '' }));
+              }}
+              className={`mt-0.5 ${errors.terms ? 'border-destructive' : ''}`}
+            />
+            <div className="flex-1">
+              <label htmlFor="agree-terms" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+                I have read and agree to the{' '}
+                <button
+                  type="button"
+                  onClick={() => { setTermsModalType('terms'); setShowTermsModal(true); }}
+                  className="text-accent font-medium hover:underline"
+                >
+                  Terms & Conditions
+                </button>{' '}
+                and{' '}
+                <button
+                  type="button"
+                  onClick={() => { setTermsModalType('privacy'); setShowTermsModal(true); }}
+                  className="text-accent font-medium hover:underline"
+                >
+                  Privacy Policy
+                </button>
+                .
+              </label>
+              {errors.terms && <p className="text-xs text-destructive mt-1">{errors.terms}</p>}
+            </div>
+          </div>
+
           <Button
             type="submit"
             className="w-full h-13 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-2xl text-base py-4"
@@ -619,6 +660,12 @@ export default function Register() {
           Powered by SendITHome AI · Proprietary Intelligent Logistics Platform
         </p>
       </div>
+
+      <TermsModal
+        open={showTermsModal}
+        onClose={() => setShowTermsModal(false)}
+        type={termsModalType}
+      />
     </div>
   );
 }
