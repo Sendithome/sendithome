@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowLeft, X, Gift, Plane, Settings, Smile, Globe, Sparkles,
-  Route, Package, ShieldCheck, Store, Building2, Truck, Banknote,
+  ArrowLeft, X, Gift, Plane, Settings, Smile, Sparkles, Route,
   CheckCircle2, ShoppingBag
 } from 'lucide-react';
 
@@ -13,12 +12,12 @@ const sections = [
   },
   {
     icon: Settings,
-    title: '2. How the Platform Works',
+    title: '2. How It Works for You',
     body: 'Built to be done in about 3 minutes, right from your hotel:\n\n• Scan & register your purchases from the QR code in your room or at reception.\n• Choose your box — 10kg or 20kg, same flat price (so you can size up and bring more home).\n• Pay a simple flat rate through secure Stripe checkout.\n• Hand your items + receipts to the concierge team — they pack and seal the box in front of you.\n• Stored under CCTV until FedEx or DHL collects it.\n• Track it all the way to your doorstep.',
   },
   {
     icon: Smile,
-    title: '3. Benefits to Tourists',
+    title: '3. Your Benefits as a Tourist',
     list: [
       'Shop freely — forget the 23kg airline luggage limit.',
       'Save money — one flat box rate vs. $300+ for an extra checked bag.',
@@ -29,18 +28,8 @@ const sections = [
     ],
   },
   {
-    icon: Globe,
-    title: '4. Benefits Beyond the Traveller',
-    tiles: [
-      { icon: Store, label: 'For Retailers', text: 'Guests buy more when luggage limits stop being the reason to put something back.' },
-      { icon: Building2, label: 'For Hotels', text: 'A premium, no-cost guest amenity that earns incremental revenue on every box shipped — handled by existing concierge staff.' },
-      { icon: Truck, label: 'For Logistics Partners (FedEx / DHL)', text: 'Clean, pre-packed, pre-labelled, customs-ready parcels from premium hotel locations.' },
-      { icon: Banknote, label: 'For the Local Economy', text: 'Higher tourist spending, full tax retained by the host country (no refund-scheme leakage), and new activity across retail, hospitality, and logistics.' },
-    ],
-  },
-  {
     icon: Sparkles,
-    title: '5. Why Send It Home Is Different',
+    title: "4. Why It's Different for You",
     list: [
       'One flat price per box — not confusing weight-based courier pricing.',
       'From your hotel lobby — not a courier depot across town.',
@@ -51,7 +40,7 @@ const sections = [
   },
   {
     icon: Route,
-    title: '6. Your Step-by-Step Journey',
+    title: '5. Your Step-by-Step Journey',
     steps: [
       'Scan the QR code at your hotel.',
       'Register your items and home address (~3 min).',
@@ -151,23 +140,6 @@ export default function FrictionFreeShoppingPass({ open, onClose }) {
                             </li>
                           ))}
                         </ul>
-                      )}
-
-                      {section.tiles && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
-                          {section.tiles.map((tile, i) => {
-                            const TileIcon = tile.icon;
-                            return (
-                              <div key={i} className="bg-muted/50 border border-border rounded-xl p-4">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <TileIcon className="w-4 h-4 text-accent shrink-0" />
-                                  <p className="text-xs font-bold text-foreground">{tile.label}</p>
-                                </div>
-                                <p className="text-xs text-muted-foreground leading-relaxed">{tile.text}</p>
-                              </div>
-                            );
-                          })}
-                        </div>
                       )}
 
                       {section.steps && (
