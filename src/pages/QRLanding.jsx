@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, MapPin, Star, ArrowRight, Loader2, QrCode } from 'lucide-react';
+import { Package, MapPin, Star, ArrowRight, Loader2, QrCode, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
+import FrictionFreeShoppingPass from '../components/FrictionFreeShoppingPass';
 
 export default function QRLanding() {
   const { hotelId } = useParams();
@@ -14,6 +15,7 @@ export default function QRLanding() {
 
   const hasStart = new URLSearchParams(window.location.search).get('start') === '1';
   const [showQR, setShowQR] = useState(!hasStart);
+  const [showPass, setShowPass] = useState(false);
 
   const landingUrl = `${window.location.origin}/hotel/${hotelId}?start=1`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(landingUrl)}&margin=12&format=png`;
@@ -225,6 +227,14 @@ export default function QRLanding() {
           className="space-y-3"
         >
           <Button
+            variant="outline"
+            className="w-full h-12 rounded-2xl border-accent/40 text-accent hover:bg-accent/5 font-semibold text-sm"
+            onClick={() => setShowPass(true)}
+          >
+            <Sparkles className="w-4 h-4 mr-2" />
+            Friction-Free Shopping Pass
+          </Button>
+          <Button
             className="w-full h-13 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-2xl text-base py-4"
             onClick={() => navigate(`/register?hotelId=${hotelId}`)}
           >
@@ -250,6 +260,8 @@ export default function QRLanding() {
           Powered by SendITHome AI · Proprietary Intelligent Logistics Platform
         </p>
       </div>
+
+      <FrictionFreeShoppingPass open={showPass} onClose={() => setShowPass(false)} />
     </div>
   );
 }
