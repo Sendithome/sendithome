@@ -45,18 +45,6 @@ const sections = [
       'Same price, bigger box — more of your trip comes home for the same cost.',
     ],
   },
-  {
-    icon: Route,
-    title: '5. Your Step-by-Step Journey',
-    steps: [
-      'Scan the QR code at your hotel.',
-      'Register your items and home address (~3 min).',
-      'Choose your box — 10kg or 20kg, same price.',
-      'Pay the flat rate via secure checkout.',
-      'Drop off items + receipts at the concierge; watch them pack and seal.',
-      'We collect, ship, and track via FedEx/DHL — straight to your door.',
-    ],
-  },
 ];
 
 export default function FrictionFreeShoppingPass({ open, onClose }) {
