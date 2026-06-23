@@ -1,55 +1,22 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  ArrowLeft, X, Gift, Plane, Settings, Smile, Sparkles, Route,
-  CheckCircle2, ShoppingBag
-} from 'lucide-react';
+import { ArrowLeft, X, QrCode, Package, Receipt, MapPin, CheckCircle2, ShoppingBag } from 'lucide-react';
 
-const sections = [
-  {
-    icon: Gift,
-    title: '1. What Send It Home Is',
-    body: 'Your holiday shopping, shipped from your hotel to your front door.\n\nSend It Home is a hotel-based shipping service for the things you buy on your trip. Instead of squeezing purchases into your suitcase or paying excess baggage, you register them at your hotel and we deliver them home.\n\nNo excess baggage fees. No airport queues. No customs confusion.\n\nConvenience Delivered Seamlessly.',
-  },
-  {
-    icon: Settings,
-    title: '2. How It Works for You',
-    body: 'Built to be done in about 3 minutes, right from your hotel:\n\n• Scan & register your purchases from the QR code in your room or at reception.\n• Choose your box — 10kg or 20kg, same flat price (so you can size up and bring more home).\n• Pay a simple flat rate through secure Stripe checkout.\n• Hand your items + receipts to the concierge team — they pack and seal the box in front of you.\n• Stored under CCTV until FedEx or DHL collects it.\n• Track it all the way to your doorstep.',
-  },
-  {
-    icon: Smile,
-    title: '3. Your Benefits as a Tourist',
-    list: [
-      'Shop freely — forget the 23kg airline luggage limit.',
-      'Save money — one flat box rate vs. $300+ for an extra checked bag.',
-      'Pack-free travel — walk to your gate with just your carry-on.',
-      'Skip the tax-refund queue at the airport entirely.',
-      'Arrives safely — professionally packed by trained hotel staff.',
-      'Always know where it is — real-time FedEx/DHL tracking.',
-    ],
-  },
-  {
-    icon: Sparkles,
-    title: "4. Why It's Different for You",
-    list: [
-      'One flat price per box — not confusing weight-based courier pricing.',
-      'From your hotel lobby — not a courier depot across town.',
-      'Customs paperwork done for you — generated automatically from your declared items.',
-      'Personal Shopping Only — a strict policy that keeps every shipment compliant, trusted, and hassle-free at customs.',
-      'Same price, bigger box — more of your trip comes home for the same cost.',
-    ],
-  },
-  {
-    icon: Route,
-    title: '5. Your Step-by-Step Journey',
-    steps: [
-      'Scan the QR code at your hotel.',
-      'Register your items and home address (~3 min).',
-      'Choose your box — 10kg or 20kg, same price.',
-      'Pay the flat rate via secure checkout.',
-      'Drop off items + receipts at the concierge; watch them pack and seal.',
-      'We collect, ship, and track via FedEx/DHL — straight to your door.',
-    ],
-  },
+const steps = [
+  { icon: QrCode, text: 'Scan QR & register your details*', note: 'The registration process is seamless, and takes less than 4 minutes to complete.' },
+  { icon: Package, text: 'Pick up your box (10kg/20kg)**', note: 'Your selected box size can be collected from hotel reception, or conveniently delivered to your room.' },
+  { icon: Receipt, text: 'Scan & Upload your shopping receipts***', note: 'Upload unlimited shopping receipts, subject to the terms and conditions.' },
+  { icon: MapPin, text: 'Drop box at reception****', note: 'Once your box is packed, simply visit reception to seal and send.' },
+];
+
+const touristBenefits = [
+  'Travel luggage-free while continuing luxury shopping experiences.',
+  'Seamless "shop now, deliver home" capability',
+  'Reduced airport stress, baggage handling, and carousel wait times',
+  'Consolidated fulfillment in the convenience of their hotel room.',
+  'Improved convenience, security, and customer experience',
+  'End-to-end tracking and integrated logistics management',
+  'Enhanced premium travel experience aligned with luxury expectations.',
+  'Expedited international priority shipping, conveniently delivered to your home within 1–3 working days.',
 ];
 
 export default function FrictionFreeShoppingPass({ open, onClose }) {
@@ -71,7 +38,7 @@ export default function FrictionFreeShoppingPass({ open, onClose }) {
             onClick={(e) => e.stopPropagation()}
             className="bg-background w-full max-w-2xl h-[100dvh] sm:h-[90vh] sm:rounded-3xl overflow-hidden flex flex-col"
           >
-            {/* Sticky header with Back button */}
+            {/* Sticky header */}
             <div className="sticky top-0 z-10 bg-background border-b border-border px-5 py-3 flex items-center justify-between shrink-0">
               <button
                 onClick={onClose}
@@ -89,78 +56,126 @@ export default function FrictionFreeShoppingPass({ open, onClose }) {
             </div>
 
             {/* Scrollable content */}
-            <div className="overflow-y-auto flex-1 px-5 py-6 sm:px-8 sm:py-8">
-              {/* Hero */}
-              <div className="text-center mb-8">
-                <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mx-auto mb-4">
-                  <Plane className="w-7 h-7 text-accent-foreground" />
-                </div>
-                <h1 className="text-2xl font-black text-accent mb-1">Friction-Free Shopping Pass.</h1>
-                <p className="text-lg font-bold text-foreground">Sail Through the Airport.</p>
-                <p className="text-sm text-muted-foreground mt-2">Welcome to <span className="font-bold text-foreground">Send it Home</span></p>
+            <div className="overflow-y-auto flex-1">
+              {/* ── IMAGE 3: Branding Hero ── */}
+              <div className="bg-black px-6 py-12 text-center">
+                <h1 className="font-bold mb-3" style={{ fontSize: 'clamp(32px, 7vw, 52px)', lineHeight: 1.1 }}>
+                  <span className="text-white">SEND</span>
+                  <span style={{ color: '#E91E63' }}>IT</span>
+                  <span className="text-white">HOME</span>
+                </h1>
+                <p style={{ color: '#D4AF37' }} className="font-semibold mb-1" >
+                  Convenience Delivered Seamlessly
+                </p>
+                <p className="text-white text-xs tracking-widest font-semibold uppercase">
+                  AI Driven Platform
+                </p>
+                <p className="text-white italic mt-3 mb-6" style={{ fontSize: 'clamp(16px, 3.5vw, 22px)' }}>
+                  A New Tourism Retail Mobility Model
+                </p>
+                {/* Magenta divider */}
+                <div className="w-full h-px mb-6" style={{ background: '#E91E63' }} />
+                <p className="text-white mb-4" style={{ fontSize: 'clamp(18px, 4vw, 28px)' }}>
+                  "Shop in Dubai. We deliver it home."
+                </p>
+                <p style={{ color: '#D4AF37' }} className="text-sm mb-2">
+                  We have created a controlled international tourist shopping corridor*
+                </p>
+                <p style={{ color: '#E91E63' }} className="text-sm font-semibold">
+                  A Reciprocal Tourism Spending Ecosystem Targeting Mid to High Wealth Tourists
+                </p>
+                <p style={{ color: '#E91E63' }} className="text-sm font-semibold">
+                  Within A Multilateral Economic Framework.
+                </p>
               </div>
 
-              {/* Intro */}
-              <div className="space-y-4 text-sm text-muted-foreground leading-relaxed mb-8">
-                <p>
-                  We've all been there: you're standing in a gorgeous boutique overseas, looking at a stunning pair of shoes or an incredible jacket, and that annoying little voice in your head stops you. "How am I going to fit this in my suitcase?" "Do I really want to drag this through three airport transfers?" "Is it worth standing in that massive, chaotic tax-refund line at 4:00 AM before my flight?" The airport tax and luggage game is broken. It adds friction to your holiday and ruins the thrill of shopping.
-                </p>
-                <p>
-                  That's why we created <strong className="text-foreground">Send it Home</strong> — a brand-new, first-of-its-kind shopping corridor built entirely around your freedom.
-                </p>
-                <p className="font-semibold text-foreground">No heavy bags. No customs lines. No airport baggage stress.</p>
-                <p className="font-semibold text-accent">Just ultimate shopping mobility.</p>
-              </div>
+              {/* ── IMAGE 1: HOW IT WORKS ── */}
+              <div className="px-6 py-10" style={{ background: '#10141D' }}>
+                <h2 className="text-center font-black mb-8" style={{ color: '#E51C77', fontSize: 'clamp(20px, 5vw, 30px)' }}>
+                  HOW IT WORKS
+                </h2>
 
-              {/* Sections */}
-              <div className="space-y-6">
-                {sections.map((section, idx) => {
-                  const Icon = section.icon;
-                  return (
-                    <div key={idx} className="bg-card border border-border rounded-2xl p-5">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
-                          <Icon className="w-5 h-5 text-accent" />
+                {/* Steps */}
+                <div className="space-y-6">
+                  {steps.map((step, idx) => {
+                    const Icon = step.icon;
+                    return (
+                      <div key={idx} className="flex flex-col items-center text-center">
+                        {/* Icon circle */}
+                        <div
+                          className="w-16 h-16 rounded-full flex items-center justify-center mb-3"
+                          style={{ background: '#D5006D' }}
+                        >
+                          <Icon className="w-7 h-7 text-white" />
                         </div>
-                        <h3 className="text-base font-bold text-foreground">{section.title}</h3>
+                        <p className="text-white text-sm font-semibold mb-1">{step.text}</p>
+                        {/* Arrow between steps (except last) */}
+                        {idx < steps.length - 1 && (
+                          <div className="my-1" style={{ color: '#E51C77' }}>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                              <path d="M12 5v14M5 12l7 7 7-7" />
+                            </svg>
+                          </div>
+                        )}
                       </div>
+                    );
+                  })}
+                </div>
 
-                      {section.body && (
-                        <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
-                          {section.body}
-                        </div>
-                      )}
+                {/* Sub-text */}
+                <p className="text-center text-white/80 text-sm mt-8">
+                  Min spend US$1,500 · Personal Shopping Only
+                </p>
 
-                      {section.list && (
-                        <ul className="space-y-2.5 mt-1">
-                          {section.list.map((item, i) => (
-                            <li key={i} className="flex items-start gap-2.5 text-sm text-foreground">
-                              <CheckCircle2 className="w-4 h-4 text-accent shrink-0 mt-0.5" />
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+                {/* Pink divider */}
+                <div className="w-full h-px my-6" style={{ background: '#E51C77' }} />
 
-                      {section.steps && (
-                        <ol className="space-y-3 mt-1">
-                          {section.steps.map((step, i) => (
-                            <li key={i} className="flex items-start gap-3 text-sm text-foreground">
-                              <div className="w-7 h-7 rounded-full bg-accent text-accent-foreground flex items-center justify-center shrink-0 text-xs font-bold">
-                                {i + 1}
-                              </div>
-                              <span className="mt-1">{step}</span>
-                            </li>
-                          ))}
-                        </ol>
-                      )}
-                    </div>
-                  );
-                })}
+                {/* Footnotes */}
+                <div className="space-y-3 text-white/70 text-xs leading-relaxed">
+                  {steps.map((step, idx) => (
+                    <p key={idx}>
+                      <span style={{ color: '#E51C77' }}>{step.note.match(/\*/)?.[0] || ''}</span> {step.note}
+                    </p>
+                  ))}
+                </div>
               </div>
 
-              {/* CTA at bottom */}
-              <div className="mt-8 text-center">
+              {/* ── IMAGE 2: TOURISTS ── */}
+              <div className="px-6 py-10" style={{ background: '#101624' }}>
+                <div className="flex items-center justify-center gap-2 mb-8">
+                  <CheckCircle2 className="w-6 h-6" style={{ color: '#4ADE80' }} />
+                  <h2 className="font-black tracking-wide" style={{ color: '#4ADE80', fontSize: 'clamp(20px, 5vw, 30px)' }}>
+                    TOURISTS
+                  </h2>
+                </div>
+
+                <ul className="space-y-4 max-w-md mx-auto">
+                  {touristBenefits.map((benefit, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <span
+                        className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                        style={{ background: '#D4AF37' }}
+                      >
+                        <CheckCircle2 className="w-3 h-3 text-black" />
+                      </span>
+                      <span className="text-white text-sm leading-relaxed">{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* ── Footer ── */}
+              <div className="px-6 py-6 bg-black">
+                <p className="text-center" style={{ color: '#AAAAAA', fontSize: '10px' }}>
+                  PROPRIETARY &amp; CONFIDENTIAL — MAY 2026 · SendITHome is an Operating Company of Vacation Logistics DMCC
+                </p>
+                <p className="text-center mt-1" style={{ color: '#AAAAAA', fontSize: '10px' }}>
+                  *for participating countries.
+                </p>
+              </div>
+
+              {/* CTA */}
+              <div className="bg-background px-6 py-8 text-center">
                 <button
                   onClick={onClose}
                   className="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-2xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-sm transition-colors"
