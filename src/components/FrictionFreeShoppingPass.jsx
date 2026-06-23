@@ -38,11 +38,10 @@ const sections = [
     icon: Sparkles,
     title: "4. Why It's Different for You",
     list: [
-      'One flat price per box — not confusing weight-based courier pricing.',
-      'From your hotel lobby — not a courier depot across town.',
+      'One flat price for either a 10 kg or 20 kg box.',
+      'Packed by you from the convenience of your hotel room.',
       'Customs paperwork done for you — generated automatically from your declared items.',
       'Personal Shopping Only — a strict policy that keeps every shipment compliant, trusted, and hassle-free at customs.',
-      'Same price, bigger box — more of your trip comes home for the same cost.',
     ],
   },
 ];
