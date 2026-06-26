@@ -114,10 +114,10 @@ export default function TouristPortal() {
   const currency = eligibleItems[0]?.currency || 'AED';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
 
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-white border-b border-border px-4 py-3 flex items-center gap-3 shadow-sm">
+      <header className="sticky top-0 z-30 bg-card border-b border-border px-4 py-3 flex items-center gap-3 shadow-sm">
         <button
           onClick={() => navigate('/my-orders')}
           className="w-8 h-8 rounded-xl bg-muted flex items-center justify-center"
@@ -143,7 +143,7 @@ export default function TouristPortal() {
       </header>
 
       {/* Hero card */}
-      <div className="bg-white border-b border-border px-4 py-5">
+      <div className="bg-card border-b border-border px-4 py-5">
         <div className="max-w-lg mx-auto">
 
           {/* Delivery destination strip */}
@@ -212,7 +212,7 @@ export default function TouristPortal() {
       </div>
 
       {/* Tabs */}
-      <nav className="bg-white border-b border-border px-4 sticky top-[57px] z-20">
+      <nav className="bg-card border-b border-border px-4 sticky top-[57px] z-20">
         <div className="max-w-lg mx-auto flex gap-0">
           {TABS.map(t => {
             const Icon = t.icon;
@@ -253,8 +253,8 @@ export default function TouristPortal() {
                       className={cn(
                         'flex items-center gap-3 rounded-2xl p-4 border transition-all',
                         active ? 'bg-accent/5 border-accent/30 shadow-sm' :
-                        done   ? 'bg-white border-border' :
-                                 'bg-white border-border opacity-40'
+                        done   ? 'bg-card border-border' :
+                                 'bg-card border-border opacity-40'
                       )}
                     >
                       <div className={cn(
@@ -299,13 +299,13 @@ export default function TouristPortal() {
 
               {/* Download declaration CTA */}
               <button
-                onClick={handleDownloadPDF}
-                disabled={downloading}
-                className="w-full flex items-center justify-between bg-white border border-border rounded-2xl px-4 py-3.5 hover:bg-muted/30 transition-colors disabled:opacity-60"
+              onClick={handleDownloadPDF}
+              disabled={downloading}
+              className="w-full flex items-center justify-between bg-card border border-border rounded-2xl px-4 py-3.5 hover:bg-muted/30 transition-colors disabled:opacity-60"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-gray-100 flex items-center justify-center">
-                    {downloading ? <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" /> : <FileText className="w-4 h-4 text-gray-600" />}
+                  <div className="w-9 h-9 rounded-xl bg-muted flex items-center justify-center">
+                    {downloading ? <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" /> : <FileText className="w-4 h-4 text-muted-foreground" />}
                   </div>
                   <div className="text-left">
                     <p className="text-xs font-bold text-foreground">Customs Declaration (CN22/CN23)</p>
@@ -328,7 +328,7 @@ export default function TouristPortal() {
                   { label: 'Box Size', value: order.box_size || '—' },
                   { label: 'Total Value', value: `${currency} ${totalValue.toFixed(0)}` },
                 ].map(s => (
-                  <div key={s.label} className="bg-white border border-border rounded-2xl p-3 text-center">
+                  <div key={s.label} className="bg-card border border-border rounded-2xl p-3 text-center">
                     <p className="text-lg font-black text-foreground">{s.value}</p>
                     <p className="text-[10px] text-muted-foreground mt-0.5">{s.label}</p>
                   </div>
@@ -338,7 +338,7 @@ export default function TouristPortal() {
               {/* Item cards */}
               <div className="space-y-2">
                 {eligibleItems.map((item, i) => (
-                  <div key={item.id || i} className="bg-white border border-border rounded-2xl px-4 py-3 flex items-center gap-3">
+                  <div key={item.id || i} className="bg-card border border-border rounded-2xl px-4 py-3 flex items-center gap-3">
                     <div className="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
                       <ShoppingBag className="w-4 h-4 text-accent" />
                     </div>
@@ -358,10 +358,10 @@ export default function TouristPortal() {
 
               {/* Ineligible items note */}
               {items.filter(i => i.eligible === false).length > 0 && (
-                <div className="bg-red-50 border border-red-100 rounded-2xl p-3">
-                  <p className="text-xs font-semibold text-red-700 mb-2">Not included in shipment</p>
+                <div className="bg-destructive/5 border border-destructive/20 rounded-2xl p-3">
+                  <p className="text-xs font-semibold text-destructive mb-2">Not included in shipment</p>
                   {items.filter(i => i.eligible === false).map((item, i) => (
-                    <p key={i} className="text-[10px] text-red-600 line-through">{item.item_name} — {item.ineligible_reason}</p>
+                    <p key={i} className="text-[10px] text-destructive/80 line-through">{item.item_name} — {item.ineligible_reason}</p>
                   ))}
                 </div>
               )}
@@ -373,7 +373,7 @@ export default function TouristPortal() {
             <motion.div key="details" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
 
               {/* Shipment info */}
-              <div className="bg-white border border-border rounded-2xl overflow-hidden">
+              <div className="bg-card border border-border rounded-2xl overflow-hidden">
                 <div className="bg-muted/30 px-4 py-2.5 border-b border-border">
                   <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Shipment Info</p>
                 </div>
@@ -396,7 +396,7 @@ export default function TouristPortal() {
 
               {/* Pickup location */}
               {order.hotel_name && (
-                <div className="bg-white border border-border rounded-2xl overflow-hidden">
+                <div className="bg-card border border-border rounded-2xl overflow-hidden">
                   <div className="bg-muted/30 px-4 py-2.5 border-b border-border">
                     <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground flex items-center gap-1.5">
                       <MapPin className="w-3 h-3" /> Pickup Location
@@ -418,7 +418,7 @@ export default function TouristPortal() {
               )}
 
               {/* Delivery address */}
-              <div className="bg-white border border-border rounded-2xl overflow-hidden">
+              <div className="bg-card border border-border rounded-2xl overflow-hidden">
                 <div className="bg-muted/30 px-4 py-2.5 border-b border-border">
                   <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground flex items-center gap-1.5">
                     <Home className="w-3 h-3" /> Delivery Address
@@ -442,7 +442,7 @@ export default function TouristPortal() {
               </div>
 
               {/* Payment summary */}
-              <div className="bg-white border border-border rounded-2xl overflow-hidden">
+              <div className="bg-card border border-border rounded-2xl overflow-hidden">
                 <div className="bg-muted/30 px-4 py-2.5 border-b border-border">
                   <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Payment</p>
                 </div>

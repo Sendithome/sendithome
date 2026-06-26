@@ -98,31 +98,31 @@ function BrandCard({ brand }) {
   }).filter(s => s.items);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-md transition-shadow">
+    <div className="bg-card border border-border rounded-2xl overflow-hidden hover:shadow-md transition-shadow">
       <button className="w-full text-left p-4 flex items-start justify-between gap-3" onClick={() => setOpen(!open)}>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
-            <span className="font-bold text-sm text-gray-900">{brand.name}</span>
-            <span className={`text-[10px] font-semibold border px-1.5 py-0.5 rounded-full ${TIER_COLORS[brand.tier] || 'bg-gray-100 text-gray-600 border-gray-200'}`}>{brand.tier}</span>
+            <span className="font-bold text-sm text-foreground">{brand.name}</span>
+            <span className={`text-[10px] font-semibold border px-1.5 py-0.5 rounded-full ${TIER_COLORS[brand.tier] || 'bg-muted text-muted-foreground border-border'}`}>{brand.tier}</span>
           </div>
-          <p className="text-xs text-gray-500 leading-snug">{brand.spec}</p>
+          <p className="text-xs text-muted-foreground leading-snug">{brand.spec}</p>
           <div className="flex items-center gap-3 mt-1.5 flex-wrap">
-            <span className="flex items-center gap-1 text-[11px] text-gray-400"><MapPin className="w-3 h-3" />{brand.mall}</span>
-            <span className="flex items-center gap-1 text-[11px] text-gray-400"><Tag className="w-3 h-3" />{brand.location}</span>
+            <span className="flex items-center gap-1 text-[11px] text-muted-foreground"><MapPin className="w-3 h-3" />{brand.mall}</span>
+            <span className="flex items-center gap-1 text-[11px] text-muted-foreground"><Tag className="w-3 h-3" />{brand.location}</span>
           </div>
         </div>
         <div className="shrink-0 mt-1">
-          {open ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+          {open ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
         </div>
       </button>
       {open && (
-        <div className="border-t border-gray-100 px-4 py-3 bg-gray-50">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1"><Package className="w-3 h-3" /> Product Catalog</p>
+        <div className="border-t border-border px-4 py-3 bg-muted/30">
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1"><Package className="w-3 h-3" /> Product Catalog</p>
           <div className="space-y-2">
             {sections.map((s, i) => (
               <div key={i}>
-                {s.heading && <p className="text-[10px] font-bold text-gray-600 uppercase tracking-wide mb-0.5">{s.heading}</p>}
-                <p className="text-xs text-gray-600 leading-relaxed">{s.items}</p>
+                {s.heading && <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide mb-0.5">{s.heading}</p>}
+                <p className="text-xs text-muted-foreground leading-relaxed">{s.items}</p>
               </div>
             ))}
           </div>
@@ -157,9 +157,9 @@ export default function BrandDirectory() {
   }, [filtered]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-card border-b border-border sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-4">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-8 h-8 rounded-xl bg-accent flex items-center justify-center shrink-0">
@@ -171,19 +171,19 @@ export default function BrandDirectory() {
             </div>
           </div>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search brands or products..."
-              className="pl-9 h-9 bg-gray-50 text-sm"
+              className="pl-9 h-9 bg-muted text-sm"
             />
           </div>
           {/* Tier filter */}
           <div className="flex gap-1.5 mt-2 flex-wrap">
             {TIERS.map(t => (
               <button key={t} onClick={() => setActiveTier(t)}
-                className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors ${activeTier === t ? 'bg-primary text-primary-foreground border-primary' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'}`}>
+                className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors ${activeTier === t ? 'bg-primary text-primary-foreground border-primary' : 'bg-card text-muted-foreground border-border hover:bg-muted'}`}>
                 {t}
               </button>
             ))}
@@ -194,7 +194,7 @@ export default function BrandDirectory() {
           <div className="flex gap-1 overflow-x-auto pb-0 scrollbar-hide">
             {CATEGORIES.map(c => (
               <button key={c} onClick={() => setActiveCategory(c)}
-                className={`shrink-0 text-[11px] font-semibold px-3 py-2 border-b-2 transition-colors whitespace-nowrap ${activeCategory === c ? 'border-accent text-accent' : 'border-transparent text-gray-500 hover:text-gray-800'}`}>
+                className={`shrink-0 text-[11px] font-semibold px-3 py-2 border-b-2 transition-colors whitespace-nowrap ${activeCategory === c ? 'border-accent text-accent' : 'border-transparent text-muted-foreground hover:text-foreground'}`}>
                 {c}
               </button>
             ))}
@@ -204,10 +204,10 @@ export default function BrandDirectory() {
 
       {/* Stats bar */}
       <div className="max-w-5xl mx-auto px-4 py-3">
-        <p className="text-xs text-gray-500">
-          Showing <span className="font-semibold text-gray-800">{filtered.length}</span> brand{filtered.length !== 1 ? 's' : ''} 
+        <p className="text-xs text-muted-foreground">
+          Showing <span className="font-semibold text-foreground">{filtered.length}</span> brand{filtered.length !== 1 ? 's' : ''} 
           {search && <span> matching "<strong>{search}</strong>"</span>}
-          {' '}· <span className="text-gray-400 text-[11px]">NO Watches · NO Jewellery · NO Perfumes · NO Furniture</span>
+          {' '}· <span className="text-muted-foreground/70 text-[11px]">NO Watches · NO Jewellery · NO Perfumes · NO Furniture</span>
         </p>
       </div>
 
@@ -215,7 +215,7 @@ export default function BrandDirectory() {
       <div className="max-w-5xl mx-auto px-4 pb-12 space-y-8">
         {Object.entries(groupedByCategory).map(([cat, brands]) => (
           <div key={cat}>
-            <h2 className="text-sm font-bold text-gray-700 mb-3 sticky top-[148px] bg-gray-50 py-1">{cat} <span className="font-normal text-gray-400">({brands.length})</span></h2>
+            <h2 className="text-sm font-bold text-foreground mb-3 sticky top-[148px] bg-background py-1">{cat} <span className="font-normal text-muted-foreground">({brands.length})</span></h2>
             <div className="grid gap-2 sm:grid-cols-2">
               {brands.map(b => <BrandCard key={b.id} brand={b} />)}
             </div>
@@ -223,8 +223,8 @@ export default function BrandDirectory() {
         ))}
         {filtered.length === 0 && (
           <div className="text-center py-16">
-            <Package className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-            <p className="text-sm text-gray-500">No brands found</p>
+            <Package className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
+            <p className="text-sm text-muted-foreground">No brands found</p>
           </div>
         )}
       </div>
