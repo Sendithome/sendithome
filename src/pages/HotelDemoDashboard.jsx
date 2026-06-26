@@ -28,7 +28,7 @@ const UAE = getCountryById('uae');
 const UAE_MONTHLY = getMonthlyChartData(UAE);
 
 const STATS = [
-  { label: 'Total Shipments', value: '284,000', change: '+18%', up: true, icon: Package, color: 'text-blue-600', bg: 'bg-blue-50' },
+  { label: 'Total Shipments', value: '284,000', change: '+18%', up: true, icon: Package, color: 'text-accent', bg: 'bg-accent/10' },
   { label: 'Revenue Generated', value: '$22.4B', change: '+22%', up: true, icon: DollarSign, color: 'text-green-600', bg: 'bg-green-50' },
   { label: 'Boxes Remaining', value: '38 / 60', change: '-12', up: false, icon: Box, color: 'text-amber-600', bg: 'bg-amber-50' },
   { label: 'Countries Served', value: '34', change: '+5', up: true, icon: Globe, color: 'text-purple-600', bg: 'bg-purple-50' },
@@ -84,7 +84,7 @@ const TABS = [
 function StatCard({ stat }) {
   const Icon = stat.icon;
   return (
-    <motion.div whileHover={{ y: -2 }} className="bg-white border border-border rounded-2xl p-4 flex items-start gap-3 shadow-sm">
+    <motion.div whileHover={{ y: -2 }} className="bg-card border border-border rounded-2xl p-4 flex items-start gap-3 shadow-sm">
       <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${stat.bg}`}>
         <Icon className={`w-5 h-5 ${stat.color}`} />
       </div>
@@ -108,7 +108,7 @@ export default function HotelDemoDashboard() {
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent('https://sendit.home/guest-onboarding/atlantis-the-palm-demo')}&margin=12&format=png`;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
 
       {/* Header */}
       <header className="sticky top-0 z-30 bg-white border-b border-border px-4 py-3 flex items-center gap-3 shadow-sm">
