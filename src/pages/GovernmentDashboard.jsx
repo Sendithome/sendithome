@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Shield, LogOut, RefreshCw, Loader2, BarChart3, ClipboardList,
-  CheckCircle2, Eye, Package, FileSearch, DollarSign, Globe, Users
+  CheckCircle2, Eye, Package, FileSearch, DollarSign, Globe, Users,
+  Lock
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
@@ -29,12 +30,21 @@ const TABS = [
 ];
 
 const STATUS_CFG = {
-  pending: { label: 'Awaiting Clearance', color: 'text-yellow-600', bg: 'bg-yellow-50 border-yellow-200' },
-  approved: { label: 'Cleared', color: 'text-green-600', bg: 'bg-green-50 border-green-200' },
-  queried: { label: 'On Hold', color: 'text-orange-600', bg: 'bg-orange-50 border-orange-200' },
+  pending: { label: 'Awaiting Clearance', color: 'text-amber-700', bg: 'bg-amber-50 border-amber-200' },
+  approved: { label: 'Cleared', color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200' },
+  queried: { label: 'On Hold', color: 'text-orange-700', bg: 'bg-orange-50 border-orange-200' },
   overdue: { label: 'Overdue', color: 'text-destructive', bg: 'bg-destructive/5 border-destructive/20' },
   cancelled: { label: 'Rejected', color: 'text-destructive', bg: 'bg-destructive/5 border-destructive/20' },
 };
+
+const STAT_META = [
+  { icon: BarChart3, iconColor: 'text-accent', iconBg: 'bg-accent/10' },
+  { icon: Package, iconColor: 'text-accent', iconBg: 'bg-accent/10' },
+  { icon: Users, iconColor: 'text-amber-600', iconBg: 'bg-amber-50' },
+  { icon: Package, iconColor: 'text-teal-600', iconBg: 'bg-teal-50' },
+  { icon: DollarSign, iconColor: 'text-emerald-600', iconBg: 'bg-emerald-50' },
+  { icon: Globe, iconColor: 'text-blue-600', iconBg: 'bg-blue-50' },
+];
 
 export default function GovernmentDashboard() {
   const navigate = useNavigate();
@@ -91,12 +101,24 @@ export default function GovernmentDashboard() {
   const consolidatedCount = orders.filter(o => o.multi_retailer_status === 'consolidated').length;
   const pendingConsolidationCount = orders.filter(o => o.multi_retailer_status === 'pending_retailer_approvals').length;
 
+  const stats = [
+    { label: 'Total Shipments', value: verifications.length.toLocaleString() },
+    { label: 'Active Shipments', value: activeShipments.toLocaleString(), pulse: activeShipments > 0 },
+    { label: 'Partner Hotels (UAE)', value: (approvedHotels || 847).toLocaleString() },
+    { label: 'Partner Retailers', value: (approvedRetailers || 3240).toLocaleString() },
+    { label: 'Total Export Value', value: totalExportValue > 0 ? `$${(totalExportValue / 1e6).toFixed(2)}M` : '$22.4B' },
+    { label: 'UAE Shipments', value: UAE.totalShipments.toLocaleString() },
+  ];
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 text-accent animate-spin mx-auto mb-3" />
-          <p className="text-xs text-muted-foreground">Loading classified data…</p>
+          <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mx-auto mb-4">
+            <Loader2 className="w-7 h-7 text-accent animate-spin" />
+          </div>
+          <p className="text-sm font-semibold text-foreground">Loading classified data…</p>
+          <p className="text-xs text-muted-foreground mt-1">Verifying clearance credentials</p>
         </div>
       </div>
     );
@@ -105,28 +127,32 @@ export default function GovernmentDashboard() {
   return (
     <div className="min-h-screen bg-background">
       {/* Classification Banner */}
-      <div className="bg-accent/10 border-b border-accent/20 text-center py-1.5">
-        <p className="text-[10px] font-black text-accent tracking-[0.3em] uppercase">⚠ Confidential — Government Use Only ⚠</p>
+      <div className="bg-primary text-center py-2">
+        <div className="flex items-center justify-center gap-2">
+          <Lock className="w-3 h-3 text-accent" />
+          <p className="text-[10px] font-black text-accent tracking-[0.3em] uppercase">Confidential — Government Use Only</p>
+          <Lock className="w-3 h-3 text-accent" />
+        </div>
       </div>
 
       {/* Header */}
-      <header className="sticky top-0 z-20 bg-card/95 backdrop-blur border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-20 bg-card/95 backdrop-blur-md border-b border-border shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-8 h-8 bg-accent rounded-xl flex items-center justify-center shrink-0">
-              <Package className="w-4 h-4 text-accent-foreground" />
+            <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shrink-0 shadow-sm">
+              <Package className="w-5 h-5 text-accent-foreground" />
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
-              <p className="text-xs font-bold text-muted-foreground truncate">{deptName} — Oversight Portal</p>
+              <p className="text-[10px] font-black tracking-widest text-foreground leading-none">SEND<span className="text-accent">IT</span>HOME</p>
+              <p className="text-xs font-bold text-muted-foreground truncate mt-0.5">{deptName} — Oversight Portal</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
-            <button onClick={loadData} className="p-2 text-muted-foreground hover:text-foreground transition-colors">
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button onClick={loadData} className="w-9 h-9 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex items-center justify-center">
               <RefreshCw className="w-4 h-4" />
             </button>
-            <button onClick={handleLogout} className="p-2 text-muted-foreground hover:text-accent transition-colors">
+            <button onClick={handleLogout} className="w-9 h-9 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors flex items-center justify-center">
               <LogOut className="w-4 h-4" />
             </button>
           </div>
@@ -137,37 +163,55 @@ export default function GovernmentDashboard() {
 
         {/* Stat Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-          <StatCard icon="📊" label="Total Shipments" value={verifications.length.toLocaleString()} colorCls="text-primary" borderCls="border-primary/20" />
-          <StatCard icon="📦" label="Active Shipments" value={activeShipments.toLocaleString()} colorCls="text-accent" borderCls="border-accent/30" pulse={activeShipments > 0} />
-          <StatCard icon="🏨" label="Partner Hotels (UAE)" value={(approvedHotels || 847).toLocaleString()} colorCls="text-amber-600" borderCls="border-amber-200" />
-          <StatCard icon="🏪" label="Partner Retailers" value={(approvedRetailers || 3240).toLocaleString()} colorCls="text-teal-600" borderCls="border-teal-200" />
-          <StatCard icon="💰" label="Total Export Value" value={totalExportValue > 0 ? `$${(totalExportValue / 1e6).toFixed(2)}M` : '$22.4B'} colorCls="text-green-600" borderCls="border-green-200" />
-          <StatCard icon="🇦🇪" label="UAE Shipments" value={UAE.totalShipments.toLocaleString()} colorCls="text-blue-600" borderCls="border-blue-200" />
+          {stats.map((s, i) => {
+            const meta = STAT_META[i];
+            const Icon = meta.icon;
+            return (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+                className={`bg-card border border-border rounded-2xl p-4 shadow-sm ${s.pulse ? 'ring-1 ring-accent/30' : ''}`}
+              >
+                <div className={`w-9 h-9 rounded-xl ${meta.iconBg} flex items-center justify-center mb-3 ${s.pulse ? 'animate-pulse' : ''}`}>
+                  <Icon className={`w-4.5 h-4.5 ${meta.iconColor}`} />
+                </div>
+                <p className="text-[11px] text-muted-foreground leading-tight font-medium">{s.label}</p>
+                <p className="text-xl font-black text-foreground mt-1">{s.value}</p>
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 border-b border-border">
-          {TABS.map(t => {
-            const Icon = t.icon;
-            return (
-              <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
-                className={`flex items-center gap-1.5 px-4 py-3 text-xs font-semibold border-b-2 transition-colors ${
-                  tab === t.id ? 'border-accent text-accent' : 'border-transparent text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                {t.label}
-                {t.id === 'clearance' && clearanceQueue.length > 0 && (
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-accent/15 text-accent">{clearanceQueue.length}</span>
-                )}
-                {t.id === 'consolidated' && (consolidatedCount + pendingConsolidationCount) > 0 && (
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">{consolidatedCount + pendingConsolidationCount}</span>
-                )}
-              </button>
-            );
-          })}
+        <div className="bg-card border border-border rounded-2xl p-1.5 shadow-sm">
+          <div className="flex gap-1 overflow-x-auto">
+            {TABS.map(t => {
+              const Icon = t.icon;
+              const isActive = tab === t.id;
+              return (
+                <button
+                  key={t.id}
+                  onClick={() => setTab(t.id)}
+                  className={`flex items-center gap-2 px-3.5 py-2.5 text-xs font-semibold rounded-xl whitespace-nowrap transition-all ${
+                    isActive
+                      ? 'bg-accent text-accent-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {t.label}
+                  {t.id === 'clearance' && clearanceQueue.length > 0 && (
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${isActive ? 'bg-white/20 text-white' : 'bg-accent/15 text-accent'}`}>{clearanceQueue.length}</span>
+                  )}
+                  {t.id === 'consolidated' && (consolidatedCount + pendingConsolidationCount) > 0 && (
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${isActive ? 'bg-white/20 text-white' : 'bg-primary/10 text-primary'}`}>{consolidatedCount + pendingConsolidationCount}</span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <AnimatePresence mode="wait">
@@ -179,40 +223,42 @@ export default function GovernmentDashboard() {
               </div>
 
               {clearanceQueue.length === 0 ? (
-                <div className="text-center py-16 text-muted-foreground">
-                  <CheckCircle2 className="w-10 h-10 mx-auto mb-3 text-green-400/40" />
-                  <p className="font-semibold">No shipments pending clearance</p>
+                <div className="bg-card border border-border rounded-2xl text-center py-16 text-muted-foreground">
+                  <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center mx-auto mb-3">
+                    <CheckCircle2 className="w-7 h-7 text-emerald-500/60" />
+                  </div>
+                  <p className="font-semibold text-foreground">No shipments pending clearance</p>
                   <p className="text-xs mt-1">All cleared — system up to date</p>
                 </div>
               ) : (
-                <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
+                <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs">
                       <thead>
                         <tr className="border-b border-border bg-muted/40">
                           {['Shipment ID', 'Tourist Name', 'Nationality', 'Destination', 'Value', 'Retailer Status', 'Customs Ref', 'Date Submitted', 'Action'].map(h => (
-                            <th key={h} className="text-left px-3 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">{h}</th>
+                            <th key={h} className="text-left px-4 py-3.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">{h}</th>
                           ))}
                         </tr>
                       </thead>
                       <tbody>
-                        {clearanceQueue.map(v => {
+                        {clearanceQueue.map((v, idx) => {
                           const isCleared = v.status === 'approved' && v.customs_ref?.startsWith('GCLEAR');
                           return (
-                            <tr key={v.id} className="border-b border-border hover:bg-muted/30 transition-colors">
-                              <td className="px-3 py-3 font-mono text-accent whitespace-nowrap">{v.shipment_id}</td>
-                              <td className="px-3 py-3 text-foreground font-medium">{v.tourist_name || '—'}</td>
-                              <td className="px-3 py-3 text-muted-foreground">{v.tourist_passport_country || '—'}</td>
-                              <td className="px-3 py-3 text-muted-foreground">{v.destination_country || '—'}</td>
-                              <td className="px-3 py-3 text-amber-600 font-bold">${(v.total_value || 0).toLocaleString()}</td>
-                              <td className="px-3 py-3">
-                                <span className="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-1 rounded-full whitespace-nowrap">✓ Retailer Approved</span>
+                            <tr key={v.id} className={`border-b border-border transition-colors hover:bg-muted/30 ${idx % 2 === 1 ? 'bg-muted/10' : ''}`}>
+                              <td className="px-4 py-3.5 font-mono text-accent whitespace-nowrap font-semibold">{v.shipment_id}</td>
+                              <td className="px-4 py-3.5 text-foreground font-medium">{v.tourist_name || '—'}</td>
+                              <td className="px-4 py-3.5 text-muted-foreground">{v.tourist_passport_country || '—'}</td>
+                              <td className="px-4 py-3.5 text-muted-foreground">{v.destination_country || '—'}</td>
+                              <td className="px-4 py-3.5 text-amber-600 font-bold">${(v.total_value || 0).toLocaleString()}</td>
+                              <td className="px-4 py-3.5">
+                                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-full whitespace-nowrap">✓ Retailer Approved</span>
                               </td>
-                              <td className="px-3 py-3 font-mono text-muted-foreground whitespace-nowrap">{v.customs_ref || 'Pending'}</td>
-                              <td className="px-3 py-3 text-muted-foreground whitespace-nowrap">{v.created_date ? new Date(v.created_date).toLocaleDateString() : '—'}</td>
-                              <td className="px-3 py-3">
+                              <td className="px-4 py-3.5 font-mono text-muted-foreground whitespace-nowrap">{v.customs_ref || 'Pending'}</td>
+                              <td className="px-4 py-3.5 text-muted-foreground whitespace-nowrap">{v.created_date ? new Date(v.created_date).toLocaleDateString() : '—'}</td>
+                              <td className="px-4 py-3.5">
                                 {isCleared ? (
-                                  <span className="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-1 rounded-full">✅ Cleared</span>
+                                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-full">✅ Cleared</span>
                                 ) : (
                                   <button
                                     onClick={() => setReviewingShipment(v)}
@@ -292,21 +338,14 @@ export default function GovernmentDashboard() {
       </AnimatePresence>
 
       {/* Confidentiality Footer */}
-      <footer className="border-t border-border bg-card mt-8 py-3 px-4 text-center">
-        <p className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase">
-          © {new Date().getFullYear()} SendItHome · Proprietary and Confidential · Authorised Government Access Only · Unauthorised use is strictly prohibited
-        </p>
+      <footer className="border-t border-border bg-card mt-8 py-4 px-4 text-center">
+        <div className="flex items-center justify-center gap-2 mb-1">
+          <Lock className="w-3 h-3 text-muted-foreground" />
+          <p className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase">
+            © {new Date().getFullYear()} SendItHome · Proprietary and Confidential · Authorised Government Access Only · Unauthorised use is strictly prohibited
+          </p>
+        </div>
       </footer>
-    </div>
-  );
-}
-
-function StatCard({ icon, label, value, colorCls, borderCls, pulse }) {
-  return (
-    <div className={`bg-card border rounded-xl p-3 shadow-sm ${borderCls} ${pulse ? 'animate-pulse' : ''}`}>
-      <p className="text-base">{icon}</p>
-      <p className="text-xs text-muted-foreground mt-1.5 leading-tight">{label}</p>
-      <p className={`text-lg font-black mt-1 ${colorCls}`}>{value}</p>
     </div>
   );
 }
