@@ -38,6 +38,7 @@ import HotelInventory from './pages/HotelInventory';
 import HotelDemoDashboard from './pages/HotelDemoDashboard';
 import DeclarationPreview from './pages/DeclarationPreview';
 import TouristPortal from './pages/TouristPortal';
+import Showcase from './pages/Showcase';
 // Add page imports here
 
 const PUBLIC_PATHS = [
@@ -114,6 +115,7 @@ const AuthenticatedApp = () => {
       <Route path="/declaration-preview" element={<DeclarationPreview />} />
       <Route path="/login" element={<Login />} />
       <Route path="/shipment/:id" element={<TouristPortal />} />
+      <Route path="/showcase" element={<Showcase />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
