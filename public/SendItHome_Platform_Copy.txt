@@ -1,0 +1,377 @@
+═══════════════════════════════════════════════════════════════════════════════
+  SEND IT HOME — PLATFORM HOOK LINES & KEY WORDING
+  Complete List Across All Portals & Pages
+═══════════════════════════════════════════════════════════════════════════════
+
+───────────────────────────────────────────────────────────────────────────────
+GLOBAL / RECURRING ACROSS ALL PORTALS
+────────────────────────────────────────────────────────────────────────────────
+
+• SENDITHOME (Brand wordmark — "SEND" + pink "IT" + "HOME")
+• "The Multilateral Retail Mobility & Cross-Border Shopping Corridor Ecosystem"
+   (Official platform tagline/subtitle)
+• "Powered by SendITHome AI · Proprietary Intelligent Logistics Platform"
+   (Global footer)
+• "© 2026 SendItHome · Proprietary and Confidential · Authorised Partner Access Only · Unauthorised use is strictly prohibited"
+   (Confidentiality footer on all partner portals)
+• "© 2026 SendITHome · Sovereign-Backed Shopping Corridor Partnership · All rights reserved"
+   (Hotel Partner Portal footer)
+• "Proprietary and Confidential"
+   (Universal footer line)
+
+────────────────────────────────────────────────────────────────────────────────
+QR LANDING PAGE (Guest Onboarding — Tourist Portal Entry)
+────────────────────────────────────────────────────────────────────────────────
+
+• "Scan to start your shipment and arrange collection from your hotel"
+   (QR splash screen prompt)
+• "Start My Shipment"
+   (Primary CTA button)
+• "I already have an account"
+   (Secondary CTA button)
+• "[Hotel Name] is an official Send It Home collection point."
+   (Collection point trust badge)
+• "Send Your Purchases Home"
+   (Welcome card headline)
+• "Deliver your items directly from [Hotel] straight to your doorstep. Expedited delivery in 1–3 working days (M-F)."
+   (Welcome card subtext)
+• "Total Cost — US$50" (plus optional insurance)
+• "Transit Protection & Activation — US$30 PAID NOW"
+   "Activates your digital customs clearance and includes complimentary US$2,000 shipping insurance."
+• "Concierge Fulfillment — US$20 ADDED TO HOTEL BILL"
+   "Charged directly by [Hotel] to your room bill for your premium box, secure tape, and courier handover."
+• "Extended Coverage — Optional"
+   "High-value third-party insurance up to US$20,000 available at checkout."
+• "Direct Courier Support"
+• "Hotel pickup within 24 hours (M-F)"
+• "Full tracking via WhatsApp"
+• "50+ countries covered"
+• "Friction-Free Shopping Pass"
+   (Info button label)
+• "Your parcel will be securely collected by our courier partner within 24 hours."
+   (Collection point note)
+
+────────────────────────────────────────────────────────────────────────────────
+FRICTION-FREE SHOPPING PASS (Info Modal — Tourist Portal)
+────────────────────────────────────────────────────────────────────────────────
+
+• "Your Friction-Free Shopping Pass."
+• "Sail Through the Airport."
+• "No heavy bags. No customs lines. No airport baggage stress."
+• "Just your elevated ultimate shopping mobility experience."
+• "We've all been there: you're standing in a gorgeous boutique overseas... 'How am I going to fit this in my suitcase?'... The airport tax and luggage game is broken. It adds friction to your holiday and ruins the thrill of shopping."
+• "That's why we created Send It Home — a brand-new, innovative, first-of-its-kind shopping multilateral corridor built entirely around your freedom."
+• "Your holiday shopping, shipped from your hotel to your front door."
+• "No excess baggage fees. No airport queues. No customs confusion."
+• "A new tourism retail mobility model — convenience delivered seamlessly."
+• "Scan the QR code & register your details — seamless, and takes less than 4 minutes to complete."
+• "Pick up your box (10kg or 20kg) — collected from hotel reception, or conveniently delivered to your room."
+• "Scan & upload your shopping receipts — upload unlimited receipts, subject to the terms and conditions."
+• "Drop your box at reception — once packed, simply visit reception to seal and send."
+• "Travel luggage-free while continuing your luxury shopping experiences."
+• "Seamless 'shop now, deliver home' capability."
+• "Reduced airport stress, baggage handling, and carousel wait times."
+• "Consolidated fulfillment in the convenience of your hotel room."
+• "Improved convenience, security, and customer experience."
+• "End-to-end tracking and integrated logistics management."
+• "Enhanced premium travel experience aligned with luxury expectations."
+• "Expedited international priority shipping, delivered to your home within 1–3 working days."
+• "One flat price for either a 10 kg or 20 kg box."
+• "Packed by you from the convenience of your hotel room."
+• "Customs paperwork done for you — generated automatically from your declared items."
+• "Personal Shopping Only — a strict policy that keeps every shipment compliant, trusted, and hassle-free at customs."
+• "Min spend US$1,500 · Personal Shopping Only"
+• "Got it — Let's Start"
+   (CTA button)
+
+────────────────────────────────────────────────────────────────────────────────
+REGISTRATION PAGE (Tourist Account Creation)
+────────────────────────────────────────────────────────────────────────────────
+
+• "Welcome to Send It Home!"
+   (Hero headline — pink)
+• "We see you're enjoying your stay at [Hotel Name]"
+   (Hotel contextual greeting)
+• "We trust you've had an incredible holiday in [City]!"
+• "The smart way to send your holiday purchases back home."
+   (Generic — when no hotel context)
+• "Create your account below to get started in just a few clicks."
+• "Our unique international courier service makes sending packages back home safe, simple, reliable and with total peace of mind."
+• "✈️ Travel light. We've got the rest covered."
+   (Tagline — gold)
+• "Create Your Account"
+   (Form heading)
+• "Fill in your details below — it only takes a few minutes."
+• "Scan Your Passport"
+• "Point your camera at the photo page. Our AI instantly reads and fills all your details."
+• "Open Camera & Scan"
+• "Upload from Gallery / Files"
+• "Or fill in the details manually below"
+• "AI is reading your passport…"
+• "Extracting your details automatically"
+• "Passport scanned successfully"
+• "Details auto-filled below. Review and confirm."
+• "Passport details are required for international shipping and customs clearance only. Your information is stored securely and protected in accordance with international data privacy regulations."
+   (Privacy note)
+• "If you don't have WhatsApp, please download it here — we use WhatsApp for real-time shipment tracking & updates."
+• "Home Delivery Address"
+• "This is where your shipment will be delivered. Must match your passport details."
+• "🚚 Shipping to [Country]: US$50 total (US$30 paid now + US$20 hotel bill)"
+• "You can choose your box size after uploading your receipts."
+• "Submit & Continue"
+   (Submit button)
+• "Already have an account? Log In"
+
+────────────────────────────────────────────────────────────────────────────────
+HOTEL PARTNER LANDING PAGE (Hotel Onboarding Portal)
+────────────────────────────────────────────────────────────────────────────────
+
+• "SendITHome Property Activation Portal"
+   (Hero heading)
+• "Sovereign-Backed · Property Activation Portal"
+   (Hero badge)
+• "Welcome to the SendITHome global cross-border ecosystem. This secure portal activates your property's integration into the sovereign-backed shopping corridor partnership, turning guest luggage friction into seamless, direct-to-home fulfilment."
+• "Just as complimentary high-speed Wi-Fi transformed from a luxury perk into an absolute guest expectation, the SendITHome corridor is the new global benchmark for friction-free travel. It seamlessly transforms your property from a place where guests merely stay into an active enabler of their luxury lifestyle."
+• "Activate Your Property"
+   (Primary CTA)
+• "Activation Workflow"
+   (Secondary CTA)
+• "$20 USD — Guaranteed Yield / Shipment"
+• "7 Days — Activation Window"
+• "$2,000 — Standard Transit Cover"
+• "24h — VIP Courier Collection"
+• "National Directive · Compliance Notice"
+• "Following the recent Department of Economy and Tourism (DET) briefing, and in compliance with the national directive, all licensed 4 and 5-star hospitality properties are required to activate their operational profile within seven (7) days of this notice to ensure synchronised launch readiness across the city's luxury corridors."
+• "Elite Guest Experience & Financial Yield"
+   (Section 01)
+• "Guaranteed Ancillary Revenue"
+   "Earn a fixed USD $20 partnership yield for every completed guest shipment booking — inclusive of custom luxury packaging, inventory management, training, and portal analytics."
+• "The Ultimate Luxury Amenity"
+   "Provide your international elite travellers with complete freedom from excess baggage fees, airport weight anxiety, and customs friction — actively driving extended stays and repeat loyalty."
+• "White-Glove Global Support"
+   "Full customer care, tracking, and customs clearing are managed entirely by our tier-one global courier partner, insulating your front-of-house team from post-departure logistics."
+• "Unified National Messaging & Zero-Friction Marketing"
+   (Section 02)
+• "The Department of Economy and Tourism (DET) will directly supply your property with pre-approved, high-conversion digital collateral for immediate deployment across your in-room television networks and property-wide digital displays."
+• "Sovereign Integration & Frictionless Workflow"
+   (Section 03)
+• "To initialise your activation, the front office or designated concierge retains operational oversight of the following seamless steps."
+• "Validate Credentials — Takes 2 minutes"
+   "Enter your official Government License Number and Property ID to instantly map your hotel to the national retail network."
+• "Deploy Concierge & Media Assets — Instant Activation"
+   "Download your digital ecosystem kit, including guest-facing QR codes, tracking integrations, and the official DET-mandated digital signage packages."
+• "White-Glove Presentation & Fulfilment — Free Materials"
+   "Your concierge provides the supplied luxury packing materials and securing tools entirely free of charge."
+• "VIP Custody & Collection — Within 24 hours"
+   "Place the prepared shipment in a CCTV-monitored holding area. Our integrated courier network will pick up the parcel within 24 hours (Monday – Friday)."
+• "Integrated Front Office Operations & Folio Settlement"
+   (Section 04)
+• "Verified Chain of Custody"
+   "The shipment charge is posted directly to the guest's room folio. Upon digital or physical signature at the front office, a receipt is issued to the guest, establishing a verified chain of custody."
+• "Audited Trust & Liability Ringfencing"
+   (Section 05)
+• "Aligned with Standard Luggage Policy"
+   "The property's liability during the short-term holding window mirrors standard hotel luggage custody protocols."
+• "Comprehensive Transit Insurance"
+   "Every shipment automatically includes standard protection up to USD $2,000 against damage or loss during transit, with secondary coverage options up to USD $20,000 available directly to the guest."
+• "Declining Content Liability"
+   "The hotel bears no liability for the declared value, condition, or contents of the package — only for the secure custody of the sealed box itself until handover to the courier."
+• "Corporate Onboarding Profile"
+   (Section 06)
+• "The activation fields validate directly against official databases."
+• "Complete Official Onboarding"
+   (Final CTA)
+• "Validates against DET database"
+• "Instant activation"
+• "Sovereign-backed"
+• "Activate Property"
+   (Header button)
+
+────────────────────────────────────────────────────────────────────────────────
+HOTEL DEMO DASHBOARD
+────────────────────────────────────────────────────────────────────────────────
+
+• "DEMO MODE"
+   (Header badge)
+• "Atlantis The Palm, Dubai — Hotel Partner"
+   (Demo hotel identity)
+• "Fully Onboarded · 1,544 Keys"
+   (Hotel status badge)
+• "★ 5-star luxury resort"
+• "Demo Data Only. All figures, shipments, and revenue shown on this dashboard are illustrative examples for demonstration purposes. They do not represent real transactions."
+• "Revenue Earned This Month — $6,380"
+   "Based on 638 × $10 hotel service fee — $20 platform fee less $10 SIH fee"
+• "Projected Annual Revenue — $76,560"
+   "Estimated based on current monthly run rate × 12 months"
+• "Total Shipments — 284,000 (+18%)"
+• "Revenue Generated — $22.4B (+22%)"
+• "Boxes Remaining — 38 / 60"
+• "Countries Served — 34"
+• "Tier 5 · 800+ Keys · 60 boxes allocated"
+• "Guest Shipments"
+• "All shipments originating from Atlantis The Palm, Dubai"
+• "Box Inventory"
+• "Current stock levels and replenishment history"
+• "Automatic Replenishment"
+   "SendITHome monitors your stock levels 24/7. When boxes drop below your reorder threshold, a replenishment order is automatically raised and dispatched within 24 hours — at zero cost to your property."
+• "Hotel QR Code"
+• "Guests scan this QR code to start their SendITHome shipment"
+• "QR Scans (30d) — 2,841"
+• "Conversion Rate — 45%"
+• "Avg. per Day — 94"
+• "Placement Guide: Print A4 · place at concierge & front desk · Add to in-room information folders · Feature on hotel app & in-room TV screens · Share on social media & digital signage"
+• "Ready to partner with SendITHome?"
+• "Register your hotel to go live in as few as 10 working days."
+• "Register Your Hotel"
+   (CTA button)
+
+────────────────────────────────────────────────────────────────────────────────
+RETAILER DASHBOARD (Retail Partner Portal)
+────────────────────────────────────────────────────────────────────────────────
+
+• "[Store Name] — Retailer Partner Portal"
+• "⚠️ You have [N] shipment verification(s) awaiting your approval — respond within 24 hours"
+• "⚠️ You have [N] shipment verification(s) awaiting your approval — [N] OVERDUE"
+• "Estimated Earnings This Month"
+• "2.5% commission on approved shipment values"
+• "How Commission Works"
+• "You earn 2.5% commission on the total value of each shipment you verify and approve. A separate 10% government contribution is automatically calculated from the declared goods value and remitted to the relevant authority — this is not deducted from your commission."
+• "Pending Approvals"
+• "Approved This Month"
+• "Govt. Contribution (10%) — on shipped items only"
+• "All clear — no pending verifications"
+• "New shipments will appear here automatically"
+
+────────────────────────────────────────────────────────────────────────────────
+RETAILER REGISTRATION PAGE
+────────────────────────────────────────────────────────────────────────────────
+
+• "Register as a Retail Partner"
+   (Page heading)
+• "Join the Send It Home network and start earning commission on verified tourist shipments."
+
+────────────────────────────────────────────────────────────────────────────────
+GOVERNMENT DASHBOARD (Oversight Portal)
+────────────────────────────────────────────────────────────────────────────────
+
+• "Confidential — Government Use Only"
+   (Classification banner)
+• "[Department] — Oversight Portal"
+• "Shipments Awaiting Government Clearance"
+• "Retailer-approved shipments that require official government clearance before payment release"
+• "All clear — no shipments awaiting clearance"
+• "Customs Declarations"
+• "Consolidated Shipments"
+• "Audit Trail"
+• "Commission & Tax Revenue"
+
+────────────────────────────────────────────────────────────────────────────────
+ADMIN DASHBOARD (Central Admin)
+────────────────────────────────────────────────────────────────────────────────
+
+• "Central Admin Dashboard"
+• "SENDITHOME"
+• "Retailer Approvals →"
+• "Hotel Admin →"
+• "Gov Portal →"
+• "Courier Portal →"
+• "© 2026 SendItHome · Proprietary and Confidential · Internal Use Only · Unauthorised use is strictly prohibited"
+
+────────────────────────────────────────────────────────────────────────────────
+COURIER DASHBOARD (Logistics Portal)
+────────────────────────────────────────────────────────────────────────────────
+
+• "[Company] — Logistics Portal"
+• "🔔 [N] new hotel(s) assigned for physical onboarding"
+• "Please contact each hotel and complete physical onboarding within 5 working days of assignment"
+• "⚠️ [N] hotel(s) overdue — immediate action required"
+• "📦 [N] Box Replenishment Request(s) Pending"
+
+────────────────────────────────────────────────────────────────────────────────
+COURIER LOGIN / RETAILER PORTAL / GOVERNMENT LOGIN (Auth Pages)
+────────────────────────────────────────────────────────────────────────────────
+
+• "Sovereign-Backed · Property Activation Portal" (Hotel Partner)
+• "Secure Government Portal Access" (Government Login)
+• "Authorized Retailer Access" (Retailer Portal)
+• "Logistics Partner Access" (Courier Login)
+
+────────────────────────────────────────────────────────────────────────────────
+DECLARATION PREVIEW (Customs Document)
+────────────────────────────────────────────────────────────────────────────────
+
+• "Send It Home — Customs Declaration Preview"
+• "Shipment: SIH-2026-00847"
+• Multi-language translation support (English, العربية, 中文, Русский, Deutsch, Français, Español, हिन्दी, 日本語)
+
+────────────────────────────────────────────────────────────────────────────────
+OXFORD OVERVIEW (Strategic Economic Context)
+────────────────────────────────────────────────────────────────────────────────
+
+• "Send It Home — Economic Context Overview"
+• "Prepared for internal strategic reference · Not for distribution"
+• "Dubai Tourism Economy"
+• "Shopping Tourism Behaviour"
+• "The Logistics Gap"
+• "The Solution"
+• "Conclusion"
+
+────────────────────────────────────────────────────────────────────────────────
+TOURIST PORTAL (Shipment Tracking)
+────────────────────────────────────────────────────────────────────────────────
+
+• "Track Your Shipment"
+• "Shipment Status"
+• "Item Inventory"
+• "Order Details"
+• Status lifecycle: "Pending → Receipt Uploaded → Payment Pending → Paid → Packed → Picked Up → In Transit → Delivered / Cancelled"
+
+────────────────────────────────────────────────────────────────────────────────
+NEW ORDER PAGE (Shipment Creation)
+────────────────────────────────────────────────────────────────────────────────
+
+• Steps: "Your Details" → "Home Address" → "Confirm"
+• "🚚 Shipping to [Country]: US$50 total (US$30 paid now + US$20 hotel bill)"
+• "You can choose your box size after uploading your receipts."
+
+────────────────────────────────────────────────────────────────────────────────
+RECEIPT UPLOAD PAGE
+────────────────────────────────────────────────────────────────────────────────
+
+• "Upload Your Shopping Receipts"
+• "Scan & upload your shopping receipts — upload unlimited receipts, subject to the terms and conditions."
+
+────────────────────────────────────────────────────────────────────────────────
+PAYMENT PAGE
+────────────────────────────────────────────────────────────────────────────────
+
+• "Transit Protection & Activation — US$30"
+• "Pay US$30 Now"
+• "Concierge Fulfillment (US$20) will be charged to your hotel room bill."
+
+────────────────────────────────────────────────────────────────────────────────
+KEY PRICING / NUMBERS USED ACROSS PLATFORM
+────────────────────────────────────────────────────────────────────────────────
+
+• US$50 total shipping cost (flat)
+  → US$30 — Transit Protection & Activation (paid online)
+  → US$20 — Concierge Fulfillment (added to hotel bill)
+• US$2,000 — Standard transit insurance (included)
+• US$20,000 — Optional extended coverage (high-value)
+• US$1,500 — Minimum spend requirement
+• 1–3 working days (M-F) — Expedited delivery timeline
+• 24 hours (M-F) — Hotel pickup window
+• 50+ countries served
+• 10kg and 20kg box sizes
+• 2.5% retailer commission
+• 10% government contribution
+• $20 USD — Guaranteed hotel yield per shipment
+• 7 days — Hotel activation window
+• 10 working days — Go-live timeline
+• 1,544 rooms — Demo hotel (Atlantis The Palm, Dubai)
+• Tier 5 — Demo hotel inventory tier (60 boxes)
+
+═══════════════════════════════════════════════════════════════════════════════
+  END OF DOCUMENT
+  Compiled from all Send It Home platform portals and pages.
+═══════════════════════════════════════════════════════════════════════════════
