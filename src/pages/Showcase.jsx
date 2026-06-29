@@ -90,6 +90,7 @@ const SHOWCASE_PAGES = [
       { label: 'Declaration Preview', path: '/declaration-preview' },
       { label: 'Developer Docs', path: '/docs' },
       { label: 'Oxford Overview', path: '/oxford-overview' },
+      { label: 'Premium & Luxury Retailer Intelligence Platform', path: 'https://claude.ai/public/artifacts/190823bb-bf6c-4c9d-a823-46dab05f8e33', external: true },
     ],
   },
 ];
@@ -100,6 +101,10 @@ export default function Showcase() {
   const [iframeKey, setIframeKey] = useState(0);
 
   const handleSelect = (page) => {
+    if (page.external) {
+      window.open(page.path, '_blank', 'noopener,noreferrer');
+      return;
+    }
     setSelected(page);
     setSidebarOpen(false);
     setIframeKey(k => k + 1);
@@ -185,7 +190,7 @@ export default function Showcase() {
             <p className="text-[10px] text-muted-foreground truncate font-mono">{selected.path}</p>
           </div>
           <a
-            href={iframeUrl}
+            href={selected.external ? selected.path : iframeUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 px-3 h-8 rounded-lg bg-muted hover:bg-accent hover:text-accent-foreground text-xs font-semibold text-foreground transition-colors shrink-0"
@@ -194,14 +199,34 @@ export default function Showcase() {
           </a>
         </header>
 
-        {/* Iframe */}
+        {/* Iframe / External Link Panel */}
         <div className="flex-1 bg-muted/30">
-          <iframe
-            key={iframeKey}
-            src={iframeUrl}
-            title={selected.label}
-            className="w-full h-full border-0"
-          />
+          {selected.external ? (
+            <div className="flex flex-col items-center justify-center h-full gap-4 px-6 text-center">
+              <ExternalLink className="w-12 h-12 text-accent" />
+              <div>
+                <p className="text-lg font-bold text-foreground mb-1">{selected.label}</p>
+                <p className="text-sm text-muted-foreground max-w-md">
+                  This is an external resource hosted on Claude. Click below to open it in a new tab.
+                </p>
+              </div>
+              <a
+                href={selected.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-6 h-11 rounded-xl bg-accent text-accent-foreground font-bold text-sm hover:bg-accent/90 transition-colors"
+              >
+                <ExternalLink className="w-4 h-4" /> Open External Link
+              </a>
+            </div>
+          ) : (
+            <iframe
+              key={iframeKey}
+              src={iframeUrl}
+              title={selected.label}
+              className="w-full h-full border-0"
+            />
+          )}
         </div>
       </div>
     </div>
