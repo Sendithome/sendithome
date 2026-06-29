@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, Tooltip, ResponsiveContainer, Legend
@@ -24,7 +24,35 @@ function KpiCard({ icon: Icon, label, value, color = 'text-foreground' }) {
 }
 
 export default function GovCommissionTab({ verifications, retailers }) {
-  const approved = verifications.filter(v => v.status === 'approved');
+  const [period, setPeriod] = useState('all');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+  const [showOutstanding, setShowOutstanding] = useState(false);
+
+  const periodFiltered = useMemo(() => {
+    const allApproved = verifications.filter(v => v.status === 'approved');
+    if (period === 'all' && !dateFrom && !dateTo) return allApproved;
+    const now = new Date();
+    return allApproved.filter(v => {
+      const d = v.approved_at ? new Date(v.approved_at) : new Date(v.created_date || 0);
+      if (period === 'month') {
+        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      }
+      if (period === 'quarter') {
+        const q = Math.floor(now.getMonth() / 3);
+        const dQ = Math.floor(d.getMonth() / 3);
+        return dQ === q && d.getFullYear() === now.getFullYear();
+      }
+      if (period === 'year') {
+        return d.getFullYear() === now.getFullYear();
+      }
+      if (dateFrom && d < new Date(dateFrom)) return false;
+      if (dateTo && d > new Date(dateTo + 'T23:59:59')) return false;
+      return true;
+    });
+  }, [verifications, period, dateFrom, dateTo]);
+
+  const approved = periodFiltered;
 
   const metrics = useMemo(() => {
     const totalRevenue = approved.reduce((s, v) => s + getCommissionAmount(v.total_value || 0, v.tourist_passport_country), 0);
@@ -103,10 +131,30 @@ export default function GovCommissionTab({ verifications, retailers }) {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h2 className="text-base font-bold text-foreground">Government Revenue & Commission Dashboard</h2>
-        <p className="text-xs text-muted-foreground mt-0.5">Tiered commission collection — retailers pay per store transaction based on tourist origin country and spend bracket</p>
+      {/* Header + Date Filters */}
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="text-base font-bold text-foreground">Government Revenue & Commission Dashboard</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">Tiered Variable Commission Structure — retailers pay per store transaction based on tourist origin country and spend bracket. Collected via Unified Tax & Fee Assessment cycle, ring-fenced in a Sovereign Trust Fund with Priority Settlement Allocation to the Project Operator within 7 business days.</p>
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <select value={period} onChange={e => setPeriod(e.target.value)}
+            className="h-9 bg-card border border-input rounded-xl px-3 text-xs text-foreground focus:outline-none focus:border-accent">
+            <option value="all">All Time</option>
+            <option value="month">This Month</option>
+            <option value="quarter">This Quarter</option>
+            <option value="year">This Year</option>
+            <option value="custom">Custom Range</option>
+          </select>
+          {period === 'custom' && (
+            <>
+              <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
+                className="h-9 bg-card border border-input rounded-xl px-2 text-xs text-foreground focus:outline-none focus:border-accent" />
+              <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)}
+                className="h-9 bg-card border border-input rounded-xl px-2 text-xs text-foreground focus:outline-none focus:border-accent" />
+            </>
+          )}
+        </div>
       </div>
 
       {/* Commission Structure Summary */}
@@ -141,10 +189,10 @@ export default function GovCommissionTab({ verifications, retailers }) {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <KpiCard icon={DollarSign} label="Total Govt. Revenue" value={`$${metrics.totalRevenue.toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-accent" />
-        <KpiCard icon={CheckCircle2} label="Commission Collected" value={`$${metrics.totalPaid.toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-green-600" />
-        <KpiCard icon={AlertTriangle} label="Outstanding" value={`$${metrics.outstanding.toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-destructive" />
-        <KpiCard icon={TrendingUp} label="Annual (YTD)" value={`$${metrics.annualCommission.toLocaleString('en', { maximumFractionDigits: 0 })}`} />
+        <KpiCard icon={DollarSign} label="Total Govt. Revenue" value={`US$${metrics.totalRevenue.toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-accent" />
+        <KpiCard icon={CheckCircle2} label="Commission Collected" value={`US$${metrics.totalPaid.toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-green-600" />
+        <KpiCard icon={AlertTriangle} label="Outstanding" value={`US$${metrics.outstanding.toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-destructive" />
+        <KpiCard icon={TrendingUp} label="Annual (YTD)" value={`US$${metrics.annualCommission.toLocaleString('en', { maximumFractionDigits: 0 })}`} />
         <KpiCard icon={Store} label="Active Retailers" value={metrics.byRetailer.length} />
         <KpiCard icon={Globe} label="Collection Rate" value={`${metrics.collectionRate}%`} color={metrics.collectionRate >= 80 ? 'text-green-600' : 'text-amber-600'} />
       </div>
@@ -239,11 +287,11 @@ export default function GovCommissionTab({ verifications, retailers }) {
           <div className="grid grid-cols-2 gap-3 mt-3">
             <div className="text-center bg-green-50 rounded-xl p-3">
               <p className="text-xs text-muted-foreground">Collected</p>
-              <p className="text-sm font-black text-green-700">${metrics.totalPaid.toLocaleString('en', { maximumFractionDigits: 0 })}</p>
+              <p className="text-sm font-black text-green-700">US${metrics.totalPaid.toLocaleString('en', { maximumFractionDigits: 0 })}</p>
             </div>
             <div className="text-center bg-red-50 rounded-xl p-3">
               <p className="text-xs text-muted-foreground">Outstanding</p>
-              <p className="text-sm font-black text-red-700">${metrics.outstanding.toLocaleString('en', { maximumFractionDigits: 0 })}</p>
+              <p className="text-sm font-black text-red-700">US${metrics.outstanding.toLocaleString('en', { maximumFractionDigits: 0 })}</p>
             </div>
           </div>
         </div>
@@ -259,7 +307,7 @@ export default function GovCommissionTab({ verifications, retailers }) {
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-border">
-                  {['#', 'Retailer', 'Shipments', 'Export Value', 'Commission Due', 'Status'].map(h => (
+                  {['#', 'Retailer', 'Shipments', 'Export Value', 'Commission Due', 'Status', 'Action'].map(h => (
                     <th key={h} className="text-left py-2 px-2 text-[10px] font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
@@ -277,6 +325,14 @@ export default function GovCommissionTab({ verifications, retailers }) {
                         {i % 3 === 0 ? '✓ Paid' : '⏳ Pending'}
                       </span>
                     </td>
+                    <td className="py-2.5 px-2">
+                      <button
+                        onClick={() => setShowOutstanding(!showOutstanding)}
+                        className="text-[10px] text-accent hover:underline font-semibold"
+                      >
+                        View Details
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -285,20 +341,31 @@ export default function GovCommissionTab({ verifications, retailers }) {
         )}
       </div>
 
-      {/* Retailers with Outstanding */}
+      {/* Retailers with Outstanding — Clickable/Expandable */}
       {metrics.retailersWithOutstanding.length > 0 && (
         <div className="bg-destructive/5 border border-destructive/20 rounded-2xl p-5">
-          <h3 className="text-sm font-bold text-destructive mb-3 flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4" /> Retailers with Outstanding Balances
-          </h3>
-          <div className="space-y-2">
-            {metrics.retailersWithOutstanding.map(r => (
-              <div key={r.name} className="flex items-center justify-between bg-white/60 rounded-xl px-4 py-2.5">
-                <span className="text-xs font-semibold text-foreground">{r.name}</span>
-                <span className="text-xs font-bold text-destructive">${(r.commission * 0.4).toLocaleString('en', { maximumFractionDigits: 0 })} outstanding</span>
-              </div>
-            ))}
-          </div>
+          <button
+            onClick={() => setShowOutstanding(!showOutstanding)}
+            className="w-full flex items-center justify-between mb-3"
+          >
+            <h3 className="text-sm font-bold text-destructive flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4" /> Retailers with Outstanding Balances ({metrics.retailersWithOutstanding.length})
+            </h3>
+            <span className="text-xs font-bold text-destructive">US${metrics.outstanding.toLocaleString('en', { maximumFractionDigits: 0 })} total outstanding</span>
+          </button>
+          {showOutstanding && (
+            <div className="space-y-2 animate-in fade-in duration-200">
+              {metrics.retailersWithOutstanding.map(r => (
+                <div key={r.name} className="flex items-center justify-between bg-white/60 rounded-xl px-4 py-2.5">
+                  <div>
+                    <span className="text-xs font-semibold text-foreground">{r.name}</span>
+                    <span className="text-[10px] text-muted-foreground ml-2">{r.shipments} shipment{r.shipments !== 1 ? 's' : ''}</span>
+                  </div>
+                  <span className="text-xs font-bold text-destructive">US${(r.commission * 0.4).toLocaleString('en', { maximumFractionDigits: 0 })} outstanding</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

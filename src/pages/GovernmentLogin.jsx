@@ -73,7 +73,7 @@ export default function GovernmentLogin() {
             <span className="text-sm font-black text-foreground">SEND<span className="text-accent">IT</span>HOME</span>
           </div>
           <h1 className="text-2xl font-black text-foreground">Government Oversight Portal</h1>
-          <p className="text-muted-foreground text-sm mt-2 leading-relaxed">Tourism Retail Export — Clearing House & Verification Authority</p>
+          <p className="text-muted-foreground text-sm mt-2 leading-relaxed">Tourism Retail Export — Fiscal Agent & Settlement Authority</p>
         </div>
 
         {/* Classification Banner */}

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Search, User, Filter, Eye, Download, Globe, Calendar, MapPin, Hotel } from 'lucide-react';
+import { Search, User, Filter, Eye, Download, Globe, Calendar, MapPin, Hotel, FileText } from 'lucide-react';
 
 const STATUS_CFG = {
   pending:   { label: 'Pending',   color: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
@@ -9,7 +9,6 @@ const STATUS_CFG = {
   cancelled: { label: 'Rejected',  color: 'bg-red-50 text-red-700 border-red-200' },
 };
 
-// Deduplicate verifications by tourist (one row per unique tourist + shipment)
 function buildTouristRows(verifications) {
   const seen = new Set();
   const rows = [];
@@ -27,6 +26,7 @@ export default function PassportCopiesTab({ verifications }) {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [countryFilter, setCountryFilter] = useState('all');
+  const [showMissingOnly, setShowMissingOnly] = useState(false);
   const [selectedPassport, setSelectedPassport] = useState(null);
 
   const touristRows = useMemo(() => buildTouristRows(verifications), [verifications]);
@@ -47,9 +47,10 @@ export default function PassportCopiesTab({ verifications }) {
         r.destination_country?.toLowerCase().includes(q);
       const matchStatus = statusFilter === 'all' || r.status === statusFilter;
       const matchCountry = countryFilter === 'all' || r.tourist_passport_country === countryFilter;
-      return matchSearch && matchStatus && matchCountry;
+      const matchMissing = !showMissingOnly || !r.passport_url;
+      return matchSearch && matchStatus && matchCountry && matchMissing;
     });
-  }, [touristRows, search, statusFilter, countryFilter]);
+  }, [touristRows, search, statusFilter, countryFilter, showMissingOnly]);
 
   const withPassport = filtered.filter(r => r.passport_url).length;
   const withoutPassport = filtered.filter(r => !r.passport_url).length;
@@ -65,8 +66,8 @@ export default function PassportCopiesTab({ verifications }) {
           </p>
         </div>
         <div className="flex items-center gap-2 text-xs font-semibold flex-wrap">
-          <span className="bg-green-100 text-green-700 border border-green-200 px-2.5 py-1 rounded-full">{withPassport} with passport</span>
-          <span className="bg-red-50 text-red-700 border border-red-200 px-2.5 py-1 rounded-full">{withoutPassport} missing</span>
+          <span className="bg-green-50 text-green-700 border border-green-200 px-2.5 py-1 rounded-full">Passport Uploaded: {withPassport}</span>
+          <span className="bg-red-50 text-red-700 border border-red-200 px-2.5 py-1 rounded-full">Missing: {withoutPassport}</span>
         </div>
       </div>
 
@@ -101,6 +102,12 @@ export default function PassportCopiesTab({ verifications }) {
             {countries.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
         </div>
+        <button
+          onClick={() => setShowMissingOnly(!showMissingOnly)}
+          className={`flex items-center gap-1.5 h-9 px-3 rounded-xl text-xs font-semibold border transition-colors ${showMissingOnly ? 'bg-red-50 border-red-300 text-red-700' : 'bg-card border-input text-muted-foreground hover:text-foreground'}`}
+        >
+          <Filter className="w-3.5 h-3.5" /> Missing Only
+        </button>
       </div>
 
       {/* Table */}
@@ -149,10 +156,10 @@ export default function PassportCopiesTab({ verifications }) {
                             onClick={() => setSelectedPassport(r)}
                             className="flex items-center gap-1 text-[11px] font-semibold text-accent hover:underline"
                           >
-                            <Eye className="w-3.5 h-3.5" /> View
+                            <Eye className="w-3.5 h-3.5" /> View Passport
                           </button>
                         ) : (
-                          <span className="text-[10px] text-muted-foreground italic">Not uploaded</span>
+                          <span className="text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">Not Uploaded</span>
                         )}
                       </td>
                     </tr>
@@ -208,7 +215,7 @@ export default function PassportCopiesTab({ verifications }) {
                   <iframe src={selectedPassport.passport_url} title="Passport PDF" className="w-full h-96 rounded-xl" />
                 ) : (
                   <div className="text-center py-12">
-                    <User className="w-12 h-12 mx-auto text-muted-foreground/40 mb-3" />
+                    <FileText className="w-12 h-12 mx-auto text-muted-foreground/40 mb-3" />
                     <p className="text-xs text-muted-foreground">Document preview not available</p>
                     <a href={selectedPassport.passport_url} target="_blank" rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 mt-3 text-xs text-accent hover:underline">

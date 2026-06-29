@@ -91,6 +91,8 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
   ];
 
   const allPassed = complianceChecks.every(c => c.passed);
+  const passedCount = complianceChecks.filter(c => c.passed).length;
+  const failedCount = complianceChecks.length - passedCount;
 
   const handleConfirm = async () => {
     setSubmitting(true);
@@ -139,6 +141,27 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
         </div>
 
         <div className="p-6 space-y-5">
+          {/* Pass / Fail Summary Banner */}
+          <div className={`rounded-xl px-4 py-3 flex items-center justify-between border ${allPassed ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}`}>
+            <div className="flex items-center gap-3">
+              {allPassed
+                ? <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                : <AlertTriangle className="w-5 h-5 text-red-600" />}
+              <div>
+                <p className={`text-sm font-bold ${allPassed ? 'text-emerald-800' : 'text-red-800'}`}>
+                  {allPassed ? 'ALL CHECKS PASSED' : `${failedCount} CHECK${failedCount !== 1 ? 'S' : ''} FAILED`}
+                </p>
+                <p className={`text-xs ${allPassed ? 'text-emerald-700' : 'text-red-700'}`}>
+                  {passedCount} passed · {failedCount} failed · Shipment {allPassed ? 'eligible for clearance' : 'requires review'}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-300 px-2 py-1 rounded-full">PASS: {passedCount}</span>
+              {failedCount > 0 && <span className="text-[10px] font-bold text-red-700 bg-red-100 border border-red-300 px-2 py-1 rounded-full">FAIL: {failedCount}</span>}
+            </div>
+          </div>
+
           {/* Tourist Info */}
           <section className="bg-muted/40 rounded-xl p-4 space-y-2">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-1.5"><User className="w-3 h-3" /> Tourist Details</p>
@@ -198,36 +221,38 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
             </section>
           )}
 
-          {/* Customs Declaration */}
-          <section className="bg-muted/40 rounded-xl p-4 space-y-2">
+          {/* Supporting Documents */}
+          <section className="bg-muted/40 rounded-xl p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-1.5"><FileText className="w-3 h-3" /> Customs Declaration</p>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-1.5"><FileText className="w-3 h-3" /> Supporting Documents</p>
               <button
                 onClick={handleDownloadPDF}
                 disabled={downloading}
                 className="flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1.5 bg-accent/10 hover:bg-accent/20 text-accent rounded-lg transition-colors disabled:opacity-50"
               >
                 {downloading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
-                {downloading ? 'Generating…' : 'Download PDF'}
+                {downloading ? 'Generating…' : 'Download Declaration PDF'}
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <KV k="Customs Ref" v={shipment.customs_ref || 'Pending Clearance'} />
-              <KV k="Submitted" v={shipment.created_date ? new Date(shipment.created_date).toLocaleDateString() : '—'} />
-              <KV k="Destination" v={shipment.destination_country || '—'} />
-              <KV k="Status" v={shipment.status?.toUpperCase() || '—'} highlight />
-            </div>
-            <div className="flex flex-wrap gap-4 mt-1">
-              {shipment.passport_url && (
-                <a href={shipment.passport_url} target="_blank" rel="noopener noreferrer" className="text-xs text-accent hover:underline flex items-center gap-1">
-                  <FileText className="w-3 h-3" /> View Passport Copy
+            <div className="grid grid-cols-1 gap-2">
+              {shipment.passport_url ? (
+                <a href={shipment.passport_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-accent hover:underline bg-card border border-border rounded-lg px-3 py-2 transition-colors">
+                  <FileText className="w-3.5 h-3.5 shrink-0" /> Passport Copy — {shipment.tourist_name || 'Tourist'}
                 </a>
+              ) : (
+                <div className="flex items-center gap-2 text-xs text-muted-foreground bg-card border border-dashed border-border rounded-lg px-3 py-2">
+                  <FileText className="w-3.5 h-3.5 shrink-0" /> Passport Copy — Not Uploaded
+                </div>
               )}
               {shipment.receipt_url && (
-                <a href={shipment.receipt_url} target="_blank" rel="noopener noreferrer" className="text-xs text-accent hover:underline flex items-center gap-1">
-                  <FileText className="w-3 h-3" /> View Receipt Document
+                <a href={shipment.receipt_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-accent hover:underline bg-card border border-border rounded-lg px-3 py-2 transition-colors">
+                  <FileText className="w-3.5 h-3.5 shrink-0" /> Shopping Receipt — {shipment.store_name || 'Store'}
                 </a>
               )}
+            </div>
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <KV k="Customs Ref" v={shipment.customs_ref || 'Pending Clearance'} />
+              <KV k="Submitted" v={shipment.created_date ? new Date(shipment.created_date).toLocaleDateString() : '—'} />
             </div>
           </section>
 

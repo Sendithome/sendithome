@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Search, Download } from 'lucide-react';
+import { Search, Download, Eye } from 'lucide-react';
 
 const ACTION_LABELS = {
   pending: { label: 'Shipment Created', colorCls: 'text-blue-700 bg-blue-50 border-blue-200' },
@@ -9,29 +9,41 @@ const ACTION_LABELS = {
   cancelled: { label: 'Rejected', colorCls: 'text-red-700 bg-red-50 border-red-200' },
 };
 
-export default function AuditTrailTab({ verifications }) {
+export default function AuditTrailTab({ verifications, retailers = [], onReview }) {
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+
+  const retailerMap = useMemo(() => {
+    const m = {};
+    retailers.forEach(r => { m[r.id] = r; });
+    return m;
+  }, [retailers]);
+
+  function getRetailerName(v) {
+    const r = retailerMap[v.retailer_id];
+    if (r) return r.brand_name || r.store_name || '—';
+    return v.store_name || v.retailer_email || '—';
+  }
 
   const filtered = useMemo(() => {
     return verifications.filter(v => {
       if (filterStatus !== 'all' && v.status !== filterStatus) return false;
       if (search) {
         const q = search.toLowerCase();
-        if (!v.shipment_id?.toLowerCase().includes(q) && !v.tourist_name?.toLowerCase().includes(q) && !v.retailer_email?.toLowerCase().includes(q) && !v.hotel_name?.toLowerCase().includes(q)) return false;
+        if (!v.shipment_id?.toLowerCase().includes(q) && !v.tourist_name?.toLowerCase().includes(q) && !v.retailer_email?.toLowerCase().includes(q) && !v.hotel_name?.toLowerCase().includes(q) && !getRetailerName(v).toLowerCase().includes(q)) return false;
       }
       if (dateFrom && new Date(v.created_date) < new Date(dateFrom)) return false;
       if (dateTo && new Date(v.created_date) > new Date(dateTo + 'T23:59:59')) return false;
       return true;
     });
-  }, [verifications, search, filterStatus, dateFrom, dateTo]);
+  }, [verifications, search, filterStatus, dateFrom, dateTo, retailerMap]);
 
   const downloadCSV = () => {
     const rows = [
-      ['Shipment ID', 'Tourist', 'Nationality', 'Hotel', 'Retailer', 'Value', 'Status', 'Customs Ref', 'Created', 'Approved At'],
-      ...filtered.map(v => [v.shipment_id, v.tourist_name, v.tourist_passport_country, v.hotel_name, v.retailer_email, v.total_value, v.status, v.customs_ref || '', v.created_date, v.approved_at || ''])
+      ['Shipment ID', 'Tourist', 'Nationality', 'Hotel', 'Retailer', 'Value', 'Status', 'Customs Ref', 'Created', 'Approved At', 'Actioned By'],
+      ...filtered.map(v => [v.shipment_id, v.tourist_name, v.tourist_passport_country, v.hotel_name, getRetailerName(v), v.total_value, v.status, v.customs_ref || '', v.created_date, v.approved_at || '', v.approved_by || ''])
     ];
     const csv = rows.map(r => r.map(c => `"${c || ''}"`).join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -86,7 +98,7 @@ export default function AuditTrailTab({ verifications }) {
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-border bg-muted/40">
-                {['Timestamp', 'Shipment ID', 'Tourist', 'Nationality', 'Hotel', 'Retailer', 'Value', 'Status', 'Customs Ref'].map(h => (
+                {['Timestamp', 'Shipment ID', 'Tourist', 'Nationality', 'Hotel', 'Retailer', 'Value', 'Status', 'Actioned By', 'Customs Ref'].map(h => (
                   <th key={h} className="text-left px-3 py-2.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">{h}</th>
                 ))}
               </tr>
@@ -94,7 +106,7 @@ export default function AuditTrailTab({ verifications }) {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="text-center text-muted-foreground py-10">No records match your filters</td>
+                  <td colSpan={10} className="text-center text-muted-foreground py-10">No records match your filters</td>
                 </tr>
               ) : (
                 filtered.map(v => {
@@ -102,15 +114,24 @@ export default function AuditTrailTab({ verifications }) {
                   return (
                     <tr key={v.id} className="border-b border-border hover:bg-muted/20 transition-colors">
                       <td className="px-3 py-2.5 text-muted-foreground whitespace-nowrap">{v.created_date ? new Date(v.created_date).toLocaleString() : '—'}</td>
-                      <td className="px-3 py-2.5 font-mono text-accent whitespace-nowrap">{v.shipment_id}</td>
+                      <td className="px-3 py-2.5 whitespace-nowrap">
+                        {onReview ? (
+                          <button onClick={() => onReview(v)} className="font-mono text-accent hover:underline flex items-center gap-1">
+                            <Eye className="w-3 h-3" /> {v.shipment_id}
+                          </button>
+                        ) : (
+                          <span className="font-mono text-accent">{v.shipment_id}</span>
+                        )}
+                      </td>
                       <td className="px-3 py-2.5 text-foreground">{v.tourist_name || '—'}</td>
                       <td className="px-3 py-2.5 text-muted-foreground">{v.tourist_passport_country || '—'}</td>
                       <td className="px-3 py-2.5 text-muted-foreground">{v.hotel_name || '—'}</td>
-                      <td className="px-3 py-2.5 text-muted-foreground truncate max-w-24">{v.retailer_email || '—'}</td>
+                      <td className="px-3 py-2.5 text-foreground font-medium truncate max-w-32">{getRetailerName(v)}</td>
                       <td className="px-3 py-2.5 text-amber-600 font-semibold whitespace-nowrap">${(v.total_value || 0).toLocaleString()}</td>
                       <td className="px-3 py-2.5 whitespace-nowrap">
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${cfg.colorCls}`}>{cfg.label}</span>
                       </td>
+                      <td className="px-3 py-2.5 text-muted-foreground whitespace-nowrap">{v.approved_by || (v.status === 'pending' ? 'System' : '—')}</td>
                       <td className="px-3 py-2.5 font-mono text-muted-foreground">{v.customs_ref || '—'}</td>
                     </tr>
                   );

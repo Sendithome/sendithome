@@ -1,16 +1,15 @@
 import { useState, useMemo } from 'react';
-import { Search, Filter, Eye, Download, Globe, User, FileText, Package, Loader2, DollarSign } from 'lucide-react';
+import { Search, Filter, Eye, Download, Globe, User, FileText, Package, Loader2, DollarSign, CheckCircle2, AlertTriangle, X } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const STATUS_CFG = {
-  pending:   { label: 'Pending',   color: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
-  approved:  { label: 'Approved',  color: 'bg-green-50 text-green-700 border-green-200' },
-  queried:   { label: 'Queried',   color: 'bg-orange-50 text-orange-700 border-orange-200' },
-  overdue:   { label: 'Overdue',   color: 'bg-red-50 text-red-700 border-red-200' },
-  cancelled: { label: 'Rejected',  color: 'bg-red-50 text-red-700 border-red-200' },
+  pending:   { label: 'Pending',   color: 'bg-yellow-50 text-yellow-700 border-yellow-200', reason: 'Awaiting customs clearance' },
+  approved:  { label: 'Approved',  color: 'bg-green-50 text-green-700 border-green-200', reason: 'Cleared by government officer' },
+  queried:   { label: 'Queried',   color: 'bg-orange-50 text-orange-700 border-orange-200', reason: 'On hold — additional review required' },
+  overdue:   { label: 'Overdue',   color: 'bg-red-50 text-red-700 border-red-200', reason: 'Past deadline — urgent action needed' },
+  cancelled: { label: 'Rejected',  color: 'bg-red-50 text-red-700 border-red-200', reason: 'Rejected by government officer' },
 };
 
-// One declaration per unique shipment
 function buildDeclarations(verifications) {
   const map = {};
   for (const v of verifications) {
@@ -26,22 +25,27 @@ function buildDeclarations(verifications) {
         status: v.status,
         created_date: v.created_date,
         customs_ref: v.customs_ref,
+        approved_by: v.approved_by,
         verifications: [],
       };
     }
     map[key].verifications.push(v);
-    // Prefer approved status
-    if (v.status === 'approved') map[key].status = 'approved';
+    if (v.status === 'approved') {
+      map[key].status = 'approved';
+      map[key].customs_ref = v.customs_ref || map[key].customs_ref;
+      map[key].approved_by = v.approved_by || map[key].approved_by;
+    }
   }
   return Object.values(map).sort((a, b) => new Date(b.created_date || 0) - new Date(a.created_date || 0));
 }
 
-export default function CustomsDeclarationsTab({ verifications }) {
+export default function CustomsDeclarationsTab({ verifications, onReview }) {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [destFilter, setDestFilter] = useState('all');
   const [selectedDecl, setSelectedDecl] = useState(null);
   const [downloading, setDownloading] = useState(null);
+  const [actionLoading, setActionLoading] = useState(false);
 
   const declarations = useMemo(() => buildDeclarations(verifications), [verifications]);
 
@@ -95,6 +99,34 @@ export default function CustomsDeclarationsTab({ verifications }) {
     a.click();
     URL.revokeObjectURL(url);
     setDownloading(null);
+  };
+
+  const handleQuickAction = async (decl, action) => {
+    if (action === 'approve') {
+      if (!window.confirm(`Confirm clearance of declaration ${decl.shipment_id}?`)) return;
+    }
+    setActionLoading(true);
+    const now = new Date().toISOString();
+    const officer = sessionStorage.getItem('gov_email') || 'gov-officer';
+    for (const v of decl.verifications) {
+      let update = {};
+      if (action === 'approve') {
+        update = { status: 'approved', approved_at: now, approved_by: officer, customs_ref: `GCLEAR-${Date.now()}-${v.id.slice(-4)}` };
+      } else if (action === 'query') {
+        update = { status: 'queried', query_reason: 'Government review required', query_type: 'government_hold', query_submitted_at: now };
+      } else if (action === 'reject') {
+        update = { status: 'cancelled', query_reason: 'Rejected by government officer', query_type: 'government_reject', query_submitted_at: now };
+      }
+      await base44.entities.RetailerVerification.update(v.id, update);
+    }
+    // Update local state
+    const updatedDecl = { ...decl, status: action === 'approve' ? 'approved' : action === 'query' ? 'queried' : 'cancelled' };
+    if (action === 'approve') {
+      updatedDecl.customs_ref = `GCLEAR-${Date.now()}`;
+      updatedDecl.approved_by = officer;
+    }
+    setSelectedDecl(updatedDecl);
+    setActionLoading(false);
   };
 
   return (
@@ -193,7 +225,8 @@ export default function CustomsDeclarationsTab({ verifications }) {
                         {d.created_date ? new Date(d.created_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
                       </td>
                       <td className="px-3 py-3">
-                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${sc.color}`}>{sc.label}</span>
+                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${sc.color}`} title={sc.reason}>{sc.label}</span>
+                        {d.status === 'pending' && <p className="text-[9px] text-muted-foreground mt-0.5">{sc.reason}</p>}
                       </td>
                       <td className="px-3 py-3">
                         <div className="flex items-center gap-2">
@@ -219,8 +252,8 @@ export default function CustomsDeclarationsTab({ verifications }) {
       {/* Declaration Detail Modal */}
       {selectedDecl && (
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={() => setSelectedDecl(null)}>
-          <div className="bg-card rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-auto" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+          <div className="bg-card rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-auto" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border sticky top-0 bg-card z-10">
               <div>
                 <p className="text-sm font-bold text-foreground">Customs Declaration — {selectedDecl.shipment_id}</p>
                 <p className="text-[11px] text-muted-foreground">{selectedDecl.tourist_name} · {selectedDecl.tourist_passport_country} → {selectedDecl.destination_country}</p>
@@ -231,7 +264,7 @@ export default function CustomsDeclarationsTab({ verifications }) {
                   {downloading === selectedDecl.shipment_id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
                   Download PDF
                 </button>
-                <button onClick={() => setSelectedDecl(null)} className="text-muted-foreground hover:text-foreground text-lg leading-none font-bold px-2">×</button>
+                <button onClick={() => setSelectedDecl(null)} className="text-muted-foreground hover:text-foreground"><X className="w-4 h-4" /></button>
               </div>
             </div>
 
@@ -253,7 +286,26 @@ export default function CustomsDeclarationsTab({ verifications }) {
                 ))}
               </div>
 
-              {/* Retailer Breakdown */}
+              {/* Supporting Documents */}
+              <div className="bg-muted/40 rounded-xl p-4 space-y-2">
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-1.5"><FileText className="w-3 h-3" /> Supporting Documents</p>
+                <div className="grid grid-cols-1 gap-2">
+                  {selectedDecl.verifications.flatMap(v => [
+                    v.passport_url && { label: `Passport Copy — ${selectedDecl.tourist_name || 'Tourist'}`, url: v.passport_url },
+                    v.receipt_url && { label: `Shopping Receipt — ${v.store_name || 'Store'}`, url: v.receipt_url },
+                  ].filter(Boolean)).map((doc, i) => (
+                    <a key={i} href={doc.url} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-xs text-accent hover:underline bg-card border border-border rounded-lg px-3 py-2 transition-colors">
+                      <FileText className="w-3.5 h-3.5 shrink-0" /> {doc.label}
+                    </a>
+                  ))}
+                  {selectedDecl.verifications.every(v => !v.passport_url && !v.receipt_url) && (
+                    <p className="text-xs text-muted-foreground italic px-3 py-2">No supporting documents available.</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Retailer Breakdown with HS Codes */}
               {selectedDecl.verifications.map((v, i) => {
                 const items = (v.items || []).filter(item => item.eligible !== false);
                 const total = v.total_value || items.reduce((s, item) => s + (item.price || 0), 0);
@@ -278,7 +330,7 @@ export default function CustomsDeclarationsTab({ verifications }) {
                             <tr key={j} className="hover:bg-muted/10">
                               <td className="px-3 py-2 text-foreground">{item.description || '—'}</td>
                               <td className="px-3 py-2 text-muted-foreground">{item.category || '—'}</td>
-                              <td className="px-3 py-2 font-mono text-blue-700 text-[10px]">{item.hs_code || '—'}</td>
+                              <td className="px-3 py-2 font-mono text-blue-700 text-[10px] font-semibold">{item.hs_code || '—'}</td>
                               <td className="px-3 py-2 text-right font-semibold text-foreground">${(item.price || 0).toFixed(2)}</td>
                             </tr>
                           ))}
@@ -301,6 +353,35 @@ export default function CustomsDeclarationsTab({ verifications }) {
                   ${selectedDecl.verifications.reduce((s, v) => s + (v.total_value || 0), 0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>
+
+              {/* Government Officer Action Panel */}
+              {selectedDecl.status !== 'approved' && selectedDecl.status !== 'cancelled' && (
+                <div className="bg-muted/40 rounded-xl p-4 border border-border space-y-3">
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Government Officer Action Panel</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    <button onClick={() => handleQuickAction(selectedDecl, 'approve')} disabled={actionLoading}
+                      className="h-10 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-colors">
+                      {actionLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+                      Approve & Clear
+                    </button>
+                    <button onClick={() => handleQuickAction(selectedDecl, 'query')} disabled={actionLoading}
+                      className="h-10 bg-yellow-500 hover:bg-yellow-600 disabled:opacity-50 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-colors">
+                      <AlertTriangle className="w-3.5 h-3.5" /> Hold for Review
+                    </button>
+                    <button onClick={() => handleQuickAction(selectedDecl, 'reject')} disabled={actionLoading}
+                      className="h-10 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-colors">
+                      <X className="w-3.5 h-3.5" /> Reject
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Officer Info */}
+              {selectedDecl.approved_by && (
+                <p className="text-[10px] text-muted-foreground text-center">
+                  Actioned by: <span className="font-semibold text-foreground">{selectedDecl.approved_by}</span>
+                </p>
+              )}
             </div>
           </div>
         </div>

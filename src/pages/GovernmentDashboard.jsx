@@ -17,6 +17,7 @@ import DeclarationBreakdownTab from '@/components/government/DeclarationBreakdow
 import GovCommissionTab from '@/components/government/GovCommissionTab';
 import PassportCopiesTab from '@/components/government/PassportCopiesTab';
 import CustomsDeclarationsTab from '@/components/government/CustomsDeclarationsTab';
+import ClearanceQueueTab from '@/components/government/ClearanceQueueTab';
 
 const TABS = [
   { id: 'clearance', label: 'Clearance Queue', icon: Shield },
@@ -216,66 +217,12 @@ export default function GovernmentDashboard() {
 
         <AnimatePresence mode="wait">
           {tab === 'clearance' && (
-            <motion.div key="clearance" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
-              <div>
-                <h2 className="text-base font-bold text-foreground">Shipments Awaiting Government Clearance</h2>
-                <p className="text-xs text-muted-foreground mt-0.5">Retailer-approved shipments that require official government clearance before payment release</p>
-              </div>
-
-              {clearanceQueue.length === 0 ? (
-                <div className="bg-card border border-border rounded-2xl text-center py-16 text-muted-foreground">
-                  <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center mx-auto mb-3">
-                    <CheckCircle2 className="w-7 h-7 text-emerald-500/60" />
-                  </div>
-                  <p className="font-semibold text-foreground">No shipments pending clearance</p>
-                  <p className="text-xs mt-1">All cleared — system up to date</p>
-                </div>
-              ) : (
-                <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-xs">
-                      <thead>
-                        <tr className="border-b border-border bg-muted/40">
-                          {['Shipment ID', 'Tourist Name', 'Nationality', 'Destination', 'Value', 'Retailer Status', 'Customs Ref', 'Date Submitted', 'Action'].map(h => (
-                            <th key={h} className="text-left px-4 py-3.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">{h}</th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {clearanceQueue.map((v, idx) => {
-                          const isCleared = v.status === 'approved' && v.customs_ref?.startsWith('GCLEAR');
-                          return (
-                            <tr key={v.id} className={`border-b border-border transition-colors hover:bg-muted/30 ${idx % 2 === 1 ? 'bg-muted/10' : ''}`}>
-                              <td className="px-4 py-3.5 font-mono text-accent whitespace-nowrap font-semibold">{v.shipment_id}</td>
-                              <td className="px-4 py-3.5 text-foreground font-medium">{v.tourist_name || '—'}</td>
-                              <td className="px-4 py-3.5 text-muted-foreground">{v.tourist_passport_country || '—'}</td>
-                              <td className="px-4 py-3.5 text-muted-foreground">{v.destination_country || '—'}</td>
-                              <td className="px-4 py-3.5 text-amber-600 font-bold">${(v.total_value || 0).toLocaleString()}</td>
-                              <td className="px-4 py-3.5">
-                                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-full whitespace-nowrap">✓ Retailer Approved</span>
-                              </td>
-                              <td className="px-4 py-3.5 font-mono text-muted-foreground whitespace-nowrap">{v.customs_ref || 'Pending'}</td>
-                              <td className="px-4 py-3.5 text-muted-foreground whitespace-nowrap">{v.created_date ? new Date(v.created_date).toLocaleDateString() : '—'}</td>
-                              <td className="px-4 py-3.5">
-                                {isCleared ? (
-                                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-full">✅ Cleared</span>
-                                ) : (
-                                  <button
-                                    onClick={() => setReviewingShipment(v)}
-                                    className="flex items-center gap-1.5 px-3 h-8 bg-accent hover:bg-accent/90 text-accent-foreground text-[10px] font-bold rounded-lg transition-colors whitespace-nowrap"
-                                  >
-                                    <Eye className="w-3 h-3" /> Review & Clear
-                                  </button>
-                                )}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
+            <motion.div key="clearance" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <ClearanceQueueTab
+                clearanceQueue={clearanceQueue}
+                onReview={setReviewingShipment}
+                onAction={handleAction}
+              />
             </motion.div>
           )}
 
@@ -315,13 +262,13 @@ export default function GovernmentDashboard() {
 
           {tab === 'customs' && (
             <motion.div key="customs" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-              <CustomsDeclarationsTab verifications={verifications} />
+              <CustomsDeclarationsTab verifications={verifications} onReview={setReviewingShipment} />
             </motion.div>
           )}
 
           {tab === 'audit' && (
             <motion.div key="audit" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-              <AuditTrailTab verifications={verifications} />
+              <AuditTrailTab verifications={verifications} retailers={retailers} onReview={setReviewingShipment} />
             </motion.div>
           )}
         </AnimatePresence>

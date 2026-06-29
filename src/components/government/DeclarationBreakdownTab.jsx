@@ -34,21 +34,39 @@ function buildDeclarations(verifications, retailers) {
 export default function DeclarationBreakdownTab({ verifications, retailers }) {
   const [search, setSearch] = useState('');
   const [expandedKey, setExpandedKey] = useState(null);
-  const [expandedRetailer, setExpandedRetailer] = useState(null); // `${shipmentId}-${retailerId}`
+  const [expandedRetailer, setExpandedRetailer] = useState(null);
   const [exporting, setExporting] = useState(false);
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+  const [nationalityFilter, setNationalityFilter] = useState('all');
+  const [destFilter, setDestFilter] = useState('all');
+  const [hotelFilter, setHotelFilter] = useState('all');
+  const [retailerFilter, setRetailerFilter] = useState('all');
 
   const declarations = useMemo(() => buildDeclarations(verifications, retailers), [verifications, retailers]);
 
+  const nationalities = useMemo(() => [...new Set(declarations.map(d => d.tourist_passport_country).filter(Boolean))].sort(), [declarations]);
+  const destinations = useMemo(() => [...new Set(declarations.map(d => d.destination_country).filter(Boolean))].sort(), [declarations]);
+  const hotels = useMemo(() => [...new Set(declarations.map(d => d.hotel_name).filter(Boolean))].sort(), [declarations]);
+  const allRetailers = useMemo(() => [...new Set(declarations.flatMap(d => d.retailer_verifications.map(v => v.store_name)).filter(Boolean))].sort(), [declarations]);
+
   const filtered = useMemo(() => {
-    if (!search) return declarations;
     const q = search.toLowerCase();
-    return declarations.filter(d =>
-      d.tourist_name?.toLowerCase().includes(q) ||
-      d.shipment_id?.toLowerCase().includes(q) ||
-      d.tourist_passport_country?.toLowerCase().includes(q) ||
-      d.destination_country?.toLowerCase().includes(q)
-    );
-  }, [declarations, search]);
+    return declarations.filter(d => {
+      const matchSearch = !q ||
+        d.tourist_name?.toLowerCase().includes(q) ||
+        d.shipment_id?.toLowerCase().includes(q) ||
+        d.tourist_passport_country?.toLowerCase().includes(q) ||
+        d.destination_country?.toLowerCase().includes(q);
+      const matchNat = nationalityFilter === 'all' || d.tourist_passport_country === nationalityFilter;
+      const matchDest = destFilter === 'all' || d.destination_country === destFilter;
+      const matchHotel = hotelFilter === 'all' || d.hotel_name === hotelFilter;
+      const matchRetailer = retailerFilter === 'all' || d.retailer_verifications.some(v => v.store_name === retailerFilter);
+      const matchDateFrom = !dateFrom || new Date(d.created_date) >= new Date(dateFrom);
+      const matchDateTo = !dateTo || new Date(d.created_date) <= new Date(dateTo + 'T23:59:59');
+      return matchSearch && matchNat && matchDest && matchHotel && matchRetailer && matchDateFrom && matchDateTo;
+    });
+  }, [declarations, search, nationalityFilter, destFilter, hotelFilter, retailerFilter, dateFrom, dateTo]);
 
   const exportCSV = () => {
     const rows = [
@@ -231,15 +249,35 @@ export default function DeclarationBreakdownTab({ verifications, retailers }) {
       {/* Summary Totals */}
       <TotalsBar declarations={filtered} />
 
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-        <input
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Search by tourist name, shipment ID, nationality, destination…"
-          className="w-full h-9 pl-9 pr-3 bg-card border border-input rounded-xl text-xs text-foreground focus:outline-none focus:border-accent transition-colors"
-        />
+      {/* Search + Filters */}
+      <div className="flex flex-wrap gap-2 items-center">
+        <div className="relative flex-1 min-w-48">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search tourist, shipment ID, nationality, destination…"
+            className="w-full h-9 pl-9 pr-3 bg-card border border-input rounded-xl text-xs text-foreground focus:outline-none focus:border-accent transition-colors"
+          />
+        </div>
+        <select value={nationalityFilter} onChange={e => setNationalityFilter(e.target.value)} className="h-9 bg-card border border-input rounded-xl px-2 text-xs text-foreground focus:outline-none focus:border-accent">
+          <option value="all">All Nationalities</option>
+          {nationalities.map(n => <option key={n} value={n}>{n}</option>)}
+        </select>
+        <select value={destFilter} onChange={e => setDestFilter(e.target.value)} className="h-9 bg-card border border-input rounded-xl px-2 text-xs text-foreground focus:outline-none focus:border-accent">
+          <option value="all">All Destinations</option>
+          {destinations.map(d => <option key={d} value={d}>{d}</option>)}
+        </select>
+        <select value={hotelFilter} onChange={e => setHotelFilter(e.target.value)} className="h-9 bg-card border border-input rounded-xl px-2 text-xs text-foreground focus:outline-none focus:border-accent">
+          <option value="all">All Hotels</option>
+          {hotels.map(h => <option key={h} value={h}>{h}</option>)}
+        </select>
+        <select value={retailerFilter} onChange={e => setRetailerFilter(e.target.value)} className="h-9 bg-card border border-input rounded-xl px-2 text-xs text-foreground focus:outline-none focus:border-accent">
+          <option value="all">All Retailers</option>
+          {allRetailers.map(r => <option key={r} value={r}>{r}</option>)}
+        </select>
+        <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} className="h-9 bg-card border border-input rounded-xl px-2 text-xs text-foreground focus:outline-none focus:border-accent" />
+        <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} className="h-9 bg-card border border-input rounded-xl px-2 text-xs text-foreground focus:outline-none focus:border-accent" />
       </div>
 
       {/* Declaration Cards */}
@@ -439,12 +477,20 @@ function DeclarationCard({ declaration: d, isExpanded, onToggle, expandedRetaile
                                     </tbody>
                                   </table>
                                 )}
-                                {v.receipt_url && (
-                                  <a href={v.receipt_url} target="_blank" rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1 mt-2 text-[10px] text-accent hover:underline">
-                                    <Receipt className="w-3 h-3" /> View Original Receipt
-                                  </a>
-                                )}
+                                <div className="flex flex-wrap gap-3 mt-2">
+                                  {v.receipt_url && (
+                                    <a href={v.receipt_url} target="_blank" rel="noopener noreferrer"
+                                      className="inline-flex items-center gap-1 text-[10px] text-accent hover:underline">
+                                      <Receipt className="w-3 h-3" /> View Original Receipt
+                                    </a>
+                                  )}
+                                  {v.passport_url && (
+                                    <a href={v.passport_url} target="_blank" rel="noopener noreferrer"
+                                      className="inline-flex items-center gap-1 text-[10px] text-accent hover:underline">
+                                      <FileText className="w-3 h-3" /> View Passport Copy
+                                    </a>
+                                  )}
+                                </div>
                               </td>
                             </tr>
                           )}
