@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Search, ChevronDown, ChevronUp, ExternalLink, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { Search, ChevronDown, ChevronUp, ExternalLink, CheckCircle2, Download } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const STATUS_COLORS = {
@@ -10,6 +10,8 @@ const STATUS_COLORS = {
   overdue: 'bg-red-100 text-red-600 border-red-200',
 };
 
+const isOverdue = (v) => v.status === 'pending' && v.deadline_at && new Date(v.deadline_at) < new Date();
+
 export default function AdminShipmentsTab({ verifications, retailers, onRefresh }) {
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -18,16 +20,27 @@ export default function AdminShipmentsTab({ verifications, retailers, onRefresh 
 
   const retailerMap = Object.fromEntries(retailers.map(r => [r.id, r]));
 
+  const stats = useMemo(() => {
+    const total = verifications.length;
+    const pending = verifications.filter(v => v.status === 'pending' && !isOverdue(v)).length;
+    const overdue = verifications.filter(isOverdue).length;
+    const approved = verifications.filter(v => v.status === 'approved').length;
+    const totalValue = verifications.reduce((s, v) => s + (v.total_value || 0), 0);
+    return { total, pending, overdue, approved, totalValue };
+  }, [verifications]);
+
   const filtered = verifications.filter(v => {
     const matchSearch = !search ||
       v.shipment_id?.toLowerCase().includes(search.toLowerCase()) ||
       v.tourist_name?.toLowerCase().includes(search.toLowerCase()) ||
       v.store_name?.toLowerCase().includes(search.toLowerCase());
-    const matchStatus = filterStatus === 'all' || v.status === filterStatus;
+    const matchStatus = filterStatus === 'all' || (filterStatus === 'overdue' ? isOverdue(v) : v.status === filterStatus);
     return matchSearch && matchStatus;
   });
 
   const handleOverride = async (id, newStatus) => {
+    const label = newStatus === 'approved' ? 'admin-approve this verification' : 'cancel this verification';
+    if (!window.confirm(`Are you sure you want to ${label}? This action overrides the retailer workflow.`)) return;
     setOverriding(id);
     await base44.entities.RetailerVerification.update(id, {
       status: newStatus,
@@ -38,8 +51,31 @@ export default function AdminShipmentsTab({ verifications, retailers, onRefresh 
     setOverriding(null);
   };
 
+  const handleExport = () => {
+    const rows = [['Shipment ID', 'Store', 'Tourist', 'Destination', 'Items', 'Value (USD)', 'Status', 'Deadline']];
+    filtered.forEach(v => rows.push([
+      v.shipment_id || '', v.store_name || '', v.tourist_name || '', v.destination_country || '',
+      v.items?.length || 0, (v.total_value || 0).toFixed(2),
+      isOverdue(v) ? 'overdue' : v.status, v.deadline_at ? new Date(v.deadline_at).toLocaleDateString('en-GB') : '',
+    ]));
+    const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    const a = document.createElement('a');
+    a.href = url; a.download = `verifications_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="space-y-4">
+      {/* Summary */}
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <SummaryChip label="Total" value={stats.total} />
+        <SummaryChip label="Pending" value={stats.pending} color="text-yellow-700" />
+        <SummaryChip label="Overdue" value={stats.overdue} color="text-red-600" />
+        <SummaryChip label="Approved" value={stats.approved} color="text-green-700" />
+        <SummaryChip label="Total Value" value={`US$${stats.totalValue.toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-foreground" />
+      </div>
+
       {/* Filters */}
       <div className="flex flex-wrap gap-2 items-center">
         <div className="relative">
@@ -51,10 +87,14 @@ export default function AdminShipmentsTab({ verifications, retailers, onRefresh 
           className="h-9 px-3 bg-card border border-border rounded-xl text-xs text-foreground focus:outline-none focus:border-accent">
           <option value="all">All Status</option>
           <option value="pending">Pending</option>
+          <option value="overdue">Overdue</option>
           <option value="approved">Approved</option>
           <option value="queried">Queried</option>
           <option value="cancelled">Cancelled</option>
         </select>
+        <button onClick={handleExport} className="flex items-center gap-1.5 h-9 px-3 bg-card border border-border rounded-xl text-xs font-semibold text-foreground hover:border-accent transition-colors">
+          <Download className="w-3.5 h-3.5" /> Export CSV
+        </button>
         <span className="text-xs text-muted-foreground ml-auto">{filtered.length} verifications</span>
       </div>
 
@@ -73,20 +113,20 @@ export default function AdminShipmentsTab({ verifications, retailers, onRefresh 
             </thead>
             <tbody className="divide-y divide-border">
               {filtered.map(v => {
-                const isOverdue = v.status === 'pending' && v.deadline_at && new Date(v.deadline_at) < new Date();
+                const overdue = isOverdue(v);
                 const retailer = retailerMap[v.retailer_id];
                 return (
                   <>
-                    <tr key={v.id} className={`hover:bg-muted/20 transition-colors ${isOverdue ? 'bg-red-50/30' : ''}`}>
+                    <tr key={v.id} className={`hover:bg-muted/20 transition-colors ${overdue ? 'bg-red-50/30' : ''}`}>
                       <td className="py-2.5 px-3 font-mono font-bold text-accent">{v.shipment_id}</td>
                       <td className="py-2.5 px-3 font-medium text-foreground">{v.store_name || '—'}</td>
                       <td className="py-2.5 px-3">{v.tourist_name || '—'}</td>
                       <td className="py-2.5 px-3 text-muted-foreground">{v.destination_country || '—'}</td>
                       <td className="py-2.5 px-3 text-center">{v.items?.length || 0}</td>
-                      <td className="py-2.5 px-3 font-semibold">${(v.total_value || 0).toFixed(2)}</td>
+                      <td className="py-2.5 px-3 font-semibold">US${(v.total_value || 0).toFixed(2)}</td>
                       <td className="py-2.5 px-3">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${STATUS_COLORS[isOverdue ? 'overdue' : v.status] || STATUS_COLORS.pending}`}>
-                          {isOverdue ? 'OVERDUE' : v.status}
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${STATUS_COLORS[overdue ? 'overdue' : v.status] || STATUS_COLORS.pending}`}>
+                          {overdue ? 'OVERDUE' : v.status}
                         </span>
                       </td>
                       <td className="py-2.5 px-3 text-muted-foreground">
@@ -131,7 +171,7 @@ export default function AdminShipmentsTab({ verifications, retailers, onRefresh 
                                         <td className="py-2 px-3 font-medium">{item.description}</td>
                                         <td className="py-2 px-3 text-muted-foreground">{item.category}</td>
                                         <td className="py-2 px-3 font-mono">{item.hs_code || '—'}</td>
-                                        <td className="py-2 px-3 text-right font-semibold">${(item.price || 0).toFixed(2)}</td>
+                                        <td className="py-2 px-3 text-right font-semibold">US${(item.price || 0).toFixed(2)}</td>
                                         <td className="py-2 px-3">
                                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${item.eligible ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}>
                                             {item.eligible ? 'Eligible' : 'Ineligible'}
@@ -143,8 +183,8 @@ export default function AdminShipmentsTab({ verifications, retailers, onRefresh 
                                   <tfoot>
                                     <tr className="border-t border-border bg-muted/20">
                                       <td colSpan={3} className="py-2 px-3 font-bold text-foreground">Total Shipment Value</td>
-                                      <td className="py-2 px-3 text-right font-bold text-foreground">${(v.total_value || 0).toFixed(2)}</td>
-                                      <td className="py-2 px-3 text-amber-600 font-bold text-[10px]">10% = ${((v.total_value || 0) * 0.10).toFixed(2)}</td>
+                                      <td className="py-2 px-3 text-right font-bold text-foreground">US${(v.total_value || 0).toFixed(2)}</td>
+                                      <td className="py-2 px-3 text-amber-600 font-bold text-[10px]">10% = US${((v.total_value || 0) * 0.10).toFixed(2)}</td>
                                     </tr>
                                   </tfoot>
                                 </table>
@@ -188,6 +228,15 @@ export default function AdminShipmentsTab({ verifications, retailers, onRefresh 
           </table>
         </div>
       )}
+    </div>
+  );
+}
+
+function SummaryChip({ label, value, color = 'text-foreground' }) {
+  return (
+    <div className="bg-card border border-border rounded-xl px-3 py-2.5">
+      <p className="text-[10px] text-muted-foreground uppercase tracking-wide">{label}</p>
+      <p className={`text-lg font-bold mt-0.5 ${color}`}>{value}</p>
     </div>
   );
 }
