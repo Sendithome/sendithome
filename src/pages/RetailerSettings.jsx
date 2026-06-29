@@ -12,14 +12,23 @@ export default function RetailerSettings() {
   const [staffEmail, setStaffEmail] = useState('');
 
   useEffect(() => {
-    const id = sessionStorage.getItem('retailer_id');
-    if (!id) return;
-    base44.entities.Retailer.filter({ id }).then(rs => {
-      if (rs.length > 0) {
-        setRetailer(rs[0]);
-        setForm(rs[0]);
-      }
-    });
+    const id = sessionStorage.getItem('retailer_id') || localStorage.getItem('retailer_id');
+    if (id) {
+      base44.entities.Retailer.filter({ id }).then(rs => {
+        if (rs.length > 0) {
+          setRetailer(rs[0]);
+          setForm(rs[0]);
+        }
+      });
+    } else {
+      // Demo mode: load first available retailer
+      base44.entities.Retailer.list('-created_date', 1).then(rs => {
+        if (rs.length > 0) {
+          setRetailer(rs[0]);
+          setForm(rs[0]);
+        }
+      });
+    }
   }, []);
 
   const update = (k, v) => setForm(p => ({ ...p, [k]: v }));

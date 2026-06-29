@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend
 } from 'recharts';
-import { DollarSign, TrendingUp, AlertTriangle, CheckCircle2, Clock } from 'lucide-react';
+import { DollarSign, TrendingUp, AlertTriangle, CheckCircle2, Clock, Download } from 'lucide-react';
 import {
   getCommissionTier, getCommissionAmount, getCommissionTiers,
   getCountryGroupLabel, MIN_SPEND, MAX_SPEND
@@ -35,6 +35,7 @@ const TIER_COLORS = [
 ];
 
 export default function CommissionTab({ verifications }) {
+  const [txSearch, setTxSearch] = useState('');
   const approved = verifications.filter(v => v.status === 'approved');
 
   // Determine the country group from the verifications
@@ -144,6 +145,17 @@ export default function CommissionTab({ verifications }) {
             </div>
           ))}
         </div>
+        <p className="text-[10px] text-muted-foreground mt-3 leading-relaxed">
+          <strong className="text-foreground">How tiers work:</strong> Commission tiers are <strong className="text-foreground">per-transaction</strong>, not cumulative — each shipment is assessed independently based on its declared value at the time of approval. Tiers do <strong className="text-foreground">not</strong> reset monthly; they apply to each individual store transaction regardless of when it occurs.
+        </p>
+      </div>
+
+      {/* Calculation explanation */}
+      <div className="bg-muted/40 border border-border rounded-2xl p-4">
+        <p className="text-xs font-bold text-foreground mb-1">How Your Commission Is Calculated</p>
+        <p className="text-[11px] text-muted-foreground leading-relaxed">
+          Commission = <strong className="text-foreground">Declared Shipment Value</strong> × <strong className="text-foreground">Tier Rate</strong>. The tier rate is determined by the tourist's origin country group (Preferred or Rest of World) and the total declared value of eligible items in the shipment. For example, a US$5,000 shipment to a Preferred-country tourist at a 5% tier rate = US$250 commission owed to the government.
+        </p>
       </div>
 
       {/* KPIs */}
@@ -231,10 +243,57 @@ export default function CommissionTab({ verifications }) {
 
       {/* Commission Transaction History */}
       <div className="bg-card border border-border rounded-2xl p-5">
-        <h3 className="text-sm font-bold mb-4">Commission Transaction History</h3>
-        {metrics.commissionRecords.length === 0 ? (
-          <p className="text-xs text-muted-foreground text-center py-8">No commission records yet</p>
-        ) : (
+        <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
+          <h3 className="text-sm font-bold">Commission Transaction History</h3>
+          {metrics.commissionRecords.length > 0 && (
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <input
+                  value={txSearch}
+                  onChange={e => setTxSearch(e.target.value)}
+                  placeholder="Search shipment ID, tourist, store…"
+                  className="h-8 bg-background border border-input rounded-lg pl-3 pr-3 text-xs text-foreground focus:outline-none focus:border-accent w-48"
+                />
+              </div>
+              <button
+                onClick={() => {
+                  const header = ['Shipment ID', 'Date', 'Store', 'Shipment Value (US$)', 'Tier', 'Rate', 'Commission (US$)', 'Tourist Origin', 'Status'];
+                  const filteredTx = metrics.commissionRecords.filter(r => {
+                    if (!txSearch) return true;
+                    const q = txSearch.toLowerCase();
+                    return r.shipment_id?.toLowerCase().includes(q) ||
+                      r.store_name?.toLowerCase().includes(q) ||
+                      r.tourist_passport_country?.toLowerCase().includes(q);
+                  });
+                  const rows = filteredTx.map(r => [
+                    r.shipment_id, r.approved_at ? new Date(r.approved_at).toLocaleDateString() : '',
+                    r.store_name, (r.total_value || 0).toFixed(2),
+                    `T${r.tier.tier}`, r.tier.label,
+                    r.commissionDue.toFixed(2), r.tourist_passport_country, 'Pending'
+                  ]);
+                  const csv = [header, ...rows].map(row => row.join(',')).join('\n');
+                  const blob = new Blob([csv], { type: 'text/csv' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a'); a.href = url; a.download = `commission-transactions-${new Date().toISOString().slice(0,10)}.csv`; a.click();
+                  URL.revokeObjectURL(url);
+                }}
+                className="flex items-center gap-1.5 text-xs font-semibold border border-border text-foreground px-3 h-8 rounded-lg hover:bg-muted transition-colors"
+              >
+                <Download className="w-3.5 h-3.5" /> Export CSV
+              </button>
+            </div>
+          )}
+        </div>
+        {(() => {
+          const filteredTx = metrics.commissionRecords.filter(r => {
+            if (!txSearch) return true;
+            const q = txSearch.toLowerCase();
+            return r.shipment_id?.toLowerCase().includes(q) ||
+              r.store_name?.toLowerCase().includes(q) ||
+              r.tourist_passport_country?.toLowerCase().includes(q);
+          });
+          if (filteredTx.length === 0) return <p className="text-xs text-muted-foreground text-center py-8">No commission records found.</p>;
+          return (
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
@@ -245,7 +304,7 @@ export default function CommissionTab({ verifications }) {
                 </tr>
               </thead>
               <tbody>
-                {metrics.commissionRecords.slice(0, 20).map((r, i) => (
+                {filteredTx.slice(0, 20).map((r, i) => (
                   <tr key={r.id || i} className="border-b border-border/50 hover:bg-muted/30">
                     <td className="py-2.5 px-2 font-mono text-accent whitespace-nowrap">{r.shipment_id || '—'}</td>
                     <td className="py-2.5 px-2 text-muted-foreground whitespace-nowrap">{r.approved_at ? new Date(r.approved_at).toLocaleDateString() : '—'}</td>
@@ -267,7 +326,8 @@ export default function CommissionTab({ verifications }) {
               </tbody>
             </table>
           </div>
-        )}
+          );
+        })()}
       </div>
     </div>
   );

@@ -69,11 +69,13 @@ export default function RetailerRegistration() {
 
         <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
 
+          <p className="text-[10px] text-muted-foreground">Fields marked with <span className="text-accent font-bold">*</span> are required.</p>
+
           {/* Store Name vs Brand Name explanation */}
-          <div className="bg-secondary/60 border border-border rounded-xl px-4 py-3 text-xs text-muted-foreground leading-relaxed">
-            <p className="font-semibold text-foreground mb-1">📋 Two different name fields:</p>
-            <p><span className="font-semibold text-foreground">Store Name</span> — Your legal registered business name (as on trade license).</p>
-            <p className="mt-0.5"><span className="font-semibold text-foreground">Brand Name</span> — The name printed on shopping receipts issued to customers (e.g. Gucci, Prada, Nike). This is used to auto-match receipts to your store.</p>
+          <div className="bg-secondary/60 border border-border rounded-xl px-4 py-3 text-xs text-muted-foreground leading-relaxed space-y-0.5">
+            <p className="font-semibold text-foreground">📋 Two name fields — why?</p>
+            <p><span className="font-semibold text-foreground">Store Name</span> — Your legal business name (as shown on your trade license).</p>
+            <p><span className="font-semibold text-foreground">Brand Name</span> — The name shown on customer receipts (e.g. Gucci, Prada, Nike), used to auto-match receipts to your store.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -87,9 +89,12 @@ export default function RetailerRegistration() {
           <Field label="Store Location (Mall / Area) *">
             <input value={form.store_location} onChange={e => update('store_location', e.target.value)} placeholder="e.g. Dubai Mall, Downtown" className={inputCls} />
           </Field>
-          <Field label="Trade License Number *">
-            <input value={form.trade_license_number} onChange={e => update('trade_license_number', e.target.value)} placeholder="e.g. TL-12345678" className={inputCls} />
-          </Field>
+          <div>
+            <Field label="Trade License Number *">
+              <input value={form.trade_license_number} onChange={e => update('trade_license_number', e.target.value)} placeholder="e.g. TL-12345678" className={inputCls} />
+            </Field>
+            <p className="text-[10px] text-muted-foreground mt-1">Required to verify your legal authorisation to operate and comply with government regulations.</p>
+          </div>
           <Field label="Contact Person Name *">
             <input value={form.contact_name} onChange={e => update('contact_name', e.target.value)} placeholder="Full Name" className={inputCls} />
           </Field>

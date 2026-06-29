@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Download, Loader2, Clock, CheckCircle2, AlertTriangle, Search, FileText, Package, TrendingUp } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import ShipmentDetailModal from './ShipmentDetailModal';
 
 const STATUS_CONFIG = {
   pending:   { label: 'Awaiting Approval',  color: 'text-yellow-600',  bg: 'bg-yellow-50 border-yellow-200' },
@@ -40,6 +41,25 @@ export default function ShipmentsTab({ verifications, retailer }) {
   const [filterFrom, setFilterFrom] = useState('');
   const [filterTo, setFilterTo] = useState('');
   const [generatingPDF, setGeneratingPDF] = useState(false);
+  const [ongoingSearch, setOngoingSearch] = useState('');
+  const [selectedShipment, setSelectedShipment] = useState(null);
+
+  const exportCSV = () => {
+    const header = ['Shipment ID', 'Tourist Name', 'Destination', 'Items', 'Value (US$)', 'Commission (US$)', 'Date Created', 'Status'];
+    const rows = verifications.map(v => [
+      v.shipment_id, v.tourist_name, v.destination_country,
+      v.items?.length || 0,
+      (v.total_value || 0).toFixed(2),
+      ((v.total_value || 0) * 0.10).toFixed(2),
+      v.created_date ? new Date(v.created_date).toLocaleDateString() : '',
+      v.status
+    ]);
+    const csv = [header, ...rows].map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = `shipments-export-${new Date().toISOString().slice(0,10)}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const ongoing = useMemo(() =>
     verifications.filter(v => v.status === 'pending' || v.status === 'queried' || v.status === 'overdue'),
@@ -247,14 +267,23 @@ export default function ShipmentsTab({ verifications, retailer }) {
             </button>
           ))}
         </div>
-        <button
-          onClick={generateAccountingPDF}
-          disabled={generatingPDF || approved.length === 0}
-          className="flex items-center gap-2 text-xs font-semibold bg-amber-500 hover:bg-amber-600 disabled:opacity-40 text-white px-4 py-2 rounded-xl transition-colors shadow-sm"
-        >
-          {generatingPDF ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileText className="w-3.5 h-3.5" />}
-          Download Accounting Report (PDF)
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={exportCSV}
+            disabled={verifications.length === 0}
+            className="flex items-center gap-2 text-xs font-semibold border border-border text-foreground disabled:opacity-40 px-4 py-2 rounded-xl hover:bg-muted transition-colors"
+          >
+            <Download className="w-3.5 h-3.5" /> Export CSV
+          </button>
+          <button
+            onClick={generateAccountingPDF}
+            disabled={generatingPDF || approved.length === 0}
+            className="flex items-center gap-2 text-xs font-semibold bg-amber-500 hover:bg-amber-600 disabled:opacity-40 text-white px-4 py-2 rounded-xl transition-colors shadow-sm"
+          >
+            {generatingPDF ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileText className="w-3.5 h-3.5" />}
+            Download Accounting Report (PDF)
+          </button>
+        </div>
       </div>
 
       {/* Summary Strip */}
@@ -265,7 +294,17 @@ export default function ShipmentsTab({ verifications, retailer }) {
       </div>
 
       {view === 'ongoing' && (
-        <OngoingView verifications={verifications.filter(v => v.status === 'pending' || v.status === 'queried')} />
+        <OngoingView
+          verifications={verifications.filter(v => v.status === 'pending' || v.status === 'queried').filter(v => {
+            if (!ongoingSearch) return true;
+            const q = ongoingSearch.toLowerCase();
+            return v.shipment_id?.toLowerCase().includes(q) ||
+              v.tourist_name?.toLowerCase().includes(q) ||
+              v.destination_country?.toLowerCase().includes(q);
+          })}
+          search={ongoingSearch} setSearch={setOngoingSearch}
+          onSelect={setSelectedShipment}
+        />
       )}
 
       {view === 'history' && (
@@ -276,7 +315,12 @@ export default function ShipmentsTab({ verifications, retailer }) {
           filterStatus={filterStatus} setFilterStatus={setFilterStatus}
           filterFrom={filterFrom} setFilterFrom={setFilterFrom}
           filterTo={filterTo} setFilterTo={setFilterTo}
+          onSelect={setSelectedShipment}
         />
+      )}
+
+      {selectedShipment && (
+        <ShipmentDetailModal verification={selectedShipment} onClose={() => setSelectedShipment(null)} />
       )}
     </div>
   );
@@ -295,7 +339,9 @@ function SummaryCard({ icon, label, value, color, footnote }) {
   );
 }
 
-function OngoingView({ verifications }) {
+function OngoingView({ verifications, search, setSearch, onSelect }) {
+  const inputCls = "h-8 bg-background border border-input rounded-lg px-2 text-xs text-foreground focus:outline-none focus:border-accent transition-colors";
+
   if (verifications.length === 0) {
     return (
       <div className="text-center py-14 text-muted-foreground">
@@ -308,14 +354,21 @@ function OngoingView({ verifications }) {
 
   return (
     <div className="space-y-3">
-      <p className="text-xs text-muted-foreground font-medium">{verifications.length} shipment{verifications.length !== 1 ? 's' : ''} awaiting action</p>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs text-muted-foreground font-medium">{verifications.length} shipment{verifications.length !== 1 ? 's' : ''} awaiting action</p>
+        <div className="relative">
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search…"
+            className={`${inputCls} pl-7 w-36`} />
+        </div>
+      </div>
       {verifications.map(v => {
         const isOverdue = v.deadline_at && new Date(v.deadline_at) < new Date();
         return (
           <div key={v.id} className={`bg-card border rounded-2xl p-4 shadow-sm ${isOverdue ? 'border-destructive/40' : v.status === 'queried' ? 'border-orange-200' : 'border-yellow-200'}`}>
             <div className="flex items-start justify-between gap-3 flex-wrap">
               <div>
-                <p className="text-sm font-bold text-foreground font-mono">{v.shipment_id}</p>
+                <button onClick={() => onSelect && onSelect(v)} className="text-sm font-bold text-foreground font-mono hover:text-accent hover:underline transition-colors">{v.shipment_id}</button>
                 <p className="text-xs text-muted-foreground mt-0.5">{v.tourist_name} · {v.destination_country}</p>
                 <div className="flex items-center gap-2 mt-2 flex-wrap">
                   <StatusBadge status={v.status} deadline_at={v.deadline_at} />
@@ -353,7 +406,7 @@ function OngoingView({ verifications }) {
   );
 }
 
-function HistoryView({ verifications, search, setSearch, filterStatus, setFilterStatus, filterFrom, setFilterFrom, filterTo, setFilterTo }) {
+function HistoryView({ verifications, search, setSearch, filterStatus, setFilterStatus, filterFrom, setFilterFrom, filterTo, setFilterTo, onSelect }) {
   const inputCls = "h-8 bg-background border border-input rounded-lg px-2 text-xs text-foreground focus:outline-none focus:border-accent transition-colors";
 
   return (
@@ -396,7 +449,9 @@ function HistoryView({ verifications, search, setSearch, filterStatus, setFilter
             <tbody className="divide-y divide-border">
               {verifications.map(v => (
                 <tr key={v.id} className="hover:bg-muted/20 transition-colors">
-                  <td className="py-2.5 px-3 font-mono text-accent font-semibold">{v.shipment_id}</td>
+                  <td className="py-2.5 px-3">
+                    <button onClick={() => onSelect && onSelect(v)} className="font-mono text-accent font-semibold hover:underline">{v.shipment_id}</button>
+                  </td>
                   <td className="py-2.5 px-3 text-foreground">{v.tourist_name || '—'}</td>
                   <td className="py-2.5 px-3 text-muted-foreground">{v.destination_country || '—'}</td>
                   <td className="py-2.5 px-3 text-center">{v.items?.length || 0}</td>

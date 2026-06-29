@@ -1,11 +1,31 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Download } from 'lucide-react';
 
 const COLORS = ['#22C55E', '#D4A855', '#FF007F', '#6366F1', '#0EA5E9', '#F97316'];
 
+const QUICK_FILTERS = [
+  { id: 'all', label: 'All Time' },
+  { id: 'month', label: 'This Month' },
+  { id: '30d', label: 'Last 30 Days' },
+  { id: 'ytd', label: 'Year to Date' },
+];
+
 export default function AnalyticsTab({ verifications }) {
-  const approved = useMemo(() => verifications.filter(v => v.status === 'approved'), [verifications]);
+  const [quickFilter, setQuickFilter] = useState('all');
+
+  const approved = useMemo(() => {
+    const all = verifications.filter(v => v.status === 'approved');
+    if (quickFilter === 'all') return all;
+    const now = new Date();
+    return all.filter(v => {
+      const d = v.approved_at ? new Date(v.approved_at) : new Date(v.created_date || 0);
+      if (quickFilter === 'month') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      if (quickFilter === '30d') return d >= new Date(now.getTime() - 30 * 86400000);
+      if (quickFilter === 'ytd') return d.getFullYear() === now.getFullYear();
+      return true;
+    });
+  }, [verifications, quickFilter]);
 
   // Monthly volume
   const monthly = useMemo(() => {
@@ -54,19 +74,35 @@ export default function AnalyticsTab({ verifications }) {
     URL.revokeObjectURL(url);
   };
 
-  const tooltipStyle = { backgroundColor: '#111827', border: '1px solid #374151', borderRadius: 8, color: '#fff', fontSize: 12 };
+  const tooltipStyle = {
+    backgroundColor: 'hsl(var(--popover))',
+    border: '1px solid hsl(var(--border))',
+    borderRadius: 8,
+    color: 'hsl(var(--popover-foreground))',
+    fontSize: 12,
+  };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
+      {/* Quick date filters */}
+      <div className="flex rounded-xl border border-border overflow-hidden bg-card w-fit">
+        {QUICK_FILTERS.map(f => (
+          <button key={f.id} onClick={() => setQuickFilter(f.id)}
+            className={`px-3 py-1.5 text-xs font-semibold transition-colors ${quickFilter === f.id ? 'bg-accent text-accent-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}>
+            {f.label}
+          </button>
+        ))}
+      </div>
+
       {/* Monthly Export Volume */}
-      <ChartCard title="Monthly Export Volume">
+      <ChartCard title="Monthly Export Volume" description="Number of approved shipments per month over the last 12 months.">
         {monthly.length === 0 ? <EmptyChart /> : (
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={monthly}>
-              <XAxis dataKey="label" tick={{ fill: '#6B7280', fontSize: 11 }} />
-              <YAxis tick={{ fill: '#6B7280', fontSize: 11 }} />
+              <XAxis dataKey="label" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
+              <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
               <Tooltip contentStyle={tooltipStyle} />
-              <Bar dataKey="shipments" fill="#22C55E" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="shipments" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         )}
@@ -74,12 +110,14 @@ export default function AnalyticsTab({ verifications }) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Top Categories */}
-        <ChartCard title="Top Exported Categories">
+        <ChartCard title="Top Exported Categories" description="Breakdown of shipped items by product category.">
           {categories.length === 0 ? <EmptyChart /> : (
             <ResponsiveContainer width="100%" height={180}>
               <PieChart>
-                <Pie data={categories} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  labelLine={false} fontSize={10}>
+                <Pie data={categories} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70}
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  labelLine={false}
+                  style={{ fontSize: 10, fill: 'hsl(var(--foreground))', fontWeight: 600 }}>
                   {categories.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Pie>
                 <Tooltip contentStyle={tooltipStyle} />
@@ -89,14 +127,14 @@ export default function AnalyticsTab({ verifications }) {
         </ChartCard>
 
         {/* Average Basket Size */}
-        <ChartCard title="Average Basket Size ($)">
+        <ChartCard title="Average Basket Size (US$)" description="Average shipment value per month — tracks tourist spending trends.">
           {basketTrend.length === 0 ? <EmptyChart /> : (
             <ResponsiveContainer width="100%" height={180}>
               <LineChart data={basketTrend}>
-                <XAxis dataKey="label" tick={{ fill: '#6B7280', fontSize: 11 }} />
-                <YAxis tick={{ fill: '#6B7280', fontSize: 11 }} />
+                <XAxis dataKey="label" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
+                <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
                 <Tooltip contentStyle={tooltipStyle} />
-                <Line type="monotone" dataKey="avg" stroke="#D4A855" strokeWidth={2} dot={{ fill: '#D4A855', r: 3 }} />
+                <Line type="monotone" dataKey="avg" stroke="hsl(var(--chart-2))" strokeWidth={2} dot={{ fill: 'hsl(var(--chart-2))', r: 3 }} />
               </LineChart>
             </ResponsiveContainer>
           )}
@@ -104,53 +142,53 @@ export default function AnalyticsTab({ verifications }) {
       </div>
 
       {/* Destination Countries */}
-      <ChartCard title="Destination Countries">
+      <ChartCard title="Destination Countries" description="Top countries where your shipments are being delivered.">
         {destinations.length === 0 ? <EmptyChart /> : (
           <ResponsiveContainer width="100%" height={destinations.length * 36 + 20}>
             <BarChart data={destinations} layout="vertical" margin={{ left: 80 }}>
-              <XAxis type="number" tick={{ fill: '#6B7280', fontSize: 11 }} />
-              <YAxis type="category" dataKey="name" tick={{ fill: '#9CA3AF', fontSize: 11 }} width={75} />
+              <XAxis type="number" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
+              <YAxis type="category" dataKey="name" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} width={75} />
               <Tooltip contentStyle={tooltipStyle} />
-              <Bar dataKey="value" fill="#FF007F" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="value" fill="hsl(var(--chart-1))" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         )}
       </ChartCard>
 
       {/* Commission Statement */}
-      <ChartCard title="Commission Statement (Tiered)">
-        <p className="text-[10px] text-slate-500 italic mb-3">Commission is tiered based on tourist origin country and transaction value. Two groups: Preferred (GCC, India, Egypt, Jordan, Russia) and Rest of the World. VAT excluded.</p>
+      <ChartCard title="Commission Statement (Tiered)" description="Monthly breakdown of shipment value and commission owed to the government.">
         <div className="space-y-2">
           {monthly.length === 0 ? (
-            <p className="text-center text-slate-500 text-sm py-4">No data yet.</p>
+            <p className="text-center text-muted-foreground text-sm py-4">No data yet.</p>
           ) : (
             monthly.map(m => (
-              <div key={m.month} className="flex items-center justify-between py-2 border-b border-slate-800 text-xs">
-                <span className="text-white font-semibold w-16">{m.label}</span>
-                <span className="text-slate-400">{m.shipments} shipments</span>
-                <span className="text-slate-300">${m.value.toFixed(2)} shipped value</span>
-                <span className="text-[#D4A855] font-bold">${(m.commission || 0).toFixed(2)}</span>
+              <div key={m.month} className="flex items-center justify-between py-2 border-b border-border text-xs">
+                <span className="text-foreground font-semibold w-16">{m.label}</span>
+                <span className="text-muted-foreground">{m.shipments} shipments</span>
+                <span className="text-muted-foreground">US${m.value.toFixed(2)} shipped</span>
+                <span className="text-amber-600 font-bold">US${(m.commission || 0).toFixed(2)}</span>
               </div>
             ))
           )}
         </div>
-        <button onClick={downloadStatement} className="mt-4 flex items-center gap-2 text-xs text-green-400 border border-green-500/40 rounded-lg px-3 h-8 hover:bg-green-500/10 transition-colors">
-          <Download className="w-3.5 h-3.5" /> Download Commission Statement (PDF)
+        <button onClick={downloadStatement} className="mt-4 flex items-center gap-2 text-xs font-semibold text-foreground border border-border rounded-lg px-3 h-8 hover:bg-muted transition-colors">
+          <Download className="w-3.5 h-3.5" /> Download Commission Statement (CSV)
         </button>
       </ChartCard>
     </div>
   );
 }
 
-function ChartCard({ title, children }) {
+function ChartCard({ title, description, children }) {
   return (
-    <div className="bg-[#111827] border border-slate-700 rounded-2xl p-4">
-      <p className="text-sm font-bold text-[#D4A855] mb-4">{title}</p>
+    <div className="bg-card border border-border rounded-2xl p-4 shadow-sm">
+      <p className="text-sm font-bold text-foreground mb-1">{title}</p>
+      {description && <p className="text-[10px] text-muted-foreground mb-4">{description}</p>}
       {children}
     </div>
   );
 }
 
 function EmptyChart() {
-  return <p className="text-center text-slate-600 text-xs py-8">No data available yet.</p>;
+  return <p className="text-center text-muted-foreground text-xs py-8">No data available yet.</p>;
 }

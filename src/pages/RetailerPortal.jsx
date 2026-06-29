@@ -10,6 +10,7 @@ export default function RetailerPortal() {
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleLogin = async () => {
     setError('');
@@ -30,6 +31,10 @@ export default function RetailerPortal() {
       setError('Incorrect password. Please check the credentials sent to your email.');
       setLoading(false);
       return;
+    }
+    if (rememberMe) {
+      localStorage.setItem('retailer_id', retailer.id);
+      localStorage.setItem('retailer_name', retailer.store_name);
     }
     sessionStorage.setItem('retailer_id', retailer.id);
     sessionStorage.setItem('retailer_name', retailer.store_name);
@@ -84,6 +89,16 @@ export default function RetailerPortal() {
               </button>
             </div>
           </Field>
+
+          <div className="flex items-center justify-between text-xs">
+            <label className="flex items-center gap-2 cursor-pointer text-muted-foreground">
+              <input type="checkbox" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} className="accent-accent" />
+              Remember Me
+            </label>
+            <button type="button" onClick={() => setError('Please contact your Send It Home partnership manager at retail-partnerships@sendithome.com to reset your password.')} className="text-accent hover:underline font-medium">
+              Forgot Password?
+            </button>
+          </div>
 
           {error && (
             <p className="text-xs text-destructive bg-destructive/10 border border-destructive/30 rounded-xl px-3 py-2">{error}</p>
