@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Download, Loader2, Clock, CheckCircle2, AlertTriangle, Search, FileText, Package, TrendingUp } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import ShipmentDetailModal from './ShipmentDetailModal';
+import { getCommissionAmount, getCommissionTier } from '@/utils/commissionTiers';
 
 const STATUS_CONFIG = {
   pending:   { label: 'Awaiting Approval',  color: 'text-yellow-600',  bg: 'bg-yellow-50 border-yellow-200' },
@@ -85,7 +86,7 @@ export default function ShipmentsTab({ verifications, retailer }) {
     setGeneratingPDF(true);
     const approved = verifications.filter(v => v.status === 'approved');
     const totalValue = approved.reduce((s, v) => s + (v.total_value || 0), 0);
-    const totalCommission = totalValue * 0.10;
+    const totalCommission = approved.reduce((s, v) => s + getCommissionAmount(v.total_value || 0, v.tourist_passport_country), 0);
 
     const lines = [
       `SEND IT HOME — RETAILER COMMISSION REPORT`,
@@ -100,10 +101,12 @@ export default function ShipmentsTab({ verifications, retailer }) {
       `─────────────────────────────────────────`,
       `Total Shipments Approved:   ${approved.length}`,
       `Total Declared Value (USD): $${totalValue.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-      `Govt. Commission (10%*):    $${totalCommission.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      `Govt. Commission:         $${totalCommission.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
       ``,
-      `* 10% commission rate shown as reference/demo model. Final rate subject to approval by`,
-      `  relevant economic & government authorities. VAT calculated separately.`,
+      `* Commission is tiered based on tourist origin country and transaction value.`,
+      `  Preferred group (GCC, India, Egypt, Jordan, Russia): 1%-10% across 8 tiers.`,
+      `  Rest of World (ROW): 2%-10% across 7 tiers. Higher spend = lower rate.`,
+      `  Min spend US$1,500 · Max US$20,000. VAT excluded.`,
       ``,
       `SHIPMENT DETAILS`,
       `─────────────────────────────────────────`,
@@ -167,7 +170,7 @@ export default function ShipmentsTab({ verifications, retailer }) {
       const cards = [
         { label: 'Total Shipments', value: String(approved2.length) },
         { label: 'Total Value (USD)', value: `$${totalValue.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` },
-        { label: 'Govt. Commission (10%*)', value: `$${totalCommission.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` },
+        { label: 'Govt. Commission (Tiered)', value: `$${totalCommission.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` },
       ];
       const cardW = (W - margin * 2 - 8) / 3;
       cards.forEach((c, i) => {
@@ -185,7 +188,7 @@ export default function ShipmentsTab({ verifications, retailer }) {
 
       // Disclaimer
       doc.setTextColor(130, 130, 130); doc.setFontSize(6.5); doc.setFont('helvetica', 'italic');
-      doc.text('* 10% govt. commission rate shown as demo/reference — applies only on declared shipped items. VAT excluded. Final rate subject to regulatory approval.', margin, y);
+      doc.text('* Commission is tiered (1%-10%) based on tourist origin country & transaction value. VAT excluded.', margin, y);
       y += 8;
 
       // Table header
@@ -225,7 +228,7 @@ export default function ShipmentsTab({ verifications, retailer }) {
         doc.setFillColor(isEven ? 252 : 245, isEven ? 252 : 245, isEven ? 252 : 248);
         doc.rect(margin, y, W - margin * 2, 7, 'F');
         doc.setTextColor(40, 40, 40); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
-        const commission = (v.total_value || 0) * 0.10;
+        const commission = getCommissionAmount(v.total_value || 0, v.tourist_passport_country);
         const row = [
           String(i + 1),
           v.shipment_id || '—',
@@ -254,6 +257,7 @@ export default function ShipmentsTab({ verifications, retailer }) {
 
   const approved = verifications.filter(v => v.status === 'approved');
   const totalValue = approved.reduce((s, v) => s + (v.total_value || 0), 0);
+  const totalCommission = approved.reduce((s, v) => s + getCommissionAmount(v.total_value || 0, v.tourist_passport_country), 0);
 
   return (
     <div className="space-y-5">
@@ -290,7 +294,7 @@ export default function ShipmentsTab({ verifications, retailer }) {
       <div className="grid grid-cols-3 gap-3">
         <SummaryCard icon={<Package className="w-4 h-4" />} label="Total Shipments" value={verifications.length} color="text-primary" />
         <SummaryCard icon={<CheckCircle2 className="w-4 h-4" />} label="Approved" value={approved.length} color="text-green-600" />
-        <SummaryCard icon={<TrendingUp className="w-4 h-4" />} label="Govt. Commission (10%*)" value={`$${(totalValue * 0.10).toLocaleString('en', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`} color="text-amber-600" footnote="on shipped items only" />
+        <SummaryCard icon={<TrendingUp className="w-4 h-4" />} label="Govt. Commission (Tiered)" value={`$${totalCommission.toLocaleString('en', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`} color="text-amber-600" footnote="tiered — based on tourist origin & spend" />
       </div>
 
       {view === 'ongoing' && (
@@ -383,7 +387,7 @@ function OngoingView({ verifications, search, setSearch, onSelect }) {
               <div className="text-right shrink-0">
                 <p className="text-xs text-muted-foreground">Declared Value</p>
                 <p className="text-base font-bold text-foreground">${(v.total_value || 0).toFixed(2)}</p>
-                <p className="text-[10px] text-amber-600 font-semibold mt-0.5">10%* Govt: ${((v.total_value || 0) * 0.10).toFixed(2)}</p>
+                <p className="text-[10px] text-amber-600 font-semibold mt-0.5">Tiered Govt: ${getCommissionAmount(v.total_value || 0, v.tourist_passport_country).toFixed(2)}</p>
                 <p className="text-[10px] text-muted-foreground mt-0.5">{v.items?.length || 0} item{(v.items?.length || 0) !== 1 ? 's' : ''}</p>
               </div>
             </div>
@@ -441,7 +445,7 @@ function HistoryView({ verifications, search, setSearch, filterStatus, setFilter
           <table className="w-full text-xs">
             <thead className="bg-muted/40">
               <tr className="text-muted-foreground">
-                {['Shipment ID', 'Tourist', 'Destination', 'Items', 'Value', 'Commission (10%*)', 'Date Created', 'Status'].map(h => (
+                {['Shipment ID', 'Tourist', 'Destination', 'Items', 'Value', 'Commission (Tiered)', 'Date Created', 'Status'].map(h => (
                   <th key={h} className="text-left py-2.5 px-3 font-semibold whitespace-nowrap">{h}</th>
                 ))}
               </tr>
@@ -456,7 +460,7 @@ function HistoryView({ verifications, search, setSearch, filterStatus, setFilter
                   <td className="py-2.5 px-3 text-muted-foreground">{v.destination_country || '—'}</td>
                   <td className="py-2.5 px-3 text-center">{v.items?.length || 0}</td>
                   <td className="py-2.5 px-3 font-semibold text-foreground">${(v.total_value || 0).toFixed(2)}</td>
-                  <td className="py-2.5 px-3 font-bold text-amber-600">${((v.total_value || 0) * 0.10).toFixed(2)}</td>
+                  <td className="py-2.5 px-3 font-bold text-amber-600">${getCommissionAmount(v.total_value || 0, v.tourist_passport_country).toFixed(2)}</td>
                   <td className="py-2.5 px-3 text-muted-foreground whitespace-nowrap">
                     {v.created_date ? new Date(v.created_date).toLocaleDateString('en-GB') : '—'}
                   </td>
@@ -469,7 +473,7 @@ function HistoryView({ verifications, search, setSearch, filterStatus, setFilter
           </table>
         </div>
       )}
-      <p className="text-[10px] text-muted-foreground italic text-center">* 10% govt. commission rate is a reference model on shipped items only. VAT excluded. Subject to regulatory approval.</p>
+      <p className="text-[10px] text-muted-foreground italic text-center">* Commission is tiered (1%-10%) based on tourist origin country & transaction value. VAT excluded. Min spend US$1,500 · Max US$20,000.</p>
     </div>
   );
 }
