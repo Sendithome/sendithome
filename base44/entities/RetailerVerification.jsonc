@@ -38,7 +38,12 @@
       "type": "string"
     },
     "receipt_url": {
-      "type": "string"
+      "type": "string",
+      "description": "Shopping receipt image URL"
+    },
+    "passport_url": {
+      "type": "string",
+      "description": "Tourist passport copy image URL"
     },
     "items": {
       "type": "array",

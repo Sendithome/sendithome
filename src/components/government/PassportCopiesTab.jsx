@@ -51,8 +51,8 @@ export default function PassportCopiesTab({ verifications }) {
     });
   }, [touristRows, search, statusFilter, countryFilter]);
 
-  const withPassport = filtered.filter(r => r.receipt_url).length;
-  const withoutPassport = filtered.filter(r => !r.receipt_url).length;
+  const withPassport = filtered.filter(r => r.passport_url).length;
+  const withoutPassport = filtered.filter(r => !r.passport_url).length;
 
   return (
     <div className="space-y-5">
@@ -144,7 +144,7 @@ export default function PassportCopiesTab({ verifications }) {
                         <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${sc.color}`}>{sc.label}</span>
                       </td>
                       <td className="px-3 py-3">
-                        {r.receipt_url ? (
+                        {r.passport_url ? (
                           <button
                             onClick={() => setSelectedPassport(r)}
                             className="flex items-center gap-1 text-[11px] font-semibold text-accent hover:underline"
@@ -174,7 +174,7 @@ export default function PassportCopiesTab({ verifications }) {
                 <p className="text-[11px] text-muted-foreground">{selectedPassport.tourist_passport_country} · {selectedPassport.shipment_id}</p>
               </div>
               <div className="flex items-center gap-2">
-                <a href={selectedPassport.receipt_url} download target="_blank" rel="noopener noreferrer"
+                <a href={selectedPassport.passport_url} download target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors">
                   <Download className="w-3.5 h-3.5" /> Download
                 </a>
@@ -202,15 +202,15 @@ export default function PassportCopiesTab({ verifications }) {
             </div>
             <div className="px-5 pb-5">
               <div className="border border-border rounded-xl overflow-hidden bg-muted/20 flex items-center justify-center min-h-48">
-                {selectedPassport.receipt_url.match(/\.(jpg|jpeg|png|gif|webp)/i) ? (
-                  <img src={selectedPassport.receipt_url} alt="Passport copy" className="w-full object-contain max-h-96" />
-                ) : selectedPassport.receipt_url.match(/\.pdf$/i) ? (
-                  <iframe src={selectedPassport.receipt_url} title="Passport PDF" className="w-full h-96 rounded-xl" />
+                {selectedPassport.passport_url.match(/\.(jpg|jpeg|png|gif|webp)/i) ? (
+                  <img src={selectedPassport.passport_url} alt="Passport copy" className="w-full object-contain max-h-96" />
+                ) : selectedPassport.passport_url.match(/\.pdf$/i) ? (
+                  <iframe src={selectedPassport.passport_url} title="Passport PDF" className="w-full h-96 rounded-xl" />
                 ) : (
                   <div className="text-center py-12">
                     <User className="w-12 h-12 mx-auto text-muted-foreground/40 mb-3" />
                     <p className="text-xs text-muted-foreground">Document preview not available</p>
-                    <a href={selectedPassport.receipt_url} target="_blank" rel="noopener noreferrer"
+                    <a href={selectedPassport.passport_url} target="_blank" rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 mt-3 text-xs text-accent hover:underline">
                       <Eye className="w-3 h-3" /> Open in new tab
                     </a>

@@ -163,6 +163,7 @@ Deno.serve(async (req) => {
       tourist_passport_country: user.nationality || '',
       hotel_name: order.hotel_name || '',
       receipt_url: group.receipt_url,
+      passport_url: order.passport_url || '',
       // ALL items from this store's receipt — selected=true means tourist chose to ship it
       items: allReceiptItems.map(i => ({
         description: i.item_name,

@@ -81,6 +81,9 @@ export default function Profile() {
       file_urls: [file_url],
     });
 
+    // Persist the passport image URL so it travels with the user's orders
+    await base44.auth.updateMe({ passport_url: file_url });
+
     setForm(prev => ({
       ...prev,
       nationality: result.nationality || prev.nationality,

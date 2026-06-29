@@ -217,11 +217,18 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
               <KV k="Destination" v={shipment.destination_country || '—'} />
               <KV k="Status" v={shipment.status?.toUpperCase() || '—'} highlight />
             </div>
-            {shipment.receipt_url && (
-              <a href={shipment.receipt_url} target="_blank" rel="noopener noreferrer" className="text-xs text-accent hover:underline flex items-center gap-1 mt-1">
-                <FileText className="w-3 h-3" /> View Receipt Document
-              </a>
-            )}
+            <div className="flex flex-wrap gap-4 mt-1">
+              {shipment.passport_url && (
+                <a href={shipment.passport_url} target="_blank" rel="noopener noreferrer" className="text-xs text-accent hover:underline flex items-center gap-1">
+                  <FileText className="w-3 h-3" /> View Passport Copy
+                </a>
+              )}
+              {shipment.receipt_url && (
+                <a href={shipment.receipt_url} target="_blank" rel="noopener noreferrer" className="text-xs text-accent hover:underline flex items-center gap-1">
+                  <FileText className="w-3 h-3" /> View Receipt Document
+                </a>
+              )}
+            </div>
           </section>
 
           {/* Compliance Checks */}

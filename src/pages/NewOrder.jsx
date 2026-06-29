@@ -35,6 +35,7 @@ export default function NewOrder() {
     hotel_city: '',
     hotel_country: '',
     hotel_room: '',
+    passport_url: '',
     destination_country: '',
     destination_address: '',
     destination_city: '',
@@ -58,6 +59,7 @@ export default function NewOrder() {
     if (me?.nationality) updates.nationality = me.nationality;
     if (me?.passport_number) updates.passport_number = me.passport_number;
     if (me?.passport_expiry) updates.passport_expiry = me.passport_expiry;
+    if (me?.passport_url) updates.passport_url = me.passport_url;
     if (me?.phone_number) updates.phone_number = me.phone_number.includes('|') ? me.phone_number : `+971|${me.phone_number}`;
     if (me?.whatsapp_number) updates.whatsapp_number = me.whatsapp_number.includes('|') ? me.whatsapp_number : `+971|${me.whatsapp_number}`;
     if (me?.email) updates.email = me.email;
@@ -144,6 +146,7 @@ export default function NewOrder() {
       ...form,
       phone_number: formatPhone(form.phone_number),
       whatsapp_number: formatPhone(form.whatsapp_number),
+      passport_url: form.passport_url || undefined,
       order_number: orderNum,
       status: 'pending',
       price: 50,
