@@ -218,15 +218,15 @@ export default function ReceiptUpload() {
                     <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mx-auto mb-4">
                       <Camera className="w-6 h-6 text-accent" />
                     </div>
-                    <p className="text-sm font-semibold text-foreground">Upload Receipt Photo</p>
+                    <p className="text-sm font-semibold text-foreground">Upload Receipt</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Take a photo or upload an image of your shopping receipt
+                      Take a photo of your receipt or upload an existing image.
                     </p>
-                    <p className="text-xs text-accent font-medium mt-3">Our AI will auto-extract all items</p>
+                    <p className="text-xs text-accent font-medium mt-3">Our AI will automatically extract the items from your receipt.</p>
                     <div className="flex gap-3 justify-center mt-5">
                       <label className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 rounded-xl text-xs font-semibold bg-accent text-accent-foreground hover:bg-accent/90 transition-colors">
                         <Camera className="w-3.5 h-3.5" />
-                        Open Camera
+                        Take Receipt Photo
                         <input type="file" accept="image/*" capture className="hidden" onChange={handleFileUpload} disabled={uploading || processing} />
                       </label>
                       <label className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 rounded-xl text-xs font-semibold border border-input bg-background hover:bg-muted transition-colors">
@@ -426,7 +426,7 @@ export default function ReceiptUpload() {
         <div className="space-y-6">
           <div>
             <h2 className="text-xl font-bold text-foreground">Choose Your Box</h2>
-            <p className="text-sm text-muted-foreground mt-1">Both sizes ship at the same flat rate. Pick what fits your purchases.</p>
+            <p className="text-sm text-muted-foreground mt-1">The only difference is the maximum weight. Choose the size that fits your purchases.</p>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <BoxCard size="10kg" selected={boxSize === '10kg'} onSelect={setBoxSize} />
@@ -451,7 +451,10 @@ export default function ReceiptUpload() {
               <ClipboardList className="w-5 h-5 text-accent" />
               <h2 className="text-xl font-bold text-foreground">Customs Declaration</h2>
             </div>
-            <p className="text-sm text-muted-foreground">Please review the CN22/CN23 declaration form before proceeding to payment.</p>
+            <div className="bg-accent/5 border border-accent/20 rounded-xl px-4 py-3 mb-4">
+              <p className="text-sm font-medium text-foreground">Please review your shipment details before confirming and proceeding to payment.</p>
+            </div>
+            <p className="text-sm text-muted-foreground">Please review the CN22/CN23 declaration form below.</p>
           </div>
 
           <ShipmentDeclarationForm order={{ ...order, box_size: boxSize }} items={savedItems} />

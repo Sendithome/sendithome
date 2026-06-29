@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 
 const NAV_ITEMS = [
   { path: '/', icon: Home, label: 'Home' },
-  { path: '/my-orders', icon: ClipboardList, label: 'My Orders' },
+  { path: '/my-orders', icon: ClipboardList, label: 'My Shipments' },
   { path: '/track', icon: Truck, label: 'Track' },
   { path: '/profile', icon: User, label: 'Profile' },
 ];

@@ -342,7 +342,7 @@ export default function Register() {
 
           {/* Tagline */}
           <p className="font-semibold tracking-wide" style={{ color: '#E5A93B', fontSize: 'clamp(13px, 3vw, 15px)' }}>
-            ✈️ Travel light. We've got the rest covered.
+            ✈️ Travel light. We'll take care of the rest.
           </p>
         </div>
 
@@ -402,7 +402,7 @@ export default function Register() {
                 </div>
                 <p className="text-base font-bold text-white mb-1">Scan Your Passport</p>
                 <p className="text-xs text-white/60 mb-5 max-w-xs mx-auto">
-                  Point your camera at the photo page. Our AI instantly reads and fills all your details.
+                  Point your camera at the photo page. Our AI instantly reads and automatically fills in your details.
                 </p>
                 <button
                   type="button"
@@ -420,7 +420,7 @@ export default function Register() {
                   <Upload className="w-4 h-4" />
                   Upload from Gallery / Files
                 </button>
-                <p className="text-sm text-white/60 mt-4">Or fill in the details manually below</p>
+                <p className="text-sm text-white/60 mt-4">Scan your passport or enter your details manually</p>
               </div>
             )}
           </div>

@@ -29,7 +29,13 @@ export default function Profile() {
   }, []);
 
   const loadProfile = async () => {
-    const me = await base44.auth.me();
+    let me;
+    try {
+      me = await base44.auth.me();
+    } catch {
+      base44.auth.redirectToLogin('/profile');
+      return;
+    }
     setUser(me);
     setForm({
       nationality: me.nationality || '',

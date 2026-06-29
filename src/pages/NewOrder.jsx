@@ -168,7 +168,7 @@ export default function NewOrder() {
           <ArrowLeft className="w-4 h-4" />
         </button>
         <div>
-          <h1 className="text-lg font-bold text-foreground">New Shipment</h1>
+          <h1 className="text-lg font-bold text-foreground">New Order</h1>
           <p className="text-xs text-muted-foreground">Step {step + 1} of {STEPS.length} — {STEPS[step]}</p>
         </div>
       </div>
@@ -202,8 +202,11 @@ export default function NewOrder() {
             </div>
 
             {/* Read-only account summary */}
-            <div className="bg-muted/50 rounded-2xl border border-border p-4">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Account Details</p>
+            <div className="bg-card rounded-2xl border-2 border-accent/20 p-4 shadow-sm">
+              <div className="flex items-center gap-2 mb-3">
+                <User className="w-4 h-4 text-accent" />
+                <p className="text-xs font-semibold text-foreground uppercase tracking-wide">Account Details</p>
+              </div>
               <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                 <div><span className="text-muted-foreground text-xs">Name</span><p className="font-medium text-foreground">{[form.first_name, form.middle_name, form.last_name].filter(Boolean).join(' ') || '—'}</p></div>
                 <div><span className="text-muted-foreground text-xs">Nationality</span><p className="font-medium text-foreground">{form.nationality || '—'}</p></div>
@@ -214,8 +217,7 @@ export default function NewOrder() {
                 <div className="col-span-2"><span className="text-muted-foreground text-xs">WhatsApp</span><p className="font-medium text-foreground">{form.whatsapp_number ? form.whatsapp_number.replace('|', ' ') : '—'}</p></div>
               </div>
               <p className="text-[10px] text-muted-foreground mt-3">
-                Need to update your details?{' '}
-                <a href="/profile" className="text-accent font-medium hover:underline">Edit in Profile</a>
+                <a href="/profile" className="text-accent font-medium hover:underline">Edit Profile</a>
               </p>
             </div>
 
@@ -304,8 +306,7 @@ export default function NewOrder() {
                 </div>
               </div>
               <p className="text-[10px] text-muted-foreground mt-3">
-                Need to update?{' '}
-                <a href="/profile" className="text-accent font-medium hover:underline">Edit in Profile</a>
+                <a href="/profile" className="text-accent font-medium hover:underline">Edit Profile</a>
               </p>
             </div>
 

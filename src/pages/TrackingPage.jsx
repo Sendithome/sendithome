@@ -49,7 +49,7 @@ export default function TrackingPage() {
 
     const found = [...(byTracking || []), ...(byOrder || [])][0] || null;
     if (!found) {
-      setError('No shipment found with that tracking or order number.');
+      setError('No shipment found with that tracking or shipment number.');
     } else {
       setOrder(found);
     }
@@ -69,7 +69,7 @@ export default function TrackingPage() {
             <Package className="w-7 h-7 text-accent-foreground" />
           </div>
           <h1 className="text-2xl font-bold text-foreground">Track Your Shipment</h1>
-          <p className="text-sm text-muted-foreground mt-1">Enter your tracking or order number to get real-time updates</p>
+          <p className="text-sm text-muted-foreground mt-1">Enter your tracking or shipment number to get real-time updates.</p>
         </div>
 
         {/* Search Bar */}
@@ -113,7 +113,7 @@ export default function TrackingPage() {
               <div className="bg-card border border-border rounded-2xl p-5 space-y-3">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide font-semibold">Order</p>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide font-semibold">Shipment</p>
                     <p className="font-bold text-lg text-foreground">{order.order_number || '—'}</p>
                   </div>
                   <div className="text-right">
@@ -171,7 +171,7 @@ export default function TrackingPage() {
                 <div className="bg-destructive/10 border border-destructive/20 rounded-2xl p-5 flex items-center gap-3">
                   <AlertCircle className="w-6 h-6 text-destructive shrink-0" />
                   <div>
-                    <p className="font-semibold text-destructive">Order Cancelled</p>
+                    <p className="font-semibold text-destructive">Shipment Cancelled</p>
                     <p className="text-xs text-muted-foreground mt-0.5">This shipment has been cancelled. Contact support for assistance.</p>
                   </div>
                 </div>

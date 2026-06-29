@@ -61,7 +61,7 @@ export default function OrderDetail() {
           <ArrowLeft className="w-4 h-4" />
         </button>
         <div className="flex-1">
-          <h1 className="text-lg font-bold text-foreground">{order.order_number || 'Order'}</h1>
+          <h1 className="text-lg font-bold text-foreground">{order.order_number || 'Shipment'}</h1>
           <p className="text-xs text-muted-foreground">{order.box_size} box · {order.destination_country}</p>
         </div>
         <span className={cn("text-[10px] font-semibold px-3 py-1.5 rounded-full", config.color)}>
@@ -91,9 +91,9 @@ export default function OrderDetail() {
             <CreditCard className="w-5 h-5 text-accent mt-0.5" />
             <div className="flex-1">
               <p className="text-sm font-semibold">Complete your payment</p>
-              <p className="text-xs text-muted-foreground mt-0.5">$60 flat rate for your {order.box_size} box</p>
+              <p className="text-xs text-muted-foreground mt-0.5">$30 paid online + $20 hotel bill</p>
               <Button asChild size="sm" className="mt-3 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium">
-                <Link to={`/order/${orderId}/payment`}>Pay $60</Link>
+                <Link to={`/order/${orderId}/payment`}>Pay $30</Link>
               </Button>
             </div>
           </div>

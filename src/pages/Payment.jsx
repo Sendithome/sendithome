@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CreditCard, Shield, Check, Package, Lock } from 'lucide-react';
+import { ArrowLeft, CreditCard, Shield, Check, Package, Lock, ChevronDown } from 'lucide-react';
 import { convertToLocalCurrency } from '../utils/currencyConversion';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
@@ -15,6 +15,7 @@ export default function Payment() {
   const [items, setItems] = useState([]);
   const [processing, setProcessing] = useState(false);
   const [paid, setPaid] = useState(false);
+  const [showItems, setShowItems] = useState(false);
 
   const [cardNumber, setCardNumber] = useState('');
   const [cardName, setCardName] = useState('');
@@ -83,7 +84,7 @@ export default function Payment() {
             className="w-full rounded-xl"
             onClick={() => navigate('/my-orders')}
           >
-            Go to My Orders
+            Go to My Shipments
           </Button>
         </div>
       </div>
@@ -131,9 +132,27 @@ export default function Payment() {
           <span className="text-muted-foreground">Concierge Fulfillment</span>
           <span className="text-muted-foreground">$20 — charged to hotel bill</span>
         </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Items</span>
-          <span>{items.length} eligible items</span>
+        <div className="border-t border-border">
+          <button
+            onClick={() => setShowItems(!showItems)}
+            className="w-full flex justify-between text-sm py-2 items-center"
+          >
+            <span className="text-muted-foreground">Items</span>
+            <span className="text-accent font-semibold flex items-center gap-1">
+              {items.length} eligible {items.length === 1 ? 'item' : 'items'}
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showItems ? 'rotate-180' : ''}`} />
+            </span>
+          </button>
+          {showItems && (
+            <div className="space-y-1.5 pb-2">
+              {items.map((item, i) => (
+                <div key={i} className="flex justify-between text-xs text-muted-foreground pl-2">
+                  <span>{item.item_name} ×{item.quantity || 1}</span>
+                  <span>{item.currency} {item.price}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Insurance ($2,000 coverage)</span>
@@ -144,7 +163,7 @@ export default function Payment() {
           <span className="text-green-600">Included</span>
         </div>
         <div className="border-t border-border pt-3 flex justify-between items-center">
-          <span className="font-semibold">Due Now</span>
+          <span className="font-semibold">Amount Due Now</span>
           <span className="text-2xl font-bold text-accent">$30.00 USD</span>
         </div>
         </div>

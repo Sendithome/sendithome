@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 const STATUS_STEPS = [
   { key: 'paid',       label: 'Confirmed',   icon: CheckCircle2, desc: 'Payment received & shipment confirmed' },
   { key: 'packed',     label: 'Packed',      icon: Box,          desc: 'Items packed and ready for pickup' },
-  { key: 'picked_up',  label: 'Collected',   icon: Truck,        desc: 'Picked up by our courier partner' },
+  { key: 'picked_up',  label: 'Picked Up',    icon: Truck,        desc: 'Picked up by our courier partner' },
   { key: 'in_transit', label: 'In Transit',  icon: Plane,        desc: 'Your parcel is on its way home!' },
   { key: 'delivered',  label: 'Delivered',   icon: Home,         desc: 'Successfully delivered to your door' },
 ];
@@ -27,11 +27,11 @@ function getStepIndex(status) {
 
 const STATUS_CONFIG = {
   pending:           { label: 'Pending',          color: 'bg-slate-100 text-slate-600',   dot: 'bg-slate-400' },
-  receipt_uploaded:  { label: 'Processing',        color: 'bg-blue-50 text-blue-700',      dot: 'bg-blue-500' },
+  receipt_uploaded:  { label: 'Receipt Uploaded',  color: 'bg-blue-50 text-blue-700',      dot: 'bg-blue-500' },
   payment_pending:   { label: 'Awaiting Payment',  color: 'bg-amber-50 text-amber-700',    dot: 'bg-amber-500' },
   paid:              { label: 'Confirmed',          color: 'bg-green-50 text-green-700',    dot: 'bg-green-500' },
   packed:            { label: 'Packed',             color: 'bg-indigo-50 text-indigo-700',  dot: 'bg-indigo-500' },
-  picked_up:         { label: 'Collected',          color: 'bg-purple-50 text-purple-700',  dot: 'bg-purple-500' },
+  picked_up:         { label: 'Picked Up',          color: 'bg-purple-50 text-purple-700',  dot: 'bg-purple-500' },
   in_transit:        { label: 'In Transit',         color: 'bg-orange-50 text-orange-700',  dot: 'bg-orange-500' },
   delivered:         { label: 'Delivered ✓',        color: 'bg-emerald-50 text-emerald-700', dot: 'bg-emerald-500' },
   cancelled:         { label: 'Cancelled',          color: 'bg-red-50 text-red-700',         dot: 'bg-red-400' },
@@ -101,7 +101,7 @@ export default function TouristPortal() {
       <div className="flex flex-col items-center justify-center min-h-screen gap-4 px-4">
         <AlertCircle className="w-12 h-12 text-muted-foreground" />
         <p className="text-foreground font-semibold">Shipment not found</p>
-        <button onClick={() => navigate('/my-orders')} className="text-accent text-sm font-semibold">← Back to My Orders</button>
+        <button onClick={() => navigate('/my-orders')} className="text-accent text-sm font-semibold">← Back to My Shipments</button>
       </div>
     );
   }
@@ -448,8 +448,12 @@ export default function TouristPortal() {
                 </div>
                 <div className="px-4 py-3 space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Platform Fee</span>
-                    <span className="font-semibold">$50 USD</span>
+                    <span className="text-muted-foreground">Transit Protection &amp; Activation</span>
+                    <span className="font-semibold">$30 USD</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Concierge Fulfillment</span>
+                    <span className="text-muted-foreground">$20 — charged to hotel bill</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Payment Status</span>

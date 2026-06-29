@@ -14,7 +14,7 @@ export default function QRLanding() {
   const [notFound, setNotFound] = useState(false);
 
   const hasStart = new URLSearchParams(window.location.search).get('start') === '1';
-  const [showQR, setShowQR] = useState(!hasStart);
+  const [showQR, setShowQR] = useState(false);
   const [showPass, setShowPass] = useState(false);
 
   const landingUrl = `${window.location.origin}/hotel/${hotelId}?start=1`;
@@ -115,7 +115,7 @@ export default function QRLanding() {
             className="w-full max-w-xs mt-3 rounded-2xl border-white/20 text-white bg-white/10 hover:bg-white/20"
             onClick={() => window.location.href = '/login'}
           >
-            I already have an account
+            Already have an account? Log In
           </Button>
         </motion.div>
       </AnimatePresence>
@@ -246,7 +246,7 @@ export default function QRLanding() {
             className="w-full rounded-2xl"
             onClick={() => window.location.href = '/login'}
           >
-            I already have an account
+            Already have an account? Log In
           </Button>
         </motion.div>
 

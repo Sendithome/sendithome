@@ -32,13 +32,13 @@ export default function MyOrders() {
     <div className="max-w-lg mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-bold text-foreground">My Orders</h1>
+          <h1 className="text-xl font-bold text-foreground">My Shipments</h1>
           <p className="text-xs text-muted-foreground mt-0.5">{orders.length} shipment{orders.length !== 1 ? 's' : ''}</p>
         </div>
         <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground rounded-xl font-medium" size="sm">
           <Link to="/new-order">
             <Plus className="w-4 h-4 mr-1" />
-            New
+            New Shipment
           </Link>
         </Button>
       </div>
@@ -52,12 +52,12 @@ export default function MyOrders() {
           <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
             <Package className="w-7 h-7 text-muted-foreground" />
           </div>
-          <h3 className="font-semibold text-foreground">No orders yet</h3>
+          <h3 className="font-semibold text-foreground">No shipments yet</h3>
           <p className="text-sm text-muted-foreground mt-1 max-w-xs mx-auto">
             Start your first shipment and send your shopping home with ease.
           </p>
           <Button asChild className="mt-6 bg-accent hover:bg-accent/90 text-accent-foreground rounded-xl font-semibold">
-            <Link to="/new-order">Create First Order</Link>
+            <Link to="/new-order">Create First Shipment</Link>
           </Button>
         </motion.div>
       ) : (

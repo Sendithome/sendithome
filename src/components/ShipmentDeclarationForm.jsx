@@ -3,7 +3,7 @@ import { getShippingPrice } from '../utils/pricing';
 import { convertToLocalCurrency, initCurrencyRates } from '../utils/currencyConversion';
 import SignaturePad from './SignaturePad';
 import { base44 } from '@/api/base44Client';
-import { Download, Loader2 } from 'lucide-react';
+import { Download, Loader2, ChevronDown } from 'lucide-react';
 
 // AED → USD fixed rate fallback (1 AED = 0.2723 USD)
 const AED_TO_USD = 0.2723;
@@ -13,6 +13,23 @@ function toUSD(price, currency) {
   if (currency === 'USD') return price;
   if (currency === 'AED') return price * AED_TO_USD;
   return price; // fallback
+}
+
+function CollapsibleSection({ title, defaultOpen = true, children }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="border-l border-r border-b border-gray-400">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full bg-gray-100 border-b border-gray-400 px-2 py-1 flex items-center justify-between"
+      >
+        <p className="text-[9px] font-bold uppercase tracking-wider">{title}</p>
+        <ChevronDown className={`w-3 h-3 text-gray-600 transition-transform ${open ? '' : 'rotate-180'}`} />
+      </button>
+      {open && children}
+    </div>
+  );
 }
 
 export default function ShipmentDeclarationForm({ order, items, onProceed, onSignatureChange }) {
@@ -71,11 +88,8 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
           </div>
         </div>
 
-        {/* Shipper / Sender */}
-        <div className="border-l border-r border-b border-gray-400">
-          <div className="bg-gray-100 border-b border-gray-400 px-2 py-1">
-            <p className="text-[9px] font-bold uppercase tracking-wider">Section A — Sender / Shipper Details</p>
-          </div>
+        {/* Section A — Sender / Shipper */}
+        <CollapsibleSection title="Section A — Sender / Shipper Details" defaultOpen={true}>
           <div className="grid grid-cols-2">
             <div className="border-r border-gray-400 p-2 space-y-1.5">
               <div>
@@ -118,13 +132,10 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
               </div>
             </div>
           </div>
-        </div>
+        </CollapsibleSection>
 
-        {/* Consignee / Recipient */}
-        <div className="border-l border-r border-b border-gray-400">
-          <div className="bg-gray-100 border-b border-gray-400 px-2 py-1">
-            <p className="text-[9px] font-bold uppercase tracking-wider">Section B — Consignee / Receiver Details</p>
-          </div>
+        {/* Section B — Consignee / Recipient */}
+        <CollapsibleSection title="Section B — Consignee / Receiver Details" defaultOpen={true}>
           <div className="grid grid-cols-2">
             <div className="border-r border-gray-400 p-2 space-y-1.5">
               <div>
@@ -171,13 +182,10 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
               </div>
             </div>
           </div>
-        </div>
+        </CollapsibleSection>
 
-        {/* Shipment Type */}
-        <div className="border-l border-r border-b border-gray-400">
-          <div className="bg-gray-100 border-b border-gray-400 px-2 py-1">
-            <p className="text-[9px] font-bold uppercase tracking-wider">Section C — Nature of Contents</p>
-          </div>
+        {/* Section C — Nature of Contents */}
+        <CollapsibleSection title="Section C — Nature of Contents" defaultOpen={false}>
           <div className="p-2 flex gap-6">
             {[
               { label: 'Gift', checked: false },
@@ -194,13 +202,10 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
               </label>
             ))}
           </div>
-        </div>
+        </CollapsibleSection>
 
-        {/* Item List */}
-        <div className="border-l border-r border-b border-gray-400">
-          <div className="bg-gray-100 border-b border-gray-400 px-2 py-1">
-            <p className="text-[9px] font-bold uppercase tracking-wider">Section D — Description of Contents (Customs Declaration)</p>
-          </div>
+        {/* Section D — Description of Contents */}
+        <CollapsibleSection title="Section D — Description of Contents (Customs Declaration)" defaultOpen={true}>
           {/* Table header */}
           <div className="grid border-b border-gray-400 bg-gray-50" style={{ gridTemplateColumns: '1fr 65px 65px 40px 100px 100px' }}>
             {['Description of Goods', 'Category', 'HS Code', 'Qty', 'Unit Value', 'Total Value'].map(h => (
@@ -271,13 +276,10 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
               <p className="text-[9px] text-amber-700">⚠ Some items may require additional customs review before your shipment is cleared. If so, our courier partner will call you on the phone number you provided.</p>
             </div>
           )}
-        </div>
+        </CollapsibleSection>
 
-        {/* Shipping Info */}
-        <div className="border-l border-r border-b border-gray-400">
-          <div className="bg-gray-100 border-b border-gray-400 px-2 py-1">
-            <p className="text-[9px] font-bold uppercase tracking-wider">Section E — Shipping & Service Details</p>
-          </div>
+        {/* Section E — Shipping & Service Details */}
+        <CollapsibleSection title="Section E — Shipping & Service Details" defaultOpen={false}>
           <div className="grid grid-cols-4 divide-x divide-gray-300 p-0">
             <div className="p-2">
               <p className="text-[9px] text-gray-500 uppercase">Country of Purchase</p>
@@ -288,21 +290,18 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
               <p className="font-bold text-[10px] mt-0.5">Send It Home · FedEx / DHL</p>
             </div>
             <div className="p-2">
-              <p className="text-[9px] text-gray-500 uppercase">Platform Fee</p>
-              <p className="font-bold text-[10px] mt-0.5">$50.00 USD</p>
+              <p className="text-[9px] text-gray-500 uppercase">Transit &amp; Activation</p>
+              <p className="font-bold text-[10px] mt-0.5">$30 online + $20 hotel</p>
             </div>
             <div className="p-2">
               <p className="text-[9px] text-gray-500 uppercase">Est. Transit Time</p>
               <p className="font-bold text-[10px] mt-0.5">1–3 Working Days</p>
             </div>
           </div>
-        </div>
+        </CollapsibleSection>
 
-        {/* Declaration */}
-        <div className="border-l border-r border-b border-gray-400">
-          <div className="bg-gray-100 border-b border-gray-400 px-2 py-1">
-            <p className="text-[9px] font-bold uppercase tracking-wider">Section F — Sender's Declaration</p>
-          </div>
+        {/* Section F — Sender's Declaration */}
+        <CollapsibleSection title="Section F — Sender's Declaration" defaultOpen={true}>
           <div className="p-3">
             <p className="text-[9px] text-gray-600 leading-relaxed">
               I/We hereby certify that the particulars given in this declaration are correct and that this consignment does not contain
@@ -331,13 +330,10 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
               )}
             </div>
           </div>
-        </div>
+        </CollapsibleSection>
 
         {/* SIH Customer Support */}
-        <div className="border-l border-r border-b border-gray-400">
-          <div className="bg-gray-100 border-b border-gray-400 px-2 py-1">
-            <p className="text-[9px] font-bold uppercase tracking-wider">Send It Home — Customer Support</p>
-          </div>
+        <CollapsibleSection title="Send It Home — Customer Support" defaultOpen={false}>
           <div className="p-3 grid grid-cols-2 gap-x-6 gap-y-1.5">
             <div>
               <p className="text-[9px] text-gray-500 uppercase">Customer Support Email</p>
@@ -360,7 +356,7 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
               <p className="font-bold text-[10px] text-gray-400 italic">Coming soon</p>
             </div>
           </div>
-        </div>
+        </CollapsibleSection>
 
         {/* Footer */}
         <div className="border-l border-r border-b border-gray-400 bg-gray-800 text-white p-3 text-center space-y-0.5">

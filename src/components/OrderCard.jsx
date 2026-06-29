@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Package, ChevronRight, Truck } from 'lucide-react';
+import { Package, ChevronRight, Truck, MapPin, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 
@@ -22,29 +22,41 @@ export default function OrderCard({ order }) {
   const isActive = ACTIVE_STATUSES.includes(order.status);
   const linkTo = isActive ? `/shipment/${order.id}` : `/order/${order.id}`;
 
+  // Primary identifier: hotel name, or destination, or fallback
+  const primaryLabel = order.hotel_name || [order.destination_city, order.destination_country].filter(Boolean).join(', ') || order.order_number || `#${order.id?.slice(0, 8)}`;
+  const secondaryLabel = order.hotel_name
+    ? [order.destination_city, order.destination_country].filter(Boolean).join(', ')
+    : order.order_number || `#${order.id?.slice(0, 8)}`;
+
   return (
     <Link
       to={linkTo}
       className="block bg-card rounded-2xl border border-border p-4 hover:border-accent/30 hover:shadow-sm transition-all"
     >
       <div className="flex items-start justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-xl bg-primary/5 flex items-center justify-center">
-            <Package className="w-5 h-5 text-primary" />
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-11 h-11 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
+            {order.hotel_name ? (
+              <Building2 className="w-5 h-5 text-accent" />
+            ) : (
+              <MapPin className="w-5 h-5 text-accent" />
+            )}
           </div>
-          <div>
-            <p className="font-semibold text-sm text-foreground">
-              {order.box_size} Box
+          <div className="min-w-0">
+            <p className="font-semibold text-sm text-foreground truncate">
+              {primaryLabel}
             </p>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {order.order_number || `#${order.id?.slice(0, 8)}`}
-            </p>
+            {secondaryLabel !== primaryLabel && (
+              <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                {secondaryLabel}
+              </p>
+            )}
           </div>
         </div>
         {isActive ? (
-          <span className="text-[9px] font-bold bg-accent/10 text-accent px-2 py-0.5 rounded-full">TRACK</span>
+          <span className="text-[9px] font-bold bg-accent/10 text-accent px-2 py-0.5 rounded-full shrink-0">TRACK</span>
         ) : (
-          <ChevronRight className="w-4 h-4 text-muted-foreground mt-1" />
+          <ChevronRight className="w-4 h-4 text-muted-foreground mt-1 shrink-0" />
         )}
       </div>
 
@@ -53,11 +65,19 @@ export default function OrderCard({ order }) {
           <span className={cn("text-[10px] font-semibold px-2.5 py-1 rounded-full", config.color)}>
             {config.label}
           </span>
+          {order.box_size && (
+            <span className="text-[10px] font-medium text-muted-foreground flex items-center gap-1">
+              <Package className="w-3 h-3" />
+              {order.box_size}
+            </span>
+          )}
         </div>
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-          <Truck className="w-3 h-3" />
-          <span>{order.destination_country || 'Not set'}</span>
-        </div>
+        {order.destination_country && (
+          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <Truck className="w-3 h-3" />
+            <span>{order.destination_country}</span>
+          </div>
+        )}
       </div>
     </Link>
   );
