@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   Package, Smartphone, Hotel, Store, Shield, Truck, Boxes,
-  FileText, LayoutDashboard, BookOpen, ExternalLink, X, Menu
+  FileText, LayoutDashboard, ExternalLink, X, Menu
 } from 'lucide-react';
 
 const SHOWCASE_PAGES = [
@@ -21,6 +21,7 @@ const SHOWCASE_PAGES = [
       { label: 'Track Shipment', path: '/track' },
       { label: 'Profile', path: '/profile' },
       { label: 'Tourist Portal (Shipment View)', path: '/shipment/6a3ba85284af787d7be0cca3' },
+      { label: 'Declaration Preview', path: '/declaration-preview' },
       { label: 'Login Page', path: '/login' },
     ],
   },
@@ -78,19 +79,6 @@ const SHOWCASE_PAGES = [
     pages: [
       { label: 'Courier Login', path: '/courier-login' },
       { label: 'Courier Dashboard', path: '/courier-dashboard' },
-    ],
-  },
-  {
-    group: 'Resources & Tools',
-    icon: BookOpen,
-    color: 'text-slate-600',
-    bg: 'bg-muted',
-    pages: [
-      { label: 'Brand Directory', path: '/brand-directory' },
-      { label: 'Declaration Preview', path: '/declaration-preview' },
-      { label: 'Developer Docs', path: '/docs' },
-      { label: 'Oxford Overview', path: '/oxford-overview' },
-      { label: 'Premium & Luxury Retailer Intelligence Platform', path: 'https://claude.ai/public/artifacts/190823bb-bf6c-4c9d-a823-46dab05f8e33', external: true },
     ],
   },
 ];
