@@ -1,8 +1,37 @@
-import { useMemo } from 'react';
-import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { DollarSign, Hotel, Store, Users, Package, TrendingUp, Activity, Globe } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { DollarSign, Hotel, Store, Users, Package, TrendingUp, ChevronRight } from 'lucide-react';
 
 const COLORS = ['#ff0064', '#1e293b', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
+const usd = (n) => 'US$' + Number(n || 0).toLocaleString();
+
+const DATE_FILTERS = [
+  { id: 'today', label: 'Today' },
+  { id: 'month', label: 'This Month' },
+  { id: '30d', label: 'Last 30 Days' },
+  { id: 'all', label: 'All Time' },
+  { id: 'custom', label: 'Custom' },
+];
+
+function inRange(dateStr, range, customFrom, customTo) {
+  if (range === 'all') return true;
+  if (!dateStr) return false;
+  const d = new Date(dateStr);
+  const now = new Date();
+  if (range === 'today') return d.toDateString() === now.toDateString();
+  if (range === 'month') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  if (range === '30d') {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 30);
+    return d >= cutoff;
+  }
+  if (range === 'custom') {
+    if (customFrom && d < new Date(customFrom)) return false;
+    if (customTo && d > new Date(customTo + 'T23:59:59')) return false;
+    return true;
+  }
+  return true;
+}
 
 function KpiCard({ icon: Icon, label, value, sub }) {
   return (
@@ -19,11 +48,24 @@ function KpiCard({ icon: Icon, label, value, sub }) {
 
 export default function AdminExecutiveTab({ data }) {
   const { orders, verifications, retailers, hotels, users } = data;
+  const [range, setRange] = useState('all');
+  const [customFrom, setCustomFrom] = useState('');
+  const [customTo, setCustomTo] = useState('');
+  const [expandedHealth, setExpandedHealth] = useState(null);
+
+  const fOrders = useMemo(
+    () => orders.filter(o => inRange(o.created_date, range, customFrom, customTo)),
+    [orders, range, customFrom, customTo]
+  );
+  const fVerifications = useMemo(
+    () => verifications.filter(v => inRange(v.created_date, range, customFrom, customTo)),
+    [verifications, range, customFrom, customTo]
+  );
 
   const metrics = useMemo(() => {
-    const paidOrders = orders.filter(o => o.payment_status === 'paid');
+    const paidOrders = fOrders.filter(o => o.payment_status === 'paid');
     const totalRevenue = paidOrders.reduce((s, o) => s + (o.price || 60), 0);
-    const commissionRevenue = verifications.filter(v => v.status === 'approved').reduce((s, v) => s + (v.commission_amount || 0), 0);
+    const commissionRevenue = fVerifications.filter(v => v.status === 'approved').reduce((s, v) => s + (v.commission_amount || 0), 0);
     const totalEarnings = totalRevenue + commissionRevenue;
     const avgOrderValue = paidOrders.length ? Math.round(totalRevenue / paidOrders.length) : 0;
     const activeHotels = hotels.filter(h => h.active !== false).length;
@@ -42,29 +84,102 @@ export default function AdminExecutiveTab({ data }) {
     });
 
     const statusData = [
-      { name: 'Delivered', value: orders.filter(o => o.status === 'delivered').length },
-      { name: 'In Transit', value: orders.filter(o => o.status === 'in_transit').length },
-      { name: 'Paid/Packed', value: orders.filter(o => ['paid', 'packed'].includes(o.status)).length },
-      { name: 'Pending', value: orders.filter(o => ['pending', 'receipt_uploaded', 'payment_pending'].includes(o.status)).length },
-      { name: 'Cancelled', value: orders.filter(o => o.status === 'cancelled').length },
+      { name: 'Delivered', value: fOrders.filter(o => o.status === 'delivered').length },
+      { name: 'In Transit', value: fOrders.filter(o => o.status === 'in_transit').length },
+      { name: 'Paid/Packed', value: fOrders.filter(o => ['paid', 'packed'].includes(o.status)).length },
+      { name: 'Pending', value: fOrders.filter(o => ['pending', 'receipt_uploaded', 'payment_pending'].includes(o.status)).length },
+      { name: 'Cancelled', value: fOrders.filter(o => o.status === 'cancelled').length },
     ].filter(d => d.value > 0);
+    const statusTotal = statusData.reduce((s, d) => s + d.value, 0);
 
     const countryMap = {};
-    orders.forEach(o => { if (o.destination_country) countryMap[o.destination_country] = (countryMap[o.destination_country] || 0) + 1; });
+    fOrders.forEach(o => { if (o.destination_country) countryMap[o.destination_country] = (countryMap[o.destination_country] || 0) + 1; });
     const topCountries = Object.entries(countryMap).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([country, count]) => ({ country: country.slice(0, 14), count }));
 
-    return { totalEarnings, totalRevenue, commissionRevenue, avgOrderValue, activeHotels, activeRetailers, tourists, monthlyData, statusData, topCountries, paidOrders };
-  }, [data]);
+    return { totalEarnings, totalRevenue, commissionRevenue, avgOrderValue, activeHotels, activeRetailers, tourists, monthlyData, statusData, statusTotal, topCountries, paidOrders };
+  }, [fOrders, fVerifications, hotels, retailers, users]);
+
+  const healthItems = useMemo(() => ({
+    'Pending Verifications': {
+      value: fVerifications.filter(v => v.status === 'pending').length,
+      total: Math.max(fVerifications.length, 1),
+      color: 'bg-yellow-400',
+      records: fVerifications.filter(v => v.status === 'pending').slice(0, 10).map(v => ({ primary: v.shipment_id, secondary: `${v.store_name || '—'} · ${v.tourist_name || '—'}` })),
+    },
+    'Approved Verifications': {
+      value: fVerifications.filter(v => v.status === 'approved').length,
+      total: Math.max(fVerifications.length, 1),
+      color: 'bg-green-500',
+      records: fVerifications.filter(v => v.status === 'approved').slice(0, 10).map(v => ({ primary: v.shipment_id, secondary: `${v.store_name || '—'} · ${usd((v.total_value || 0).toFixed(0))}` })),
+    },
+    'Paid Orders': {
+      value: metrics.paidOrders.length,
+      total: Math.max(fOrders.length, 1),
+      color: 'bg-accent',
+      records: metrics.paidOrders.slice(0, 10).map(o => ({ primary: o.order_number, secondary: `${o.hotel_name || '—'} → ${o.destination_country || '—'}` })),
+    },
+    'Pending Retailers': {
+      value: retailers.filter(r => r.status === 'pending').length,
+      total: Math.max(retailers.length, 1),
+      color: 'bg-blue-500',
+      records: retailers.filter(r => r.status === 'pending').slice(0, 10).map(r => ({ primary: r.store_name, secondary: r.contact_email })),
+    },
+  }), [fVerifications, fOrders, retailers, metrics.paidOrders]);
 
   return (
     <div className="space-y-6">
+      {/* Quick date filters */}
+      <div className="flex flex-wrap items-center gap-2">
+        {DATE_FILTERS.map(f => (
+          <button
+            key={f.id}
+            onClick={() => setRange(f.id)}
+            className={`px-3 h-8 rounded-lg text-xs font-semibold transition-colors ${
+              range === f.id ? 'bg-accent text-accent-foreground' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            {f.label}
+          </button>
+        ))}
+        {range === 'custom' && (
+          <div className="flex items-center gap-2">
+            <input type="date" value={customFrom} onChange={e => setCustomFrom(e.target.value)}
+              className="h-8 px-2 bg-card border border-border rounded-lg text-xs focus:outline-none focus:border-accent" />
+            <span className="text-xs text-muted-foreground">to</span>
+            <input type="date" value={customTo} onChange={e => setCustomTo(e.target.value)}
+              className="h-8 px-2 bg-card border border-border rounded-lg text-xs focus:outline-none focus:border-accent" />
+          </div>
+        )}
+      </div>
+
+      {/* Primary revenue KPIs */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {[
+          { label: 'Shipping Revenue', value: usd(metrics.totalRevenue), sub: 'From paid orders', icon: Package },
+          { label: 'Retailer Commission', value: usd(metrics.commissionRevenue), sub: 'From approved verifications', icon: Store },
+          { label: 'Total Platform Revenue', value: usd(metrics.totalEarnings), sub: 'Combined earnings', icon: DollarSign },
+        ].map(({ label, value, sub, icon: Icon }) => (
+          <div key={label} className="bg-card border border-border rounded-2xl p-5 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center shrink-0">
+              <Icon className="w-6 h-6 text-accent" />
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">{label}</p>
+              <p className="text-xl font-black text-foreground">{value}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Secondary KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <KpiCard icon={DollarSign} label="Total Revenue" value={`$${metrics.totalEarnings.toLocaleString()}`} />
+        <KpiCard icon={DollarSign} label="Total Revenue (USD)" value={usd(metrics.totalEarnings)} />
         <KpiCard icon={Hotel} label="Active Hotels" value={metrics.activeHotels} />
         <KpiCard icon={Store} label="Active Retailers" value={metrics.activeRetailers} />
         <KpiCard icon={Users} label="Tourists" value={metrics.tourists.length} />
-        <KpiCard icon={Package} label="Total Shipments" value={orders.length} />
-        <KpiCard icon={TrendingUp} label="Avg Order Value" value={`$${metrics.avgOrderValue}`} />
+        <KpiCard icon={Package} label="Total Shipments" value={fOrders.length} />
+        <KpiCard icon={TrendingUp} label="Avg Order Value" value={usd(metrics.avgOrderValue)} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -74,9 +189,9 @@ export default function AdminExecutiveTab({ data }) {
             <BarChart data={metrics.monthlyData}>
               <XAxis dataKey="month" tick={{ fontSize: 11 }} />
               <YAxis tick={{ fontSize: 11 }} />
-              <Tooltip formatter={(v, n) => [n === 'revenue' ? `$${v}` : v, n === 'revenue' ? 'Revenue' : 'Shipments']} />
+              <Tooltip formatter={(v, n) => [n === 'revenue' ? usd(v) : v, n === 'revenue' ? 'Revenue' : 'Shipments']} />
               <Legend />
-              <Bar dataKey="revenue" fill="#ff0064" radius={[4, 4, 0, 0]} name="Revenue ($)" />
+              <Bar dataKey="revenue" fill="#ff0064" radius={[4, 4, 0, 0]} name="Revenue (US$)" />
               <Bar dataKey="shipments" fill="#1e293b" radius={[4, 4, 0, 0]} name="Shipments" />
             </BarChart>
           </ResponsiveContainer>
@@ -87,15 +202,29 @@ export default function AdminExecutiveTab({ data }) {
           {metrics.statusData.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-16">No data yet</p>
           ) : (
-            <ResponsiveContainer width="100%" height={200}>
-              <PieChart>
-                <Pie data={metrics.statusData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" nameKey="name">
-                  {metrics.statusData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
-                </Pie>
-                <Tooltip />
-                <Legend iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <ResponsiveContainer width="100%" height={180} className="sm:!w-1/2">
+                <PieChart>
+                  <Pie data={metrics.statusData} cx="50%" cy="50%" innerRadius={45} outerRadius={75} dataKey="value" nameKey="name">
+                    {metrics.statusData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                  </Pie>
+                  <Tooltip formatter={(v, n) => [`${v} (${Math.round((v / metrics.statusTotal) * 100)}%)`, n]} />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="w-full sm:w-1/2 space-y-1.5">
+                {metrics.statusData.map((d, i) => (
+                  <div key={d.name} className="flex items-center justify-between text-xs">
+                    <span className="flex items-center gap-2 text-muted-foreground">
+                      <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
+                      {d.name}
+                    </span>
+                    <span className="font-bold text-foreground">
+                      {d.value} <span className="text-muted-foreground font-medium">({Math.round((d.value / metrics.statusTotal) * 100)}%)</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       </div>
@@ -119,44 +248,41 @@ export default function AdminExecutiveTab({ data }) {
 
         <div className="bg-card border border-border rounded-2xl p-5">
           <h3 className="text-sm font-bold text-foreground mb-4">Operational Health</h3>
-          <div className="space-y-4 mt-2">
-            {[
-              { label: 'Pending Verifications', value: verifications.filter(v => v.status === 'pending').length, total: Math.max(verifications.length, 1), color: 'bg-yellow-400' },
-              { label: 'Approved Verifications', value: verifications.filter(v => v.status === 'approved').length, total: Math.max(verifications.length, 1), color: 'bg-green-500' },
-              { label: 'Paid Orders', value: metrics.paidOrders.length, total: Math.max(orders.length, 1), color: 'bg-accent' },
-              { label: 'Pending Retailers', value: retailers.filter(r => r.status === 'pending').length, total: Math.max(retailers.length, 1), color: 'bg-blue-500' },
-            ].map(({ label, value, total, color }) => (
-              <div key={label}>
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="text-muted-foreground">{label}</span>
-                  <span className="font-bold text-foreground">{value} / {total}</span>
+          <p className="text-[10px] text-muted-foreground mb-3">Click a metric to drill into outstanding items.</p>
+          <div className="space-y-3 mt-2">
+            {Object.entries(healthItems).map(([label, { value, total, color, records }]) => {
+              const isOpen = expandedHealth === label;
+              return (
+                <div key={label}>
+                  <button onClick={() => setExpandedHealth(isOpen ? null : label)} className="w-full text-left">
+                    <div className="flex justify-between text-xs mb-1 items-center">
+                      <span className="text-muted-foreground flex items-center gap-1">
+                        <ChevronRight className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-90' : ''}`} />
+                        {label}
+                      </span>
+                      <span className="font-bold text-foreground">{value} / {total}</span>
+                    </div>
+                    <div className="h-2 bg-muted rounded-full overflow-hidden">
+                      <div className={`h-full ${color} rounded-full`} style={{ width: `${Math.round((value / total) * 100)}%` }} />
+                    </div>
+                  </button>
+                  {isOpen && (
+                    <div className="mt-2 pl-4 space-y-1.5 border-l-2 border-border">
+                      {records.length === 0 ? (
+                        <p className="text-[11px] text-muted-foreground py-1">No outstanding items.</p>
+                      ) : records.map((r, i) => (
+                        <div key={i} className="flex flex-col">
+                          <span className="text-[11px] font-mono font-bold text-accent">{r.primary || '—'}</span>
+                          <span className="text-[10px] text-muted-foreground">{r.secondary}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <div className="h-2 bg-muted rounded-full overflow-hidden">
-                  <div className={`h-full ${color} rounded-full`} style={{ width: `${Math.round((value / total) * 100)}%` }} />
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {[
-          { label: 'Shipping Revenue', value: `$${metrics.totalRevenue.toLocaleString()}`, sub: 'From paid orders', icon: Package },
-          { label: 'Retailer Commission', value: `$${metrics.commissionRevenue.toLocaleString()}`, sub: 'From approved verifications', icon: Store },
-          { label: 'Total Platform Revenue', value: `$${metrics.totalEarnings.toLocaleString()}`, sub: 'Combined earnings', icon: DollarSign },
-        ].map(({ label, value, sub, icon: Icon }) => (
-          <div key={label} className="bg-card border border-border rounded-2xl p-5 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center shrink-0">
-              <Icon className="w-6 h-6 text-accent" />
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">{label}</p>
-              <p className="text-xl font-black text-foreground">{value}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>
-            </div>
-          </div>
-        ))}
       </div>
     </div>
   );

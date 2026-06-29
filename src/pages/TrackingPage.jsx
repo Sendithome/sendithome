@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ShipmentMap from '../components/ShipmentMap';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Package, Loader2, MapPin, Clock, CheckCircle2, Truck, AlertCircle, RefreshCw } from 'lucide-react';
@@ -31,9 +31,8 @@ export default function TrackingPage() {
   const [error, setError] = useState('');
   const [searched, setSearched] = useState(false);
 
-  const handleSearch = async (e) => {
-    e?.preventDefault();
-    const val = trackingInput.trim().toUpperCase();
+  const runSearch = async (rawVal) => {
+    const val = (rawVal || '').trim().toUpperCase();
     if (!val) return;
 
     setLoading(true);
@@ -55,6 +54,21 @@ export default function TrackingPage() {
     }
     setLoading(false);
   };
+
+  const handleSearch = (e) => {
+    e?.preventDefault();
+    runSearch(trackingInput);
+  };
+
+  // Auto-search when arriving with ?order= or ?tracking= in the URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const preset = params.get('order') || params.get('tracking');
+    if (preset) {
+      setTrackingInput(preset);
+      runSearch(preset);
+    }
+  }, []);
 
   const currentStep = order ? getStepIndex(order.status) : 0;
   const isCancelled = order?.status === 'cancelled';

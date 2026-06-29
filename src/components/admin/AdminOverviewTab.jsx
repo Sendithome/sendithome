@@ -48,8 +48,8 @@ export default function AdminOverviewTab({ data }) {
         <StatCard icon={<Package className="w-5 h-5" />} label="Verifications" value={verifications.length} color="text-blue-600" bg="bg-blue-50" />
         <StatCard icon={<CheckCircle2 className="w-5 h-5" />} label="Approved Shipments" value={stats.approved.length} color="text-green-600" bg="bg-green-50" />
         <StatCard icon={<Clock className="w-5 h-5" />} label="Pending Approvals" value={stats.pending.length} color="text-yellow-600" bg="bg-yellow-50" pulse={stats.pending.length > 0} />
-        <StatCard icon={<DollarSign className="w-5 h-5" />} label="Total Export Value" value={`$${stats.totalExportValue.toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-emerald-600" bg="bg-emerald-50" />
-        <StatCard icon={<TrendingUp className="w-5 h-5" />} label="Govt. Commission (10%)" value={`$${(stats.totalExportValue * 0.10).toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-amber-600" bg="bg-amber-50" />
+        <StatCard icon={<DollarSign className="w-5 h-5" />} label="Total Export Value (USD)" value={`US$${stats.totalExportValue.toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-emerald-600" bg="bg-emerald-50" />
+        <StatCard icon={<TrendingUp className="w-5 h-5" />} label="Govt. Commission (10%, USD)" value={`US$${(stats.totalExportValue * 0.10).toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-amber-600" bg="bg-amber-50" />
         <StatCard icon={<Store className="w-5 h-5" />} label="Active Retailers" value={stats.activeRetailers} color="text-purple-600" bg="bg-purple-50" />
         <StatCard icon={<AlertTriangle className="w-5 h-5" />} label="Pending Retailers" value={stats.pendingRetailers} color="text-red-600" bg="bg-red-50" pulse={stats.pendingRetailers > 0} />
       </div>
@@ -115,7 +115,7 @@ export default function AdminOverviewTab({ data }) {
                   <p className="text-[10px] text-muted-foreground">{v.store_name} · {v.tourist_name}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-semibold text-foreground">${(v.total_value || 0).toFixed(2)}</span>
+                  <span className="text-xs font-semibold text-foreground">US${(v.total_value || 0).toFixed(2)}</span>
                   <StatusPill status={v.status} />
                 </div>
               </div>
