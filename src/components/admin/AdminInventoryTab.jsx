@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import {
   Package, RefreshCw, Loader2, AlertTriangle, CheckCircle2,
-  TrendingDown, Search, Filter
+  TrendingDown, Search, Filter, Download
 } from 'lucide-react';
 import { getInventoryTier, TIER_LABELS } from '@/utils/inventoryTiers';
 
@@ -60,6 +60,10 @@ export default function AdminInventoryTab({ hotels = [], onRefresh }) {
   };
 
   const updateOrderStatus = async (orderId, newStatus) => {
+    if (newStatus === 'delivered') {
+      const order = repOrders.find(o => o.id === orderId);
+      if (!window.confirm(`Confirm delivery of ${order?.quantity_requested || 0}× ${order?.box_type || ''} boxes to "${order?.hotel_name || 'this hotel'}"? This will update inventory stock levels.`)) return;
+    }
     setUpdatingOrder(orderId);
     const now = new Date().toISOString();
     const update = { status: newStatus };
@@ -115,6 +119,22 @@ export default function AdminInventoryTab({ hotels = [], onRefresh }) {
 
   const pendingOrders = repOrders.filter(o => o.status === 'pending' || o.status === 'acknowledged' || o.status === 'in_transit');
 
+  const handleExport = () => {
+    const rows = [['Hotel', 'Tier', 'Rooms', '10KG Stock', '10KG Status', '20KG Stock', '20KG Status', 'Reorder At', 'Last Updated']];
+    filtered.forEach(inv => rows.push([
+      inv.hotel_name || '', `T${inv.tier}`, inv.number_of_rooms || '',
+      `${inv.current_10kg ?? 0}/${inv.allocated_10kg}`, inv.status_10kg || '',
+      `${inv.current_20kg ?? 0}/${inv.allocated_20kg}`, inv.status_20kg || '',
+      inv.reorder_trigger_level ?? '',
+      inv.last_updated ? new Date(inv.last_updated).toLocaleDateString('en-GB') : '',
+    ]));
+    const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    const a = document.createElement('a');
+    a.href = url; a.download = `box_inventory_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  };
+
   if (loading) return <div className="flex items-center justify-center py-12"><Loader2 className="w-6 h-6 text-accent animate-spin" /></div>;
 
   return (
@@ -124,10 +144,16 @@ export default function AdminInventoryTab({ hotels = [], onRefresh }) {
           <h2 className="text-base font-bold text-foreground">Hotel Box Inventory Management</h2>
           <p className="text-xs text-muted-foreground mt-0.5">Automated tier-based allocation with real-time replenishment tracking</p>
         </div>
-        <button onClick={() => { loadData(); onRefresh?.(); }}
-          className="flex items-center gap-1.5 px-3 h-8 text-xs text-muted-foreground border border-border rounded-xl hover:text-foreground bg-card">
-          <RefreshCw className="w-3.5 h-3.5" /> Refresh
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={handleExport}
+            className="flex items-center gap-1.5 px-3 h-8 text-xs font-semibold text-foreground border border-border rounded-xl hover:border-accent bg-card transition-colors">
+            <Download className="w-3.5 h-3.5" /> Export CSV
+          </button>
+          <button onClick={() => { loadData(); onRefresh?.(); }}
+            className="flex items-center gap-1.5 px-3 h-8 text-xs text-muted-foreground border border-border rounded-xl hover:text-foreground bg-card">
+            <RefreshCw className="w-3.5 h-3.5" /> Refresh
+          </button>
+        </div>
       </div>
 
       {/* KPIs */}

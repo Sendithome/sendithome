@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import {
   Truck, Plus, CheckCircle2, Loader2, Eye, EyeOff,
-  Clock, AlertTriangle, MapPin, RefreshCw
+  Clock, AlertTriangle, MapPin, RefreshCw, Download
 } from 'lucide-react';
 
 const STAGE_LABELS = {
@@ -63,8 +63,32 @@ export default function AdminCourierTab({ onboardings = [], hotels = [], onRefre
   };
 
   const toggleStatus = async (c) => {
+    const action = c.status === 'active' ? 'deactivate' : 'activate';
+    if (!window.confirm(`Are you sure you want to ${action} courier "${c.company_name}"?`)) return;
     await base44.entities.CourierPartner.update(c.id, { status: c.status === 'active' ? 'inactive' : 'active' });
     await loadCouriers();
+  };
+
+  const handleExport = () => {
+    const rows = [['Hotel', 'Location', 'Stage', 'Dispatched', 'Deadline', 'Days Left', 'Updated By']];
+    [...active, ...completed].forEach(ob => {
+      const hotel = hotels.find(h => h.id === ob.hotel_id);
+      const daysLeft = getWorkingDaysLeft(ob.target_completion_date);
+      rows.push([
+        ob.hotel_name || hotel?.name || '',
+        hotel ? `${hotel.city || ''}, ${hotel.country || ''}` : '',
+        STAGE_LABELS[ob.logistics_stage] || ob.logistics_stage || '',
+        ob.dispatched_at ? new Date(ob.dispatched_at).toLocaleDateString('en-GB') : '',
+        ob.target_completion_date ? new Date(ob.target_completion_date).toLocaleDateString('en-GB') : '',
+        daysLeft !== null ? daysLeft : '',
+        ob.stage_updated_by || '',
+      ]);
+    });
+    const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    const a = document.createElement('a');
+    a.href = url; a.download = `courier_onboarding_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+    URL.revokeObjectURL(url);
   };
 
   const active = onboardings.filter(o => o.logistics_stage && o.logistics_stage !== 'pending_dispatch' && o.logistics_stage !== 'fully_onboarded');
@@ -84,6 +108,9 @@ export default function AdminCourierTab({ onboardings = [], hotels = [], onRefre
         <div className="flex items-center gap-2">
           <button onClick={onRefresh} className="p-2 text-muted-foreground hover:text-foreground">
             <RefreshCw className="w-4 h-4" />
+          </button>
+          <button onClick={handleExport} className="flex items-center gap-1.5 h-8 px-3 text-xs font-semibold text-foreground border border-border rounded-xl bg-card hover:border-accent transition-colors">
+            <Download className="w-3.5 h-3.5" /> Export CSV
           </button>
           <button
             onClick={() => setShowForm(!showForm)}

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
-import { Activity, Clock, AlertTriangle, CheckCircle2, Zap } from 'lucide-react';
+import { Activity, Clock, AlertTriangle, CheckCircle2, Zap, Download } from 'lucide-react';
 
 function KpiCard({ icon: Icon, label, value, color = 'text-foreground' }) {
   return (
@@ -87,8 +87,26 @@ export default function AdminOperationalTab({ data }) {
     return { avgProcessingHours, avgApprovalHours, overdueVerifications, failedOrders, dailyActivity, complianceRate, submitted, bottlenecks };
   }, [data]);
 
+  const handleExport = () => {
+    const rows = [['Date', 'Orders', 'Verifications']];
+    metrics.dailyActivity.forEach(d => rows.push([d.day, d.orders, d.verifications]));
+    rows.push([]);
+    rows.push(['Bottleneck Stage', 'Count']);
+    metrics.bottlenecks.forEach(b => rows.push([b.stage, b.count]));
+    const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    const a = document.createElement('a');
+    a.href = url; a.download = `operational_report_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="space-y-6">
+      <div className="flex justify-end">
+        <button onClick={handleExport} className="flex items-center gap-1.5 h-8 px-3 text-xs font-semibold text-foreground border border-border rounded-xl bg-card hover:border-accent transition-colors">
+          <Download className="w-3.5 h-3.5" /> Export Report
+        </button>
+      </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <KpiCard icon={Clock} label="Avg Processing Time" value={`${metrics.avgProcessingHours}h`} />
         <KpiCard icon={Zap} label="Avg Approval Time" value={`${metrics.avgApprovalHours}h`} />
