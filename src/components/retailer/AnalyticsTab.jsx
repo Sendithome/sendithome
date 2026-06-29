@@ -118,8 +118,8 @@ export default function AnalyticsTab({ verifications }) {
       </ChartCard>
 
       {/* Commission Statement */}
-      <ChartCard title="Commission Statement (Govt. 10%*)">
-        <p className="text-[10px] text-slate-500 italic mb-3">* 10% applies only on declared items shipped internationally through the platform. VAT excluded. Rate shown as demo/reference — subject to approval by economic &amp; government authorities.</p>
+      <ChartCard title="Commission Statement (Tiered)">
+        <p className="text-[10px] text-slate-500 italic mb-3">Commission is tiered based on tourist origin country and transaction value. Two groups: Preferred (GCC, India, Egypt, Jordan, Russia) and Rest of the World. VAT excluded.</p>
         <div className="space-y-2">
           {monthly.length === 0 ? (
             <p className="text-center text-slate-500 text-sm py-4">No data yet.</p>
@@ -129,7 +129,7 @@ export default function AnalyticsTab({ verifications }) {
                 <span className="text-white font-semibold w-16">{m.label}</span>
                 <span className="text-slate-400">{m.shipments} shipments</span>
                 <span className="text-slate-300">${m.value.toFixed(2)} shipped value</span>
-                <span className="text-[#D4A855] font-bold">${(m.value * 0.10).toFixed(2)} (10%*)</span>
+                <span className="text-[#D4A855] font-bold">${(m.commission || 0).toFixed(2)}</span>
               </div>
             ))
           )}

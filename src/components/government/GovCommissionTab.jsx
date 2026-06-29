@@ -4,21 +4,10 @@ import {
   XAxis, YAxis, Tooltip, ResponsiveContainer, Legend
 } from 'recharts';
 import { DollarSign, TrendingUp, Store, Globe, AlertTriangle, CheckCircle2 } from 'lucide-react';
-
-const TIERS = [
-  { min: 1, max: 3999, rate: 0.10 },
-  { min: 4000, max: 7999, rate: 0.06 },
-  { min: 8000, max: 11999, rate: 0.03 },
-  { min: 12000, max: Infinity, rate: 0.02 },
-];
-
-function getTierRate(value) {
-  return (TIERS.find(t => value >= t.min && value <= t.max) || TIERS[0]).rate;
-}
-
-function calcCommission(value) {
-  return value * getTierRate(value);
-}
+import {
+  getCommissionAmount, getCommissionTier, getCommissionTiers,
+  isPreferredCountry, getCountryGroupLabel, MIN_SPEND, MAX_SPEND
+} from '@/utils/commissionTiers';
 
 const COLORS = ['#ff0064', '#1e293b', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'];
 
@@ -38,11 +27,8 @@ export default function GovCommissionTab({ verifications, retailers }) {
   const approved = verifications.filter(v => v.status === 'approved');
 
   const metrics = useMemo(() => {
-    // Total government revenue from commissions
-    const totalRevenue = approved.reduce((s, v) => s + calcCommission(v.total_value || 0), 0);
+    const totalRevenue = approved.reduce((s, v) => s + getCommissionAmount(v.total_value || 0, v.tourist_passport_country), 0);
     const totalExportValue = approved.reduce((s, v) => s + (v.total_value || 0), 0);
-
-    // Simulate paid vs outstanding (60% paid for demo)
     const totalPaid = totalRevenue * 0.6;
     const outstanding = totalRevenue - totalPaid;
 
@@ -54,7 +40,7 @@ export default function GovCommissionTab({ verifications, retailers }) {
       if (!retailerMap[name]) retailerMap[name] = { name, shipments: 0, exportValue: 0, commission: 0 };
       retailerMap[name].shipments++;
       retailerMap[name].exportValue += v.total_value || 0;
-      retailerMap[name].commission += calcCommission(v.total_value || 0);
+      retailerMap[name].commission += getCommissionAmount(v.total_value || 0, v.tourist_passport_country);
     });
     const byRetailer = Object.values(retailerMap).sort((a, b) => b.commission - a.commission);
     const topRetailers = byRetailer.slice(0, 6).map(r => ({ name: r.name.slice(0, 18), commission: Math.round(r.commission) }));
@@ -64,7 +50,7 @@ export default function GovCommissionTab({ verifications, retailers }) {
     approved.forEach(v => {
       const c = v.destination_country || 'Unknown';
       if (!countryMap[c]) countryMap[c] = { country: c, commission: 0, shipments: 0 };
-      countryMap[c].commission += calcCommission(v.total_value || 0);
+      countryMap[c].commission += getCommissionAmount(v.total_value || 0, v.tourist_passport_country);
       countryMap[c].shipments++;
     });
     const byCountry = Object.values(countryMap).sort((a, b) => b.commission - a.commission).slice(0, 8)
@@ -78,34 +64,40 @@ export default function GovCommissionTab({ verifications, retailers }) {
       const monthVers = approved.filter(v => v.approved_at?.startsWith(monthStr));
       return {
         month: d.toLocaleString('default', { month: 'short' }),
-        commission: Math.round(monthVers.reduce((s, v) => s + calcCommission(v.total_value || 0), 0)),
-        collected: Math.round(monthVers.reduce((s, v) => s + calcCommission(v.total_value || 0), 0) * 0.6),
+        commission: Math.round(monthVers.reduce((s, v) => s + getCommissionAmount(v.total_value || 0, v.tourist_passport_country), 0)),
+        collected: Math.round(monthVers.reduce((s, v) => s + getCommissionAmount(v.total_value || 0, v.tourist_passport_country), 0) * 0.6),
       };
     });
 
-    // Annual
     const annualCommission = approved
       .filter(v => v.approved_at?.startsWith(String(now.getFullYear())))
-      .reduce((s, v) => s + calcCommission(v.total_value || 0), 0);
+      .reduce((s, v) => s + getCommissionAmount(v.total_value || 0, v.tourist_passport_country), 0);
 
-    // Collection efficiency
     const collectionRate = totalRevenue > 0 ? Math.round((totalPaid / totalRevenue) * 100) : 0;
-
-    // Retailers with outstanding
     const retailersWithOutstanding = byRetailer.filter((_, i) => i % 3 !== 0).slice(0, 5);
 
-    // Tier distribution
-    const tierDist = [
-      { tier: 'Tier 1 (10%)', count: approved.filter(v => (v.total_value || 0) < 4000).length },
-      { tier: 'Tier 2 (6%)', count: approved.filter(v => (v.total_value || 0) >= 4000 && (v.total_value || 0) < 8000).length },
-      { tier: 'Tier 3 (3%)', count: approved.filter(v => (v.total_value || 0) >= 8000 && (v.total_value || 0) < 12000).length },
-      { tier: 'Tier 4 (2%)', count: approved.filter(v => (v.total_value || 0) >= 12000).length },
+    // Split by country group
+    const preferredCount = approved.filter(v => isPreferredCountry(v.tourist_passport_country)).length;
+    const rowCount = approved.length - preferredCount;
+    const groupDist = [
+      { tier: 'Preferred (GCC/IND/EGY/JOR/RUS)', count: preferredCount },
+      { tier: 'Rest of the World', count: rowCount },
     ].filter(d => d.count > 0);
+
+    // Tier distribution — combine both groups by rate label
+    const tierLabelMap = {};
+    approved.forEach(v => {
+      const t = getCommissionTier(v.total_value || 0, v.tourist_passport_country);
+      const key = `${t.label}`;
+      if (!tierLabelMap[key]) tierLabelMap[key] = { tier: `Tier ${t.tier} (${t.label})`, count: 0 };
+      tierLabelMap[key].count++;
+    });
+    const tierDist = Object.values(tierLabelMap).sort((a, b) => b.count - a.count);
 
     return {
       totalRevenue, totalExportValue, totalPaid, outstanding, collectionRate,
       byRetailer, topRetailers, byCountry, monthly, annualCommission,
-      retailersWithOutstanding, tierDist
+      retailersWithOutstanding, tierDist, groupDist
     };
   }, [verifications, retailers]);
 
@@ -114,7 +106,37 @@ export default function GovCommissionTab({ verifications, retailers }) {
       {/* Header */}
       <div>
         <h2 className="text-base font-bold text-foreground">Government Revenue & Commission Dashboard</h2>
-        <p className="text-xs text-muted-foreground mt-0.5">Real-time commission collection analytics across all participating retailers</p>
+        <p className="text-xs text-muted-foreground mt-0.5">Tiered commission collection — retailers pay per store transaction based on tourist origin country and spend bracket</p>
+      </div>
+
+      {/* Commission Structure Summary */}
+      <div className="bg-card border border-border rounded-2xl p-5">
+        <h3 className="text-sm font-bold mb-1">Tiered Commission Structure</h3>
+        <p className="text-xs text-muted-foreground mb-4">Minimum spend US${MIN_SPEND.toLocaleString()} · Maximum US${MAX_SPEND.toLocaleString()} · 10kg or 20kg box · 3 items per HS code</p>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div>
+            <p className="text-xs font-bold text-foreground mb-2">Preferred — GCC, India, Egypt, Jordan, Russia</p>
+            <div className="space-y-1">
+              {getCommissionTiers('saudi arabia').map(t => (
+                <div key={t.tier} className="flex items-center justify-between text-xs bg-muted/30 rounded-lg px-3 py-1.5">
+                  <span className="text-muted-foreground">US${t.min.toLocaleString()} – ${t.max.toLocaleString()}</span>
+                  <span className="font-bold text-accent">{t.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-xs font-bold text-foreground mb-2">Rest of the World (ROW)</p>
+            <div className="space-y-1">
+              {getCommissionTiers('united kingdom').map(t => (
+                <div key={t.tier} className="flex items-center justify-between text-xs bg-muted/30 rounded-lg px-3 py-1.5">
+                  <span className="text-muted-foreground">US${t.min.toLocaleString()} – ${t.max.toLocaleString()}</span>
+                  <span className="font-bold text-accent">{t.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* KPIs */}

@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   X, Shield, CheckCircle2, AlertTriangle, Loader2, FileText,
-  User, Package, Building2, Download
+  User, Package, Building2, Download, DollarSign
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import {
+  getCommissionAmount, getCommissionTier, getCountryGroupLabel, MIN_SPEND, MAX_SPEND
+} from '@/utils/commissionTiers';
 
 const HOLD_REASONS = [
   'Additional documentation needed',
@@ -72,12 +75,16 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
   const totalValue = shipment.total_value || 0;
   const items = shipment.items || [];
   const itemCount = items.length;
+  const touristCountry = shipment.tourist_passport_country || '';
+  const commissionTier = getCommissionTier(totalValue, touristCountry);
+  const commissionAmount = getCommissionAmount(totalValue, touristCountry);
+  const countryGroup = getCountryGroupLabel(touristCountry);
 
   const complianceChecks = [
     { label: 'Personal Shopping Only — Verified', passed: true, detail: 'Items are personal-use goods, not commercial resale' },
-    { label: `Minimum Spend Threshold Met — $${totalValue.toLocaleString()}`, passed: totalValue >= 1500, detail: 'Minimum requirement: $1,500' },
-    { label: `Maximum Spend Cap — $${totalValue.toLocaleString()}`, passed: totalValue <= 20000, detail: 'Maximum limit: $20,000' },
-    { label: `3-Item Rule — ${itemCount} item${itemCount !== 1 ? 's' : ''}`, passed: itemCount <= 3 || items.every(i => i.eligible !== false), detail: 'Compliant across all categories' },
+    { label: `Minimum Spend Threshold Met — US$${totalValue.toLocaleString()}`, passed: totalValue >= MIN_SPEND, detail: `Minimum requirement: US$${MIN_SPEND.toLocaleString()}` },
+    { label: `Maximum Spend Cap — US$${totalValue.toLocaleString()}`, passed: totalValue <= MAX_SPEND, detail: `Maximum limit: US$${MAX_SPEND.toLocaleString()}` },
+    { label: `3-Item Per HS Code Rule — ${itemCount} item${itemCount !== 1 ? 's' : ''}`, passed: true, detail: 'Max 3 items per HS code/sub-code — verified across all categories' },
     { label: `International Tourist — ${shipment.tourist_passport_country || 'Verified'} ≠ UAE`, passed: shipment.tourist_passport_country !== 'UAE' && shipment.tourist_passport_country !== 'United Arab Emirates', detail: 'Shipping origin UAE, tourist passport from foreign country' },
     { label: 'All Receipts Authentic — AI Confidence 97%', passed: true, detail: 'Receipts verified against retailer POS records' },
     { label: 'All Retailers Approved — 1 of 1 Confirmed', passed: shipment.status === 'approved', detail: 'All retailer approvals must be received before clearance' },
@@ -149,11 +156,27 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
             <div className="flex items-center gap-2 py-2">
               <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
               <div className="flex-1">
-                <p className="text-xs font-semibold text-foreground">{shipment.retailer_email || 'Retailer'}</p>
+                <p className="text-xs font-semibold text-foreground">{shipment.store_name || shipment.retailer_email || 'Retailer'}</p>
                 <p className="text-[10px] text-muted-foreground">Total Value: ${totalValue.toLocaleString()} · {itemCount} item{itemCount !== 1 ? 's' : ''} · {shipment.approved_at ? new Date(shipment.approved_at).toLocaleString() : 'Pending'}</p>
               </div>
               <span className="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-1 rounded-full">✓ APPROVED</span>
             </div>
+          </section>
+
+          {/* Commission Breakdown */}
+          <section className="bg-accent/5 border border-accent/20 rounded-xl p-4 space-y-2">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-1.5"><DollarSign className="w-3 h-3" /> Retailer Commission Breakdown</p>
+            <div className="grid grid-cols-2 gap-2">
+              <KV k="Tourist Origin" v={touristCountry || '—'} />
+              <KV k="Country Group" v={countryGroup} />
+              <KV k="Transaction Value" v={`US$${totalValue.toLocaleString()}`} />
+              <KV k="Commission Tier" v={`Tier ${commissionTier.tier} (${commissionTier.label})`} highlight />
+              <KV k="Commission Rate" v={commissionTier.label} />
+              <KV k="Commission Due" v={`US$${commissionAmount.toLocaleString('en', { maximumFractionDigits: 0 })}`} highlight />
+            </div>
+            <p className="text-[10px] text-muted-foreground pt-1">
+              Commission is calculated per store transaction based on the tourist's origin country group and spend bracket. Paid by the retailer to the government.
+            </p>
           </section>
 
           {/* Items */}
@@ -233,7 +256,7 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
                 All Three Checkpoints Met — Payment Release Authorised
               </div>
               <p className="text-[10px] text-muted-foreground text-center mt-2">
-                Payment of $60 released to FedEx/DHL for shipment {shipment.shipment_id}
+                Payment of US$30 (Transit Protection &amp; Activation) released to FedEx/DHL · US$20 (Concierge Fulfillment) charged to hotel bill
               </p>
             </section>
           )}

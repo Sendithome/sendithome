@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronUp, Clock, CheckCircle2, AlertTriangle, ExternalLink, Loader2, FileDown } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import {
+  getCommissionAmount, getCommissionTier, getCountryGroupLabel
+} from '@/utils/commissionTiers';
 
 function useCountdown(deadline) {
   const [remaining, setRemaining] = useState(null);
@@ -51,6 +54,9 @@ export default function VerificationCard({ verification, retailer, onApproved, o
   const [submitting, setSubmitting] = useState(false);
   const [approved, setApproved] = useState(false);
   const [downloadingPDF, setDownloadingPDF] = useState(false);
+
+  const tier = getCommissionTier(verification.total_value || 0, verification.tourist_passport_country);
+  const commission = getCommissionAmount(verification.total_value || 0, verification.tourist_passport_country);
 
   const handleDownloadDeclaration = async () => {
     setDownloadingPDF(true);
@@ -104,7 +110,7 @@ export default function VerificationCard({ verification, retailer, onApproved, o
         className="bg-green-500/10 border border-green-500/40 rounded-2xl p-4 flex items-center gap-3">
         <CheckCircle2 className="w-5 h-5 text-green-400 shrink-0" />
         <p className="text-sm text-green-300 font-semibold">
-          Approved ✓ — Shipment {verification.shipment_id} verified. Govt. commission (10%*): ${((verification.total_value || 0) * 0.10).toFixed(2)} recorded.
+          Approved ✓ — Shipment {verification.shipment_id} verified. Govt. commission (Tier {tier.tier} — {tier.label}): ${commission.toFixed(2)} recorded.
         </p>
       </motion.div>
     );
@@ -215,11 +221,11 @@ export default function VerificationCard({ verification, retailer, onApproved, o
                           <span className="text-slate-400">{verification.items.filter(i => !i.selected).length} items · ${verification.items.filter(i => !i.selected).reduce((s, i) => s + (i.price || 0), 0).toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between border-t border-slate-700 pt-1.5">
-                          <span className="text-slate-400">Govt. commission (10%*) on shipped items only:</span>
-                          <span className="text-[#D4A855] font-bold">${((verification.total_value || 0) * 0.10).toFixed(2)}</span>
+                          <span className="text-slate-400">Govt. commission (Tier {tier.tier} — {tier.label}) on shipped items only:</span>
+                          <span className="text-[#D4A855] font-bold">${commission.toFixed(2)}</span>
                         </div>
                       </div>
-                      <p className="text-[10px] text-slate-500 italic">* Commission applies ONLY on the {verification.items.filter(i => i.selected).length} shipped items — not on the full receipt total. VAT calculated separately. Rate subject to regulatory approval.</p>
+                      <p className="text-[10px] text-slate-500 italic">Commission applies ONLY on the {verification.items.filter(i => i.selected).length} shipped items — not on the full receipt total. Rate determined by tourist origin ({getCountryGroupLabel(verification.tourist_passport_country)}) and transaction value. VAT calculated separately.</p>
                     </div>
                   </div>
                 )}
@@ -265,9 +271,9 @@ export default function VerificationCard({ verification, retailer, onApproved, o
                 <li>These items were genuinely purchased at <strong className="text-white">{retailer?.store_name}</strong> on {verification.shipment_date ? new Date(verification.shipment_date).toLocaleDateString() : '—'}.</li>
                 <li>The receipt is authentic.</li>
                 <li>You approve the export of these goods through the Send It Home certified channel.</li>
-                <li>A government commission of <strong className="text-[#D4A855]">10%*</strong> (<strong className="text-[#D4A855]">${((verification.total_value || 0) * 0.10).toFixed(2)}</strong>) applies <strong>only on the {verification.items?.length || 0} selected shipment items</strong> valued at <strong className="text-white">${(verification.total_value || 0).toFixed(2)}</strong> — NOT on the full receipt total. Items not selected for shipment by the tourist are excluded.</li>
+                <li>A government commission of <strong className="text-[#D4A855]">{tier.label}</strong> (Tier {tier.tier}, <strong className="text-[#D4A855]">${commission.toFixed(2)}</strong>) applies <strong>only on the {verification.items?.length || 0} selected shipment items</strong> valued at <strong className="text-white">${(verification.total_value || 0).toFixed(2)}</strong> — NOT on the full receipt total. Items not selected for shipment by the tourist are excluded. Rate determined by tourist origin: {getCountryGroupLabel(verification.tourist_passport_country)}.</li>
               </ol>
-              <p className="text-[10px] text-slate-500 italic mt-2">* 10% government commission rate shown as a demo/reference model. Final rate subject to approval by relevant authorities. VAT calculated separately.</p>
+              <p className="text-[10px] text-slate-500 italic mt-2">Commission rate is tiered based on tourist origin country group and transaction value. VAT calculated separately.</p>
               <p className="text-slate-500 italic mt-1">This confirmation is legally binding and forms part of the export documentation.</p>
             </div>
             <label className="flex items-start gap-2 cursor-pointer mb-4">

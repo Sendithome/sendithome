@@ -26,6 +26,14 @@
     "tourist_passport_country": {
       "type": "string"
     },
+    "tourist_country_group": {
+      "type": "string",
+      "enum": [
+        "preferred",
+        "row"
+      ],
+      "description": "Commission country group: preferred (GCC, India, Egypt, Jordan, Russia) or row (Rest of World)"
+    },
     "hotel_name": {
       "type": "string"
     },
@@ -60,6 +68,14 @@
     },
     "commission_amount": {
       "type": "number"
+    },
+    "commission_tier": {
+      "type": "number",
+      "description": "Tier number (1-8 for preferred, 1-7 for ROW)"
+    },
+    "commission_rate": {
+      "type": "number",
+      "description": "e.g. 0.10 for 10%"
     },
     "destination_country": {
       "type": "string"

@@ -10,6 +10,7 @@ import ApprovedHistoryTab from '@/components/retailer/ApprovedHistoryTab';
 import AnalyticsTab from '@/components/retailer/AnalyticsTab';
 import ShipmentsTab from '@/components/retailer/ShipmentsTab';
 import CommissionTab from '@/components/retailer/CommissionTab';
+import { getCommissionAmount, getCountryGroupLabel } from '@/utils/commissionTiers';
 
 const TABS = [
   { id: 'pending', label: 'Pending Approvals' },
@@ -130,16 +131,16 @@ export default function RetailerDashboard() {
           </motion.div>
         )}
 
-        {/* Earnings highlight */}
+        {/* Commission highlight */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4 shadow-sm">
-            <p className="text-xs font-bold text-green-700 uppercase tracking-wide mb-1">Estimated Earnings This Month</p>
-            <p className="text-2xl font-black text-green-700">${(approved.filter(v => v.approved_at?.startsWith(thisMonthStr)).reduce((s, v) => s + (v.total_value || 0), 0) * 0.025).toLocaleString('en', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
-            <p className="text-[10px] text-green-600 mt-1">2.5% commission on approved shipment values</p>
+          <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 shadow-sm">
+            <p className="text-xs font-bold text-amber-700 uppercase tracking-wide mb-1">Commission Due This Month</p>
+            <p className="text-2xl font-black text-amber-700">${approved.filter(v => v.approved_at?.startsWith(thisMonthStr)).reduce((s, v) => s + getCommissionAmount(v.total_value || 0, v.tourist_passport_country), 0).toLocaleString('en', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
+            <p className="text-[10px] text-amber-600 mt-1">Tiered commission on approved shipment values — paid to government</p>
           </div>
           <div className="bg-muted/40 border border-border rounded-2xl p-4 shadow-sm">
             <p className="text-xs font-bold text-foreground mb-1">How Commission Works</p>
-            <p className="text-[11px] text-muted-foreground leading-relaxed">You earn <strong className="text-foreground">2.5% commission</strong> on the total value of each shipment you verify and approve. A separate <strong className="text-foreground">10% government contribution</strong> is automatically calculated from the declared goods value and remitted to the relevant authority — this is not deducted from your commission.</p>
+            <p className="text-[11px] text-muted-foreground leading-relaxed">You pay a <strong className="text-foreground">tiered commission</strong> per store transaction based on the tourist's origin country and spend bracket. Two groups apply: <strong className="text-foreground">Preferred</strong> (GCC, India, Egypt, Jordan, Russia) and <strong className="text-foreground">Rest of the World</strong>. Rates range from 1% to 10% — higher spend means lower rates, incentivizing larger basket sizes.</p>
           </div>
         </div>
 
@@ -162,11 +163,11 @@ export default function RetailerDashboard() {
           />
           <StatCard
             icon={<DollarSign className="w-5 h-5" />}
-            label="Govt. Contribution (10%)"
-            value={`$${(approved.filter(v => v.approved_at?.startsWith(thisMonthStr)).reduce((s, v) => s + (v.total_value || 0), 0) * 0.10).toLocaleString('en', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
+            label="Commission Due (This Month)"
+            value={`$${approved.filter(v => v.approved_at?.startsWith(thisMonthStr)).reduce((s, v) => s + getCommissionAmount(v.total_value || 0, v.tourist_passport_country), 0).toLocaleString('en', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
             colorCls="text-amber-600"
             bgCls="bg-amber-50 border-amber-200"
-            footnote="on shipped items only"
+            footnote="tiered — paid to government"
           />
         </div>
 
