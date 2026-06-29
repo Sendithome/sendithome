@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Truck, CheckCircle2, Clock, AlertTriangle, LogOut, RefreshCw,
-  Loader2, MapPin, ChevronRight, Phone, Mail, Bell, Package
+  Loader2, MapPin, ChevronRight, Phone, Mail, Bell, Package, Search
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
@@ -77,6 +77,8 @@ export default function CourierDashboard() {
   const [updating, setUpdating] = useState(null);
   const [updatingOrder, setUpdatingOrder] = useState(null);
   const [notes, setNotes] = useState({});
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterTab, setFilterTab] = useState('all');
 
   const courierCompany = sessionStorage.getItem('courier_company') || 'Courier Partner';
   const courierEmail = sessionStorage.getItem('courier_email') || '';
@@ -157,6 +159,31 @@ export default function CourierDashboard() {
     const d = getWorkingDaysLeft(o.target_completion_date);
     return d !== null && d < 0;
   });
+
+  const matchesSearch = (ob) => {
+    if (!searchQuery) return true;
+    const hotel = hotels.find(h => h.id === ob.hotel_id);
+    const name = (ob.hotel_name || hotel?.name || '').toLowerCase();
+    const city = (hotel?.city || '').toLowerCase();
+    return name.includes(searchQuery.toLowerCase()) || city.includes(searchQuery.toLowerCase());
+  };
+
+  const filteredActive = active.filter(ob => {
+    if (!matchesSearch(ob)) return false;
+    if (filterTab === 'completed') return false;
+    if (filterTab === 'new') return ob.logistics_stage === 'dispatched_to_logistics';
+    if (filterTab === 'overdue') {
+      const d = getWorkingDaysLeft(ob.target_completion_date);
+      return d !== null && d < 0;
+    }
+    if (filterTab === 'in_progress') {
+      const d = getWorkingDaysLeft(ob.target_completion_date);
+      return ob.logistics_stage !== 'dispatched_to_logistics' && !(d !== null && d < 0);
+    }
+    return true;
+  });
+
+  const filteredCompleted = completed.filter(matchesSearch);
 
   if (loading) {
     return (
@@ -276,14 +303,50 @@ export default function CourierDashboard() {
           <StatCard label="Completed" value={completed.length} color="text-green-600" bg="bg-green-50 border-green-200" icon={CheckCircle2} />
         </div>
 
+        {/* Search + Filters */}
+        <div className="space-y-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search by hotel name or city…"
+              className="w-full h-10 pl-9 pr-3 bg-card border border-border rounded-xl text-sm focus:outline-none focus:border-accent"
+            />
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            {[
+              { key: 'all', label: 'All', count: active.length },
+              { key: 'new', label: 'New', count: newTasks.length },
+              { key: 'in_progress', label: 'In Progress', count: active.length - newTasks.length - overdue.length },
+              { key: 'overdue', label: 'Overdue', count: overdue.length },
+              { key: 'completed', label: 'Completed', count: completed.length },
+            ].map(tab => (
+              <button
+                key={tab.key}
+                onClick={() => setFilterTab(tab.key)}
+                className={`px-3 h-8 rounded-lg text-xs font-bold transition-colors ${
+                  filterTab === tab.key
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-muted text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {tab.label} ({tab.count})
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Active Tasks */}
+        {filterTab !== 'completed' && (
         <div>
           <h2 className="text-sm font-bold text-foreground mb-3">
             Active Onboarding Tasks
-            <span className="ml-2 text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-200 rounded-full px-2 py-0.5">{active.length}</span>
+            <span className="ml-2 text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-200 rounded-full px-2 py-0.5">{filteredActive.length}</span>
           </h2>
 
-          {active.length === 0 ? (
+          {filteredActive.length === 0 ? (
             <div className="text-center py-14 text-muted-foreground bg-card border border-border rounded-2xl">
               <CheckCircle2 className="w-10 h-10 mx-auto mb-3 text-green-400/40" />
               <p className="font-semibold">No active tasks</p>
@@ -291,7 +354,7 @@ export default function CourierDashboard() {
             </div>
           ) : (
             <div className="space-y-4">
-              {active.map(ob => {
+              {filteredActive.map(ob => {
                 const hotel = hotels.find(h => h.id === ob.hotel_id);
                 const nextStage = STAGE_NEXT[ob.logistics_stage];
                 const daysLeft = getWorkingDaysLeft(ob.target_completion_date);
@@ -353,9 +416,19 @@ export default function CourierDashboard() {
                               : `⏱ ${daysLeft} working day${daysLeft !== 1 ? 's' : ''} left`}
                           </div>
                         )}
-                        {ob.dispatched_at && (
+                        {ob.target_completion_date && (
                           <p className="text-[10px] text-muted-foreground mt-1">
+                            Due: {new Date(ob.target_completion_date).toLocaleDateString('en-AE')}
+                          </p>
+                        )}
+                        {ob.dispatched_at && (
+                          <p className="text-[10px] text-muted-foreground mt-0.5">
                             Assigned: {new Date(ob.dispatched_at).toLocaleDateString('en-AE')}
+                          </p>
+                        )}
+                        {ob.stage_updated_by && (
+                          <p className="text-[10px] text-muted-foreground mt-0.5">
+                            Courier: {ob.stage_updated_by}
                           </p>
                         )}
                       </div>
@@ -458,16 +531,17 @@ export default function CourierDashboard() {
             </div>
           )}
         </div>
+        )}
 
         {/* Completed */}
-        {completed.length > 0 && (
+        {filteredCompleted.length > 0 && (
           <div>
             <h2 className="text-sm font-bold text-foreground mb-3">
               Completed Onboardings
-              <span className="ml-2 text-[10px] font-bold bg-green-100 text-green-700 border border-green-200 rounded-full px-2 py-0.5">{completed.length}</span>
+              <span className="ml-2 text-[10px] font-bold bg-green-100 text-green-700 border border-green-200 rounded-full px-2 py-0.5">{filteredCompleted.length}</span>
             </h2>
             <div className="space-y-2">
-              {completed.map(ob => {
+              {filteredCompleted.map(ob => {
                 const hotel = hotels.find(h => h.id === ob.hotel_id);
                 return (
                   <div key={ob.id} className="bg-card border border-green-200 rounded-xl px-4 py-3 flex items-center gap-3">

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Truck, Lock, Mail, Loader2, Eye, EyeOff, Package } from 'lucide-react';
+import { Truck, Lock, Mail, Loader2, Eye, EyeOff, Package, Info, Headphones } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,6 +11,8 @@ export default function CourierLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [remember, setRemember] = useState(false);
+  const [showForgot, setShowForgot] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -18,9 +21,10 @@ export default function CourierLogin() {
     const couriers = await base44.entities.CourierPartner.filter({ email, password, status: 'active' });
     if (couriers.length > 0) {
       const courier = couriers[0];
-      sessionStorage.setItem('courier_id', courier.id);
-      sessionStorage.setItem('courier_company', courier.company_name);
-      sessionStorage.setItem('courier_email', courier.email);
+      const storage = remember ? localStorage : sessionStorage;
+      storage.setItem('courier_id', courier.id);
+      storage.setItem('courier_company', courier.company_name);
+      storage.setItem('courier_email', courier.email);
       navigate('/courier-dashboard');
     } else {
       setError('Invalid email or password. Please contact your administrator.');
@@ -81,6 +85,39 @@ export default function CourierLogin() {
             </div>
           </div>
 
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="remember-me"
+                checked={remember}
+                onCheckedChange={setRemember}
+              />
+              <label htmlFor="remember-me" className="text-xs text-muted-foreground cursor-pointer">Remember me</label>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowForgot(!showForgot)}
+              className="text-xs text-blue-600 font-medium hover:underline"
+            >
+              Forgot Password?
+            </button>
+          </div>
+
+          {showForgot && (
+            <div className="bg-blue-50 border border-blue-200 rounded-xl px-3 py-3 space-y-1">
+              <p className="text-xs font-bold text-blue-800 flex items-center gap-1.5">
+                <Info className="w-3.5 h-3.5" /> Password Reset
+              </p>
+              <p className="text-[11px] text-blue-700 leading-relaxed">
+                Please contact the Send It Home admin team to reset your courier portal password:
+              </p>
+              <div className="text-[11px] text-blue-700 space-y-0.5 mt-1">
+                <p>📧 admin@sendithome.com</p>
+                <p>📞 +971 4 000 0000</p>
+              </div>
+            </div>
+          )}
+
           {error && (
             <div className="bg-destructive/10 border border-destructive/30 rounded-xl px-3 py-2.5">
               <p className="text-xs text-destructive font-medium">{error}</p>
@@ -103,6 +140,22 @@ export default function CourierLogin() {
         >
           🚀 Enter Demo (Skip Login)
         </button>
+
+        {/* Admin Support Contact */}
+        <div className="mt-4 bg-muted/50 border border-border rounded-xl px-4 py-3">
+          <div className="flex items-center gap-2 mb-1.5">
+            <Headphones className="w-3.5 h-3.5 text-blue-600" />
+            <p className="text-xs font-bold text-foreground">Need Help?</p>
+          </div>
+          <p className="text-[11px] text-muted-foreground leading-relaxed">
+            For login credentials, password resets, or technical support, contact the Send It Home admin team:
+          </p>
+          <div className="text-[11px] text-muted-foreground mt-1.5 space-y-0.5">
+            <p>📧 admin@sendithome.com</p>
+            <p>📞 +971 4 000 0000</p>
+            <p>🕐 Sun–Thu, 9:00 AM – 6:00 PM (GST)</p>
+          </div>
+        </div>
 
         <p className="text-center text-xs text-muted-foreground mt-3">
           Logistics partners only · Contact admin for credentials
