@@ -87,9 +87,9 @@ export default function AdminRetailerAnalyticsTab({ data }) {
           {metrics.topByCommission.length === 0 ? <p className="text-sm text-muted-foreground text-center py-16">No approved verifications yet</p> : (
             <ResponsiveContainer width="100%" height={210}>
               <BarChart data={metrics.topByCommission} layout="vertical">
-                <XAxis type="number" tick={{ fontSize: 10 }} tickFormatter={v => `$${v}`} />
+                <XAxis type="number" tick={{ fontSize: 10 }} tickFormatter={v => `US$${v}`} />
                 <YAxis dataKey="name" type="category" tick={{ fontSize: 9 }} width={100} />
-                <Tooltip formatter={v => [`$${v.toFixed(2)}`, 'Commission']} />
+                <Tooltip formatter={v => [`US$${v.toFixed(2)}`, 'Commission']} />
                 <Bar dataKey="commission" fill="#ff0064" radius={[0, 4, 4, 0]} name="Commission" />
               </BarChart>
             </ResponsiveContainer>

@@ -60,7 +60,7 @@ export default function AdminTouristAnalyticsTab({ data }) {
         <KpiCard icon={TrendingUp} label="Repeat Users" value={metrics.repeatUsers} />
         <KpiCard icon={Package} label="Completed Shipments" value={metrics.completedOrders.length} />
         <KpiCard icon={Package} label="Pending Shipments" value={metrics.pendingOrders.length} />
-        <KpiCard icon={DollarSign} label="Avg Order Value" value={`$${metrics.avgOrderValue}`} />
+        <KpiCard icon={DollarSign} label="Avg Order Value" value={`US$${metrics.avgOrderValue}`} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">

@@ -86,10 +86,10 @@ export default function AdminFinancialTab({ data }) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <KpiCard icon={DollarSign} label="Total Revenue" value={`$${metrics.totalRevenue.toLocaleString()}`} highlight />
-        <KpiCard icon={TrendingUp} label="This Month" value={`$${metrics.monthlyRevenue.toLocaleString()}`} sub={metrics.monthGrowth >= 0 ? `+${metrics.monthGrowth}% vs last month` : `${metrics.monthGrowth}% vs last month`} />
+        <KpiCard icon={DollarSign} label="Total Revenue" value={`US$${metrics.totalRevenue.toLocaleString()}`} highlight />
+        <KpiCard icon={TrendingUp} label="This Month" value={`US$${metrics.monthlyRevenue.toLocaleString()}`} sub={metrics.monthGrowth >= 0 ? `+${metrics.monthGrowth}% vs last month` : `${metrics.monthGrowth}% vs last month`} />
         <KpiCard icon={CreditCard} label="Payment Success" value={`${metrics.paymentSuccessRate}%`} />
-        <KpiCard icon={Package} label="Refund Amount" value={`$${metrics.refundAmount.toLocaleString()}`} sub={`${metrics.refundedOrders.length} orders`} />
+        <KpiCard icon={Package} label="Refund Amount" value={`US$${metrics.refundAmount.toLocaleString()}`} sub={`${metrics.refundedOrders.length} orders`} />
       </div>
 
       {/* 12-month revenue trend */}
@@ -98,8 +98,8 @@ export default function AdminFinancialTab({ data }) {
         <ResponsiveContainer width="100%" height={220}>
           <BarChart data={metrics.byMonth}>
             <XAxis dataKey="month" tick={{ fontSize: 10 }} />
-            <YAxis tick={{ fontSize: 10 }} tickFormatter={v => `$${v}`} />
-            <Tooltip formatter={v => [`$${v}`, '']} />
+            <YAxis tick={{ fontSize: 10 }} tickFormatter={v => `US$${v}`} />
+            <Tooltip formatter={v => [`US$${v}`, '']} />
             <Legend iconSize={10} wrapperStyle={{ fontSize: 11 }} />
             <Bar dataKey="shipping" stackId="a" fill="#ff0064" name="Shipping" />
             <Bar dataKey="commission" stackId="a" fill="#1e293b" radius={[4, 4, 0, 0]} name="Commission" />
@@ -119,7 +119,7 @@ export default function AdminFinancialTab({ data }) {
                   <Pie data={metrics.byBox} cx="50%" cy="50%" outerRadius={60} dataKey="value">
                     {metrics.byBox.map((_, i) => <Cell key={i} fill={COLORS[i]} />)}
                   </Pie>
-                  <Tooltip formatter={v => [`$${v}`, '']} />
+                  <Tooltip formatter={v => [`US$${v}`, '']} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="space-y-1 mt-2">
@@ -129,7 +129,7 @@ export default function AdminFinancialTab({ data }) {
                       <span className="w-2 h-2 rounded-full inline-block" style={{ background: COLORS[i] }} />
                       {b.name}
                     </span>
-                    <span className="font-bold">${b.value.toLocaleString()}</span>
+                    <span className="font-bold">US${b.value.toLocaleString()}</span>
                   </div>
                 ))}
               </div>
@@ -142,9 +142,9 @@ export default function AdminFinancialTab({ data }) {
           {metrics.byCountry.length === 0 ? <p className="text-sm text-muted-foreground text-center py-16">No data yet</p> : (
             <ResponsiveContainer width="100%" height={180}>
               <BarChart data={metrics.byCountry} layout="vertical">
-                <XAxis type="number" tick={{ fontSize: 10 }} tickFormatter={v => `$${v}`} />
+                <XAxis type="number" tick={{ fontSize: 10 }} tickFormatter={v => `US$${v}`} />
                 <YAxis dataKey="country" type="category" tick={{ fontSize: 10 }} width={90} />
-                <Tooltip formatter={v => [`$${v}`, 'Revenue']} />
+                <Tooltip formatter={v => [`US$${v}`, 'Revenue']} />
                 <Bar dataKey="revenue" fill="#ff0064" radius={[0, 4, 4, 0]} name="Revenue" />
               </BarChart>
             </ResponsiveContainer>
@@ -157,9 +157,9 @@ export default function AdminFinancialTab({ data }) {
         {metrics.byHotel.length === 0 ? <p className="text-sm text-muted-foreground text-center py-8">No data yet</p> : (
           <ResponsiveContainer width="100%" height={180}>
             <BarChart data={metrics.byHotel} layout="vertical">
-              <XAxis type="number" tick={{ fontSize: 10 }} tickFormatter={v => `$${v}`} />
+              <XAxis type="number" tick={{ fontSize: 10 }} tickFormatter={v => `US$${v}`} />
               <YAxis dataKey="hotel" type="category" tick={{ fontSize: 10 }} width={120} />
-              <Tooltip formatter={v => [`$${v}`, 'Revenue']} />
+              <Tooltip formatter={v => [`US$${v}`, 'Revenue']} />
               <Bar dataKey="revenue" fill="#1e293b" radius={[0, 4, 4, 0]} name="Revenue" />
             </BarChart>
           </ResponsiveContainer>
@@ -168,9 +168,9 @@ export default function AdminFinancialTab({ data }) {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
-          { label: 'Shipping Revenue', value: `$${metrics.shippingRevenue.toLocaleString()}`, sub: `${metrics.paidOrders.length} paid orders` },
-          { label: 'Commission Revenue', value: `$${metrics.commissionRevenue.toLocaleString()}`, sub: 'From retailer approvals' },
-          { label: 'Refund Exposure', value: `$${metrics.refundAmount.toLocaleString()}`, sub: `${metrics.refundedOrders.length} refunded orders` },
+          { label: 'Shipping Revenue', value: `US$${metrics.shippingRevenue.toLocaleString()}`, sub: `${metrics.paidOrders.length} paid orders` },
+          { label: 'Commission Revenue', value: `US$${metrics.commissionRevenue.toLocaleString()}`, sub: 'From retailer approvals' },
+          { label: 'Refund Exposure', value: `US$${metrics.refundAmount.toLocaleString()}`, sub: `${metrics.refundedOrders.length} refunded orders` },
         ].map(({ label, value, sub }) => (
           <div key={label} className="bg-muted/40 rounded-2xl p-5 text-center">
             <p className="text-2xl font-black text-foreground">{value}</p>

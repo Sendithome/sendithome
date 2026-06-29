@@ -97,9 +97,9 @@ export default function AdminHotelAnalyticsTab({ data }) {
         {metrics.topByRevenue.length === 0 ? <p className="text-sm text-muted-foreground text-center py-8">No revenue data yet</p> : (
           <ResponsiveContainer width="100%" height={180}>
             <BarChart data={metrics.topByRevenue} layout="vertical">
-              <XAxis type="number" tick={{ fontSize: 10 }} tickFormatter={v => `$${v}`} />
+              <XAxis type="number" tick={{ fontSize: 10 }} tickFormatter={v => `US$${v}`} />
               <YAxis dataKey="name" type="category" tick={{ fontSize: 10 }} width={120} />
-              <Tooltip formatter={v => [`$${v}`, 'Revenue']} />
+              <Tooltip formatter={v => [`US$${v}`, 'Revenue']} />
               <Bar dataKey="revenue" fill="#1e293b" radius={[0, 4, 4, 0]} name="Revenue" />
             </BarChart>
           </ResponsiveContainer>
