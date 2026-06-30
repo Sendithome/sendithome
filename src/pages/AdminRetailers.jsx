@@ -28,6 +28,8 @@ export default function AdminRetailers() {
   const [locationFilter, setLocationFilter] = useState('all');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+  const [sortKey, setSortKey] = useState('date');
+  const [sortDir, setSortDir] = useState('desc');
 
   useEffect(() => { loadRetailers(); base44.auth.me().then(setMe).catch(() => {}); }, []);
 
@@ -103,22 +105,31 @@ export default function AdminRetailers() {
     return Array.from(set).sort();
   }, [retailers]);
 
-  const filtered = retailers.filter(r => {
-    if (filter !== 'all' && r.status !== filter) return false;
-    if (search) {
-      const q = search.toLowerCase();
-      const hay = [r.store_name, r.brand_name, r.contact_name, r.contact_email].map(v => (v || '').toLowerCase()).join(' ');
-      if (!hay.includes(q)) return false;
-    }
-    if (categoryFilter !== 'all' && r.store_category !== categoryFilter) return false;
-    if (locationFilter !== 'all' && r.store_location !== locationFilter) return false;
-    if (dateFrom || dateTo) {
-      const created = r.created_date ? new Date(r.created_date).getTime() : 0;
-      if (dateFrom && created < new Date(dateFrom).getTime()) return false;
-      if (dateTo && created > new Date(dateTo).getTime() + 86400000) return false;
-    }
-    return true;
-  });
+  const filtered = useMemo(() => {
+    const dir = sortDir === 'asc' ? 1 : -1;
+    const order = { pending: 0, approved: 1, rejected: 2, suspended: 3 };
+    return retailers.filter(r => {
+      if (filter !== 'all' && r.status !== filter) return false;
+      if (search) {
+        const q = search.toLowerCase();
+        const hay = [r.store_name, r.brand_name, r.contact_name, r.contact_email].map(v => (v || '').toLowerCase()).join(' ');
+        if (!hay.includes(q)) return false;
+      }
+      if (categoryFilter !== 'all' && r.store_category !== categoryFilter) return false;
+      if (locationFilter !== 'all' && r.store_location !== locationFilter) return false;
+      if (dateFrom || dateTo) {
+        const created = r.created_date ? new Date(r.created_date).getTime() : 0;
+        if (dateFrom && created < new Date(dateFrom).getTime()) return false;
+        if (dateTo && created > new Date(dateTo).getTime() + 86400000) return false;
+      }
+      return true;
+    }).sort((a, b) => {
+      if (sortKey === 'name') { const av = (a.store_name || '').toLowerCase(), bv = (b.store_name || '').toLowerCase(); return av < bv ? -dir : av > bv ? dir : 0; }
+      if (sortKey === 'date') { return ((new Date(a.created_date || 0).getTime()) - (new Date(b.created_date || 0).getTime())) * dir; }
+      if (sortKey === 'status') { return ((order[a.status] ?? 9) - (order[b.status] ?? 9)) * dir; }
+      return 0;
+    });
+  }, [retailers, filter, search, categoryFilter, locationFilter, dateFrom, dateTo, sortKey, sortDir]);
 
   const filtersActive = search || categoryFilter !== 'all' || locationFilter !== 'all' || dateFrom || dateTo;
 
@@ -186,6 +197,18 @@ export default function AdminRetailers() {
               Clear
             </button>
           ) : null}
+          <div className="flex items-center gap-1">
+            <select value={sortKey} onChange={e => setSortKey(e.target.value)}
+              className="h-9 px-3 bg-card border border-border rounded-xl text-xs focus:outline-none focus:border-accent">
+              <option value="date">Sort: Reg. Date</option>
+              <option value="name">Sort: Name</option>
+              <option value="status">Sort: Status</option>
+            </select>
+            <button onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')}
+              className="h-9 px-3 bg-card border border-border rounded-xl text-xs font-semibold text-foreground hover:border-accent flex items-center gap-1">
+              {sortDir === 'asc' ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />} {sortDir === 'asc' ? 'Asc' : 'Desc'}
+            </button>
+          </div>
           <span className="ml-auto text-xs text-muted-foreground">{filtered.length} of {retailers.length}</span>
         </div>
 
@@ -201,7 +224,7 @@ export default function AdminRetailers() {
           <div className="space-y-3">
             {filtered.map(r => (
               <motion.div key={r.id} layout
-                className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
+                className={`rounded-2xl overflow-hidden shadow-sm border ${r.status === 'pending' ? 'bg-yellow-50/60 border-amber-300' : 'bg-card border-border'}`}>
 
                 {/* Card Header */}
                 <div className="p-4 flex items-center justify-between gap-3 flex-wrap">
@@ -215,6 +238,9 @@ export default function AdminRetailers() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-[10px] text-muted-foreground hidden sm:inline">
+                      {r.created_date ? new Date(r.created_date).toLocaleDateString('en-GB') : '—'}
+                    </span>
                     <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border capitalize ${STATUS_COLORS[r.status]}`}>
                       {r.status}
                     </span>
@@ -224,8 +250,8 @@ export default function AdminRetailers() {
                       </span>
                     )}
                     <button onClick={() => setExpandedId(expandedId === r.id ? null : r.id)}
-                      className="text-muted-foreground hover:text-foreground transition-colors">
-                      {expandedId === r.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      className="flex items-center gap-1 text-xs font-semibold text-foreground border border-border rounded-lg px-2.5 py-1.5 hover:border-accent hover:text-accent transition-colors">
+                      {expandedId === r.id ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />} View Details
                     </button>
                   </div>
                 </div>
