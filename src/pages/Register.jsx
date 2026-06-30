@@ -342,7 +342,7 @@ export default function Register() {
 
           {/* Tagline */}
           <p className="font-semibold tracking-wide" style={{ color: '#E5A93B', fontSize: 'clamp(13px, 3vw, 15px)' }}>
-            ✈️ Travel light. We'll take care of the rest.
+            ✈️ Travel Light. We've Got the Rest Covered.
           </p>
         </div>
 
