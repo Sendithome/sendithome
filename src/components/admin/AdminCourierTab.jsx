@@ -4,6 +4,8 @@ import {
   Truck, Plus, CheckCircle2, Loader2, Eye, EyeOff,
   Clock, AlertTriangle, MapPin, RefreshCw, Download
 } from 'lucide-react';
+import COUNTRIES from '@/lib/countries';
+import CourierCountryPicker from './CourierCountryPicker';
 
 const STAGE_LABELS = {
   pending_dispatch: 'Pending Dispatch',
@@ -42,8 +44,14 @@ export default function AdminCourierTab({ onboardings = [], hotels = [], onRefre
   const [couriers, setCouriers] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [showPw, setShowPw] = useState({});
-  const [form, setForm] = useState({ company_name: '', contact_name: '', email: '', password: '', phone: '' });
+  const [form, setForm] = useState({ company_name: '', contact_name: '', email: '', password: '', phone: '', assigned_countries: [] });
   const [saving, setSaving] = useState(false);
+  const [editingCountries, setEditingCountries] = useState(null);
+
+  const handleAssignCountries = async (courier, countries) => {
+    await base44.entities.CourierPartner.update(courier.id, { assigned_countries: countries });
+    await loadCouriers();
+  };
 
   useEffect(() => { loadCouriers(); }, []);
 
@@ -56,7 +64,7 @@ export default function AdminCourierTab({ onboardings = [], hotels = [], onRefre
     e.preventDefault();
     setSaving(true);
     await base44.entities.CourierPartner.create({ ...form, status: 'active' });
-    setForm({ company_name: '', contact_name: '', email: '', password: '', phone: '' });
+    setForm({ company_name: '', contact_name: '', email: '', password: '', phone: '', assigned_countries: [] });
     setShowForm(false);
     setSaving(false);
     await loadCouriers();
@@ -167,6 +175,16 @@ export default function AdminCourierTab({ onboardings = [], hotels = [], onRefre
                 placeholder="+971 50 000 0000" className="mt-1 w-full h-9 px-3 bg-white border border-border rounded-xl text-xs focus:outline-none focus:border-accent" />
             </div>
           </div>
+          <div className="bg-white border border-border rounded-xl p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs text-muted-foreground">Assigned Destination Countries</label>
+              <span className="text-[10px] text-muted-foreground">{(form.assigned_countries || []).length} selected</span>
+            </div>
+            <CourierCountryPicker
+              selected={form.assigned_countries || []}
+              onChange={(countries) => setForm(p => ({ ...p, assigned_countries: countries }))}
+            />
+          </div>
           <div className="flex gap-2 pt-1">
             <button type="submit" disabled={saving}
               className="flex items-center gap-1.5 px-4 h-8 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl">
@@ -190,36 +208,76 @@ export default function AdminCourierTab({ onboardings = [], hotels = [], onRefre
           </div>
         ) : (
           <div className="space-y-2">
-            {couriers.map(c => (
-              <div key={c.id} className="bg-card border border-border rounded-xl px-4 py-3 flex items-center gap-3 flex-wrap">
-                <div className="w-8 h-8 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
-                  <Truck className="w-4 h-4 text-blue-600" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-foreground">{c.company_name}</p>
-                  <p className="text-xs text-muted-foreground">{c.contact_name && `${c.contact_name} · `}{c.email}</p>
-                </div>
-                {/* Password reveal */}
-                <div className="flex items-center gap-1.5 bg-muted/40 border border-border rounded-lg px-2 py-1">
-                  <span className="text-[10px] text-muted-foreground">Password:</span>
-                  <span className="text-xs font-mono font-semibold">
-                    {showPw[c.id] ? c.password : '••••••••'}
+            {couriers.map(c => {
+              const cFlags = (c.assigned_countries || []).map(code => {
+                const ct = COUNTRIES.find(x => x.code === code);
+                return ct || { code, name: code, flag: '' };
+              });
+              return (
+              <div key={c.id} className="bg-card border border-border rounded-xl px-4 py-3 space-y-2">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <div className="w-8 h-8 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+                    <Truck className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-foreground">{c.company_name}</p>
+                    <p className="text-xs text-muted-foreground">{c.contact_name && `${c.contact_name} · `}{c.email}</p>
+                  </div>
+                  {/* Password reveal */}
+                  <div className="flex items-center gap-1.5 bg-muted/40 border border-border rounded-lg px-2 py-1">
+                    <span className="text-[10px] text-muted-foreground">Password:</span>
+                    <span className="text-xs font-mono font-semibold">
+                      {showPw[c.id] ? c.password : '••••••••'}
+                    </span>
+                    <button onClick={() => setShowPw(p => ({ ...p, [c.id]: !p[c.id] }))} className="text-muted-foreground hover:text-foreground">
+                      {showPw[c.id] ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                    c.status === 'active' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-slate-100 text-slate-500 border-slate-200'
+                  }`}>
+                    {c.status}
                   </span>
-                  <button onClick={() => setShowPw(p => ({ ...p, [c.id]: !p[c.id] }))} className="text-muted-foreground hover:text-foreground">
-                    {showPw[c.id] ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  <button onClick={() => toggleStatus(c)}
+                    className="text-[10px] text-muted-foreground hover:text-foreground border border-border rounded-lg px-2 py-1">
+                    Toggle
+                  </button>
+                  <button onClick={() => setEditingCountries(editingCountries === c.id ? null : c.id)}
+                    className={`flex items-center gap-1 text-[10px] font-bold rounded-lg px-2 py-1 border transition-colors ${
+                      editingCountries === c.id ? 'bg-accent text-accent-foreground border-accent' : 'text-blue-700 hover:text-blue-800 border-blue-200 bg-blue-50'
+                    }`}>
+                    <MapPin className="w-3 h-3" />
+                    {c.assigned_countries?.length
+                      ? `${c.assigned_countries.length} ${c.assigned_countries.length === 1 ? 'country' : 'countries'}`
+                      : 'Assign Countries'}
                   </button>
                 </div>
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                  c.status === 'active' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-slate-100 text-slate-500 border-slate-200'
-                }`}>
-                  {c.status}
-                </span>
-                <button onClick={() => toggleStatus(c)}
-                  className="text-[10px] text-muted-foreground hover:text-foreground border border-border rounded-lg px-2 py-1">
-                  Toggle
-                </button>
+                {/* Assigned countries badges */}
+                {cFlags.length > 0 && editingCountries !== c.id && (
+                  <div className="flex flex-wrap gap-1 pl-11">
+                    {cFlags.map(ct => (
+                      <span key={ct.code} className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700">
+                        {ct.flag} {ct.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {/* Inline country picker */}
+                {editingCountries === c.id && (
+                  <div className="pl-11 pr-1">
+                    <CourierCountryPicker
+                      selected={c.assigned_countries || []}
+                      onChange={(countries) => handleAssignCountries(c, countries)}
+                    />
+                    <button onClick={() => setEditingCountries(null)}
+                      className="mt-2 text-[10px] text-muted-foreground hover:text-foreground border border-border rounded-lg px-2 py-1">
+                      Done
+                    </button>
+                  </div>
+                )}
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

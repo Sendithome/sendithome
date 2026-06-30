@@ -21,6 +21,14 @@
     "phone": {
       "type": "string"
     },
+    "assigned_countries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Destination country codes (ISO-2) this courier partner is assigned to handle"
+    },
     "status": {
       "type": "string",
       "enum": [
