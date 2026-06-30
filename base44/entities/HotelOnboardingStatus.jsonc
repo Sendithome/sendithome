@@ -44,7 +44,7 @@
     },
     "logistics_notes": {
       "type": "string",
-      "description": "Admin/logistics notes"
+      "description": "Admin/logistics implementation notes"
     },
     "stage_updated_at": {
       "type": "string",
@@ -53,6 +53,66 @@
     "stage_updated_by": {
       "type": "string",
       "description": "Email of who updated the stage"
+    },
+    "outstanding_tasks": {
+      "type": "array",
+      "description": "Checklist of outstanding onboarding tasks",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "done": {
+            "type": "boolean",
+            "default": false
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "completed_at": {
+            "type": "string"
+          },
+          "created_by": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      }
+    },
+    "communication_log": {
+      "type": "array",
+      "description": "Chronological log of communications with the hotel / courier",
+      "items": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "by": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string"
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "email",
+              "phone",
+              "whatsapp",
+              "in_person",
+              "note"
+            ],
+            "default": "note"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      }
     }
   },
   "required": [

@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import COUNTRIES from '@/lib/countries';
 import CourierCountryPicker from './CourierCountryPicker';
+import OnboardingDetailDrawer from './OnboardingDetailDrawer';
 
 const STAGE_LABELS = {
   pending_dispatch: 'Pending Dispatch',
@@ -47,6 +48,7 @@ export default function AdminCourierTab({ onboardings = [], hotels = [], onRefre
   const [form, setForm] = useState({ company_name: '', contact_name: '', email: '', password: '', phone: '', assigned_countries: [] });
   const [saving, setSaving] = useState(false);
   const [editingCountries, setEditingCountries] = useState(null);
+  const [selectedOnboarding, setSelectedOnboarding] = useState(null);
 
   const handleAssignCountries = async (courier, countries) => {
     await base44.entities.CourierPartner.update(courier.id, { assigned_countries: countries });
@@ -309,7 +311,7 @@ export default function AdminCourierTab({ onboardings = [], hotels = [], onRefre
                     const progressIdx = STAGE_ORDER.indexOf(ob.logistics_stage);
 
                     return (
-                      <tr key={ob.id} className="border-b border-border/50 hover:bg-muted/20">
+                      <tr key={ob.id} className="border-b border-border/50 hover:bg-accent/5 cursor-pointer" onClick={() => setSelectedOnboarding(ob)}>
                         <td className="px-3 py-2.5 font-semibold text-foreground whitespace-nowrap">
                           {ob.hotel_name || hotel?.name || '—'}
                         </td>
@@ -322,7 +324,7 @@ export default function AdminCourierTab({ onboardings = [], hotels = [], onRefre
                               ob.logistics_stage === 'fully_onboarded' ? 'bg-green-50 text-green-700 border-green-200' :
                               isOverdue ? 'bg-red-50 text-destructive border-destructive/30' :
                               'bg-blue-50 text-blue-700 border-blue-200'
-                            }`}>
+                            }`} title="Click row for details">
                               {STAGE_LABELS[ob.logistics_stage] || ob.logistics_stage}
                             </span>
                             {/* Mini progress bar */}
@@ -361,6 +363,15 @@ export default function AdminCourierTab({ onboardings = [], hotels = [], onRefre
           </div>
         )}
       </div>
+
+      {/* Onboarding Detail Drawer */}
+      {selectedOnboarding && (
+        <OnboardingDetailDrawer
+          onboarding={selectedOnboarding}
+          hotel={hotels.find(h => h.id === selectedOnboarding.hotel_id)}
+          onClose={() => setSelectedOnboarding(null)}
+        />
+      )}
     </div>
   );
 }
