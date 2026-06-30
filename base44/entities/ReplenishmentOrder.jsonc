@@ -36,11 +36,38 @@
       "type": "string",
       "description": "ISO timestamp when auto-triggered"
     },
+    "estimated_delivery_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Estimated delivery date for this replenishment"
+    },
+    "tracking_number": {
+      "type": "string",
+      "description": "Courier tracking number"
+    },
     "delivered_at": {
       "type": "string"
     },
     "courier_notes": {
       "type": "string"
+    },
+    "status_history": {
+      "type": "array",
+      "description": "Chronological log of status changes for this order",
+      "items": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
     },
     "trigger_level_at_time": {
       "type": "number",

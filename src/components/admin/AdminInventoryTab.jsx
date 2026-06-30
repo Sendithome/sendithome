@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import {
   Package, RefreshCw, Loader2, AlertTriangle, CheckCircle2,
   TrendingDown, Search, Filter, Download
 } from 'lucide-react';
 import { getInventoryTier, TIER_LABELS } from '@/utils/inventoryTiers';
+import ReplenishmentOrderCard from '@/components/admin/ReplenishmentOrderCard';
 
 const STATUS_COLORS = {
   ok:                       'bg-green-50 text-green-700 border-green-200',
@@ -19,7 +20,17 @@ export default function AdminInventoryTab({ hotels = [], onRefresh }) {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [filterHotel, setFilterHotel] = useState('all');
+  const [filterRegion, setFilterRegion] = useState('all');
+  const [lowStockOnly, setLowStockOnly] = useState(false);
   const [updatingOrder, setUpdatingOrder] = useState(null);
+
+  const hotelById = useMemo(() => Object.fromEntries(hotels.map(h => [h.id, h])), [hotels]);
+  const regionOf = (inv) => hotelById[inv.hotel_id]?.country || '';
+  const regions = useMemo(
+    () => [...new Set(inventories.map(regionOf).filter(Boolean))].sort(),
+    [inventories, hotelById]
+  );
 
   useEffect(() => { loadData(); }, []);
 
@@ -66,11 +77,15 @@ export default function AdminInventoryTab({ hotels = [], onRefresh }) {
     }
     setUpdatingOrder(orderId);
     const now = new Date().toISOString();
-    const update = { status: newStatus };
+    const currentOrder = repOrders.find(o => o.id === orderId);
+    const update = {
+      status: newStatus,
+      status_history: [...(currentOrder?.status_history || []), { status: newStatus, at: now, note: '' }],
+    };
     if (newStatus === 'delivered') {
       update.delivered_at = now;
       // Update inventory stock
-      const order = repOrders.find(o => o.id === orderId);
+      const order = currentOrder;
       if (order) {
         const inv = inventories.find(i => i.hotel_id === order.hotel_id);
         if (inv) {
@@ -111,10 +126,19 @@ export default function AdminInventoryTab({ hotels = [], onRefresh }) {
     setUpdatingOrder(null);
   };
 
+  const handleSaveOrderDetails = async (orderId, details) => {
+    await base44.entities.ReplenishmentOrder.update(orderId, details);
+    await loadData();
+  };
+
   const filtered = inventories.filter(inv => {
     const matchSearch = !search || inv.hotel_name?.toLowerCase().includes(search.toLowerCase());
     const matchStatus = filterStatus === 'all' || inv.status_10kg === filterStatus || inv.status_20kg === filterStatus;
-    return matchSearch && matchStatus;
+    const matchHotel = filterHotel === 'all' || inv.hotel_id === filterHotel;
+    const matchRegion = filterRegion === 'all' || regionOf(inv) === filterRegion;
+    const isLow = ['low', 'critical'].includes(inv.status_10kg) || ['low', 'critical'].includes(inv.status_20kg);
+    const matchLow = !lowStockOnly || isLow;
+    return matchSearch && matchStatus && matchHotel && matchRegion && matchLow;
   });
 
   const pendingOrders = repOrders.filter(o => o.status === 'pending' || o.status === 'acknowledged' || o.status === 'in_transit');
@@ -171,59 +195,7 @@ export default function AdminInventoryTab({ hotels = [], onRefresh }) {
         ))}
       </div>
 
-      {/* Pending Replenishment Orders */}
-      {pendingOrders.length > 0 && (
-        <div>
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
-            🔄 Active Replenishment Orders ({pendingOrders.length})
-          </p>
-          <div className="space-y-2">
-            {pendingOrders.map(order => (
-              <div key={order.id} className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 flex items-center gap-3 flex-wrap">
-                <Package className="w-4 h-4 text-blue-600 shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-foreground">{order.hotel_name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {order.quantity_requested}× {order.box_type} boxes · Triggered {order.triggered_at ? new Date(order.triggered_at).toLocaleDateString('en-AE') : '—'} · Stock at trigger: {order.stock_at_trigger ?? '—'}
-                  </p>
-                </div>
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                  order.status === 'pending' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :
-                  order.status === 'acknowledged' ? 'bg-blue-50 text-blue-700 border-blue-200' :
-                  'bg-purple-50 text-purple-700 border-purple-200'
-                }`}>
-                  {order.status}
-                </span>
-                <div className="flex gap-1.5 flex-wrap">
-                  {order.status === 'pending' && (
-                    <button disabled={updatingOrder === order.id}
-                      onClick={() => updateOrderStatus(order.id, 'acknowledged')}
-                      className="px-3 h-7 text-[10px] font-bold bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                      Acknowledge
-                    </button>
-                  )}
-                  {order.status === 'acknowledged' && (
-                    <button disabled={updatingOrder === order.id}
-                      onClick={() => updateOrderStatus(order.id, 'in_transit')}
-                      className="px-3 h-7 text-[10px] font-bold bg-purple-600 text-white rounded-lg hover:bg-purple-700">
-                      Mark In Transit
-                    </button>
-                  )}
-                  {(order.status === 'acknowledged' || order.status === 'in_transit') && (
-                    <button disabled={updatingOrder === order.id}
-                      onClick={() => updateOrderStatus(order.id, 'delivered')}
-                      className="px-3 h-7 text-[10px] font-bold bg-green-600 text-white rounded-lg hover:bg-green-700">
-                      {updatingOrder === order.id ? '…' : '✓ Mark Delivered'}
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Search & Filter */}
+      {/* Search & Filters */}
       <div className="flex gap-2 flex-wrap">
         <div className="flex items-center gap-2 px-3 h-9 bg-card border border-border rounded-xl text-xs flex-1 min-w-40">
           <Search className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
@@ -231,6 +203,18 @@ export default function AdminInventoryTab({ hotels = [], onRefresh }) {
             placeholder="Search hotel…"
             className="bg-transparent outline-none flex-1 text-xs text-foreground placeholder:text-muted-foreground" />
         </div>
+        <select value={filterHotel} onChange={e => setFilterHotel(e.target.value)}
+          className="h-9 px-3 bg-card border border-border rounded-xl text-xs focus:outline-none">
+          <option value="all">All Hotels</option>
+          {inventories.map(inv => (
+            <option key={inv.id} value={inv.hotel_id}>{inv.hotel_name}</option>
+          ))}
+        </select>
+        <select value={filterRegion} onChange={e => setFilterRegion(e.target.value)}
+          className="h-9 px-3 bg-card border border-border rounded-xl text-xs focus:outline-none">
+          <option value="all">All Regions</option>
+          {regions.map(r => <option key={r} value={r}>{r}</option>)}
+        </select>
         <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)}
           className="h-9 px-3 bg-card border border-border rounded-xl text-xs focus:outline-none">
           <option value="all">All Status</option>
@@ -239,6 +223,12 @@ export default function AdminInventoryTab({ hotels = [], onRefresh }) {
           <option value="replenishment_in_progress">In Progress</option>
           <option value="critical">Critical</option>
         </select>
+        <button onClick={() => setLowStockOnly(v => !v)}
+          className={`flex items-center gap-1.5 h-9 px-3 rounded-xl text-xs font-semibold border transition-colors ${
+            lowStockOnly ? 'bg-amber-50 text-amber-700 border-amber-300' : 'bg-card text-muted-foreground border-border hover:text-foreground'
+          }`}>
+          <AlertTriangle className="w-3.5 h-3.5" /> Low-Stock Alerts
+        </button>
       </div>
 
       {/* Inventory Table */}
@@ -295,6 +285,26 @@ export default function AdminInventoryTab({ hotels = [], onRefresh }) {
           </div>
         )}
       </div>
+
+      {/* Active Replenishment Orders */}
+      {pendingOrders.length > 0 && (
+        <div>
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
+            🔄 Active Replenishment Orders ({pendingOrders.length})
+          </p>
+          <div className="space-y-2">
+            {pendingOrders.map(order => (
+              <ReplenishmentOrderCard
+                key={order.id}
+                order={order}
+                updating={updatingOrder === order.id}
+                onStatusUpdate={updateOrderStatus}
+                onSaveDetails={handleSaveOrderDetails}
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Hotels without inventory - manual init */}
       {hotels.filter(h => !inventories.find(i => i.hotel_id === h.id)).length > 0 && (
