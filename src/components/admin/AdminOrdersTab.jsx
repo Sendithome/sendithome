@@ -82,7 +82,11 @@ export default function AdminOrdersTab({ orders }) {
     const dir = sortDir === 'asc' ? 1 : -1;
     result.sort((a, b) => {
       let av, bv;
-      if (sortBy === 'created') { av = a.created_date || ''; bv = b.created_date || ''; }
+      if (sortBy === 'created') { 
+        av = a.created_date ? new Date(a.created_date).getTime() : 0; 
+        bv = b.created_date ? new Date(b.created_date).getTime() : 0;
+        return (av - bv) * dir;
+      }
       else if (sortBy === 'status') { av = STATUS_ORDER[a.status] ?? 99; bv = STATUS_ORDER[b.status] ?? 99; }
       else if (sortBy === 'hotel') { av = (a.hotel_name || '').toLowerCase(); bv = (b.hotel_name || '').toLowerCase(); }
       else if (sortBy === 'destination') { av = (a.destination_country || '').toLowerCase(); bv = (b.destination_country || '').toLowerCase(); }
@@ -140,9 +144,9 @@ export default function AdminOrdersTab({ orders }) {
       </div>
 
       {stalledCount > 0 && (
-        <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 rounded-xl px-3 py-2 text-xs font-semibold">
+        <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-700 rounded-xl px-3 py-2 text-xs font-semibold">
           <AlertTriangle className="w-4 h-4 shrink-0" />
-          {stalledCount} order{stalledCount > 1 ? 's' : ''} stalled (no progress for over {STALL_DAYS} days) — highlighted below.
+          {stalledCount} order{stalledCount > 1 ? 's' : ''} stalled (no progress for {STALL_DAYS}+ days) — see highlighted rows below.
         </div>
       )}
 
@@ -169,7 +173,7 @@ export default function AdminOrdersTab({ orders }) {
                 const stalled = isStalled(o);
                 return (
                   <Fragment key={o.id}>
-                    <tr className={`transition-colors border-l-[3px] ${stalled ? 'border-l-red-400 bg-red-50/40' : 'border-l-transparent'} hover:bg-muted/20`}>
+                    <tr className={`transition-colors ${stalled ? 'bg-amber-50/50 border-l-4 border-l-amber-400' : 'border-l-4 border-l-transparent'} hover:bg-muted/20`}>
                       <td className="py-2.5 px-3">
                         <a
                           href={`/shipment/${o.id}`}
@@ -191,7 +195,7 @@ export default function AdminOrdersTab({ orders }) {
                           {o.status?.replace(/_/g, ' ') || '—'}
                         </span>
                         {stalled && (
-                          <span className="block mt-1 text-[9px] font-bold text-red-600 uppercase tracking-wide">⚠ Stalled</span>
+                          <span className="block text-[10px] font-bold text-amber-700 uppercase tracking-wide mt-0.5">⚠ Stalled</span>
                         )}
                       </td>
                       <td className="py-2.5 px-3">
