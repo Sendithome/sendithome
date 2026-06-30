@@ -126,7 +126,7 @@ export default function HotelPartnerLanding() {
               <span className="text-xs font-bold uppercase tracking-widest" style={{ color: GOLD }}>Sovereign-Backed · Property Activation Portal</span>
             </div>
 
-            <h1 className="font-black leading-tight mb-3" style={{ fontSize: 'clamp(2rem,4.5vw,3.4rem)', fontFamily: 'Georgia, serif', background: `linear-gradient(135deg, ${GOLD_LIGHT} 0%, ${GOLD} 55%, #8B6914 100%)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+            <h1 className="font-black leading-tight mb-3" style={{ fontSize: 'clamp(1.6rem,3.5vw,2.6rem)', fontFamily: 'Georgia, serif', background: `linear-gradient(135deg, ${GOLD_LIGHT} 0%, ${GOLD} 55%, #8B6914 100%)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               Activate Your Property with SendItHome
             </h1>
 
@@ -134,14 +134,11 @@ export default function HotelPartnerLanding() {
               {SUBTITLE}
             </p>
 
-            <p className="text-base md:text-lg leading-relaxed mb-3 font-semibold" style={{ color: '#fff' }}>
-              Offer your guests a seamless shopping experience from your hotel to their doorstep.
-            </p>
-            <p className="text-sm md:text-base leading-relaxed mb-3" style={{ color: CREAM }}>
-              Welcome to the SendItHome Property Activation Portal. This secure platform makes it easy to activate your property and start offering guests a premium service that lets them shop freely without worrying about luggage limits.
+            <p className="text-sm md:text-base leading-relaxed mb-6" style={{ color: '#fff', fontWeight: 500 }}>
+              Enhance Your Guest Experience
             </p>
             <p className="text-sm md:text-base leading-relaxed mb-8" style={{ color: CREAM }}>
-              As more travellers seek convenient, stress-free experiences, SendItHome helps your property offer an additional guest benefit while creating a new revenue opportunity. Activation is simple, secure, and designed to have your property ready to go in as little as seven days.
+              Offer your guests a premium travel-light service while earning a guaranteed USD $20 for every completed Send It Home shipment processed by your hotel.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">
@@ -154,11 +151,11 @@ export default function HotelPartnerLanding() {
               </button>
               <button
                 onClick={() => document.getElementById('how-it-works').scrollIntoView({ behavior: 'smooth' })}
-                className="font-semibold rounded-2xl text-base px-8 py-4 border transition-colors hover:bg-white/5"
+                className="font-semibold rounded-2xl text-base px-8 py-4 border transition-colors hover:bg-white/10"
                 style={{ borderColor: GOLD_BORDER, color: CREAM }}
-              >
+                >
                 How It Works
-              </button>
+                </button>
             </div>
           </motion.div>
 
@@ -258,13 +255,10 @@ export default function HotelPartnerLanding() {
         <div className="relative">
           <div className="max-w-4xl mx-auto px-5">
             <div className="text-center mb-12">
-              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: GOLD }}>Section 03</p>
-              <h2 className="text-3xl font-black mb-3" style={{ fontFamily: 'Georgia, serif', background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                Sovereign Integration & Frictionless Workflow
-              </h2>
-              <p style={{ color: CREAM }}>
-                To initialise your activation, the front office or designated concierge retains operational oversight of the following seamless steps.
-              </p>
+            <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: GOLD }}>Section 03</p>
+            <h2 className="text-3xl font-black mb-3" style={{ fontFamily: 'Georgia, serif', background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+            How It Works
+            </h2>
             </div>
             <div className="space-y-4">
               {WORKFLOW_STEPS.map((s, i) => (
