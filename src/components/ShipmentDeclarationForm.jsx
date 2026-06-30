@@ -63,6 +63,7 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
   const shippingDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
   const totalDeclaredValue = items.filter(i => i.eligible !== false).reduce((s, i) => s + ((i.price || 0) * (i.quantity || 1)), 0);
   const currency = items[0]?.currency || 'USD';
+  const totalUSD = items.filter(i => i.eligible !== false).reduce((s, i) => s + toUSD(i.price || 0, currency) * (i.quantity || 1), 0);
   const shippingCost = getShippingPrice(order?.destination_country);
 
   return (
@@ -88,8 +89,51 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
           </div>
         </div>
 
+        {/* Key Details — always visible summary */}
+        <div className="border-l border-r border-b border-gray-400">
+          <div className="bg-gray-100 border-b border-gray-400 px-2 py-1">
+            <p className="text-[9px] font-bold uppercase tracking-wider">Key Details</p>
+          </div>
+          <div className="grid grid-cols-2 divide-x divide-gray-300">
+            <div className="p-2 space-y-1">
+              <div>
+                <p className="text-[8px] text-gray-500 uppercase">Sender</p>
+                <p className="font-bold text-[10px]">{order?.recipient_name || '—'}</p>
+              </div>
+              <div>
+                <p className="text-[8px] text-gray-500 uppercase">From</p>
+                <p className="font-bold text-[10px]">{[order?.hotel_city, order?.hotel_country].filter(Boolean).join(', ') || 'United Arab Emirates'}</p>
+              </div>
+            </div>
+            <div className="p-2 space-y-1">
+              <div>
+                <p className="text-[8px] text-gray-500 uppercase">Recipient</p>
+                <p className="font-bold text-[10px]">{order?.recipient_name || '—'}</p>
+              </div>
+              <div>
+                <p className="text-[8px] text-gray-500 uppercase">To</p>
+                <p className="font-bold text-[10px]">{[order?.destination_city, order?.destination_country].filter(Boolean).join(', ') || '—'}</p>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 divide-x divide-gray-300 border-t border-gray-300">
+            <div className="p-2">
+              <p className="text-[8px] text-gray-500 uppercase">Items</p>
+              <p className="font-bold text-[10px]">{items.filter(i => i.eligible !== false).length}</p>
+            </div>
+            <div className="p-2">
+              <p className="text-[8px] text-gray-500 uppercase">Declared Value</p>
+              <p className="font-bold text-[10px] text-green-800">$ {totalUSD.toFixed(2)}</p>
+            </div>
+            <div className="p-2">
+              <p className="text-[8px] text-gray-500 uppercase">Box</p>
+              <p className="font-bold text-[10px]">{order?.box_size || '—'}</p>
+            </div>
+          </div>
+        </div>
+
         {/* Section A — Sender / Shipper */}
-        <CollapsibleSection title="Section A — Sender / Shipper Details" defaultOpen={true}>
+        <CollapsibleSection title="Section A — Sender / Shipper Details" defaultOpen={false}>
           <div className="grid grid-cols-2">
             <div className="border-r border-gray-400 p-2 space-y-1.5">
               <div>
@@ -135,7 +179,7 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
         </CollapsibleSection>
 
         {/* Section B — Consignee / Recipient */}
-        <CollapsibleSection title="Section B — Consignee / Receiver Details" defaultOpen={true}>
+        <CollapsibleSection title="Section B — Consignee / Receiver Details" defaultOpen={false}>
           <div className="grid grid-cols-2">
             <div className="border-r border-gray-400 p-2 space-y-1.5">
               <div>
@@ -205,7 +249,7 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
         </CollapsibleSection>
 
         {/* Section D — Description of Contents */}
-        <CollapsibleSection title="Section D — Description of Contents (Customs Declaration)" defaultOpen={true}>
+        <CollapsibleSection title="Section D — Description of Contents (Customs Declaration)" defaultOpen={false}>
           {/* Table header */}
           <div className="grid border-b border-gray-400 bg-gray-50" style={{ gridTemplateColumns: '1fr 65px 65px 40px 100px 100px' }}>
             {['Description of Goods', 'Category', 'HS Code', 'Qty', 'Unit Value', 'Total Value'].map(h => (

@@ -17,7 +17,7 @@ const SHOWCASE_PAGES = [
       { label: 'Receipt Upload', path: '/order/6a3ba85284af787d7be0cca3/receipts' },
       { label: 'Payment', path: '/order/6a2fbf7d5f12048618aab1dd/payment' },
       { label: 'My Orders', path: '/my-orders' },
-      { label: 'Order Detail', path: '/order/6a3ba85284af787d7be0cca3' },
+      { label: 'Shipment Details', path: '/order/6a3ba85284af787d7be0cca3' },
       { label: 'Track Shipment', path: '/track' },
       { label: 'Profile', path: '/profile' },
       { label: 'Tourist Portal (Shipment View)', path: '/shipment/6a3ba85284af787d7be0cca3' },
