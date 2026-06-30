@@ -10,6 +10,8 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import DemoShipmentsTab from '@/components/hotel/DemoShipmentsTab';
+import DemoInventoryTab from '@/components/hotel/DemoInventoryTab';
 
 const GOLD = '#C9A84C';
 const GOLD_LIGHT = '#E8C96A';
@@ -341,153 +343,15 @@ export default function HotelDemoDashboard() {
 
           {/* ── SHIPMENTS ── */}
           {tab === 'shipments' && (
-            <motion.div key="shipments" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-bold text-foreground">Guest Shipments</h2>
-                  <p className="text-sm text-muted-foreground">All shipments originating from {HOTEL.name}</p>
-                </div>
-                <div className="flex items-center gap-2 text-xs font-semibold">
-                  <span className="bg-green-100 text-green-700 px-2.5 py-1 rounded-full">892 Delivered</span>
-                  <span className="bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">312 In Transit</span>
-                  <span className="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full">80 Pending</span>
-                </div>
-              </div>
-
-              {/* Monthly bar chart */}
-              <div className="bg-white border border-border rounded-2xl p-5 shadow-sm">
-                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-4">Shipments per Month</h3>
-                <ResponsiveContainer width="100%" height={160}>
-                  <BarChart data={SHIPMENT_TREND} barSize={20}>
-                    <XAxis dataKey="month" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
-                    <YAxis hide />
-                    <Tooltip contentStyle={{ fontSize: 11, borderRadius: 8 }} />
-                    <Bar dataKey="shipments" fill="hsl(330,100%,50%)" radius={[4, 4, 0, 0]} name="Shipments" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Full shipment table */}
-              <div className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden">
-                <div className="grid grid-cols-12 gap-2 px-5 py-2.5 border-b border-border bg-muted/30">
-                  <p className="text-[10px] font-bold uppercase text-muted-foreground col-span-4">Guest / Ref</p>
-                  <p className="text-[10px] font-bold uppercase text-muted-foreground col-span-3">Destination</p>
-                  <p className="text-[10px] font-bold uppercase text-muted-foreground col-span-2 text-right">Value</p>
-                  <p className="text-[10px] font-bold uppercase text-muted-foreground col-span-2 text-center">Status</p>
-                  <p className="text-[10px] font-bold uppercase text-muted-foreground col-span-1 text-right">Time</p>
-                </div>
-                <div className="divide-y divide-border">
-                  {RECENT_SHIPMENTS.map(s => {
-                    const cfg = STATUS_CONFIG[s.status];
-                    const SIcon = cfg.icon;
-                    return (
-                      <div key={s.id} className="grid grid-cols-12 gap-2 px-5 py-3.5 hover:bg-muted/20 transition-colors">
-                        <div className="col-span-4">
-                          <p className="text-xs font-bold text-foreground">{s.guest}</p>
-                          <p className="text-[10px] text-muted-foreground font-mono">{s.id}</p>
-                        </div>
-                        <div className="col-span-3 flex items-center">
-                          <p className="text-xs text-foreground">{s.dest}</p>
-                        </div>
-                        <div className="col-span-2 flex items-center justify-end">
-                          <p className="text-xs font-bold text-foreground">{s.value}</p>
-                        </div>
-                        <div className="col-span-2 flex items-center justify-center">
-                          <span className={`flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full ${cfg.color}`}>
-                            <SIcon className="w-3 h-3" /> {cfg.label}
-                          </span>
-                        </div>
-                        <div className="col-span-1 flex items-center justify-end">
-                          <p className="text-[10px] text-muted-foreground">{s.time}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+            <motion.div key="shipments" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <DemoShipmentsTab />
             </motion.div>
           )}
 
           {/* ── INVENTORY ── */}
           {tab === 'inventory' && (
-            <motion.div key="inventory" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
-              <div>
-                <h2 className="text-lg font-bold text-foreground">Box Inventory</h2>
-                <p className="text-sm text-muted-foreground">Current stock levels and replenishment history</p>
-              </div>
-
-              {/* Stock cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {INVENTORY.map(inv => {
-                  const pct = Math.round(inv.current / inv.allocated * 100);
-                  const isLow = inv.current <= inv.reorder;
-                  return (
-                    <div key={inv.type} className={`bg-white border rounded-2xl p-5 shadow-sm ${isLow ? 'border-amber-200' : 'border-border'}`}>
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <p className="text-sm font-bold text-foreground">{inv.type} Box</p>
-                          <p className="text-xs text-muted-foreground">Flat-pack shipping box</p>
-                        </div>
-                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${isLow ? 'bg-amber-50' : 'bg-blue-50'}`}>
-                          <Package2 className={`w-5 h-5 ${isLow ? 'text-amber-500' : 'text-blue-500'}`} />
-                        </div>
-                      </div>
-                      <div className="flex items-end justify-between mb-2">
-                        <p className="text-3xl font-black text-foreground">{inv.current}</p>
-                        <p className="text-sm text-muted-foreground">/ {inv.allocated} allocated</p>
-                      </div>
-                      <div className="h-2 bg-muted rounded-full overflow-hidden mb-2">
-                        <div
-                          className={`h-full rounded-full transition-all ${pct > 50 ? 'bg-green-500' : pct > 25 ? 'bg-amber-400' : 'bg-red-500'}`}
-                          style={{ width: `${pct}%` }}
-                        />
-                      </div>
-                      <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                        <span>{pct}% stocked</span>
-                        <span>Reorder at {inv.reorder}</span>
-                      </div>
-                      {isLow && (
-                        <div className="mt-3 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 flex items-center gap-2">
-                          <AlertCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                          <p className="text-[10px] text-amber-700 font-semibold">Replenishment order triggered — courier en route</p>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Replenishment history */}
-              <div className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden">
-                <div className="px-5 py-4 border-b border-border">
-                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                    <Truck className="w-4 h-4 text-accent" /> Replenishment History
-                  </h3>
-                </div>
-                <div className="divide-y divide-border">
-                  {REPLENISHMENTS.map((r, i) => (
-                    <div key={i} className="flex items-center gap-3 px-5 py-3">
-                      <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center shrink-0">
-                        <CheckCircle2 className="w-4 h-4 text-green-600" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-xs font-bold text-foreground">{r.type} Box · {r.qty} units delivered</p>
-                        <p className="text-[10px] text-muted-foreground">{r.date}</p>
-                      </div>
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-700">Delivered</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Service note */}
-              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-start gap-3">
-                <Shield className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-bold text-blue-800">Automatic Replenishment</p>
-                  <p className="text-xs text-blue-700 mt-1">SendITHome monitors your stock levels 24/7. When boxes drop below your reorder threshold, a replenishment order is automatically raised and dispatched within 24 hours — at zero cost to your property.</p>
-                </div>
-              </div>
+            <motion.div key="inventory" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <DemoInventoryTab />
             </motion.div>
           )}
 

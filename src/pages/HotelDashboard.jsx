@@ -100,6 +100,8 @@ export default function HotelDashboard() {
 
   const [nda, setNda] = useState(null);
   const [onboardingStatus, setOnboardingStatus] = useState(null);
+  const [hotelInventory, setHotelInventory] = useState(null);
+  const [replOrders, setReplOrders] = useState([]);
 
   // Admin
   const [allApplications, setAllApplications] = useState([]);
@@ -167,6 +169,14 @@ export default function HotelDashboard() {
         hoc_name: h.hoc_name || '', hoc_email: h.hoc_email || '', hoc_phone: h.hoc_phone || '', hoc_whatsapp: h.hoc_whatsapp || '',
         fdm_name: h.fdm_name || '', fdm_email: h.fdm_email || '', fdm_phone: h.fdm_phone || '', fdm_whatsapp: h.fdm_whatsapp || '',
       });
+
+      // Quick inventory summary
+      const [invs, reps] = await Promise.all([
+        base44.entities.HotelInventory.filter({ hotel_id: h.id }),
+        base44.entities.ReplenishmentOrder.filter({ hotel_id: h.id }),
+      ]);
+      setHotelInventory(invs[0] || null);
+      setReplOrders(reps);
     }
 
     // Load NDA
@@ -1049,6 +1059,31 @@ export default function HotelDashboard() {
                 <h2 className="text-lg font-bold text-foreground">Box Inventory</h2>
                 <p className="text-sm text-muted-foreground mt-1">Track your allocated 10 KG and 20 KG box stock, replenishment orders, and usage history.</p>
               </div>
+
+              {hotelInventory ? (
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="bg-card border border-border rounded-2xl p-4 text-center">
+                    <p className="text-[10px] text-muted-foreground">Boxes on Hand</p>
+                    <p className="text-2xl font-black text-foreground">{(hotelInventory.current_10kg || 0) + (hotelInventory.current_20kg || 0)}</p>
+                    <p className="text-[10px] text-muted-foreground">{hotelInventory.current_10kg || 0} × 10kg · {hotelInventory.current_20kg || 0} × 20kg</p>
+                  </div>
+                  <div className="bg-card border border-border rounded-2xl p-4 text-center">
+                    <p className="text-[10px] text-muted-foreground">Low Stock</p>
+                    <p className="text-2xl font-black text-amber-600">{[hotelInventory.status_10kg, hotelInventory.status_20kg].filter(s => s === 'low' || s === 'critical').length}</p>
+                    <p className="text-[10px] text-muted-foreground">below reorder threshold</p>
+                  </div>
+                  <div className="bg-card border border-border rounded-2xl p-4 text-center">
+                    <p className="text-[10px] text-muted-foreground">Pending Orders</p>
+                    <p className="text-2xl font-black text-blue-600">{replOrders.filter(o => o.status === 'pending' || o.status === 'in_transit').length}</p>
+                    <p className="text-[10px] text-muted-foreground">replenishment in progress</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-muted/40 border border-border rounded-2xl p-4 text-center text-xs text-muted-foreground">
+                  Inventory not yet initialised — it is set up automatically once your hotel completes physical onboarding.
+                </div>
+              )}
+
               <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 flex items-start gap-4">
                 <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
                   <Package className="w-5 h-5 text-blue-600" />
