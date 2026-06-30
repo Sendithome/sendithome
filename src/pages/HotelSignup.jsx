@@ -29,6 +29,7 @@ export default function HotelSignup() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const [agreedTerms, setAgreedTerms] = useState(false);
 
   const update = (k, v) => {
     setForm(p => ({ ...p, [k]: v }));
@@ -159,7 +160,7 @@ export default function HotelSignup() {
             {[
               { step: '1', label: 'Create Account' },
               { step: '2', label: 'Add Hotel Details' },
-              { step: '3', label: 'Go Live' },
+              { step: '3', label: 'Ready to Launch' },
             ].map((s, i, arr) => (
               <div key={s.step} className="flex items-center gap-2">
                 <div className="flex flex-col items-center">
@@ -198,7 +199,8 @@ export default function HotelSignup() {
                       <KeyRound className="w-7 h-7 text-accent" />
                     </div>
                     <h1 className="text-2xl font-black text-foreground">Register Your Hotel</h1>
-                    <p className="text-sm text-muted-foreground mt-2">Create your account to start offering Send It Home services to your guests.</p>
+                    <p className="text-sm text-muted-foreground mt-2">Create your account to start offering SendItHome to your guests.</p>
+                    <p className="text-[10px] text-muted-foreground mt-2">Fields marked with <span className="text-accent font-bold">*</span> are required.</p>
                   </div>
 
                   <div className="space-y-4">
@@ -216,6 +218,12 @@ export default function HotelSignup() {
 
                     <div>
                       <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Password *</Label>
+                      <ul className="text-[10px] text-muted-foreground mt-1.5 space-y-0.5">
+                        <li>Minimum 8 characters</li>
+                        <li>At least one uppercase letter</li>
+                        <li>At least one number</li>
+                        <li>At least one special character (e.g. ! @ # $ %)</li>
+                      </ul>
                       <div className="relative mt-1.5">
                         <Input
                           type={showPass ? 'text' : 'password'}
@@ -248,10 +256,18 @@ export default function HotelSignup() {
                       {errors.confirm_password && <p className="text-xs text-destructive mt-1">{errors.confirm_password}</p>}
                     </div>
 
+                    <label className="flex items-start gap-2.5 cursor-pointer">
+                      <input type="checkbox" checked={agreedTerms} onChange={e => setAgreedTerms(e.target.checked)} className="mt-0.5 accent-accent" />
+                      <span className="text-xs text-muted-foreground leading-relaxed">
+                        I accept the <span className="text-accent font-semibold">Terms &amp; Conditions</span> and <span className="text-accent font-semibold">Privacy Policy</span>.
+                      </span>
+                    </label>
+
                     <Button
                       type="button"
                       onClick={handleNextStep}
-                      className="w-full h-11 bg-accent hover:bg-accent/90 text-white font-bold rounded-2xl mt-2 gap-2"
+                      disabled={!agreedTerms}
+                      className="w-full h-11 bg-accent hover:bg-accent/90 text-white font-bold rounded-2xl mt-2 gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       Continue <ChevronRight className="w-4 h-4" />
                     </Button>

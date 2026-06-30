@@ -17,17 +17,18 @@ const NAVY3 = '#131B2E';
 const CREAM = 'rgba(226,232,240,0.82)';
 
 const OFFICIAL_TAGLINE = 'The Multilateral Retail Mobility & Cross-Border Shopping Corridor Ecosystem';
+const SUBTITLE = 'The SendITHome Luxury Guest Shipping Solution';
 
 const YIELD_BENEFITS = [
   {
-    icon: DollarSign,
-    title: 'Guaranteed Ancillary Revenue',
-    desc: 'Earn a fixed USD $20 partnership yield for every completed guest shipment booking — inclusive of custom luxury packaging, inventory management, training, and portal analytics.',
+    icon: Star,
+    title: 'Enhance Your Guest Experience',
+    desc: 'The hotel serves as the guest service point where concierge staff provide the Send It Home experience. Guests collect their complimentary shipping box, pack their purchases, complete a quick digital registration, and leave the sealed box securely with the concierge. All courier documentation is automatically generated, and the courier collects the shipment directly from the hotel within 24 hours, M-F.',
   },
   {
-    icon: Star,
-    title: 'The Ultimate Luxury Amenity',
-    desc: 'Provide your international elite travellers with complete freedom from excess baggage fees, airport weight anxiety, and customs friction — actively driving extended stays and repeat loyalty.',
+    icon: DollarSign,
+    title: 'Guaranteed Ancillary Revenue',
+    desc: 'Earn a guaranteed USD $20 for every completed Send It Home shipment processed by your hotel — inclusive of custom luxury packaging, inventory management, training, and portal analytics.',
   },
   {
     icon: ShieldCheck,
@@ -125,19 +126,22 @@ export default function HotelPartnerLanding() {
               <span className="text-xs font-bold uppercase tracking-widest" style={{ color: GOLD }}>Sovereign-Backed · Property Activation Portal</span>
             </div>
 
-            <h1 className="font-black leading-tight mb-3" style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontFamily: 'Georgia, serif', background: `linear-gradient(135deg, ${GOLD_LIGHT} 0%, ${GOLD} 55%, #8B6914 100%)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              SendITHome Property Activation Portal
+            <h1 className="font-black leading-tight mb-3" style={{ fontSize: 'clamp(2rem,4.5vw,3.4rem)', fontFamily: 'Georgia, serif', background: `linear-gradient(135deg, ${GOLD_LIGHT} 0%, ${GOLD} 55%, #8B6914 100%)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+              Activate Your Property with SendItHome
             </h1>
 
-            <p className="text-base md:text-lg leading-snug mb-6 font-semibold" style={{ color: PLATINUM, fontFamily: 'Georgia, serif' }}>
-              {OFFICIAL_TAGLINE}
+            <p className="text-lg md:text-xl leading-snug mb-6 font-semibold" style={{ color: PLATINUM, fontFamily: 'Georgia, serif' }}>
+              {SUBTITLE}
             </p>
 
-            <p className="text-sm leading-relaxed mb-3" style={{ color: '#fff' }}>
-              Welcome to the SendITHome global cross-border ecosystem. This secure portal activates your property's integration into the <span style={{ color: GOLD, fontWeight: 700 }}>sovereign-backed shopping corridor partnership</span>, turning guest luggage friction into seamless, direct-to-home fulfilment.
+            <p className="text-base md:text-lg leading-relaxed mb-3 font-semibold" style={{ color: '#fff' }}>
+              Offer your guests a seamless shopping experience from your hotel to their doorstep.
             </p>
-            <p className="text-sm leading-relaxed mb-8" style={{ color: CREAM }}>
-              Just as complimentary high-speed Wi-Fi transformed from a luxury perk into an absolute guest expectation, the SendITHome corridor is the new global benchmark for friction-free travel. It seamlessly transforms your property from a place where guests merely stay into an active enabler of their luxury lifestyle.
+            <p className="text-sm md:text-base leading-relaxed mb-3" style={{ color: CREAM }}>
+              Welcome to the SendItHome Property Activation Portal. This secure platform makes it easy to activate your property and start offering guests a premium service that lets them shop freely without worrying about luggage limits.
+            </p>
+            <p className="text-sm md:text-base leading-relaxed mb-8" style={{ color: CREAM }}>
+              As more travellers seek convenient, stress-free experiences, SendItHome helps your property offer an additional guest benefit while creating a new revenue opportunity. Activation is simple, secure, and designed to have your property ready to go in as little as seven days.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">
@@ -153,7 +157,7 @@ export default function HotelPartnerLanding() {
                 className="font-semibold rounded-2xl text-base px-8 py-4 border transition-colors hover:bg-white/5"
                 style={{ borderColor: GOLD_BORDER, color: CREAM }}
               >
-                Activation Workflow
+                How It Works
               </button>
             </div>
           </motion.div>
@@ -166,11 +170,11 @@ export default function HotelPartnerLanding() {
             className="flex gap-4 mt-14 flex-wrap"
           >
             {[
-              { value: '$20 USD', label: 'Guaranteed Yield / Shipment' },
-              { value: '7 Days', label: 'Activation Window' },
-              { value: '$2,000', label: 'Standard Transit Cover' },
-              { value: '24h', label: 'VIP Courier Collection' },
-            ].map(stat => (
+               { value: 'US$20', label: 'Hotel Revenue Per Shipment' },
+               { value: '7 Days', label: 'Ready in 7 Days' },
+               { value: 'Up to US$2,000', label: 'Shipment Cover' },
+               { value: '24-Hour', label: 'VIP Courier Collection' },
+             ].map(stat => (
               <div key={stat.label} className="rounded-2xl py-4 px-5 text-center border" style={{ background: 'rgba(201,168,76,0.06)', borderColor: GOLD_BORDER, backdropFilter: 'blur(8px)' }}>
                 <p className="text-2xl font-black" style={{ color: GOLD }}>{stat.value}</p>
                 <p className="text-xs mt-0.5 font-medium" style={{ color: CREAM }}>{stat.label}</p>

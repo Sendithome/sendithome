@@ -34,7 +34,17 @@ export default function HotelInventory() {
 
   const loadData = async () => {
     setLoading(true);
-    const me = await base44.auth.me();
+    let me;
+    try {
+      me = await base44.auth.me();
+    } catch (err) {
+      base44.auth.redirectToLogin(window.location.pathname);
+      return;
+    }
+    if (!me) {
+      base44.auth.redirectToLogin(window.location.pathname);
+      return;
+    }
 
     const hotels = await base44.entities.Hotel.filter({ contact_email: me.email });
     if (hotels.length === 0) { setLoading(false); return; }

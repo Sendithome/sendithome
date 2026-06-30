@@ -5,7 +5,7 @@ import {
   Package, QrCode, TrendingUp, Users, DollarSign, Truck,
   CheckCircle2, Clock, AlertCircle, BarChart3, Star, MapPin,
   ArrowUpRight, ArrowDownRight, Box, Globe, Activity,
-  RefreshCw, Download, ChevronRight, Zap, Shield, Calendar,
+  RefreshCw, Download, ChevronRight, Zap, Shield, Calendar, Printer, Mail,
   Package2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -29,7 +29,7 @@ const UAE_MONTHLY = getMonthlyChartData(UAE);
 
 const STATS = [
   { label: 'Total Shipments', value: '284,000', change: '+18%', up: true, icon: Package, color: 'text-accent', bg: 'bg-accent/10' },
-  { label: 'Revenue Generated', value: '$22.4B', change: '+22%', up: true, icon: DollarSign, color: 'text-green-600', bg: 'bg-green-50' },
+  { label: 'Corridor Revenue', value: '$22.4B', change: '+22%', up: true, icon: DollarSign, color: 'text-green-600', bg: 'bg-green-50' },
   { label: 'Boxes Remaining', value: '38 / 60', change: '-12', up: false, icon: Box, color: 'text-amber-600', bg: 'bg-amber-50' },
   { label: 'Countries Served', value: '34', change: '+5', up: true, icon: Globe, color: 'text-purple-600', bg: 'bg-purple-50' },
 ];
@@ -130,12 +130,7 @@ export default function HotelDemoDashboard() {
               <img src={HOTEL.logo} alt="hotel" className="w-full h-full object-cover" />
             </div>
           </div>
-          <button
-            onClick={() => navigate('/hotel-onboarding')}
-            className="hidden sm:flex items-center gap-1.5 text-xs text-accent font-semibold hover:underline"
-          >
-            Register Hotel <ChevronRight className="w-3 h-3" />
-          </button>
+          <span className="hidden sm:inline text-[10px] text-muted-foreground">Demo Preview</span>
         </div>
       </header>
 
@@ -208,16 +203,16 @@ export default function HotelDemoDashboard() {
                     <DollarSign className="w-4 h-4 text-green-600" />
                     <p className="text-xs font-bold text-green-700 uppercase tracking-wide">Revenue Earned This Month</p>
                   </div>
-                  <p className="text-3xl font-black text-green-700">$6,380</p>
-                  <p className="text-xs text-green-600 mt-1">Based on 638 × $10 hotel service fee — $20 platform fee less $10 SIH fee</p>
+                  <p className="text-3xl font-black text-green-700">$12,760</p>
+                  <p className="text-xs text-green-600 mt-1">Based on 638 shipments × US$20 hotel revenue per shipment</p>
                 </div>
                 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-5 shadow-sm">
                   <div className="flex items-center gap-2 mb-2">
                     <TrendingUp className="w-4 h-4 text-blue-600" />
-                    <p className="text-xs font-bold text-blue-700 uppercase tracking-wide">Projected Annual Revenue</p>
+                    <p className="text-xs font-bold text-blue-700 uppercase tracking-wide">Projected Annual Revenue (estimated)</p>
                   </div>
-                  <p className="text-3xl font-black text-blue-700">$76,560</p>
-                  <p className="text-xs text-blue-600 mt-1">Estimated based on current monthly run rate × 12 months</p>
+                  <p className="text-3xl font-black text-blue-700">$153,120</p>
+                  <p className="text-xs text-blue-600 mt-1">Estimate — current monthly run rate ($12,760) × 12 months</p>
                 </div>
               </div>
 
@@ -524,6 +519,8 @@ export default function HotelDemoDashboard() {
                 })}
               </div>
 
+              <p className="text-[11px] text-muted-foreground">Conversion rate measures the percentage of QR scans that result in a completed shipment registration — i.e. guests who scanned and went on to ship.</p>
+
               {/* QR Code display */}
               <div className="bg-white border border-border rounded-2xl p-6 flex flex-col items-center gap-5 shadow-sm">
                 {!qrVisible ? (
@@ -551,9 +548,15 @@ export default function HotelDemoDashboard() {
                         <p className="text-[9px] text-muted-foreground">Dubai, United Arab Emirates</p>
                       </div>
                     </div>
-                    <div className="flex gap-3">
-                      <button className="flex items-center gap-1.5 px-4 py-2 bg-accent hover:bg-accent/90 text-white text-xs font-bold rounded-xl transition-colors">
+                    <div className="flex gap-3 flex-wrap justify-center">
+                      <button onClick={async () => { const r = await fetch(qrUrl); const b = await r.blob(); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = 'atlantis-the-palm-qr.png'; a.click(); URL.revokeObjectURL(u); }} className="flex items-center gap-1.5 px-4 py-2 bg-accent hover:bg-accent/90 text-white text-xs font-bold rounded-xl transition-colors">
                         <Download className="w-3.5 h-3.5" /> Download PNG
+                      </button>
+                      <button onClick={() => window.print()} className="flex items-center gap-1.5 px-4 py-2 border border-border text-xs font-semibold rounded-xl hover:bg-muted transition-colors">
+                        <Printer className="w-3.5 h-3.5" /> Print
+                      </button>
+                      <button onClick={() => window.location.href = `mailto:?subject=${encodeURIComponent('SendItHome QR Code')}&body=${encodeURIComponent('Guests can scan this QR code to start their SendItHome shipment: ' + qrUrl)}`} className="flex items-center gap-1.5 px-4 py-2 border border-border text-xs font-semibold rounded-xl hover:bg-muted transition-colors">
+                        <Mail className="w-3.5 h-3.5" /> Email
                       </button>
                       <button onClick={() => setQrVisible(false)} className="flex items-center gap-1.5 px-4 py-2 border border-border text-xs font-semibold rounded-xl hover:bg-muted transition-colors">
                         <RefreshCw className="w-3.5 h-3.5" /> Reset
@@ -584,20 +587,9 @@ export default function HotelDemoDashboard() {
         </p>
       </footer>
 
-      {/* CTA footer */}
-      <div className="max-w-4xl mx-auto px-4 pb-8 pt-2">
-        <div className="bg-primary rounded-2xl px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <p className="text-sm font-black text-primary-foreground">Ready to partner with SendITHome?</p>
-            <p className="text-xs text-primary-foreground/70 mt-0.5">Register your hotel to go live in as few as 10 working days.</p>
-          </div>
-          <button
-            onClick={() => navigate('/hotel-onboarding')}
-            className="flex items-center gap-2 px-5 py-2.5 bg-accent hover:bg-accent/90 text-white text-sm font-bold rounded-xl transition-colors whitespace-nowrap shrink-0"
-          >
-            Register Your Hotel <ArrowUpRight className="w-4 h-4" />
-          </button>
-        </div>
+      {/* Minimal CTA */}
+      <div className="max-w-4xl mx-auto px-4 pb-8 pt-2 text-center">
+        <p className="text-xs text-muted-foreground">Ready to partner with SendItHome? <button onClick={() => navigate('/hotel-onboarding')} className="text-accent font-semibold hover:underline">Register your hotel</button> — go live in as few as 7 working days.</p>
       </div>
     </div>
   );

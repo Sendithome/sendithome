@@ -324,7 +324,7 @@ export default function HotelDashboard() {
     setLogisticsStageUpdating(statusId);
     // Add 10 working days (14 calendar days approx)
     const target = new Date();
-    target.setDate(target.getDate() + 14);
+    target.setDate(target.getDate() + 10);
     await base44.entities.HotelOnboardingStatus.update(statusId, {
       logistics_stage: 'dispatched_to_logistics',
       dispatched_at: new Date().toISOString(),
@@ -823,6 +823,7 @@ export default function HotelDashboard() {
                   <p className="text-xs font-bold text-foreground uppercase tracking-wide flex items-center gap-2">
                     <Users className="w-3.5 h-3.5 text-accent" /> Key Contacts
                   </p>
+                  <p className="text-[10px] text-muted-foreground">Required contacts can be completed now or added later from Settings. WhatsApp numbers are required for SendITHome Periodical Updates.</p>
 
                   {[
                     { title: 'General Manager *', prefix: 'gm', required: true },
@@ -906,8 +907,18 @@ export default function HotelDashboard() {
                   </div>
                   <p className="text-sm font-bold text-amber-800 mb-2">NDA Required First</p>
                   <p className="text-xs text-amber-700 mb-4">You must sign the Non-Disclosure Agreement before you can submit documents for verification.</p>
+                  <div className="bg-white/60 border border-amber-200 rounded-xl px-4 py-3 mb-4 text-left">
+                    <p className="text-[10px] font-bold text-amber-800 uppercase tracking-wide mb-2">Documents to prepare after signing:</p>
+                    <ul className="text-[11px] text-amber-700 space-y-1 list-disc pl-4 text-left">
+                      <li>Valid Trade License (PDF or image)</li>
+                      <li>Trade License Number &amp; Expiry Date</li>
+                      <li>General Manager — Employment ID Card</li>
+                      <li>Front Desk Manager — Employment ID Card (optional)</li>
+                      <li>Head of Concierge — Employment ID Card (optional)</li>
+                    </ul>
+                  </div>
                   <Button size="sm" onClick={() => navigate('/nda-signing')} className="bg-accent hover:bg-accent/90 text-white rounded-xl gap-2">
-                    <PenLine className="w-3.5 h-3.5" /> Sign NDA Now
+                    <PenLine className="w-3.5 h-3.5" /> Sign NDA
                   </Button>
                 </div>
               )}
@@ -1045,6 +1056,7 @@ export default function HotelDashboard() {
                 <div className="flex-1">
                   <p className="text-sm font-bold text-blue-800">Full Inventory Dashboard</p>
                   <p className="text-xs text-blue-700 mt-1">View your current stock levels, replenishment history, and usage analytics on the dedicated inventory page.</p>
+                  <p className="text-[10px] text-blue-600 mt-2">Request more boxes when stock falls below your reorder threshold — replenishment is automatic and free of charge.</p>
                   <button onClick={() => navigate('/hotel-inventory')}
                     className="mt-3 flex items-center gap-1.5 px-4 h-8 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-colors">
                     <Package className="w-3.5 h-3.5" /> Open Inventory Dashboard
@@ -1073,7 +1085,7 @@ export default function HotelDashboard() {
                   <Truck className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-sm font-bold text-blue-800">Logistics Onboarding in Progress</p>
-                    <p className="text-xs text-blue-700 mt-1">Our logistics partner has been notified and will contact your hotel within 1–2 business days to arrange staff briefing, signage placement, and setup. Target: 10 working days.</p>
+                    <p className="text-xs text-blue-700 mt-1">"Logistics" covers the physical setup of Send It Home at your property — courier onboarding, staff briefing, signage placement, and delivery of your complimentary box inventory. Our logistics partner will contact your hotel within 1–2 business days to arrange this. Target: 7 working days.</p>
                   </div>
                 </div>
               )}
@@ -1099,16 +1111,30 @@ export default function HotelDashboard() {
               </div>
 
               {!isApproved ? (
-                <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center">
+                <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6">
                   <div className="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center mx-auto mb-4">
                     <Shield className="w-7 h-7 text-amber-600" />
                   </div>
-                  <p className="text-sm font-bold text-amber-800 mb-2">Approval Required</p>
-                  <p className="text-xs text-amber-700 mb-4">
+                  <p className="text-sm font-bold text-amber-800 mb-2 text-center">Approval Required</p>
+                  <p className="text-xs text-amber-700 mb-4 text-center">
                     {isPending
                       ? 'Your application is under review. QR code generation will be enabled once approved.'
                       : 'Complete your hotel profile and submit all documents for approval before generating your QR code.'}
                   </p>
+                  <div className="bg-white/60 border border-amber-200 rounded-xl px-4 py-3 mb-4 text-left">
+                    <p className="text-[10px] font-bold text-amber-800 uppercase tracking-wide mb-2">What is the QR code used for?</p>
+                    <p className="text-[11px] text-amber-700 leading-relaxed">Your unique QR code lets guests scan to start a Send It Home shipment in under 3 minutes — no app download needed. Once approved, you can download it for your concierge desk, in-room folders, and digital signage.</p>
+                  </div>
+                  <div className="bg-white/60 border border-amber-200 rounded-xl px-4 py-3 mb-4 text-left">
+                    <p className="text-[10px] font-bold text-amber-800 uppercase tracking-wide mb-2">Steps before your QR is available:</p>
+                    <ul className="text-[11px] text-amber-700 space-y-1 list-disc pl-4 text-left">
+                      <li className={ndaSigned ? 'line-through opacity-60' : ''}>Sign the NDA</li>
+                      <li className={hotel ? 'line-through opacity-60' : ''}>Complete your hotel profile</li>
+                      <li>Upload trade license &amp; GM employment card</li>
+                      <li>Submit for approval</li>
+                      <li>Receive admin approval</li>
+                    </ul>
+                  </div>
                   {!isPending && (
                     <Button size="sm" onClick={() => setTab(hotel ? 'documents' : 'profile')} className="bg-accent hover:bg-accent/90 text-white rounded-xl">
                       {hotel ? 'Upload Documents' : 'Complete Profile First'}
