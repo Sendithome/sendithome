@@ -833,7 +833,7 @@ export default function HotelDashboard() {
                   <p className="text-xs font-bold text-foreground uppercase tracking-wide flex items-center gap-2">
                     <Users className="w-3.5 h-3.5 text-accent" /> Key Contacts
                   </p>
-                  <p className="text-[10px] text-muted-foreground">Required contacts can be completed now or added later from Settings. WhatsApp numbers are required for SendITHome Periodical Updates.</p>
+                  <p className="text-[10px] text-muted-foreground">Required contacts can be completed now or added later from Settings. WhatsApp numbers are required for <strong className="text-foreground">SendITHome — Promotional Updates</strong>.</p>
 
                   {[
                     { title: 'General Manager *', prefix: 'gm', required: true },
