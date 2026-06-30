@@ -118,7 +118,16 @@ export default function AdminShipmentsTab({ verifications, retailers, onRefresh 
                 return (
                   <>
                     <tr key={v.id} className={`hover:bg-muted/20 transition-colors ${overdue ? 'bg-red-50/30' : ''}`}>
-                      <td className="py-2.5 px-3 font-mono font-bold text-accent">{v.shipment_id}</td>
+                      <td className="py-2.5 px-3 font-mono font-bold">
+                        {v.order_id ? (
+                          <a href={`/shipment/${v.order_id}`} target="_blank" rel="noopener noreferrer"
+                            className="text-accent hover:underline inline-flex items-center gap-1" title="Open full shipment record">
+                            {v.shipment_id}<ExternalLink className="w-3 h-3" />
+                          </a>
+                        ) : (
+                          <span className="text-accent">{v.shipment_id}</span>
+                        )}
+                      </td>
                       <td className="py-2.5 px-3 font-medium text-foreground">{v.store_name || '—'}</td>
                       <td className="py-2.5 px-3">{v.tourist_name || '—'}</td>
                       <td className="py-2.5 px-3 text-muted-foreground">{v.destination_country || '—'}</td>
