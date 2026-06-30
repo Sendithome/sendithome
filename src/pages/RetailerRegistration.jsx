@@ -73,9 +73,8 @@ export default function RetailerRegistration() {
 
           {/* Store Name vs Brand Name explanation */}
           <div className="bg-secondary/60 border border-border rounded-xl px-4 py-3 text-xs text-muted-foreground leading-relaxed space-y-0.5">
-            <p className="font-semibold text-foreground">📋 Two name fields — why?</p>
-            <p><span className="font-semibold text-foreground">Store Name</span> — Your legal business name (as shown on your trade license).</p>
-            <p><span className="font-semibold text-foreground">Brand Name</span> — The name shown on customer receipts (e.g. Gucci, Prada, Nike), used to auto-match receipts to your store.</p>
+            <p><span className="font-semibold text-foreground">Store Name</span> – Your legal business name (as shown on your trade license).</p>
+            <p><span className="font-semibold text-foreground">Brand Name</span> – The name shown on customer receipts (e.g. Gucci, Prada, Nike) and used to match receipts to your store.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

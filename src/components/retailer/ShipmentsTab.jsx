@@ -47,11 +47,11 @@ export default function ShipmentsTab({ verifications, retailer }) {
 
   const exportCSV = () => {
     const header = ['Shipment ID', 'Tourist Name', 'Destination', 'Items', 'Value (US$)', 'Commission (US$)', 'Date Created', 'Status'];
-    const rows = verifications.map(v => [
+    const rows = history.map(v => [
       v.shipment_id, v.tourist_name, v.destination_country,
       v.items?.length || 0,
       (v.total_value || 0).toFixed(2),
-      ((v.total_value || 0) * 0.10).toFixed(2),
+      getCommissionAmount(v.total_value || 0, v.tourist_passport_country).toFixed(2),
       v.created_date ? new Date(v.created_date).toLocaleDateString() : '',
       v.status
     ]);

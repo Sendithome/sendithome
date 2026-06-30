@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Download } from 'lucide-react';
 
-const COLORS = ['#22C55E', '#D4A855', '#FF007F', '#6366F1', '#0EA5E9', '#F97316'];
+const COLORS = ['#ff0064', '#D4A855', '#6366F1', '#0EA5E9', '#22C55E', '#F97316'];
 
 const QUICK_FILTERS = [
   { id: 'all', label: 'All Time' },
@@ -117,7 +117,7 @@ export default function AnalyticsTab({ verifications }) {
                 <Pie data={categories} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70}
                   label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   labelLine={false}
-                  style={{ fontSize: 10, fill: 'hsl(var(--foreground))', fontWeight: 600 }}>
+                  style={{ fontSize: 10, fill: '#ffffff', fontWeight: 700 }}>
                   {categories.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Pie>
                 <Tooltip contentStyle={tooltipStyle} />
@@ -134,7 +134,7 @@ export default function AnalyticsTab({ verifications }) {
                 <XAxis dataKey="label" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
                 <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
                 <Tooltip contentStyle={tooltipStyle} />
-                <Line type="monotone" dataKey="avg" stroke="hsl(var(--chart-2))" strokeWidth={2} dot={{ fill: 'hsl(var(--chart-2))', r: 3 }} />
+                <Line type="monotone" dataKey="avg" stroke="hsl(var(--chart-1))" strokeWidth={2} dot={{ fill: 'hsl(var(--chart-1))', r: 3 }} />
               </LineChart>
             </ResponsiveContainer>
           )}

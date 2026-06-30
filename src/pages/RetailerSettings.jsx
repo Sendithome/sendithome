@@ -9,26 +9,21 @@ export default function RetailerSettings() {
   const [form, setForm] = useState({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [staffEmail, setStaffEmail] = useState('');
 
   useEffect(() => {
     const id = sessionStorage.getItem('retailer_id') || localStorage.getItem('retailer_id');
-    if (id) {
-      base44.entities.Retailer.filter({ id }).then(rs => {
-        if (rs.length > 0) {
-          setRetailer(rs[0]);
-          setForm(rs[0]);
-        }
-      });
-    } else {
-      // Demo mode: load first available retailer
-      base44.entities.Retailer.list('-created_date', 1).then(rs => {
-        if (rs.length > 0) {
-          setRetailer(rs[0]);
-          setForm(rs[0]);
-        }
-      });
-    }
+    const loadRetailer = async () => {
+      if (id) {
+        const rs = await base44.entities.Retailer.filter({ id });
+        if (rs.length > 0) { setRetailer(rs[0]); setForm(rs[0]); return; }
+      }
+      // Fall back to demo mode (first retailer) if no session or stale id
+      const rs = await base44.entities.Retailer.list('-created_date', 1);
+      if (rs.length > 0) { setRetailer(rs[0]); setForm(rs[0]); }
+    };
+    loadRetailer().finally(() => setLoaded(true));
   }, []);
 
   const update = (k, v) => setForm(p => ({ ...p, [k]: v }));
@@ -49,9 +44,22 @@ export default function RetailerSettings() {
     setTimeout(() => setSaved(false), 3000);
   };
 
-  if (!retailer) return (
+  if (!loaded) return (
     <div className="min-h-screen bg-background flex items-center justify-center">
       <Loader2 className="w-6 h-6 text-accent animate-spin" />
+    </div>
+  );
+
+  if (!retailer) return (
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="text-center max-w-sm">
+        <p className="text-sm font-bold text-foreground mb-2">No retailer account found</p>
+        <p className="text-xs text-muted-foreground mb-5">We couldn't load a retailer profile. Please sign in or register your store to continue.</p>
+        <div className="flex gap-2 justify-center">
+          <Link to="/retailer-portal" className="px-4 h-10 bg-accent text-accent-foreground text-sm font-semibold rounded-xl flex items-center hover:bg-accent/90 transition-colors">Sign in</Link>
+          <Link to="/retailer-registration" className="px-4 h-10 border border-border text-foreground text-sm font-semibold rounded-xl flex items-center hover:bg-muted transition-colors">Register</Link>
+        </div>
+      </div>
     </div>
   );
 

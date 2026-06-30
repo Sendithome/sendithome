@@ -49,6 +49,7 @@ export default function ApprovedHistoryTab({ verifications }) {
   const [expandedId, setExpandedId] = useState(null);
   const [downloadingId, setDownloadingId] = useState(null);
   const [selectedShipment, setSelectedShipment] = useState(null);
+  const [exportingPDF, setExportingPDF] = useState(false);
 
   const toggleSort = (field) => {
     if (sortField === field) setSortDir(d => -d);
@@ -110,6 +111,54 @@ export default function ApprovedHistoryTab({ verifications }) {
     URL.revokeObjectURL(url);
   };
 
+  const exportPDF = async () => {
+    setExportingPDF(true);
+    try {
+      const { jsPDF } = await import('jspdf');
+      const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+      const W = 297, margin = 14;
+      doc.setFillColor(26, 27, 38); doc.rect(0, 0, W, 22, 'F');
+      doc.setTextColor(255, 255, 255); doc.setFontSize(13); doc.setFont('helvetica', 'bold');
+      doc.text('SEND IT HOME — Approved Shipment History', margin, 10);
+      doc.setFontSize(8); doc.setFont('helvetica', 'normal');
+      doc.text(`Generated: ${new Date().toLocaleDateString('en-GB')}`, margin, 17);
+      let y = 30;
+      const cols = [
+        { label: 'Shipment ID', x: margin },
+        { label: 'Tourist', x: margin + 40 },
+        { label: 'Date Approved', x: margin + 95 },
+        { label: 'Items', x: margin + 130 },
+        { label: 'Value (US$)', x: margin + 150 },
+        { label: 'Commission', x: margin + 185 },
+        { label: 'Destination', x: margin + 225 },
+      ];
+      doc.setFillColor(245, 245, 245); doc.rect(margin, y - 5, W - margin * 2, 7, 'F');
+      doc.setTextColor(80, 80, 80); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+      cols.forEach(c => doc.text(c.label, c.x, y));
+      y += 7;
+      doc.setFont('helvetica', 'normal'); doc.setTextColor(40, 40, 40);
+      filtered.forEach((v, i) => {
+        if (y > 200) { doc.addPage(); y = margin; }
+        if (i % 2 === 1) { doc.setFillColor(250, 250, 250); doc.rect(margin, y - 4, W - margin * 2, 6, 'F'); }
+        const row = [
+          v.shipment_id || '—',
+          (v.tourist_name || '—').substring(0, 22),
+          v.approved_at ? new Date(v.approved_at).toLocaleDateString('en-GB') : '—',
+          String(v.items?.length || 0),
+          (v.total_value || 0).toFixed(2),
+          (v.commission_amount || 0).toFixed(2),
+          (v.destination_country || '—').substring(0, 18),
+        ];
+        cols.forEach((c, ci) => doc.text(row[ci], c.x, y));
+        y += 6;
+      });
+      doc.save(`approved-history-${new Date().toISOString().slice(0, 10)}.pdf`);
+    } catch (err) {
+      console.error('PDF export error', err);
+    }
+    setExportingPDF(false);
+  };
+
   const SortIcon = ({ field }) => (
     <span className={`ml-1 text-[10px] ${sortField === field ? 'text-accent' : 'text-muted-foreground/50'}`}>
       {sortField === field ? (sortDir === -1 ? '▼' : '▲') : '⇅'}
@@ -149,6 +198,9 @@ export default function ApprovedHistoryTab({ verifications }) {
         </div>
         <button onClick={exportCSV} className="flex items-center gap-1.5 text-xs font-semibold text-foreground border border-border rounded-lg px-3 h-8 hover:bg-muted transition-colors">
           <Download className="w-3.5 h-3.5" /> Export CSV
+        </button>
+        <button onClick={exportPDF} disabled={exportingPDF} className="flex items-center gap-1.5 text-xs font-semibold text-foreground border border-border rounded-lg px-3 h-8 hover:bg-muted transition-colors disabled:opacity-50">
+          {exportingPDF ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileText className="w-3.5 h-3.5" />} Export PDF
         </button>
       </div>
 

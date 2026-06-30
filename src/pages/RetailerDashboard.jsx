@@ -141,7 +141,7 @@ export default function RetailerDashboard() {
           <div className="bg-muted/40 border border-border rounded-2xl p-4 shadow-sm">
             <p className="text-xs font-bold text-foreground mb-1">How Commission Works</p>
             <p className="text-[11px] text-muted-foreground leading-relaxed">
-              <strong className="text-foreground">Retailers pay</strong> a tiered commission per transaction to the government, based on the tourist's origin country and spend bracket. Rates range from 1%–10% — higher spend means lower rates.
+              <strong className="text-foreground">Retailers pay</strong> a tiered commission (1%–10%) per transaction to the government, based on the tourist's origin country and spend — higher spend means a lower rate.
             </p>
           </div>
         </div>
