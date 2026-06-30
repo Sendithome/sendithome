@@ -2,8 +2,10 @@ import React, { useState, useMemo } from 'react';
 import { ChevronDown, ChevronUp, Search, Download, FileText, FileSpreadsheet, Loader2, Store, Package, User, Receipt } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
+import { getCommissionAmount, getCommissionRate } from '@/utils/commissionTiers';
 
-const COMMISSION_RATE = 0.10;
+// Tiered commission is computed per retailer line using the tourist's passport
+// country and the transaction value (see utils/commissionTiers.js).
 
 // Groups verifications by order/shipment — one "declaration" per tourist per shipment
 function buildDeclarations(verifications, retailers) {
@@ -30,6 +32,11 @@ function buildDeclarations(verifications, retailers) {
   }
   return Object.values(shipmentMap).sort((a, b) => new Date(b.created_date || 0) - new Date(a.created_date || 0));
 }
+
+const lineReceivable = (v, country) => getCommissionAmount(v.total_value || 0, country);
+const lineRatePct = (v, country) => (getCommissionRate(v.total_value || 0, country) * 100).toFixed(2);
+const sumReceivable = (declarations) =>
+  declarations.reduce((s, d) => s + d.retailer_verifications.reduce((ss, v) => ss + lineReceivable(v, d.tourist_passport_country), 0), 0);
 
 export default function DeclarationBreakdownTab({ verifications, retailers }) {
   const [search, setSearch] = useState('');
@@ -70,7 +77,7 @@ export default function DeclarationBreakdownTab({ verifications, retailers }) {
 
   const exportCSV = () => {
     const rows = [
-      ['Declaration ID', 'Tourist Name', 'Nationality', 'Destination', 'Hotel', 'Date', 'Retailer Name', 'Retailer ID', 'Items Count', 'Purchase Value', `Commission (${COMMISSION_RATE * 100}%)`, 'Receivable Amount', 'Receipt Ref'],
+      ['Declaration ID', 'Tourist Name', 'Nationality', 'Destination', 'Hotel', 'Date', 'Retailer Name', 'Retailer ID', 'Items Count', 'Purchase Value', 'Commission (Tiered)', 'Receivable Amount', 'Receipt Ref'],
     ];
     for (const d of declarations) {
       for (const v of d.retailer_verifications) {
@@ -86,8 +93,8 @@ export default function DeclarationBreakdownTab({ verifications, retailers }) {
           v.retailer_id,
           selectedItems.length,
           (v.total_value || 0).toFixed(2),
-          COMMISSION_RATE * 100 + '%',
-          ((v.total_value || 0) * COMMISSION_RATE).toFixed(2),
+          lineRatePct(v, d.tourist_passport_country) + '%',
+          lineReceivable(v, d.tourist_passport_country).toFixed(2),
           v.shipment_id,
         ]);
       }
@@ -112,12 +119,12 @@ export default function DeclarationBreakdownTab({ verifications, retailers }) {
           d.created_date ? new Date(d.created_date).toLocaleDateString() : '',
           v.store_name, v.retailer_id, selectedItems.length,
           (v.total_value || 0).toFixed(2),
-          ((v.total_value || 0) * COMMISSION_RATE).toFixed(2),
+          lineReceivable(v, d.tourist_passport_country).toFixed(2),
           v.shipment_id,
         ];
       })
     );
-    const headers = ['Declaration ID', 'Tourist', 'Nationality', 'Destination', 'Hotel', 'Date', 'Retailer', 'Retailer ID', 'Items', 'Purchase Value', 'Receivable (10%)', 'Receipt Ref'];
+    const headers = ['Declaration ID', 'Tourist', 'Nationality', 'Destination', 'Hotel', 'Date', 'Retailer', 'Retailer ID', 'Items', 'Purchase Value', 'Receivable (Tiered)', 'Receipt Ref'];
     const tableHtml = `<table><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</table>`;
     const blob = new Blob([`<html><body>${tableHtml}</body></html>`], { type: 'application/vnd.ms-excel' });
     const url = URL.createObjectURL(blob);
@@ -148,12 +155,12 @@ export default function DeclarationBreakdownTab({ verifications, retailers }) {
       const totalDecl = declarations.length;
       const totalRetailers = declarations.reduce((s, d) => s + d.retailer_verifications.length, 0);
       const totalVal = declarations.reduce((s, d) => s + d.retailer_verifications.reduce((ss, v) => ss + (v.total_value || 0), 0), 0);
-      const totalReceivable = totalVal * COMMISSION_RATE;
+      const totalReceivable = sumReceivable(declarations);
 
       doc.setFillColor(248, 248, 248); doc.setDrawColor(200, 200, 200);
       doc.rect(margin, y, cW, 12, 'FD');
       doc.setFontSize(7.5); doc.setFont('helvetica', 'bold'); doc.setTextColor(80, 80, 80);
-      const sumCols = [`Total Declarations: ${totalDecl}`, `Total Retailer Lines: ${totalRetailers}`, `Total Purchase Value: $${totalVal.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, `Total Govt. Receivable (10%): $${totalReceivable.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`];
+      const sumCols = [`Total Declarations: ${totalDecl}`, `Total Retailer Lines: ${totalRetailers}`, `Total Purchase Value: $${totalVal.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, `Total Govt. Receivable (Tiered): $${totalReceivable.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`];
       sumCols.forEach((s, i) => doc.text(s, margin + 4 + i * (cW / 4), y + 7.5));
       y += 15;
 
@@ -167,7 +174,7 @@ export default function DeclarationBreakdownTab({ verifications, retailers }) {
         { label: 'Retailer', w: 34 },
         { label: 'Items', w: 12 },
         { label: 'Purchase Value', w: 26 },
-        { label: 'Receivable (10%)', w: 26 },
+        { label: 'Receivable (Tiered)', w: 26 },
         { label: 'Date', w: 24 },
       ];
 
@@ -192,7 +199,7 @@ export default function DeclarationBreakdownTab({ verifications, retailers }) {
             (v.store_name || '—').substring(0, 18),
             String(selectedItems.length),
             `$${(v.total_value || 0).toFixed(2)}`,
-            `$${((v.total_value || 0) * COMMISSION_RATE).toFixed(2)}`,
+            `$${lineReceivable(v, d.tourist_passport_country).toFixed(2)}`,
             d.created_date ? new Date(d.created_date).toLocaleDateString('en-GB') : '—',
           ];
         })
@@ -231,7 +238,7 @@ export default function DeclarationBreakdownTab({ verifications, retailers }) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-base font-bold text-foreground">Tourist Declaration Breakdown</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">Drill-down: Tourist → Retailers → Receipts → Items · Commission receivable per retailer</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Drill-down: Tourist → Retailers → Receipts → Items · Tiered commission receivable per retailer</p>
         </div>
         <div className="flex gap-2 flex-wrap">
           <button onClick={exportCSV} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-colors shadow-sm">
@@ -300,6 +307,7 @@ export default function DeclarationBreakdownTab({ verifications, retailers }) {
           ))}
         </div>
       )}
+      <p className="text-[10px] text-muted-foreground italic text-center">* Commission is tiered (1%–10%) based on tourist origin country & transaction value. VAT excluded. Min spend US$1,500 · Max US$20,000.</p>
     </div>
   );
 }
@@ -307,7 +315,7 @@ export default function DeclarationBreakdownTab({ verifications, retailers }) {
 function TotalsBar({ declarations }) {
   const totalDecl = declarations.length;
   const totalValue = declarations.reduce((s, d) => s + d.retailer_verifications.reduce((ss, v) => ss + (v.total_value || 0), 0), 0);
-  const totalReceivable = totalValue * COMMISSION_RATE;
+  const totalReceivable = sumReceivable(declarations);
   const totalRetailerLines = declarations.reduce((s, d) => s + d.retailer_verifications.length, 0);
 
   return (
@@ -316,7 +324,7 @@ function TotalsBar({ declarations }) {
         { label: 'Total Declarations', value: totalDecl.toLocaleString(), color: 'text-primary' },
         { label: 'Retailer Records', value: totalRetailerLines.toLocaleString(), color: 'text-blue-600' },
         { label: 'Total Purchase Value', value: `$${totalValue.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, color: 'text-amber-600' },
-        { label: 'Total Govt. Receivable (10%)', value: `$${totalReceivable.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, color: 'text-green-600' },
+        { label: 'Total Govt. Receivable (Tiered)', value: `$${totalReceivable.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, color: 'text-green-600' },
       ].map(s => (
         <div key={s.label} className="bg-card border border-border rounded-xl p-3 shadow-sm">
           <p className="text-[10px] text-muted-foreground uppercase tracking-wide">{s.label}</p>
@@ -329,7 +337,7 @@ function TotalsBar({ declarations }) {
 
 function DeclarationCard({ declaration: d, isExpanded, onToggle, expandedRetailer, setExpandedRetailer }) {
   const totalValue = d.retailer_verifications.reduce((s, v) => s + (v.total_value || 0), 0);
-  const totalReceivable = totalValue * COMMISSION_RATE;
+  const totalReceivable = d.retailer_verifications.reduce((s, v) => s + lineReceivable(v, d.tourist_passport_country), 0);
   const totalItems = d.retailer_verifications.reduce((s, v) => s + (v.items || []).filter(i => i.selected !== false).length, 0);
 
   return (
@@ -363,7 +371,7 @@ function DeclarationCard({ declaration: d, isExpanded, onToggle, expandedRetaile
             <p className="text-sm font-bold text-amber-600">${totalValue.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
           </div>
           <div className="hidden md:block text-right">
-            <p className="text-[10px] text-muted-foreground">Govt. Receivable (10%)</p>
+            <p className="text-[10px] text-muted-foreground">Govt. Receivable (Tiered)</p>
             <p className="text-sm font-bold text-green-600">${totalReceivable.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
           </div>
           {isExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
@@ -415,6 +423,7 @@ function DeclarationCard({ declaration: d, isExpanded, onToggle, expandedRetaile
                       const selectedItems = (v.items || []).filter(i => i.selected !== false);
                       const retailerKey = `${d.shipment_id}-${v.id}`;
                       const isRetailerExpanded = expandedRetailer === retailerKey;
+                      const rate = getCommissionRate(v.total_value || 0, d.tourist_passport_country);
                       return (
                         <React.Fragment key={v.id}>
                           <tr
@@ -427,8 +436,8 @@ function DeclarationCard({ declaration: d, isExpanded, onToggle, expandedRetaile
                               <span className="bg-muted text-foreground font-bold px-2 py-0.5 rounded-full text-[10px]">{selectedItems.length}</span>
                             </td>
                             <td className="px-3 py-2.5 font-bold text-amber-600">${(v.total_value || 0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                            <td className="px-3 py-2.5 text-muted-foreground">10%</td>
-                            <td className="px-3 py-2.5 font-bold text-green-600">${((v.total_value || 0) * COMMISSION_RATE).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            <td className="px-3 py-2.5 text-muted-foreground">{(rate * 100).toFixed(2)}%</td>
+                            <td className="px-3 py-2.5 font-bold text-green-600">${lineReceivable(v, d.tourist_passport_country).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                             <td className="px-3 py-2.5 font-mono text-muted-foreground text-[10px]">{v.shipment_id}</td>
                             <td className="px-3 py-2.5">
                               <button className="text-[10px] text-accent hover:underline flex items-center gap-0.5">
@@ -454,7 +463,7 @@ function DeclarationCard({ declaration: d, isExpanded, onToggle, expandedRetaile
                                         <th className="text-left px-3 py-1.5 font-semibold">Category</th>
                                         <th className="text-center px-3 py-1.5 font-semibold">Qty</th>
                                         <th className="text-right px-3 py-1.5 font-semibold">Item Value</th>
-                                        <th className="text-right px-3 py-1.5 font-semibold">Receivable (10%)</th>
+                                        <th className="text-right px-3 py-1.5 font-semibold">Receivable (Tiered)</th>
                                       </tr>
                                     </thead>
                                     <tbody className="bg-card divide-y divide-border">
@@ -465,14 +474,14 @@ function DeclarationCard({ declaration: d, isExpanded, onToggle, expandedRetaile
                                           <td className="px-3 py-2 text-muted-foreground">{item.category || '—'}</td>
                                           <td className="px-3 py-2 text-center">1</td>
                                           <td className="px-3 py-2 text-right font-semibold text-foreground">${(item.price || 0).toFixed(2)}</td>
-                                          <td className="px-3 py-2 text-right font-bold text-green-600">${((item.price || 0) * COMMISSION_RATE).toFixed(2)}</td>
+                                          <td className="px-3 py-2 text-right font-bold text-green-600">${((item.price || 0) * rate).toFixed(2)}</td>
                                         </tr>
                                       ))}
                                       <tr className="bg-muted/50 font-bold">
                                         <td colSpan={3} className="px-3 py-2 text-foreground">TOTAL ({selectedItems.length} items)</td>
                                         <td className="px-3 py-2 text-center">{selectedItems.length}</td>
                                         <td className="px-3 py-2 text-right text-amber-600">${(v.total_value || 0).toFixed(2)}</td>
-                                        <td className="px-3 py-2 text-right text-green-600">${((v.total_value || 0) * COMMISSION_RATE).toFixed(2)}</td>
+                                        <td className="px-3 py-2 text-right text-green-600">${lineReceivable(v, d.tourist_passport_country).toFixed(2)}</td>
                                       </tr>
                                     </tbody>
                                   </table>

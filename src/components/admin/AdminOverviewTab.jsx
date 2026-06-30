@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { ShoppingBag, Package, Store, Hotel, CheckCircle2, Clock, DollarSign, AlertTriangle, TrendingUp } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { getCommissionAmount } from '@/utils/commissionTiers';
 
 export default function AdminOverviewTab({ data }) {
   const { orders, verifications, retailers, hotels } = data;
@@ -9,10 +10,11 @@ export default function AdminOverviewTab({ data }) {
     const approved = verifications.filter(v => v.status === 'approved');
     const pending = verifications.filter(v => v.status === 'pending');
     const totalExportValue = approved.reduce((s, v) => s + (v.total_value || 0), 0);
+    const totalCommission = approved.reduce((s, v) => s + getCommissionAmount(v.total_value || 0, v.tourist_passport_country), 0);
     const activeRetailers = retailers.filter(r => r.status === 'approved').length;
     const pendingRetailers = retailers.filter(r => r.status === 'pending').length;
 
-    return { approved, pending, totalExportValue, activeRetailers, pendingRetailers };
+    return { approved, pending, totalExportValue, totalCommission, activeRetailers, pendingRetailers };
   }, [verifications, retailers]);
 
   // Monthly volume from verifications
@@ -44,12 +46,12 @@ export default function AdminOverviewTab({ data }) {
     <div className="space-y-6">
       {/* Stat Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <StatCard icon={<ShoppingBag className="w-5 h-5" />} label="Total Orders" value={orders.length} color="text-primary" bg="bg-primary/10" />
+        <StatCard icon={<ShoppingBag className="w-5 h-5" />} label="Total Shipments" value={orders.length} color="text-primary" bg="bg-primary/10" />
         <StatCard icon={<Package className="w-5 h-5" />} label="Verifications" value={verifications.length} color="text-blue-600" bg="bg-blue-50" />
         <StatCard icon={<CheckCircle2 className="w-5 h-5" />} label="Approved Shipments" value={stats.approved.length} color="text-green-600" bg="bg-green-50" />
         <StatCard icon={<Clock className="w-5 h-5" />} label="Pending Approvals" value={stats.pending.length} color="text-yellow-600" bg="bg-yellow-50" pulse={stats.pending.length > 0} />
         <StatCard icon={<DollarSign className="w-5 h-5" />} label="Total Export Value (USD)" value={`US$${stats.totalExportValue.toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-emerald-600" bg="bg-emerald-50" />
-        <StatCard icon={<TrendingUp className="w-5 h-5" />} label="Govt. Commission (10%, USD)" value={`US$${(stats.totalExportValue * 0.10).toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-amber-600" bg="bg-amber-50" />
+        <StatCard icon={<TrendingUp className="w-5 h-5" />} label="Govt. Commission (Tiered)" value={`US$${stats.totalCommission.toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-amber-600" bg="bg-amber-50" />
         <StatCard icon={<Store className="w-5 h-5" />} label="Active Retailers" value={stats.activeRetailers} color="text-purple-600" bg="bg-purple-50" />
         <StatCard icon={<AlertTriangle className="w-5 h-5" />} label="Pending Retailers" value={stats.pendingRetailers} color="text-red-600" bg="bg-red-50" pulse={stats.pendingRetailers > 0} />
       </div>

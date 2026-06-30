@@ -13,10 +13,10 @@ const SHOWCASE_PAGES = [
     pages: [
       { label: 'QR Landing (Guest Onboarding)', path: '/guest-onboarding/69c10e96d7e89842ae433412' },
       { label: 'Register / New Account', path: '/register' },
-      { label: 'New Order', path: '/new-order' },
+      { label: 'New Shipment', path: '/new-order' },
       { label: 'Receipt Upload', path: '/order/6a3ba85284af787d7be0cca3/receipts' },
       { label: 'Payment', path: '/order/6a2fbf7d5f12048618aab1dd/payment' },
-      { label: 'My Orders', path: '/my-orders' },
+      { label: 'My Shipments', path: '/my-orders' },
       { label: 'Shipment Details', path: '/order/6a3ba85284af787d7be0cca3' },
       { label: 'Track Shipment', path: '/track' },
       { label: 'Profile', path: '/profile' },

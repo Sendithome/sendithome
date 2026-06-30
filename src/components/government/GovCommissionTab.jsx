@@ -135,7 +135,7 @@ export default function GovCommissionTab({ verifications, retailers }) {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="text-base font-bold text-foreground">Government Revenue & Commission Dashboard</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">Tiered Variable Commission Structure — retailers pay per store transaction based on tourist origin country and spend bracket. Collected via Unified Tax & Fee Assessment cycle, ring-fenced in a Sovereign Trust Fund with Priority Settlement Allocation to the Project Operator within 7 business days.</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Tripartite Settlement Structure — Tiered Variable Commission Structure where retailers pay per store transaction based on tourist origin country and spend bracket. Collected via Unified Tax &amp; Fee Assessment cycle, ring-fenced in a Sovereign Trust Fund with Priority Settlement Allocation to the Project Operator within 7 business days.</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <select value={period} onChange={e => setPeriod(e.target.value)}

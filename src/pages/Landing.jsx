@@ -53,7 +53,7 @@ export default function Landing() {
               </Button>
               <Button asChild variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 rounded-xl px-8 h-12">
                 <Link to="/my-orders">
-                  My Orders
+                  My Shipments
                 </Link>
               </Button>
             </div>

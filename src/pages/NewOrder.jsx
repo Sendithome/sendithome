@@ -171,7 +171,7 @@ export default function NewOrder() {
           <ArrowLeft className="w-4 h-4" />
         </button>
         <div>
-          <h1 className="text-lg font-bold text-foreground">New Order</h1>
+          <h1 className="text-lg font-bold text-foreground">New Shipment</h1>
           <p className="text-xs text-muted-foreground">Step {step + 1} of {STEPS.length} — {STEPS[step]}</p>
         </div>
       </div>
