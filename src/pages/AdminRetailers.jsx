@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, XCircle, Loader2, RefreshCw, Building2, Mail, Phone, MapPin, ChevronDown, ChevronUp, Search } from 'lucide-react';
+import { CheckCircle2, XCircle, Loader2, RefreshCw, Building2, Mail, Phone, MapPin, ChevronDown, ChevronUp, Search, FileText, KeyRound, StickyNote, History, Save } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import RetailerApprovalHistory from '@/components/admin/RetailerApprovalHistory';
 
 const STATUS_COLORS = {
   pending: 'bg-yellow-100 text-yellow-700 border-yellow-200',
@@ -18,13 +19,17 @@ export default function AdminRetailers() {
   const [actioningId, setActioningId] = useState(null);
   const [rejectReason, setRejectReason] = useState('');
   const [showRejectInput, setShowRejectInput] = useState(null);
+  const [me, setMe] = useState(null);
+  const [resendingId, setResendingId] = useState(null);
+  const [noteDraft, setNoteDraft] = useState({});
+  const [savingNoteId, setSavingNoteId] = useState(null);
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [locationFilter, setLocationFilter] = useState('all');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
 
-  useEffect(() => { loadRetailers(); }, []);
+  useEffect(() => { loadRetailers(); base44.auth.me().then(setMe).catch(() => {}); }, []);
 
   const loadRetailers = async () => {
     setLoading(true);
@@ -33,20 +38,57 @@ export default function AdminRetailers() {
     setLoading(false);
   };
 
+  const actor = () => me?.email || 'admin';
+
   const handleApprove = async (retailer) => {
     setActioningId(retailer.id);
+    const note = (noteDraft[retailer.id] || '').trim();
     await base44.functions.invoke('approveRetailer', { retailer_id: retailer.id });
+    const history = [...(retailer.approval_history || []), { action: 'approved', by: actor(), at: new Date().toISOString(), note }];
+    await base44.entities.Retailer.update(retailer.id, {
+      approval_history: history,
+      approved_at: new Date().toISOString(),
+      approved_by: actor(),
+      ...(note ? { admin_notes: note } : {}),
+    });
+    setNoteDraft(p => ({ ...p, [retailer.id]: '' }));
     await loadRetailers();
     setActioningId(null);
   };
 
   const handleReject = async (retailer) => {
     setActioningId(retailer.id);
-    await base44.entities.Retailer.update(retailer.id, { status: 'rejected' });
+    const note = (rejectReason || '').trim();
+    const history = [...(retailer.approval_history || []), { action: 'rejected', by: actor(), at: new Date().toISOString(), note }];
+    await base44.entities.Retailer.update(retailer.id, {
+      status: 'rejected',
+      reject_reason: note,
+      approval_history: history,
+    });
     await loadRetailers();
     setActioningId(null);
     setShowRejectInput(null);
     setRejectReason('');
+  };
+
+  const handleResendCredentials = async (retailer) => {
+    setResendingId(retailer.id);
+    await base44.functions.invoke('resendRetailerCredentials', { retailer_id: retailer.id });
+    const history = [...(retailer.approval_history || []), { action: 'resent', by: actor(), at: new Date().toISOString(), note: '' }];
+    await base44.entities.Retailer.update(retailer.id, { approval_history: history, credentials_resent_at: new Date().toISOString() });
+    await loadRetailers();
+    setResendingId(null);
+  };
+
+  const handleSaveNote = async (retailer) => {
+    const note = (noteDraft[retailer.id] || '').trim();
+    if (!note) return;
+    setSavingNoteId(retailer.id);
+    const history = [...(retailer.approval_history || []), { action: 'note', by: actor(), at: new Date().toISOString(), note }];
+    await base44.entities.Retailer.update(retailer.id, { admin_notes: note, approval_history: history });
+    setNoteDraft(p => ({ ...p, [retailer.id]: '' }));
+    await loadRetailers();
+    setSavingNoteId(null);
   };
 
   const uniqueCategories = useMemo(() => {
@@ -205,6 +247,62 @@ export default function AdminRetailers() {
                         <InfoRow icon={null} label="Generated Password" value={r.login_password} highlight />
                       )}
                     </div>
+
+                    {/* Trade License Document */}
+                    <div>
+                      <p className="text-muted-foreground text-[10px] uppercase tracking-wide mb-1.5">Trade License Document</p>
+                      {r.trade_license_url ? (
+                        <a href={r.trade_license_url} target="_blank" rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent border border-accent/30 bg-accent/5 rounded-xl px-3 py-2 hover:bg-accent/10 transition-colors">
+                          <FileText className="w-3.5 h-3.5" /> View Trade License
+                        </a>
+                      ) : (
+                        <p className="text-xs text-muted-foreground italic">No document uploaded.</p>
+                      )}
+                    </div>
+
+                    {/* Approval Notes */}
+                    <div>
+                      <p className="text-muted-foreground text-[10px] uppercase tracking-wide mb-1.5 flex items-center gap-1">
+                        <StickyNote className="w-3 h-3" /> Approval Notes
+                      </p>
+                      {r.admin_notes && (
+                        <p className="text-xs text-foreground bg-muted/50 rounded-lg px-3 py-2 mb-2">{r.admin_notes}</p>
+                      )}
+                      <textarea
+                        value={noteDraft[r.id] || ''}
+                        onChange={e => setNoteDraft(p => ({ ...p, [r.id]: e.target.value }))}
+                        placeholder="Add an internal note (saved to history)…"
+                        rows={2}
+                        className="w-full bg-background border border-input rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-accent resize-none"
+                      />
+                      <button onClick={() => handleSaveNote(r)} disabled={!(noteDraft[r.id] || '').trim() || savingNoteId === r.id}
+                        className="mt-1.5 inline-flex items-center gap-1.5 h-8 px-3 text-xs font-semibold text-foreground border border-border rounded-lg bg-card hover:border-accent disabled:opacity-40 transition-colors">
+                        {savingNoteId === r.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />} Save Note
+                      </button>
+                    </div>
+
+                    {/* Approval History */}
+                    <div>
+                      <p className="text-muted-foreground text-[10px] uppercase tracking-wide mb-1.5 flex items-center gap-1">
+                        <History className="w-3 h-3" /> Approval History
+                      </p>
+                      <RetailerApprovalHistory history={r.approval_history} />
+                    </div>
+
+                    {/* Resend Credentials */}
+                    {r.status === 'approved' && (
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <button onClick={() => handleResendCredentials(r)} disabled={resendingId === r.id}
+                          className="inline-flex items-center gap-1.5 h-9 px-4 text-xs font-bold text-blue-700 border border-blue-200 bg-blue-50 rounded-xl hover:bg-blue-100 disabled:opacity-50 transition-colors">
+                          {resendingId === r.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <KeyRound className="w-3.5 h-3.5" />}
+                          Resend Login Credentials
+                        </button>
+                        {r.credentials_resent_at && (
+                          <span className="text-[10px] text-muted-foreground">Last resent: {new Date(r.credentials_resent_at).toLocaleString('en-GB')}</span>
+                        )}
+                      </div>
+                    )}
 
                     {/* Actions */}
                     {r.status === 'pending' && (

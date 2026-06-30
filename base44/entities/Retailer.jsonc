@@ -81,6 +81,47 @@
     "user_email": {
       "type": "string",
       "description": "Linked user account email"
+    },
+    "admin_notes": {
+      "type": "string",
+      "description": "Internal admin notes about this retailer"
+    },
+    "approved_at": {
+      "type": "string",
+      "description": "ISO timestamp of approval"
+    },
+    "approved_by": {
+      "type": "string",
+      "description": "Admin email who approved"
+    },
+    "reject_reason": {
+      "type": "string",
+      "description": "Reason given for rejection"
+    },
+    "credentials_resent_at": {
+      "type": "string",
+      "description": "ISO timestamp of last credentials resend"
+    },
+    "approval_history": {
+      "type": "array",
+      "description": "Chronological log of admin actions on this retailer",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "by": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
     }
   },
   "required": [
