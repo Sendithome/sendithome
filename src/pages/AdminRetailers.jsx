@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, XCircle, Loader2, RefreshCw, Building2, Mail, Phone, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
+import { CheckCircle2, XCircle, Loader2, RefreshCw, Building2, Mail, Phone, MapPin, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const STATUS_COLORS = {
@@ -18,6 +18,11 @@ export default function AdminRetailers() {
   const [actioningId, setActioningId] = useState(null);
   const [rejectReason, setRejectReason] = useState('');
   const [showRejectInput, setShowRejectInput] = useState(null);
+  const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [locationFilter, setLocationFilter] = useState('all');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
 
   useEffect(() => { loadRetailers(); }, []);
 
@@ -44,7 +49,36 @@ export default function AdminRetailers() {
     setRejectReason('');
   };
 
-  const filtered = retailers.filter(r => filter === 'all' ? true : r.status === filter);
+  const uniqueCategories = useMemo(() => {
+    const set = new Set();
+    retailers.forEach(r => { if (r.store_category) set.add(r.store_category); });
+    return Array.from(set).sort();
+  }, [retailers]);
+
+  const uniqueLocations = useMemo(() => {
+    const set = new Set();
+    retailers.forEach(r => { if (r.store_location) set.add(r.store_location); });
+    return Array.from(set).sort();
+  }, [retailers]);
+
+  const filtered = retailers.filter(r => {
+    if (filter !== 'all' && r.status !== filter) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      const hay = [r.store_name, r.brand_name, r.contact_name, r.contact_email].map(v => (v || '').toLowerCase()).join(' ');
+      if (!hay.includes(q)) return false;
+    }
+    if (categoryFilter !== 'all' && r.store_category !== categoryFilter) return false;
+    if (locationFilter !== 'all' && r.store_location !== locationFilter) return false;
+    if (dateFrom || dateTo) {
+      const created = r.created_date ? new Date(r.created_date).getTime() : 0;
+      if (dateFrom && created < new Date(dateFrom).getTime()) return false;
+      if (dateTo && created > new Date(dateTo).getTime() + 86400000) return false;
+    }
+    return true;
+  });
+
+  const filtersActive = search || categoryFilter !== 'all' || locationFilter !== 'all' || dateFrom || dateTo;
 
   const counts = {
     pending: retailers.filter(r => r.status === 'pending').length,
@@ -79,13 +113,47 @@ export default function AdminRetailers() {
           ))}
         </div>
 
+        {/* Search & Filters */}
+        <div className="flex flex-wrap gap-2 items-center">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search name, brand, email…"
+              className="h-9 pl-8 pr-3 bg-card border border-border rounded-xl text-xs focus:outline-none focus:border-accent w-60" />
+          </div>
+          <select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}
+            className="h-9 px-3 bg-card border border-border rounded-xl text-xs focus:outline-none focus:border-accent">
+            <option value="all">All Categories</option>
+            {uniqueCategories.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+          <select value={locationFilter} onChange={e => setLocationFilter(e.target.value)}
+            className="h-9 px-3 bg-card border border-border rounded-xl text-xs focus:outline-none focus:border-accent max-w-48">
+            <option value="all">All Locations</option>
+            {uniqueLocations.map(l => <option key={l} value={l}>{l}</option>)}
+          </select>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <span>From</span>
+            <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
+              className="h-9 px-2 bg-card border border-border rounded-xl text-xs focus:outline-none focus:border-accent" />
+            <span>To</span>
+            <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)}
+              className="h-9 px-2 bg-card border border-border rounded-xl text-xs focus:outline-none focus:border-accent" />
+          </div>
+          {filtersActive ? (
+            <button onClick={() => { setSearch(''); setCategoryFilter('all'); setLocationFilter('all'); setDateFrom(''); setDateTo(''); }}
+              className="h-9 px-3 text-xs text-muted-foreground hover:text-foreground border border-border rounded-xl bg-card transition-colors">
+              Clear
+            </button>
+          ) : null}
+          <span className="ml-auto text-xs text-muted-foreground">{filtered.length} of {retailers.length}</span>
+        </div>
+
         {/* List */}
         {loading ? (
           <div className="flex justify-center py-16"><Loader2 className="w-7 h-7 animate-spin text-accent" /></div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <Building2 className="w-10 h-10 mx-auto mb-3 opacity-30" />
-            <p className="font-semibold">No {filter} retailers</p>
+            <p className="font-semibold">{filtersActive ? 'No retailers match your filters' : `No ${filter} retailers`}</p>
           </div>
         ) : (
           <div className="space-y-3">
