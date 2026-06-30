@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { Search, ChevronDown, ChevronUp, ExternalLink, ArrowUpDown, AlertTriangle, MapPin } from 'lucide-react';
+import { useState, useMemo, Fragment } from 'react';
+import { Search, ChevronDown, ChevronUp, ExternalLink, AlertTriangle, MapPin } from 'lucide-react';
 
 const STATUS_COLORS = {
   pending: 'bg-slate-100 text-slate-600',
@@ -150,8 +150,8 @@ export default function AdminOrdersTab({ orders }) {
               {filtered.map(o => {
                 const stalled = isStalled(o);
                 return (
-                  <>
-                    <tr key={o.id} className={`transition-colors ${stalled ? 'bg-red-50/70 hover:bg-red-50' : 'hover:bg-muted/20'}`}>
+                  <Fragment key={o.id}>
+                    <tr className={`transition-colors border-l-[3px] ${stalled ? 'border-l-red-400 bg-red-50/40' : 'border-l-transparent'} hover:bg-muted/20`}>
                       <td className="py-2.5 px-3">
                         <a
                           href={`/shipment/${o.id}`}
@@ -163,9 +163,6 @@ export default function AdminOrdersTab({ orders }) {
                           {o.order_number || o.shipment_id || '—'}
                           <ExternalLink className="w-3 h-3" />
                         </a>
-                        {stalled && (
-                          <span className="ml-2 text-[9px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-full">STALLED</span>
-                        )}
                       </td>
                       <td className="py-2.5 px-3 font-medium text-foreground">{o.recipient_name || '—'}</td>
                       <td className="py-2.5 px-3 text-muted-foreground">{o.hotel_name || '—'}</td>
@@ -175,6 +172,9 @@ export default function AdminOrdersTab({ orders }) {
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${STATUS_COLORS[o.status] || STATUS_COLORS.pending}`}>
                           {o.status?.replace(/_/g, ' ') || '—'}
                         </span>
+                        {stalled && (
+                          <span className="block mt-1 text-[9px] font-bold text-red-600 uppercase tracking-wide">⚠ Stalled</span>
+                        )}
                       </td>
                       <td className="py-2.5 px-3">
                         {o.multi_retailer_status !== 'not_applicable' && (
@@ -193,7 +193,7 @@ export default function AdminOrdersTab({ orders }) {
                       </td>
                     </tr>
                     {expandedId === o.id && (
-                      <tr key={o.id + '-d'} className="bg-muted/10">
+                      <tr className="bg-muted/10">
                         <td colSpan={9} className="px-4 py-4">
                           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             <InfoBlock label="Shipment ID" value={o.shipment_id} />
@@ -218,7 +218,7 @@ export default function AdminOrdersTab({ orders }) {
                         </td>
                       </tr>
                     )}
-                  </>
+                  </Fragment>
                 );
               })}
             </tbody>
