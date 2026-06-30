@@ -139,7 +139,7 @@ export default function AdminDashboard() {
         {tab === 'orders' && <AdminOrdersTab orders={data.orders} />}
         {tab === 'shipments' && <AdminShipmentsTab verifications={data.verifications} retailers={data.retailers} onRefresh={loadAll} />}
         {tab === 'retailers' && <AdminRetailersTab retailers={data.retailers} onRefresh={loadAll} />}
-        {tab === 'hotels' && <AdminHotelsTab hotels={data.hotels} />}
+        {tab === 'hotels' && <AdminHotelsTab hotels={data.hotels} orders={data.orders} />}
         {tab === 'hotel-analytics' && <AdminHotelAnalyticsTab data={data} />}
         {tab === 'tourist-analytics' && <AdminTouristAnalyticsTab data={data} />}
         {tab === 'shipment-analytics' && <AdminShipmentAnalyticsTab data={data} />}
