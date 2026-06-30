@@ -232,7 +232,7 @@ export default function QRLanding() {
             onClick={() => setShowPass(true)}
           >
             <Sparkles className="w-4 h-4 mr-2" />
-            Friction-Free Shopping Pass
+            How Send It Home Works
           </Button>
           <Button
             className="w-full h-13 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-2xl text-base py-4"
