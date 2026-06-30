@@ -1,5 +1,5 @@
 import { useState, useMemo, Fragment } from 'react';
-import { Search, ChevronDown, ChevronUp, ExternalLink, AlertTriangle, MapPin } from 'lucide-react';
+import { Search, ChevronDown, ChevronUp, ExternalLink, AlertTriangle, MapPin, ArrowUp, ArrowDown } from 'lucide-react';
 
 const STATUS_COLORS = {
   pending: 'bg-slate-100 text-slate-600',
@@ -11,6 +11,12 @@ const STATUS_COLORS = {
   in_transit: 'bg-indigo-100 text-indigo-700',
   delivered: 'bg-emerald-100 text-emerald-700',
   cancelled: 'bg-red-100 text-red-500',
+};
+
+// Meaningful pipeline order for status sorting (instead of alphabetical).
+const STATUS_ORDER = {
+  pending: 0, receipt_uploaded: 1, payment_pending: 2, paid: 3, packed: 4,
+  picked_up: 5, in_transit: 6, delivered: 7, cancelled: 8,
 };
 
 // Orders stuck in a pre-delivery state for more than 3 days are flagged as stalled.
@@ -77,15 +83,28 @@ export default function AdminOrdersTab({ orders }) {
     result.sort((a, b) => {
       let av, bv;
       if (sortBy === 'created') { av = a.created_date || ''; bv = b.created_date || ''; }
-      else if (sortBy === 'status') { av = a.status || ''; bv = b.status || ''; }
-      else if (sortBy === 'hotel') { av = a.hotel_name || ''; bv = b.hotel_name || ''; }
-      else if (sortBy === 'destination') { av = a.destination_country || ''; bv = b.destination_country || ''; }
-      return av < bv ? -dir : av > bv ? dir : 0;
+      else if (sortBy === 'status') { av = STATUS_ORDER[a.status] ?? 99; bv = STATUS_ORDER[b.status] ?? 99; }
+      else if (sortBy === 'hotel') { av = (a.hotel_name || '').toLowerCase(); bv = (b.hotel_name || '').toLowerCase(); }
+      else if (sortBy === 'destination') { av = (a.destination_country || '').toLowerCase(); bv = (b.destination_country || '').toLowerCase(); }
+      else if (sortBy === 'recipient') { av = (a.recipient_name || '').toLowerCase(); bv = (b.recipient_name || '').toLowerCase(); }
+      else if (sortBy === 'order') { av = (a.order_number || a.shipment_id || '').toLowerCase(); bv = (b.order_number || b.shipment_id || '').toLowerCase(); }
+      if (av < bv) return -dir;
+      if (av > bv) return dir;
+      return 0;
     });
     return result;
   }, [orders, search, filterStatus, filterHotel, filterDest, filterDate, sortBy, sortDir]);
 
   const stalledCount = useMemo(() => filtered.filter(isStalled).length, [filtered]);
+
+  const handleSort = (column) => {
+    if (sortBy === column) {
+      setSortDir(prev => prev === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(column);
+      setSortDir(column === 'created' ? 'desc' : 'asc');
+    }
+  };
 
   const selectCls = 'h-9 px-3 bg-card border border-border rounded-xl text-xs focus:outline-none focus:border-accent';
 
@@ -117,14 +136,7 @@ export default function AdminOrdersTab({ orders }) {
           <option value="month">This Month</option>
           <option value="30d">Last 30 Days</option>
         </select>
-        <select value={`${sortBy}:${sortDir}`} onChange={e => { const [b, d] = e.target.value.split(':'); setSortBy(b); setSortDir(d); }} className={selectCls}>
-          <option value="created:desc">Newest first</option>
-          <option value="created:asc">Oldest first</option>
-          <option value="status:asc">Status (A–Z)</option>
-          <option value="hotel:asc">Hotel (A–Z)</option>
-          <option value="destination:asc">Destination (A–Z)</option>
-        </select>
-        <span className="text-xs text-muted-foreground ml-auto">{filtered.length} orders</span>
+        <span className="text-xs text-muted-foreground ml-auto">{filtered.length} orders · click a column to sort</span>
       </div>
 
       {stalledCount > 0 && (
@@ -141,9 +153,15 @@ export default function AdminOrdersTab({ orders }) {
           <table className="w-full text-xs">
             <thead className="bg-muted/40 text-muted-foreground">
               <tr>
-                {['Order #', 'Recipient', 'Hotel', 'Destination', 'Box', 'Status', 'Multi-Retailer', 'Created', ''].map(h => (
-                  <th key={h} className="text-left py-2.5 px-3 font-semibold whitespace-nowrap">{h}</th>
-                ))}
+                <SortHeader label="Order #" column="order" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} />
+                <SortHeader label="Recipient" column="recipient" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} />
+                <SortHeader label="Hotel" column="hotel" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} />
+                <SortHeader label="Destination" column="destination" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} />
+                <th className="text-left py-2.5 px-3 font-semibold whitespace-nowrap">Box</th>
+                <SortHeader label="Status" column="status" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} />
+                <th className="text-left py-2.5 px-3 font-semibold whitespace-nowrap">Multi-Retailer</th>
+                <SortHeader label="Created" column="created" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} />
+                <th className="py-2.5 px-3" />
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -226,6 +244,21 @@ export default function AdminOrdersTab({ orders }) {
         </div>
       )}
     </div>
+  );
+}
+
+function SortHeader({ label, column, sortBy, sortDir, onSort }) {
+  const active = sortBy === column;
+  return (
+    <th className="text-left py-2.5 px-3 font-semibold whitespace-nowrap">
+      <button
+        onClick={() => onSort(column)}
+        className={`inline-flex items-center gap-1 transition-colors ${active ? 'text-accent' : 'text-muted-foreground hover:text-foreground'}`}
+      >
+        {label}
+        {active && (sortDir === 'asc' ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />)}
+      </button>
+    </th>
   );
 }
 
