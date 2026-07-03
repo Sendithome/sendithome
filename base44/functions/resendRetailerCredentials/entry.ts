@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
     const brandLine = retailer.brand_name ? `\n  Brand Name (on receipts): ${retailer.brand_name}` : '';
     await base44.integrations.Core.SendEmail({
       to: retailer.contact_email,
-      subject: `Send It Home — Your Retailer Partner Credentials (Resent)`,
+      subject: `SENDITHOME — Your Retailer Partner Credentials (Resent)`,
       body: `Dear ${retailer.contact_name || retailer.store_name},
 
 As requested, here are your login credentials for the Retailer Partner Portal:
@@ -45,7 +45,7 @@ Login at: https://sendithomedxb.base44.app/retailer-portal
 Please keep these credentials secure. You can update your password from the Settings page after logging in.
 
 Best regards,
-The Send It Home Team`,
+The SENDITHOME Team`,
     });
 
     await base44.asServiceRole.entities.Retailer.update(retailer_id, {

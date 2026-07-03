@@ -23,12 +23,12 @@ const YIELD_BENEFITS = [
   {
     icon: Star,
     title: 'Enhance Your Guest Experience',
-    desc: 'The hotel serves as the guest service point where concierge staff provide the Send It Home experience. Guests collect their complimentary shipping box, pack their purchases, complete a quick digital registration, and leave the sealed box securely with the concierge. All courier documentation is automatically generated, and the courier collects the shipment directly from the hotel within 24 hours, M-F.',
+    desc: 'The hotel serves as the guest service point where concierge staff provide the SENDITHOME experience. Guests collect their complimentary shipping box, pack their purchases, complete a quick digital registration, and leave the sealed box securely with the concierge. All courier documentation is automatically generated, and the courier collects the shipment directly from the hotel within 24 hours, M-F.',
   },
   {
     icon: DollarSign,
     title: 'Guaranteed Ancillary Revenue',
-    desc: 'Earn a guaranteed USD $20 for every completed Send It Home shipment processed by your hotel — inclusive of custom luxury packaging, inventory management, training, and portal analytics.',
+    desc: 'Earn a guaranteed USD $20 for every completed SENDITHOME shipment processed by your hotel — inclusive of custom luxury packaging, inventory management, training, and portal analytics.',
   },
   {
     icon: ShieldCheck,
@@ -138,7 +138,7 @@ export default function HotelPartnerLanding() {
               Enhance Your Guest Experience
             </p>
             <p className="text-sm md:text-base leading-relaxed mb-8" style={{ color: CREAM }}>
-              Offer your guests a premium travel-light service while earning a guaranteed USD $20 for every completed Send It Home shipment processed by your hotel.
+              Offer your guests a premium travel-light service while earning a guaranteed USD $20 for every completed SENDITHOME shipment processed by your hotel.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">

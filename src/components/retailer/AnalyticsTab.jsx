@@ -66,7 +66,7 @@ export default function AnalyticsTab({ verifications }) {
   })), [monthly]);
 
   const downloadStatement = () => {
-    const lines = ['Send It Home — Commission Statement', '', 'Month,Shipments,Total Value,Commission'];
+    const lines = ['SENDITHOME — Commission Statement', '', 'Month,Shipments,Total Value,Commission'];
     monthly.forEach(m => lines.push(`${m.label},${m.shipments},$${m.value.toFixed(2)},$${m.commission.toFixed(2)}`));
     const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);

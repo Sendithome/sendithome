@@ -100,7 +100,7 @@ export default function AdminHotelAnalyticsTab({ data }) {
     const doc = new jsPDF();
     const now = new Date().toLocaleString('en-GB');
     doc.setFontSize(16);
-    doc.text('Send It Home — Hotel Analytics Report', 14, 18);
+    doc.text('SENDITHOME — Hotel Analytics Report', 14, 18);
     doc.setFontSize(9);
     doc.setTextColor(120);
     doc.text(`Generated: ${now}  |  Period: ${period.label}`, 14, 25);

@@ -64,7 +64,7 @@ export default function RetailerRegistration() {
             <p className="text-xs font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
           </div>
           <h1 className="text-2xl font-bold text-primary mt-4">Retailer Partner Registration</h1>
-          <p className="text-muted-foreground text-sm mt-1">Join the Send It Home certified retail network</p>
+          <p className="text-muted-foreground text-sm mt-1">Join the SENDITHOME certified retail network</p>
         </div>
 
         <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
@@ -121,7 +121,7 @@ export default function RetailerRegistration() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} className="mt-1 accent-accent" />
             <span className="text-xs text-muted-foreground leading-relaxed">
-              I agree to the <span className="text-accent font-semibold">Send It Home Retailer Partnership Terms</span> including 24-hour verification SLA and commission structure.
+              I agree to the <span className="text-accent font-semibold">SENDITHOME Retailer Partnership Terms</span> including 24-hour verification SLA and commission structure.
             </span>
           </label>
 

@@ -9,7 +9,7 @@
 *Your Guests Shouldn't Have to Choose Between the Shopping Trip of a Lifetime and Getting Home with Everything*
 
 **Subheadline:**
-Imagine the moment a guest discovers the perfect piece — something they didn't expect to find, something they'll treasure. They see the price tag. They hesitate. "How will I get this home?" In that moment, most guests step away. At your hotel, they don't. Send It Home changes the story. Your concierge becomes the hero who made the perfect memory possible.
+Imagine the moment a guest discovers the perfect piece — something they didn't expect to find, something they'll treasure. They see the price tag. They hesitate. "How will I get this home?" In that moment, most guests step away. At your hotel, they don't. SENDITHOME changes the story. Your concierge becomes the hero who made the perfect memory possible.
 
 **Opening Tagline (Above Stats):**
 *The Hospitality Innovation That Changes How Guests Experience Your City*
@@ -46,7 +46,7 @@ Tourism experts know the truth: guests self-limit their shopping because of logi
 **Benefit 3: Your Concierge Team Gets a Superpower**
 **Headline:** Answer the Question Guests Are Asking Before They Ask It
 
-"Can you help me get my shopping home?" It's one of the most common guest requests in tourism-adjacent cities. With Send It Home, your concierge team doesn't scramble for solutions — they have one. A premium, professional, fully-backed answer. They hand over a QR code. They say "your purchases will be home before you are." Guests feel genuinely cared for. Your team feels prepared. Your TripAdvisor rating reflects it.
+"Can you help me get my shopping home?" It's one of the most common guest requests in tourism-adjacent cities. With SENDITHOME, your concierge team doesn't scramble for solutions — they have one. A premium, professional, fully-backed answer. They hand over a QR code. They say "your purchases will be home before you are." Guests feel genuinely cared for. Your team feels prepared. Your TripAdvisor rating reflects it.
 
 ---
 
@@ -113,10 +113,10 @@ A valid UAE trade license. Employment verification for your designated hotel aut
 **Step 04 — Application Review & Approval**
 **Headline:** Our Team Personally Reviews Your Application (Not an Automated Process)
 
-We don't run an approval machine. Our partnerships team personally reviews every application. We care which hotels carry the Send It Home name. If we have questions, we call. If everything is in order, you have an answer within 48 business hours.
+We don't run an approval machine. Our partnerships team personally reviews every application. We care which hotels carry the SENDITHOME name. If we have questions, we call. If everything is in order, you have an answer within 48 business hours.
 
 **Timeline:** 48 business hours  
-**Who:** Send It Home partnerships team
+**Who:** SENDITHOME partnerships team
 
 ---
 
@@ -126,7 +126,7 @@ We don't run an approval machine. Our partnerships team personally reviews every
 Your hotel-specific QR code is generated and activated. It links to a guest-facing booking portal customized for your property. Display it at your concierge desk. Include it in your welcome pack. Laminate it on tabletop cards. Print it in your room compendium. Wherever a guest thinks "I wish I could get this home," your code is there.
 
 **Timeline:** Upon approval  
-**Who:** Send It Home operations
+**Who:** SENDITHOME operations
 
 ---
 
@@ -154,7 +154,7 @@ Guests don't need to register in advance. They don't need hotel involvement. The
 
 **Testimonial 1: The Concierge Perspective**
 
-*"The first time a guest used it, I watched the relief wash over their face. They'd been eyeing this piece of jewellery for days but were worried about luggage. With Send It Home, they didn't have to choose. They bought it. Within 48 hours of their flight, it was in their home. Then they sent us a review that mentioned our service specifically. That doesn't happen by accident."*
+*"The first time a guest used it, I watched the relief wash over their face. They'd been eyeing this piece of jewellery for days but were worried about luggage. With SENDITHOME, they didn't have to choose. They bought it. Within 48 hours of their flight, it was in their home. Then they sent us a review that mentioned our service specifically. That doesn't happen by accident."*
 
 **— Concierge Manager, Five-Star Beachfront Resort, Dubai**
 
@@ -170,7 +170,7 @@ Guests don't need to register in advance. They don't need hotel involvement. The
 
 **Testimonial 3: The Business Impact**
 
-*"We measure guest satisfaction obsessively in our industry. Within the first quarter of offering Send It Home, checkout satisfaction scores specifically improved. Not dramatically — about 7 points on a 100-point scale. That translates to measurable improvements in our online ratings. Small change in the service offering. Real, measurable business impact."*
+*"We measure guest satisfaction obsessively in our industry. Within the first quarter of offering SENDITHOME, checkout satisfaction scores specifically improved. Not dramatically — about 7 points on a 100-point scale. That translates to measurable improvements in our online ratings. Small change in the service offering. Real, measurable business impact."*
 
 **— General Manager, Premium Hospitality Property, Abu Dhabi**
 
@@ -186,7 +186,7 @@ The guests checking into your hotel tonight will shop. Some will discover someth
 
 That moment — where the guest steps away from something they love — is happening at your property right now.
 
-Send It Home transforms that moment. Your guest buys with confidence. Ships with ease. Arrives home with joy. And remembers your hotel as the place that made it possible.
+SENDITHOME transforms that moment. Your guest buys with confidence. Ships with ease. Arrives home with joy. And remembers your hotel as the place that made it possible.
 
 Your competitors can't yet offer this. You can.
 
@@ -203,7 +203,7 @@ Free to join · Fully operational within 10 days · No PMS integration required
 
 ## TRUST & CREDIBILITY SIGNALS (Bottom Section)
 
-**Headline:** Why Hotels and Guests Trust Send It Home
+**Headline:** Why Hotels and Guests Trust SENDITHOME
 
 ✓ **Genuinely Free** — No setup fees, no ongoing costs to your property. Guests pay only for their shipment.
 
@@ -223,6 +223,6 @@ Free to join · Fully operational within 10 days · No PMS integration required
 
 ## CLOSING STATEMENT
 
-*Send It Home — Making Every Stay Unforgettable, One Shipment at a Time*
+*SENDITHOME — Making Every Stay Unforgettable, One Shipment at a Time*
 
 *Operated by Vacation Logistics DMCC, Dubai · Licensed International Courier · FedEx & DHL Certified*

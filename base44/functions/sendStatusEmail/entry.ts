@@ -31,7 +31,7 @@ const STATUS_CONTENT = {
     subject: '🎉 Your Shipment Has Been Delivered!',
     heading: 'Delivered Successfully!',
     message: 'Your package has been delivered to the destination address. We hope everything arrived safely!',
-    nextStep: 'Thank you for shipping with Send It Home. We look forward to serving you again.',
+    nextStep: 'Thank you for shipping with SENDITHOME. We look forward to serving you again.',
     color: '#8b5cf6',
     emoji: '🎉',
   },
@@ -95,7 +95,7 @@ function buildEmailHtml(content, order) {
         <tr>
           <td style="background:#f0f0ec;padding:20px 32px;text-align:center;">
             <p style="margin:0;font-size:11px;color:#aaa;line-height:1.8;">
-              Send It Home · Licensed International Courier<br>
+              SENDITHOME · Licensed International Courier<br>
               Powered by FedEx & DHL · 50+ Countries · 1–3 Day Delivery
             </p>
           </td>

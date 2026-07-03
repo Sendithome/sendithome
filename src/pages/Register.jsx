@@ -295,7 +295,7 @@ export default function Register() {
         <div className="max-w-2xl mx-auto px-6 py-10 text-center">
           {/* Welcome headline */}
           <h1 className="font-bold text-accent mb-4" style={{ fontSize: 'clamp(22px, 5vw, 34px)', lineHeight: 1.2 }}>
-            Welcome to Send It Home!
+            Welcome to SENDITHOME!
           </h1>
 
           {/* Hotel contextual greeting */}

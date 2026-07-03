@@ -223,7 +223,7 @@ export default function DeclarationBreakdownTab({ verifications, retailers }) {
       // Footer
       doc.setFillColor(20, 20, 20); doc.rect(margin, y + 4, cW, 8, 'F');
       doc.setFontSize(6.5); doc.setFont('helvetica', 'normal'); doc.setTextColor(180, 180, 180);
-      doc.text('Send It Home — Vacation Logistics DMCC, Dubai | support@sendithomedxb.com | GOVERNMENT CONFIDENTIAL', margin + cW / 2, y + 10, { align: 'center' });
+      doc.text('SENDITHOME — Vacation Logistics DMCC, Dubai | support@sendithomedxb.com | GOVERNMENT CONFIDENTIAL', margin + cW / 2, y + 10, { align: 'center' });
 
       doc.save(`SIH-Declaration-Report-${new Date().toISOString().slice(0, 10)}.pdf`);
     } catch (err) {

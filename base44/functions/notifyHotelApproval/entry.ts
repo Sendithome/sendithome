@@ -89,7 +89,7 @@ function buildPartnerEmailHtml(hotel, application) {
         <tr>
           <td style="background:#f0f0ec;padding:20px 32px;text-align:center;">
             <p style="margin:0;font-size:11px;color:#aaa;line-height:1.8;">
-              Send It Home · Operations Team · This is an automated logistics alert.
+              SENDITHOME · Operations Team · This is an automated logistics alert.
             </p>
           </td>
         </tr>

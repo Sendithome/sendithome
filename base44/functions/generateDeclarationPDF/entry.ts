@@ -224,7 +224,7 @@ Deno.serve(async (req) => {
     drawRect(margin + third, y, third, 12);
     drawRect(margin + third * 2, y, third, 12);
     label('Service Provider', margin + 2, y + 3.5);
-    value('Send It Home · FedEx / DHL', margin + 2, y + 7);
+    value('SENDITHOME · FedEx / DHL', margin + 2, y + 7);
     label('Shipping Fee', margin + third + 2, y + 3.5);
     value(`$${shippingCost}.00 USD per box`, margin + third + 2, y + 7);
     label('Est. Transit Time', margin + third * 2 + 2, y + 3.5);
@@ -274,7 +274,7 @@ Deno.serve(async (req) => {
     doc.setFillColor(20, 20, 20);
     doc.rect(margin, y, contentW, 10, 'F');
     doc.setFontSize(7.5); doc.setFont('helvetica', 'bold'); doc.setTextColor(255, 255, 255);
-    doc.text('Vacation Logistics DMCC, Dubai — Operating as Send It Home', margin + contentW / 2, y + 4.5, { align: 'center' });
+    doc.text('Vacation Logistics DMCC, Dubai — Operating as SENDITHOME', margin + contentW / 2, y + 4.5, { align: 'center' });
     doc.setFontSize(6.5); doc.setFont('helvetica', 'normal'); doc.setTextColor(180, 180, 180);
     doc.text('Licensed International Courier  ·  Powered by FedEx & DHL  ·  50+ Countries', margin + contentW / 2, y + 8.5, { align: 'center' });
 

@@ -95,7 +95,7 @@ export default function RetailerPortal() {
               <input type="checkbox" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} className="accent-accent" />
               Remember Me
             </label>
-            <button type="button" onClick={() => setError('Please contact your Send It Home partnership manager at retail-partnerships@sendithome.com to reset your password.')} className="text-accent hover:underline font-medium">
+            <button type="button" onClick={() => setError('Please contact your SENDITHOME partnership manager at retail-partnerships@sendithome.com to reset your password.')} className="text-accent hover:underline font-medium">
               Forgot Password?
             </button>
           </div>

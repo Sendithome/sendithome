@@ -230,7 +230,7 @@ Deno.serve(async (req) => {
     doc.setFillColor(20, 20, 20);
     doc.rect(margin, y, contentW, 10, 'F');
     doc.setFontSize(7.5); doc.setFont('helvetica', 'bold'); doc.setTextColor(255, 255, 255);
-    doc.text('Vacation Logistics DMCC, Dubai — Operating as Send It Home', margin + contentW / 2, y + 4.5, { align: 'center' });
+    doc.text('Vacation Logistics DMCC, Dubai — Operating as SENDITHOME', margin + contentW / 2, y + 4.5, { align: 'center' });
     doc.setFontSize(6.5); doc.setFont('helvetica', 'normal'); doc.setTextColor(180, 180, 180);
     doc.text(`RETAILER COPY — ${verification.store_name}  ·  Shipment ${verification.shipment_id}  ·  CONFIDENTIAL`, margin + contentW / 2, y + 8.5, { align: 'center' });
 

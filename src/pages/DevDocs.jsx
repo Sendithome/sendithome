@@ -73,7 +73,7 @@ export default function DevDocs() {
       {/* Sidebar */}
       <aside className="hidden md:flex flex-col w-56 shrink-0 border-r border-border bg-card sticky top-0 h-screen overflow-y-auto">
         <div className="px-4 py-5 border-b border-border">
-          <p className="text-xs font-black uppercase tracking-widest text-accent">Send It Home</p>
+          <p className="text-xs font-black uppercase tracking-widest text-accent">SENDITHOME</p>
           <p className="text-[10px] text-muted-foreground mt-0.5">Developer Documentation</p>
         </div>
         <nav className="p-2 space-y-0.5 flex-1">
@@ -115,8 +115,8 @@ export default function DevDocs() {
         {/* ── OVERVIEW ── */}
         {activeSection === 'overview' && (
           <Section title="System Overview">
-            <SubSection title="What is Send It Home?">
-              <p><strong className="text-foreground">Send It Home</strong> is a hotel-based international shipping platform built for tourists shopping in the UAE (Dubai). Guests scan a QR code at their hotel, register, create a shipment order, upload shopping receipts, pay online, and have their luggage shipped directly to their home.</p>
+            <SubSection title="What is SENDITHOME?">
+              <p><strong className="text-foreground">SENDITHOME</strong> is a hotel-based international shipping platform built for tourists shopping in the UAE (Dubai). Guests scan a QR code at their hotel, register, create a shipment order, upload shopping receipts, pay online, and have their luggage shipped directly to their home.</p>
               <p className="mt-2">The platform covers the complete logistics journey: from hotel room pickup → packing → courier handover → delivery to the customer's home country.</p>
             </SubSection>
             <SubSection title="Tech Stack">

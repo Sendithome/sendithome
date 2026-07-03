@@ -176,7 +176,7 @@ export default function GovAnalyticsTab({ verifications, hotels, retailers }) {
             </ChartCard>
           </div>
 
-          <ChartCard title="Economic Impact & GDP Contribution" subtitle="Send It Home addressable opportunity">
+          <ChartCard title="Economic Impact & GDP Contribution" subtitle="SENDITHOME addressable opportunity">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
               {[
                 { label: 'Tourism Revenue', value: fmtM(country.economicImpact.directRevenue), color: 'text-blue-600' },

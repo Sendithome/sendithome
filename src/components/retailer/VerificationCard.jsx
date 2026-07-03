@@ -270,7 +270,7 @@ export default function VerificationCard({ verification, retailer, onApproved, o
               <ol className="list-decimal pl-4 space-y-1">
                 <li>These items were genuinely purchased at <strong className="text-white">{retailer?.store_name}</strong> on {verification.shipment_date ? new Date(verification.shipment_date).toLocaleDateString() : '—'}.</li>
                 <li>The receipt is authentic.</li>
-                <li>You approve the export of these goods through the Send It Home certified channel.</li>
+                <li>You approve the export of these goods through the SENDITHOME certified channel.</li>
                 <li>A government commission of <strong className="text-[#D4A855]">{tier.label}</strong> (Tier {tier.tier}, <strong className="text-[#D4A855]">${commission.toFixed(2)}</strong>) applies <strong>only on the {verification.items?.length || 0} selected shipment items</strong> valued at <strong className="text-white">${(verification.total_value || 0).toFixed(2)}</strong> — NOT on the full receipt total. Items not selected for shipment by the tourist are excluded. Rate determined by tourist origin: {getCountryGroupLabel(verification.tourist_passport_country)}.</li>
               </ol>
               <p className="text-[10px] text-slate-500 italic mt-2">Commission rate is tiered based on tourist origin country group and transaction value. VAT calculated separately.</p>
@@ -316,7 +316,7 @@ export default function VerificationCard({ verification, retailer, onApproved, o
                 <textarea value={queryText} onChange={e => setQueryText(e.target.value)} rows={4}
                   className="w-full bg-[#0B1120] border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-yellow-500 resize-none" />
               </div>
-              <p className="text-xs text-slate-500 italic">Queries pause the 24-hour timer and escalate to Send It Home compliance team.</p>
+              <p className="text-xs text-slate-500 italic">Queries pause the 24-hour timer and escalate to SENDITHOME compliance team.</p>
             </div>
             <div className="flex gap-3 mt-4">
               <button onClick={() => setShowQueryModal(false)}
