@@ -1120,7 +1120,7 @@ export default function HotelDashboard() {
                   <Truck className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-sm font-bold text-blue-800">Logistics Onboarding in Progress</p>
-                    <p className="text-xs text-blue-700 mt-1">"Logistics" covers the physical setup of SENDITHOME at your property — courier onboarding, staff briefing, signage placement, and delivery of your complimentary box inventory. Our logistics partner will contact your hotel within 1–2 business days to arrange this. Target: 7 working days.</p>
+                    <p className="text-xs text-blue-700 mt-1">"Logistics" covers the physical setup of Send It Home at your property — courier onboarding, staff briefing, signage placement, and delivery of your complimentary box inventory. Our logistics partner will contact your hotel within 1–2 business days to arrange this. Target: 7 working days.</p>
                   </div>
                 </div>
               )}
@@ -1158,7 +1158,7 @@ export default function HotelDashboard() {
                   </p>
                   <div className="bg-white/60 border border-amber-200 rounded-xl px-4 py-3 mb-4 text-left">
                     <p className="text-[10px] font-bold text-amber-800 uppercase tracking-wide mb-2">What is the QR code used for?</p>
-                    <p className="text-[11px] text-amber-700 leading-relaxed">Your unique QR code lets guests scan to start a SENDITHOME shipment in under 3 minutes — no app download needed. Once approved, you can download it for your concierge desk, in-room folders, and digital signage.</p>
+                    <p className="text-[11px] text-amber-700 leading-relaxed">Your unique QR code lets guests scan to start a Send It Home shipment in under 3 minutes — no app download needed. Once approved, you can download it for your concierge desk, in-room folders, and digital signage.</p>
                   </div>
                   <div className="bg-white/60 border border-amber-200 rounded-xl px-4 py-3 mb-4 text-left">
                     <p className="text-[10px] font-bold text-amber-800 uppercase tracking-wide mb-2">Steps before your QR is available:</p>

@@ -7,7 +7,7 @@ export default function TermsModal({ open, onClose, type = 'terms' }) {
   const termsContent = [
     {
       heading: '1. Service Overview',
-      body: 'SENDITHOME ("SIH", "we", "us") provides a hotel-based international shipping service that delivers your holiday purchases from your hotel to your home address. By registering an account and using our service, you agree to these Terms & Conditions.',
+      body: 'Send It Home ("SIH", "we", "us") provides a hotel-based international shipping service that delivers your holiday purchases from your hotel to your home address. By registering an account and using our service, you agree to these Terms & Conditions.',
     },
     {
       heading: '2. Personal Shopping Only',
@@ -66,7 +66,7 @@ export default function TermsModal({ open, onClose, type = 'terms' }) {
   const privacyContent = [
     {
       heading: '1. Introduction',
-      body: 'SENDITHOME ("SIH", "we", "us") is committed to protecting your personal data. This Privacy Policy explains what data we collect, why we collect it, how we store it, and your rights regarding your information.',
+      body: 'Send It Home ("SIH", "we", "us") is committed to protecting your personal data. This Privacy Policy explains what data we collect, why we collect it, how we store it, and your rights regarding your information.',
     },
     {
       heading: '2. Data We Collect',

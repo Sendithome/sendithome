@@ -122,7 +122,7 @@ export default function RetailerSettings() {
                 <p className="text-xs text-muted-foreground">Agreed Commission Rate</p>
                 <p className="text-2xl font-bold text-primary mt-1">{retailer.commission_rate || 2.5}%</p>
               </div>
-              <p className="text-xs text-muted-foreground max-w-xs text-right">Rate is set by SENDITHOME admin and cannot be changed here. Contact partnerships to renegotiate.</p>
+              <p className="text-xs text-muted-foreground max-w-xs text-right">Rate is set by Send It Home admin and cannot be changed here. Contact partnerships to renegotiate.</p>
             </div>
           </Section>
 

@@ -31,7 +31,7 @@ export default function OxfordOverview() {
         <SectionConclusion id="conclusion" setActive={setActive} />
       </main>
       <footer className="bg-[#1a1a2e] text-white text-center py-6 px-4">
-        <p className="text-xs font-semibold tracking-widest uppercase opacity-60">SENDITHOME — Economic Context Overview</p>
+        <p className="text-xs font-semibold tracking-widest uppercase opacity-60">Send It Home — Economic Context Overview</p>
         <p className="text-[10px] opacity-40 mt-1">Prepared for internal strategic reference · Not for distribution</p>
       </footer>
     </div>

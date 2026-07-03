@@ -9,7 +9,7 @@
 Give Your Guests the Freedom to Shop Without Limits
 
 **Subheadline:**
-Imagine your guests leaving your hotel lighter, happier, and already looking forward to their next visit. With SENDITHOME, their shopping — bags, gifts, clothing, souvenirs — travels home safely while they travel freely. Your hotel makes it possible. Your guests remember it forever.
+Imagine your guests leaving your hotel lighter, happier, and already looking forward to their next visit. With Send It Home, their shopping — bags, gifts, clothing, souvenirs — travels home safely while they travel freely. Your hotel makes it possible. Your guests remember it forever.
 
 **Stats Bar:**
 - 50+ Countries | Wherever guests call home
@@ -27,11 +27,11 @@ Imagine your guests leaving your hotel lighter, happier, and already looking for
 
 **Benefit 1: The Checkout Day Experience, Transformed**
 Title: Turn the Most Stressful Moment of a Stay Into a Memorable One
-Description: Ask any experienced hotelier and they'll tell you the same thing — checkout day is where guest experience scores are won or lost. Overweight bags, airport stress, the fear of broken souvenirs in checked luggage. SENDITHOME dissolves these worries entirely. Guests check out light, relaxed, and grateful — and your property gets the credit.
+Description: Ask any experienced hotelier and they'll tell you the same thing — checkout day is where guest experience scores are won or lost. Overweight bags, airport stress, the fear of broken souvenirs in checked luggage. Send It Home dissolves these worries entirely. Guests check out light, relaxed, and grateful — and your property gets the credit.
 
 **Benefit 2: The Concierge Service Guests Actually Ask About**
 Title: Become the Hotel That Thought of Everything
-Description: The hallmark of exceptional concierge service is addressing needs guests haven't yet verbalised. "Can you help me get my shopping home?" is one of the most common informal guest requests in tourism-adjacent retail destinations. With SENDITHOME activated at your property, your concierge team has a confident, premium answer ready before the question is even asked.
+Description: The hallmark of exceptional concierge service is addressing needs guests haven't yet verbalised. "Can you help me get my shopping home?" is one of the most common informal guest requests in tourism-adjacent retail destinations. With Send It Home activated at your property, your concierge team has a confident, premium answer ready before the question is even asked.
 
 **Benefit 3: A Free Partnership — Genuinely**
 Title: Premium Service Addition. Zero Investment. Zero Risk.
@@ -39,15 +39,15 @@ Description: This is not a pilot programme or a trial. It is a permanent, fully-
 
 **Benefit 4: Your Guests Shop More. Your City Benefits.**
 Title: Support the UAE's Tourism-Retail Economy — While Elevating Your Property
-Description: Dubai and Abu Dhabi are among the world's top retail tourism destinations. Yet many guests self-limit their shopping because of luggage anxiety. When that barrier disappears — because your hotel offers SENDITHOME — guests shop more freely, spend more per visit, and associate that freedom with your property. It's a rising tide that lifts your TripAdvisor rating, your return visit rate, and the city's tourism economy simultaneously.
+Description: Dubai and Abu Dhabi are among the world's top retail tourism destinations. Yet many guests self-limit their shopping because of luggage anxiety. When that barrier disappears — because your hotel offers Send It Home — guests shop more freely, spend more per visit, and associate that freedom with your property. It's a rising tide that lifts your TripAdvisor rating, your return visit rate, and the city's tourism economy simultaneously.
 
 **Benefit 5: No Disruption to Your Operations**
 Title: Invisible Integration — Your Team Does What They Do Best
-Description: Your housekeeping team keeps doing what they do. Your front desk team keeps doing what they do. Your concierge team keeps doing what they do — except now they have one more extraordinary service to offer. SENDITHOME operates independently. Collection, customs, courier — fully managed off-property by our logistics team.
+Description: Your housekeeping team keeps doing what they do. Your front desk team keeps doing what they do. Your concierge team keeps doing what they do — except now they have one more extraordinary service to offer. Send It Home operates independently. Collection, customs, courier — fully managed off-property by our logistics team.
 
 **Benefit 6: Insurance, Tracking & Accountability — Built In**
 Title: Your Guest's Purchases Are Protected, From Hotel to Home
-Description: Every SENDITHOME shipment is fully insured and tracked from the moment it leaves your hotel. Real-time updates. FedEx and DHL's certified international network. Customs documentation handled by professionals. When a guest checks in at their home and their favourite Dubai purchase is waiting on the doorstep, they remember which hotel made that possible.
+Description: Every Send It Home shipment is fully insured and tracked from the moment it leaves your hotel. Real-time updates. FedEx and DHL's certified international network. Customs documentation handled by professionals. When a guest checks in at their home and their favourite Dubai purchase is waiting on the doorstep, they remember which hotel made that possible.
 
 ---
 
@@ -73,13 +73,13 @@ Phase: Hotel
 
 **Step 04 — We Review and Approve Your Application (Us)**
 Title: Our Team Gets to Work
-Description: Our partnerships team personally reviews every application. We're not running an automated approval machine — we genuinely care which hotels carry the SENDITHOME name. If we have any questions, we call. If everything is in order (and it usually is), you'll have an answer within 48 business hours.
-Phase: SENDITHOME
+Description: Our partnerships team personally reviews every application. We're not running an automated approval machine — we genuinely care which hotels carry the Send It Home name. If we have any questions, we call. If everything is in order (and it usually is), you'll have an answer within 48 business hours.
+Phase: Send It Home
 
 **Step 05 — Your QR Code Goes Live (Us)**
 Title: One QR Code. Infinite Guest Experiences.
 Description: Your permanent, unique QR code is generated and activated. It links directly to a guest-facing booking portal customised for your property. Display it at your concierge desk. Include it in your welcome pack. Add it to your room compendium. Print it on a tabletop card at the lobby bar. Wherever a guest might think "I wish I could get this home," your QR code is there.
-Phase: SENDITHOME
+Phase: Send It Home
 
 **Step 06 — Logistics Team Visits Your Property (Logistics)**
 Title: White-Glove Onboarding — On-Site and In Person
@@ -98,7 +98,7 @@ Your guests don't need an account before they arrive. They don't need to registe
 
 **Testimonial 1:**
 Hotel: Grand Hyatt Dubai
-Quote: "Our guests have been asking for this exact service for years — a trusted, professional way to send their shopping home. SENDITHOME answered that need completely. The QR code sits on our concierge desk and the feedback from guests has been genuinely wonderful. It feels like a natural extension of the experience we want to create."
+Quote: "Our guests have been asking for this exact service for years — a trusted, professional way to send their shopping home. Send It Home answered that need completely. The QR code sits on our concierge desk and the feedback from guests has been genuinely wonderful. It feels like a natural extension of the experience we want to create."
 Attribution: — Concierge Manager, Grand Hyatt Dubai
 
 **Testimonial 2:**
@@ -115,7 +115,7 @@ Attribution: — Head of Guest Relations, JW Marriott Marquis
 **Body Copy:**
 The guests staying at your hotel tonight have been shopping. Some of them are quietly anxious about how they'll get their purchases home. A few of them will pay overweight baggage fees they resent. Some will simply not buy that extra item — because they don't know how they'd carry it.
 
-SENDITHOME changes that story. And your hotel gets to be the one that made it possible.
+Send It Home changes that story. And your hotel gets to be the one that made it possible.
 
 **CTA Button:** Register Your Hotel Today — It's Free
 **Secondary line:** Limited partner openings. Fully operational within 10 working days.
@@ -129,5 +129,5 @@ SENDITHOME changes that story. And your hotel gets to be the one that made it po
 
 ---
 
-*SENDITHOME — Making Every Stay Unforgettable, One Shipment at a Time*
+*Send It Home — Making Every Stay Unforgettable, One Shipment at a Time*
 *Operated by Vacation Logistics DMCC, Dubai · FedEx & DHL Certified Network*

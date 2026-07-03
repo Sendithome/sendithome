@@ -347,7 +347,7 @@ export default function ReviewModal({ shipment, onClose, onAction }) {
                     placeholder="Provide detailed reason for rejection..."
                     className="w-full h-24 bg-background border border-input rounded-xl px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-destructive resize-none"
                   />
-                  <p className="text-[10px] text-muted-foreground">This will trigger notification to SENDITHOME compliance team and the tourist.</p>
+                  <p className="text-[10px] text-muted-foreground">This will trigger notification to Send It Home compliance team and the tourist.</p>
                   <div className="flex gap-2">
                     <button onClick={handleConfirm} disabled={!rejectReason.trim() || submitting} className="flex-1 h-10 bg-destructive hover:bg-destructive/90 disabled:opacity-40 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5">
                       {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}

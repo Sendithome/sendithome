@@ -52,10 +52,10 @@ Deno.serve(async (req) => {
     const brandLine = retailer.brand_name ? `\nBrand Name (on receipts): ${retailer.brand_name}` : '';
     await base44.integrations.Core.SendEmail({
       to: retailer.contact_email,
-      subject: `Welcome to SENDITHOME — Your Retailer Partner Credentials`,
+      subject: `Welcome to Send It Home — Your Retailer Partner Credentials`,
       body: `Dear ${retailer.contact_name || retailer.store_name},
 
-Congratulations! Your retailer registration with SENDITHOME has been approved.
+Congratulations! Your retailer registration with Send It Home has been approved.
 
 Here are your login credentials for the Retailer Partner Portal:
 
@@ -69,7 +69,7 @@ Login at: https://sendithomedxb.base44.app/retailer-portal
 Please keep these credentials secure. You can update your password from the Settings page after logging in.
 
 Best regards,
-The SENDITHOME Team`,
+The Send It Home Team`,
     });
 
     return Response.json({

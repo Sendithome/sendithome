@@ -331,7 +331,7 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
             </div>
             <div className="p-2">
               <p className="text-[9px] text-gray-500 uppercase">Service Provider</p>
-              <p className="font-bold text-[10px] mt-0.5">SENDITHOME · FedEx / DHL</p>
+              <p className="font-bold text-[10px] mt-0.5">Send It Home · FedEx / DHL</p>
             </div>
             <div className="p-2">
               <p className="text-[9px] text-gray-500 uppercase">Transit &amp; Activation</p>
@@ -377,7 +377,7 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
         </CollapsibleSection>
 
         {/* SIH Customer Support */}
-        <CollapsibleSection title="SENDITHOME — Customer Support" defaultOpen={false}>
+        <CollapsibleSection title="Send It Home — Customer Support" defaultOpen={false}>
           <div className="p-3 grid grid-cols-2 gap-x-6 gap-y-1.5">
             <div>
               <p className="text-[9px] text-gray-500 uppercase">Customer Support Email</p>
@@ -404,7 +404,7 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
 
         {/* Footer */}
         <div className="border-l border-r border-b border-gray-400 bg-gray-800 text-white p-3 text-center space-y-0.5">
-          <p className="text-[10px] font-bold tracking-wide">Vacation Logistics DMCC, Dubai — Operating as SENDITHOME</p>
+          <p className="text-[10px] font-bold tracking-wide">Vacation Logistics DMCC, Dubai — Operating as Send It Home</p>
           <p className="text-[9px] opacity-70 tracking-wide">Licensed International Courier · Powered by FedEx & DHL · 50+ Countries</p>
         </div>
       </div>

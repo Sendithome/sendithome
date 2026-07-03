@@ -29,7 +29,7 @@ QR LANDING PAGE (Guest Onboarding — Tourist Portal Entry)
    (Primary CTA button)
 • "I already have an account"
    (Secondary CTA button)
-• "[Hotel Name] is an official SENDITHOME collection point."
+• "[Hotel Name] is an official Send It Home collection point."
    (Collection point trust badge)
 • "Send Your Purchases Home"
    (Welcome card headline)
@@ -60,7 +60,7 @@ FRICTION-FREE SHOPPING PASS (Info Modal — Tourist Portal)
 • "No heavy bags. No customs lines. No airport baggage stress."
 • "Just your elevated ultimate shopping mobility experience."
 • "We've all been there: you're standing in a gorgeous boutique overseas... 'How am I going to fit this in my suitcase?'... The airport tax and luggage game is broken. It adds friction to your holiday and ruins the thrill of shopping."
-• "That's why we created SENDITHOME — a brand-new, innovative, first-of-its-kind shopping multilateral corridor built entirely around your freedom."
+• "That's why we created Send It Home — a brand-new, innovative, first-of-its-kind shopping multilateral corridor built entirely around your freedom."
 • "Your holiday shopping, shipped from your hotel to your front door."
 • "No excess baggage fees. No airport queues. No customs confusion."
 • "A new tourism retail mobility model — convenience delivered seamlessly."
@@ -88,7 +88,7 @@ FRICTION-FREE SHOPPING PASS (Info Modal — Tourist Portal)
 REGISTRATION PAGE (Tourist Account Creation)
 ────────────────────────────────────────────────────────────────────────────────
 
-• "Welcome to SENDITHOME!"
+• "Welcome to Send It Home!"
    (Hero headline — pink)
 • "We see you're enjoying your stay at [Hotel Name]"
    (Hotel contextual greeting)
@@ -248,7 +248,7 @@ RETAILER REGISTRATION PAGE
 
 • "Register as a Retail Partner"
    (Page heading)
-• "Join the SENDITHOME network and start earning commission on verified tourist shipments."
+• "Join the Send It Home network and start earning commission on verified tourist shipments."
 
 ────────────────────────────────────────────────────────────────────────────────
 GOVERNMENT DASHBOARD (Oversight Portal)
@@ -300,7 +300,7 @@ COURIER LOGIN / RETAILER PORTAL / GOVERNMENT LOGIN (Auth Pages)
 DECLARATION PREVIEW (Customs Document)
 ────────────────────────────────────────────────────────────────────────────────
 
-• "SENDITHOME — Customs Declaration Preview"
+• "Send It Home — Customs Declaration Preview"
 • "Shipment: SIH-2026-00847"
 • Multi-language translation support (English, العربية, 中文, Русский, Deutsch, Français, Español, हिन्दी, 日本語)
 
@@ -308,7 +308,7 @@ DECLARATION PREVIEW (Customs Document)
 OXFORD OVERVIEW (Strategic Economic Context)
 ────────────────────────────────────────────────────────────────────────────────
 
-• "SENDITHOME — Economic Context Overview"
+• "Send It Home — Economic Context Overview"
 • "Prepared for internal strategic reference · Not for distribution"
 • "Dubai Tourism Economy"
 • "Shopping Tourism Behaviour"
@@ -373,5 +373,5 @@ KEY PRICING / NUMBERS USED ACROSS PLATFORM
 
 ═══════════════════════════════════════════════════════════════════════════════
   END OF DOCUMENT
-  Compiled from all SENDITHOME platform portals and pages.
+  Compiled from all Send It Home platform portals and pages.
 ═══════════════════════════════════════════════════════════════════════════════
