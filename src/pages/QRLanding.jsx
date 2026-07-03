@@ -99,7 +99,7 @@ export default function QRLanding() {
           <div className="flex items-center gap-1.5 bg-green-500/20 border border-green-400/30 rounded-xl px-3 py-2 max-w-xs mb-6">
             <span className="text-green-300 text-sm shrink-0">✓</span>
             <p className="text-[11px] text-green-200 leading-snug">
-              <strong className="text-white">{hotel?.name}</strong> is an official Send It Home collection point.
+              <strong className="text-white">{hotel?.name}</strong> is an official SENDITHOME collection point.
             </p>
           </div>
 
@@ -253,7 +253,7 @@ export default function QRLanding() {
         <div className="flex items-start gap-2 bg-green-50 border border-green-200 rounded-xl px-3 py-2.5 mt-4">
           <span className="text-green-600 text-sm shrink-0">✓</span>
           <p className="text-[11px] text-green-700 leading-relaxed">
-            <strong>{hotel?.name}</strong> is an official Send It Home collection point. Your parcel will be securely collected by our courier partner within 24 hours.
+            <strong>{hotel?.name}</strong> is an official SENDITHOME collection point. Your parcel will be securely collected by our courier partner within 24 hours.
           </p>
         </div>
         <p className="text-center text-[10px] text-muted-foreground mt-4">

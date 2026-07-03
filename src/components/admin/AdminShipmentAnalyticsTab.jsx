@@ -197,7 +197,7 @@ export default function AdminShipmentAnalyticsTab({ data }) {
     const doc = new jsPDF();
     const now = new Date().toLocaleString('en-GB');
     doc.setFontSize(16);
-    doc.text('Send It Home — Shipment Analytics Report', 14, 18);
+    doc.text('SENDITHOME — Shipment Analytics Report', 14, 18);
     doc.setFontSize(9);
     doc.setTextColor(120);
     doc.text(`Generated: ${now}  |  Period: ${period.label}  |  Filters: ${filtersActive ? 'active' : 'none'}`, 14, 25);

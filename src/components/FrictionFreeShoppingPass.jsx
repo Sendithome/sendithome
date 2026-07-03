@@ -7,8 +7,8 @@ import {
 const sections = [
   {
     icon: Gift,
-    title: '1. What Send It Home Is',
-    body: 'Your holiday shopping, shipped from your hotel to your front door.\n\nSend It Home is a hotel-based shipping service for the things you buy on your trip. Instead of squeezing purchases into your suitcase or paying excess baggage, you register them at your hotel and we deliver them home.\n\nA new tourism retail mobility model — convenience delivered seamlessly.\n\nNo excess baggage fees. No airport queues. No customs confusion.',
+    title: '1. What SENDITHOME Is',
+    body: 'Your holiday shopping, shipped from your hotel to your front door.\n\nSENDITHOME is a hotel-based shipping service for the things you buy on your trip. Instead of squeezing purchases into your suitcase or paying excess baggage, you register them at your hotel and we deliver them home.\n\nA new tourism retail mobility model — convenience delivered seamlessly.\n\nNo excess baggage fees. No airport queues. No customs confusion.',
   },
   {
     icon: Settings,
@@ -89,9 +89,8 @@ export default function FrictionFreeShoppingPass({ open, onClose }) {
                 <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mx-auto mb-4">
                   <Plane className="w-7 h-7 text-accent-foreground" />
                 </div>
-                <p className="text-sm text-muted-foreground mb-1">Welcome to <span className="font-bold text-foreground">Send it Home</span>: Your</p>
-                <h1 className="text-2xl font-black text-accent mb-1">Friction-Free Shopping Pass.</h1>
-                <p className="text-lg font-bold text-foreground">Sail Through the Airport.</p>
+                <p className="text-sm text-muted-foreground mb-1">Welcome to <span className="font-bold text-foreground">SENDITHOME</span></p>
+                <h1 className="text-2xl font-black text-accent mb-1">Sail Through the Airport.</h1>
               </div>
 
               {/* Intro */}
@@ -100,7 +99,7 @@ export default function FrictionFreeShoppingPass({ open, onClose }) {
                   We've all been there: you're standing in a gorgeous boutique overseas, looking at a stunning pair of shoes or an incredible jacket, and that annoying little voice in your head stops you. "How am I going to fit this in my suitcase?" "Do I really want to drag this through three airport transfers?" "Is it worth standing in that massive, chaotic tax-refund line at 4:00 AM before my flight?" The airport tax and luggage game is broken. It adds friction to your holiday and ruins the thrill of shopping.
                 </p>
                 <p>
-                  That's why we created <strong className="text-foreground">Send it Home</strong> — a brand-new, innovative, first-of-its-kind shopping multilateral corridor built entirely around your freedom.
+                  That's why we created <strong className="text-foreground">SENDITHOME</strong> — a brand-new, innovative, first-of-its-kind shopping multilateral corridor built entirely around your freedom.
                 </p>
                 <p className="font-semibold text-foreground">No heavy bags. No customs lines. No airport baggage stress.</p>
                 <p className="font-semibold text-accent">Just your elevated ultimate shopping mobility experience.</p>

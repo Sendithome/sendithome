@@ -1,4 +1,4 @@
-// ─── SEND IT HOME — TIERED COMMISSION STRUCTURE ──────────────────────────────
+// ─── SENDITHOME — TIERED COMMISSION STRUCTURE ──────────────────────────────
 // Commission is paid by retailers to the government, calculated per store
 // transaction/receipt based on the tourist's origin country group and the
 // transaction value.

@@ -40,7 +40,7 @@ export default function SectionConclusion({ id, setActive }) {
         <div className="bg-[#1a1a2e] text-white rounded-2xl p-5 text-center">
           <p className="text-2xl mb-2">🏗️</p>
           <p className="text-xs font-bold mb-1">Solution Position</p>
-          <p className="text-[11px] text-white/60 leading-relaxed">Send It Home is purpose-built to occupy and resolve this structural gap</p>
+          <p className="text-[11px] text-white/60 leading-relaxed">SENDITHOME is purpose-built to occupy and resolve this structural gap</p>
         </div>
       </div>
 
@@ -52,7 +52,7 @@ export default function SectionConclusion({ id, setActive }) {
             'The primary barrier to tourist-initiated international shipping is not courier capacity but accessible interface design, compliance automation, and hotel-point integration.',
             'A hotel-embedded, AI-mediated shipping platform directly addresses each identified dimension of the structural logistics gap.',
             'The Oxford Economics framework of high-yield tourism multiplier effects supports the thesis that removing retail-logistics friction generates measurable tourism GDP uplift.',
-            'Send It Home operates at the intersection of hospitality, logistics, and consumer technology — a convergence point with no incumbent operating at comparable scale or integration.',
+            'SENDITHOME operates at the intersection of hospitality, logistics, and consumer technology — a convergence point with no incumbent operating at comparable scale or integration.',
           ].map((c, i) => (
             <li key={i} className="flex items-start gap-3">
               <span className="text-[10px] font-black text-amber-500 mt-0.5 shrink-0">{i + 1}.</span>

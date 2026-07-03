@@ -119,7 +119,7 @@ export default function ApprovedHistoryTab({ verifications }) {
       const W = 297, margin = 14;
       doc.setFillColor(26, 27, 38); doc.rect(0, 0, W, 22, 'F');
       doc.setTextColor(255, 255, 255); doc.setFontSize(13); doc.setFont('helvetica', 'bold');
-      doc.text('SEND IT HOME — Approved Shipment History', margin, 10);
+      doc.text('SENDITHOME — Approved Shipment History', margin, 10);
       doc.setFontSize(8); doc.setFont('helvetica', 'normal');
       doc.text(`Generated: ${new Date().toLocaleDateString('en-GB')}`, margin, 17);
       let y = 30;

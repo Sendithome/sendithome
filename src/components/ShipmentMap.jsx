@@ -147,7 +147,7 @@ export default function ShipmentMap({ order }) {
         <Marker position={ORIGIN} icon={originIcon}>
           <Popup>
             <strong>Origin</strong><br />Dubai, UAE<br />
-            <span style={{ fontSize: 11, color: '#666' }}>Send It Home collection point</span>
+            <span style={{ fontSize: 11, color: '#666' }}>SENDITHOME collection point</span>
           </Popup>
         </Marker>
 

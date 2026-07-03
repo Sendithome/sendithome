@@ -146,7 +146,7 @@ export default function DeclarationBreakdownTab({ verifications, retailers }) {
       // Header
       doc.setFillColor(20, 20, 20); doc.rect(margin, y, cW, 14, 'F');
       doc.setFontSize(12); doc.setFont('helvetica', 'bold'); doc.setTextColor(255, 255, 255);
-      doc.text('SEND IT HOME — GOVERNMENT DECLARATION BREAKDOWN REPORT', margin + cW / 2, y + 6, { align: 'center' });
+      doc.text('SENDITHOME — GOVERNMENT DECLARATION BREAKDOWN REPORT', margin + cW / 2, y + 6, { align: 'center' });
       doc.setFontSize(8); doc.setFont('helvetica', 'normal'); doc.setTextColor(200, 200, 200);
       doc.text(`Generated: ${new Date().toLocaleString()} — CONFIDENTIAL — Government Use Only`, margin + cW / 2, y + 11, { align: 'center' });
       y += 17;
@@ -223,7 +223,7 @@ export default function DeclarationBreakdownTab({ verifications, retailers }) {
       // Footer
       doc.setFillColor(20, 20, 20); doc.rect(margin, y + 4, cW, 8, 'F');
       doc.setFontSize(6.5); doc.setFont('helvetica', 'normal'); doc.setTextColor(180, 180, 180);
-      doc.text('Send It Home — Vacation Logistics DMCC, Dubai | support@sendithomedxb.com | GOVERNMENT CONFIDENTIAL', margin + cW / 2, y + 10, { align: 'center' });
+      doc.text('SENDITHOME — Vacation Logistics DMCC, Dubai | support@sendithomedxb.com | GOVERNMENT CONFIDENTIAL', margin + cW / 2, y + 10, { align: 'center' });
 
       doc.save(`SIH-Declaration-Report-${new Date().toISOString().slice(0, 10)}.pdf`);
     } catch (err) {

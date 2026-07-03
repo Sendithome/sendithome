@@ -1,4 +1,4 @@
-// ─── SEND IT HOME — PILOT COUNTRY MASTER DATA ───────────────────────────────
+// ─── SENDITHOME — PILOT COUNTRY MASTER DATA ───────────────────────────────
 // UAE (Dubai) is the primary showcase market. All data is realistic and based
 // on verified tourism & trade statistics for each pilot country.
 
@@ -27,7 +27,7 @@ export const PILOT_COUNTRIES = [
     gdpContributionPct: 12.8,
     vatRate: 5,
     customsDutyAvg: 4.5,
-    description: 'Dubai is the primary Send It Home launch market. Home to the Dubai Mall, Mall of the Emirates, and 100+ luxury flagship stores, Dubai receives over 17M tourists annually with one of the highest per-tourist retail spends in the world.',
+    description: 'Dubai is the primary SENDITHOME launch market. Home to the Dubai Mall, Mall of the Emirates, and 100+ luxury flagship stores, Dubai receives over 17M tourists annually with one of the highest per-tourist retail spends in the world.',
     // Monthly shipments — seasonal: peaks in winter (Oct–Mar), dip in summer
     monthlyShipments: [4280, 3920, 3540, 2760, 2140, 1480, 1220, 1380, 2040, 2980, 3680, 4120],
     monthlyRevenue:   [5890000, 5390000, 4870000, 3800000, 2945000, 2035000, 1678000, 1898000, 2807000, 4101000, 5065000, 5668000],

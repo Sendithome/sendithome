@@ -34,7 +34,7 @@ export default function SectionSolution({ id, setActive }) {
     <SectionWrapper id={id} number="04" title="The Solution Architecture" setActive={setActive}>
 
       <p className="text-sm text-gray-700 leading-relaxed">
-        Send It Home addresses the structural logistics gap through a vertically integrated, 
+        SENDITHOME addresses the structural logistics gap through a vertically integrated, 
         hotel-anchored, technology-mediated international shipping platform. The service is not 
         a logistics company — it is a <strong>consumer experience layer</strong> built on top of 
         existing logistics infrastructure, purpose-designed for the shopping tourist in Dubai's 
