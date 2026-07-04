@@ -90,7 +90,7 @@ export default function DemoShipmentsTab() {
       const W = 297, margin = 14;
       doc.setFillColor(26, 27, 38); doc.rect(0, 0, W, 20, 'F');
       doc.setTextColor(255, 255, 255); doc.setFontSize(12); doc.setFont('helvetica', 'bold');
-      doc.text('SendItHome — Hotel Shipment Report', margin, 9);
+      doc.text('SENDITHOME — Hotel Shipment Report', margin, 9);
       doc.setFontSize(8); doc.setFont('helvetica', 'normal');
       doc.text(`Hotel: ${HOTEL_NAME} · Generated: ${new Date().toLocaleDateString('en-GB')} · ${filtered.length} shipments · Total US$${totalValue.toLocaleString()}`, margin, 16);
       let y = 28;

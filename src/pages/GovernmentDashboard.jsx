@@ -18,6 +18,7 @@ import GovCommissionTab from '@/components/government/GovCommissionTab';
 import PassportCopiesTab from '@/components/government/PassportCopiesTab';
 import CustomsDeclarationsTab from '@/components/government/CustomsDeclarationsTab';
 import ClearanceQueueTab from '@/components/government/ClearanceQueueTab';
+import BrandName from '@/components/BrandName';
 
 const TABS = [
   { id: 'clearance', label: 'Clearance Queue', icon: Shield },
@@ -289,7 +290,7 @@ export default function GovernmentDashboard() {
         <div className="flex items-center justify-center gap-2 mb-1">
           <Lock className="w-3 h-3 text-muted-foreground" />
           <p className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase">
-            © {new Date().getFullYear()} SendItHome · Proprietary and Confidential · Authorised Government Access Only · Unauthorised use is strictly prohibited
+            © {new Date().getFullYear()} <BrandName /> · Proprietary and Confidential · Authorised Government Access Only · Unauthorised use is strictly prohibited
           </p>
         </div>
       </footer>

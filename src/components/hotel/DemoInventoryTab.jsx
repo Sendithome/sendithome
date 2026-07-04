@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Package2, CheckCircle2, AlertCircle, Truck, Shield, Clock, Loader2 } from 'lucide-react';
+import BrandName from '@/components/BrandName';
 
 const INVENTORY = [
   { type: '10 kg', allocated: 60, current: 38, reorder: 50 },
@@ -107,7 +108,7 @@ export default function DemoInventoryTab() {
         <Shield className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
         <div>
           <p className="text-sm font-bold text-blue-800">Automatic Replenishment</p>
-          <p className="text-xs text-blue-700 mt-1">SendItHome monitors your stock levels 24/7. When boxes drop below your reorder threshold, a replenishment order is automatically raised and dispatched within 24 hours — at zero cost to your property. You can also request additional stock manually using the buttons above.</p>
+          <p className="text-xs text-blue-700 mt-1"><BrandName /> monitors your stock levels 24/7. When boxes drop below your reorder threshold, a replenishment order is automatically raised and dispatched within 24 hours — at zero cost to your property. You can also request additional stock manually using the buttons above.</p>
         </div>
       </div>
     </div>

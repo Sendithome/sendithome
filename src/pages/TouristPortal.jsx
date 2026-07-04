@@ -10,6 +10,7 @@ import {
 import { base44 } from '@/api/base44Client';
 import TrackingTimeline from '../components/TrackingTimeline';
 import { cn } from '@/lib/utils';
+import BrandName from '@/components/BrandName';
 
 const STATUS_STEPS = [
   { key: 'paid',       label: 'Confirmed',   icon: CheckCircle2, desc: 'Payment received & shipment confirmed' },
@@ -290,7 +291,7 @@ export default function TouristPortal() {
                 <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 text-center">
                   <div className="text-4xl mb-2">🎉</div>
                   <p className="text-lg font-black text-emerald-800">Your shopping has arrived!</p>
-                  <p className="text-sm text-emerald-700 mt-1">We hope you enjoy your purchases. Thank you for using SENDITHOME.</p>
+                  <p className="text-sm text-emerald-700 mt-1">We hope you enjoy your purchases. Thank you for using <BrandName />.</p>
                   <div className="flex justify-center gap-1 mt-3">
                     {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
                   </div>

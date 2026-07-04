@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { base44 } from '@/api/base44Client';
 import { getInventoryTier } from '../utils/inventoryTiers';
+import BrandName from '@/components/BrandName';
 
 const STEPS = ['Account', 'Hotel Details'];
 
@@ -199,7 +200,7 @@ export default function HotelSignup() {
                       <KeyRound className="w-7 h-7 text-accent" />
                     </div>
                     <h1 className="text-2xl font-black text-foreground">Register Your Hotel</h1>
-                    <p className="text-sm text-muted-foreground mt-2">Create your account to start offering SendItHome to your guests.</p>
+                    <p className="text-sm text-muted-foreground mt-2">Create your account to start offering <BrandName /> to your guests.</p>
                     <p className="text-[10px] text-muted-foreground mt-2">Fields marked with <span className="text-accent font-bold">*</span> are required.</p>
                   </div>
 

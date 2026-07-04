@@ -1,5 +1,6 @@
 import SectionWrapper from './SectionWrapper';
 import PullQuote from './PullQuote';
+import BrandName from '@/components/BrandName';
 
 export default function SectionConclusion({ id, setActive }) {
   return (
@@ -40,7 +41,7 @@ export default function SectionConclusion({ id, setActive }) {
         <div className="bg-[#1a1a2e] text-white rounded-2xl p-5 text-center">
           <p className="text-2xl mb-2">🏗️</p>
           <p className="text-xs font-bold mb-1">Solution Position</p>
-          <p className="text-[11px] text-white/60 leading-relaxed">SENDITHOME is purpose-built to occupy and resolve this structural gap</p>
+          <p className="text-[11px] text-white/60 leading-relaxed"><BrandName /> is purpose-built to occupy and resolve this structural gap</p>
         </div>
       </div>
 

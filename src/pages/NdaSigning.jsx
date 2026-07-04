@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { base44 } from '@/api/base44Client';
+import BrandName from '@/components/BrandName';
 
 const TODAY = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -304,7 +305,7 @@ export default function NdaSigning() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-muted/40 rounded-xl p-4">
                 <p className="text-xs font-bold text-accent mb-2">DISCLOSING PARTY</p>
-                <p className="text-sm font-bold">SendITHome (Sandit)</p>
+                <p className="text-sm font-bold"><BrandName /> (Sandit)</p>
                 <p className="text-xs text-muted-foreground mt-1">International Logistics & Hotel Partner Programme</p>
                 <p className="text-xs text-muted-foreground">Dubai, United Arab Emirates</p>
                 <p className="text-xs text-muted-foreground mt-1">Authorized Signature: _______________</p>
@@ -324,7 +325,7 @@ export default function NdaSigning() {
             <div className="border-t border-border pt-4 space-y-4">
               <div>
                 <p className="font-bold mb-1">1. Purpose</p>
-                <p className="text-sm text-muted-foreground">Both parties wish to explore a business relationship concerning the SendITHome Hotel Partner Programme, whereby the hotel will provide guest access to international courier and shipment services ("the Purpose"). In connection with this Purpose, each party may disclose certain confidential information to the other party.</p>
+                <p className="text-sm text-muted-foreground">Both parties wish to explore a business relationship concerning the <BrandName /> Hotel Partner Programme, whereby the hotel will provide guest access to international courier and shipment services ("the Purpose"). In connection with this Purpose, each party may disclose certain confidential information to the other party.</p>
               </div>
               <div>
                 <p className="font-bold mb-1">2. Definition of Confidential Information</p>

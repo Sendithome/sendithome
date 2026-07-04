@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import DemoShipmentsTab from '@/components/hotel/DemoShipmentsTab';
 import DemoInventoryTab from '@/components/hotel/DemoInventoryTab';
+import BrandName from '@/components/BrandName';
 
 const GOLD = '#C9A84C';
 const GOLD_LIGHT = '#E8C96A';
@@ -360,7 +361,7 @@ export default function HotelDemoDashboard() {
             <motion.div key="qr" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
               <div>
                 <h2 className="text-lg font-bold text-foreground">Hotel QR Code</h2>
-                <p className="text-sm text-muted-foreground">Guests scan this QR code to start their SendITHome shipment</p>
+                <p className="text-sm text-muted-foreground">Guests scan this QR code to start their <BrandName /> shipment</p>
               </div>
 
               {/* QR Stats */}
@@ -447,13 +448,13 @@ export default function HotelDemoDashboard() {
       {/* Confidentiality Footer */}
       <footer className="border-t border-border bg-white mt-4 py-3 px-4 text-center">
         <p className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase">
-          © {new Date().getFullYear()} SendItHome · Proprietary and Confidential · Authorised Partner Access Only · Unauthorised use is strictly prohibited
+          © {new Date().getFullYear()} <BrandName /> · Proprietary and Confidential · Authorised Partner Access Only · Unauthorised use is strictly prohibited
         </p>
       </footer>
 
       {/* Minimal CTA */}
       <div className="max-w-4xl mx-auto px-4 pb-8 pt-2 text-center">
-        <p className="text-xs text-muted-foreground">Ready to partner with SendItHome? <button onClick={() => navigate('/hotel-onboarding')} className="text-accent font-semibold hover:underline">Register your hotel</button> — go live in as few as 7 working days.</p>
+        <p className="text-xs text-muted-foreground">Ready to partner with <BrandName />? <button onClick={() => navigate('/hotel-onboarding')} className="text-accent font-semibold hover:underline">Register your hotel</button> — go live in as few as 7 working days.</p>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import {
   DollarSign, Shield, Zap, Box, FileText, Users, Star, Megaphone,
   ShieldCheck, ScrollText, Building2, AlertTriangle
 } from 'lucide-react';
+import BrandName from '@/components/BrandName';
 
 const GOLD = '#C9A84C';
 const GOLD_LIGHT = '#E8C96A';
@@ -127,7 +128,7 @@ export default function HotelPartnerLanding() {
             </div>
 
             <h1 className="font-black leading-tight mb-3" style={{ fontSize: 'clamp(1.6rem,3.5vw,2.6rem)', fontFamily: 'Georgia, serif', background: `linear-gradient(135deg, ${GOLD_LIGHT} 0%, ${GOLD} 55%, #8B6914 100%)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              Activate Your Property with SendItHome
+              Activate Your Property with SendITHome
             </h1>
 
             <p className="text-lg md:text-xl leading-snug mb-6 font-semibold" style={{ color: PLATINUM, fontFamily: 'Georgia, serif' }}>
@@ -138,7 +139,7 @@ export default function HotelPartnerLanding() {
               Enhance Your Guest Experience
             </p>
             <p className="text-sm md:text-base leading-relaxed mb-8" style={{ color: CREAM }}>
-              Offer your guests a premium travel-light service while earning a guaranteed USD $20 for every completed SENDITHOME shipment processed by your hotel.
+              Offer your guests a premium travel-light service while earning a guaranteed USD $20 for every completed <BrandName /> shipment processed by your hotel.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">
@@ -396,7 +397,7 @@ export default function HotelPartnerLanding() {
           {OFFICIAL_TAGLINE}
         </p>
         <p className="text-xs" style={{ color: 'rgba(226,232,240,0.35)' }}>
-          © 2026 SendITHome · Sovereign-Backed Shopping Corridor Partnership · All rights reserved
+          © 2026 <BrandName /> · Sovereign-Backed Shopping Corridor Partnership · All rights reserved
         </p>
         <p className="text-[10px] mt-1" style={{ color: 'rgba(226,232,240,0.3)' }}>
           Proprietary and Confidential

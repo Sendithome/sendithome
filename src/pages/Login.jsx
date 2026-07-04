@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Package } from 'lucide-react';
+import BrandName from '@/components/BrandName';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -39,9 +40,7 @@ export default function Login() {
             <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center">
               <Package className="w-5 h-5 text-accent-foreground" />
             </div>
-            <span className="text-xl font-black tracking-widest uppercase">
-              SEND<span className="text-accent">IT</span>HOME
-            </span>
+            <BrandName primary className="text-xl font-black tracking-widest" />
           </div>
           <h1 className="text-2xl font-bold text-foreground">Welcome back</h1>
           <p className="text-sm text-muted-foreground mt-1">Sign in to your account</p>
@@ -113,7 +112,7 @@ export default function Login() {
         </p>
 
         <p className="text-center text-[10px] text-muted-foreground">
-          Powered by SendITHome AI · Proprietary Intelligent Logistics Platform
+          Powered by <BrandName /> AI · Proprietary Intelligent Logistics Platform
         </p>
       </div>
     </div>

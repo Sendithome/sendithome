@@ -11,6 +11,7 @@ import PhoneInput from '../components/PhoneInput';
 import PassportVerification from '../components/PassportVerification';
 import CountrySelect from '../components/CountrySelect';
 import TermsModal from '../components/TermsModal';
+import BrandName from '@/components/BrandName';
 
 export default function Register() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -294,8 +295,8 @@ export default function Register() {
       >
         <div className="max-w-2xl mx-auto px-6 py-10 text-center">
           {/* Welcome headline */}
-          <h1 className="font-bold text-accent mb-4" style={{ fontSize: 'clamp(22px, 5vw, 34px)', lineHeight: 1.2 }}>
-            Welcome to SENDITHOME!
+          <h1 className="font-bold text-white mb-4" style={{ fontSize: 'clamp(22px, 5vw, 34px)', lineHeight: 1.2 }}>
+            Welcome to <BrandName primary />!
           </h1>
 
           {/* Hotel contextual greeting */}
@@ -657,7 +658,7 @@ export default function Register() {
         </form>
 
         <p className="text-center text-[10px] text-muted-foreground mt-8 pb-4">
-          Powered by SendITHome AI · Proprietary Intelligent Logistics Platform
+          Powered by <BrandName /> AI · Proprietary Intelligent Logistics Platform
         </p>
       </div>
 

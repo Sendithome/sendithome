@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import BrandName from '@/components/BrandName';
 import {
   ArrowLeft, X, Gift, Plane, Settings, Smile, Sparkles, Route,
   CheckCircle2, ShoppingBag
@@ -89,7 +90,7 @@ export default function FrictionFreeShoppingPass({ open, onClose }) {
                 <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mx-auto mb-4">
                   <Plane className="w-7 h-7 text-accent-foreground" />
                 </div>
-                <p className="text-sm text-muted-foreground mb-1">Welcome to <span className="font-bold text-foreground">SENDITHOME</span></p>
+                <p className="text-sm text-muted-foreground mb-1">Welcome to <BrandName primary className="text-foreground" /></p>
                 <h1 className="text-2xl font-black text-accent mb-1">Sail Through the Airport.</h1>
               </div>
 
@@ -99,7 +100,7 @@ export default function FrictionFreeShoppingPass({ open, onClose }) {
                   We've all been there: you're standing in a gorgeous boutique overseas, looking at a stunning pair of shoes or an incredible jacket, and that annoying little voice in your head stops you. "How am I going to fit this in my suitcase?" "Do I really want to drag this through three airport transfers?" "Is it worth standing in that massive, chaotic tax-refund line at 4:00 AM before my flight?" The airport tax and luggage game is broken. It adds friction to your holiday and ruins the thrill of shopping.
                 </p>
                 <p>
-                  That's why we created <strong className="text-foreground">SENDITHOME</strong> — a brand-new, innovative, first-of-its-kind shopping multilateral corridor built entirely around your freedom.
+                  That's why we created <BrandName className="font-bold text-foreground" /> — a brand-new, innovative, first-of-its-kind shopping multilateral corridor built entirely around your freedom.
                 </p>
                 <p className="font-semibold text-foreground">No heavy bags. No customs lines. No airport baggage stress.</p>
                 <p className="font-semibold text-accent">Just your elevated ultimate shopping mobility experience.</p>

@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Search, ChevronDown, ChevronUp, Package, Tag, MapPin } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import BrandName from '@/components/BrandName';
 
 const BRANDS = [
   // FASHION & LUXURY
@@ -231,7 +232,7 @@ export default function BrandDirectory() {
 
       {/* Footer */}
       <div className="bg-primary text-primary-foreground text-center py-4 px-4">
-        <p className="text-xs font-bold">SENDITHOME — Dubai Complete Brand Directory</p>
+        <p className="text-xs font-bold"><BrandName primary /> — Dubai Complete Brand Directory</p>
         <p className="text-[10px] opacity-70 mt-0.5">66 brands · ~3,919 products · Powered by FedEx & DHL</p>
       </div>
     </div>

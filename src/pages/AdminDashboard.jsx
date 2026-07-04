@@ -20,6 +20,7 @@ import AdminFinancialTab from '@/components/admin/AdminFinancialTab';
 import AdminOperationalTab from '@/components/admin/AdminOperationalTab';
 import AdminCourierTab from '@/components/admin/AdminCourierTab';
 import AdminInventoryTab from '@/components/admin/AdminInventoryTab';
+import BrandName from '@/components/BrandName';
 
 const TABS = [
   { id: 'executive', label: 'Executive', icon: Star },
@@ -153,7 +154,7 @@ export default function AdminDashboard() {
       {/* Confidentiality Footer */}
       <footer className="border-t border-border bg-card mt-8 py-3 px-4 text-center">
         <p className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase">
-          © {new Date().getFullYear()} SendItHome · Proprietary and Confidential · Internal Use Only · Unauthorised use is strictly prohibited
+          © {new Date().getFullYear()} <BrandName /> · Proprietary and Confidential · Internal Use Only · Unauthorised use is strictly prohibited
         </p>
       </footer>
     </div>

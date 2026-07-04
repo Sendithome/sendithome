@@ -3,6 +3,7 @@ import { Truck, Lock, Mail, Loader2, Eye, EyeOff, Package, Info, Headphones } fr
 import { Checkbox } from '@/components/ui/checkbox';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
+import BrandName from '@/components/BrandName';
 
 export default function CourierLogin() {
   const navigate = useNavigate();
@@ -109,7 +110,7 @@ export default function CourierLogin() {
                 <Info className="w-3.5 h-3.5" /> Password Reset
               </p>
               <p className="text-[11px] text-blue-700 leading-relaxed">
-                Please contact the SENDITHOME admin team to reset your courier portal password:
+                Please contact the <BrandName /> admin team to reset your courier portal password:
               </p>
               <div className="text-[11px] text-blue-700 space-y-0.5 mt-1">
                 <p>📧 admin@sendithome.com</p>
@@ -148,7 +149,7 @@ export default function CourierLogin() {
             <p className="text-xs font-bold text-foreground">Need Help?</p>
           </div>
           <p className="text-[11px] text-muted-foreground leading-relaxed">
-            For login credentials, password resets, or technical support, contact the SENDITHOME admin team:
+            For login credentials, password resets, or technical support, contact the <BrandName /> admin team:
           </p>
           <div className="text-[11px] text-muted-foreground mt-1.5 space-y-0.5">
             <p>📧 admin@sendithome.com</p>

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Save, Loader2, Plus, Trash2, ArrowLeft, Bell, Percent, Users, HelpCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
+import BrandName from '@/components/BrandName';
 
 export default function RetailerSettings() {
   const [retailer, setRetailer] = useState(null);
@@ -122,7 +123,7 @@ export default function RetailerSettings() {
                 <p className="text-xs text-muted-foreground">Agreed Commission Rate</p>
                 <p className="text-2xl font-bold text-primary mt-1">{retailer.commission_rate || 2.5}%</p>
               </div>
-              <p className="text-xs text-muted-foreground max-w-xs text-right">Rate is set by SENDITHOME admin and cannot be changed here. Contact partnerships to renegotiate.</p>
+              <p className="text-xs text-muted-foreground max-w-xs text-right">Rate is set by <BrandName /> admin and cannot be changed here. Contact partnerships to renegotiate.</p>
             </div>
           </Section>
 

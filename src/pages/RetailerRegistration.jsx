@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Building2, Upload, CheckCircle2, Loader2, ChevronRight, Package } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
+import BrandName from '@/components/BrandName';
 
 const CATEGORIES = [
   'Fashion', 'Footwear', 'Bags & Accessories', 'Sportswear',
@@ -64,7 +65,7 @@ export default function RetailerRegistration() {
             <p className="text-xs font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
           </div>
           <h1 className="text-2xl font-bold text-primary mt-4">Retailer Partner Registration</h1>
-          <p className="text-muted-foreground text-sm mt-1">Join the SENDITHOME certified retail network</p>
+          <p className="text-muted-foreground text-sm mt-1">Join the <BrandName /> certified retail network</p>
         </div>
 
         <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">

@@ -11,6 +11,7 @@ import AnalyticsTab from '@/components/retailer/AnalyticsTab';
 import ShipmentsTab from '@/components/retailer/ShipmentsTab';
 import CommissionTab from '@/components/retailer/CommissionTab';
 import { getCommissionAmount, getCountryGroupLabel } from '@/utils/commissionTiers';
+import BrandName from '@/components/BrandName';
 
 const TABS = [
   { id: 'pending', label: 'Pending Approvals' },
@@ -245,7 +246,7 @@ export default function RetailerDashboard() {
       {/* Confidentiality Footer */}
       <footer className="border-t border-border bg-card mt-8 py-3 px-4 text-center">
         <p className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase">
-          © {new Date().getFullYear()} SendItHome · Proprietary and Confidential · Authorised Partner Access Only · Unauthorised use is strictly prohibited
+          © {new Date().getFullYear()} <BrandName /> · Proprietary and Confidential · Authorised Partner Access Only · Unauthorised use is strictly prohibited
         </p>
       </footer>
     </div>
