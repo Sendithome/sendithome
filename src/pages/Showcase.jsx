@@ -51,8 +51,8 @@ const SHOWCASE_PAGES = [
       { label: 'Retailer Portal (Login)', path: '/retailer-portal' },
       { label: 'Retailer Dashboard', path: '/retailer-dashboard' },
       { label: 'Retailer Settings', path: '/retailer-settings' },
-      { label: 'Premium & Luxury Retailer Intelligence Platform', path: 'https://claude.ai/public/artifacts/1c2b032e-9326-4f3c-b940-cb9a767e1d9e', external: true },
-      { label: 'Eligible Items Dashboard', path: 'https://claude.ai/public/artifacts/144cc323-b4f0-42e5-a915-0218d7ac4270', external: true },
+      { label: 'Premium & Luxury Retailer Intelligence Platform', path: 'https://claude.ai/public/artifacts/2998f42a-b871-4c61-be4a-36de9a36c55b', external: true },
+      { label: 'Eligible Items Dashboard', path: 'https://claude.ai/public/artifacts/2f0691fd-d770-469d-9c9f-525c7e8f114b', external: true },
     ],
   },
   {
@@ -63,7 +63,7 @@ const SHOWCASE_PAGES = [
     pages: [
       { label: 'Government Login', path: '/government-login' },
       { label: 'Government Dashboard', path: '/government-dashboard' },
-      { label: 'Master Targeted Countries Dashboard', path: 'https://claude.ai/public/artifacts/5e1b7289-c7d8-4860-b574-22c63f3b4965', external: true },
+      { label: 'Master Target Countries Dashboard', path: 'https://claude.ai/public/artifacts/d184a0ef-e216-4f3a-a9b1-9976d764535c', external: true },
     ],
   },
   {
