@@ -5,6 +5,7 @@ import { Package, MapPin, Star, ArrowRight, Loader2, QrCode, Sparkles } from 'lu
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 import FrictionFreeShoppingPass from '../components/FrictionFreeShoppingPass';
+import PricingCard from '@/components/PricingCard';
 import BrandName from '@/components/BrandName';
 
 export default function QRLanding() {
@@ -166,59 +167,7 @@ export default function QRLanding() {
             Deliver your items directly from <span className="font-semibold text-foreground">{hotel.name}</span> straight to your doorstep. Expedited delivery in 1–3 working days (M-F).
           </p>
 
-          <div className="mt-4 bg-accent/5 border border-accent/30 rounded-2xl px-4 py-3 flex items-center justify-between">
-            <p className="text-sm font-bold text-foreground">Total Cost</p>
-            <div className="text-right">
-              <span className="text-lg font-black text-accent">US$50</span>
-              <p className="text-[10px] text-muted-foreground">plus optional insurance</p>
-            </div>
-          </div>
-
-          <div className="mt-3 space-y-3">
-            <div className="bg-muted/50 border border-border rounded-2xl px-4 py-3">
-              <div className="flex items-center justify-between mb-1">
-                <div>
-                  <p className="text-sm font-bold text-foreground">Transit Protection &amp; Activation</p>
-                  <p className="text-[10px] text-accent font-semibold uppercase tracking-wide">US$30 PAID NOW</p>
-                </div>
-                <span className="text-sm font-black text-accent">US$30</span>
-              </div>
-              <p className="text-xs text-muted-foreground">Activates your digital customs clearance and includes complimentary <strong className="text-foreground">US$2,000</strong> shipping insurance.</p>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-2xl px-4 py-3">
-              <div className="flex items-center justify-between mb-1">
-                <div>
-                  <p className="text-sm font-bold text-foreground">Concierge Fulfillment</p>
-                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">US$20 ADDED TO HOTEL BILL</p>
-                </div>
-                <span className="text-sm font-black text-accent">US$20</span>
-              </div>
-              <p className="text-xs text-muted-foreground">Charged directly by <strong className="text-foreground">{hotel.name}</strong> to your room bill for your premium box, secure tape, and courier handover.</p>
-            </div>
-            <div className="bg-accent/5 border border-accent/20 rounded-2xl px-4 py-3">
-              <div className="flex items-center justify-between mb-1">
-                <p className="text-sm font-bold text-foreground">💼 Extended Coverage</p>
-                <span className="text-xs font-semibold text-muted-foreground">Optional</span>
-              </div>
-              <p className="text-xs text-muted-foreground">High-value third-party insurance up to US$20,000 available at checkout.</p>
-            </div>
-          </div>
-
-          <ul className="mt-4 space-y-2">
-            {[
-              { text: 'Direct Courier Support' },
-              { text: 'Hotel pickup within 24 hours (M-F)' },
-              { text: 'Full tracking via WhatsApp' },
-              { text: '50+ countries covered' },
-            ].map((item, i) => (
-              <li key={i} className="flex items-start gap-2.5 text-sm text-foreground">
-                <div className="w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center shrink-0 mt-0.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-accent" />
-                </div>
-                <span>{item.text}</span>
-              </li>
-            ))}
-          </ul>
+          <PricingCard />
         </motion.div>
 
         <motion.div
