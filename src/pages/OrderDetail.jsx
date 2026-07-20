@@ -91,9 +91,9 @@ export default function OrderDetail() {
             <CreditCard className="w-5 h-5 text-accent mt-0.5" />
             <div className="flex-1">
               <p className="text-sm font-semibold">Complete your payment</p>
-              <p className="text-xs text-muted-foreground mt-0.5">$30 paid online + $20 hotel bill</p>
+              <p className="text-xs text-muted-foreground mt-0.5">$150 paid online + $20 hotel bill</p>
               <Button asChild size="sm" className="mt-3 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium">
-                <Link to={`/order/${orderId}/payment`}>Pay $30</Link>
+                <Link to={`/order/${orderId}/payment`}>Pay $150</Link>
               </Button>
             </div>
           </div>

@@ -125,8 +125,8 @@ export default function Payment() {
 
         <div className="border-t border-border pt-4 space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Transit Protection &amp; Activation</span>
-          <span className="font-semibold">$30.00 USD</span>
+          <span className="text-muted-foreground">Checkout &amp; Global Membership</span>
+          <span className="font-semibold">$150.00 USD</span>
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Concierge Fulfillment</span>
@@ -155,7 +155,7 @@ export default function Payment() {
           )}
         </div>
         <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Insurance ($2,000 coverage)</span>
+          <span className="text-muted-foreground">Insurance ($3,000 coverage)</span>
           <span className="text-green-600">Included</span>
         </div>
         <div className="flex justify-between text-sm">
@@ -164,7 +164,7 @@ export default function Payment() {
         </div>
         <div className="border-t border-border pt-3 flex justify-between items-center">
           <span className="font-semibold">Amount Due Now</span>
-          <span className="text-2xl font-bold text-accent">$30.00 USD</span>
+          <span className="text-2xl font-bold text-accent">$150.00 USD</span>
         </div>
         </div>
       </div>
@@ -258,7 +258,7 @@ export default function Payment() {
         ) : (
           <>
             <Lock className="w-5 h-5 mr-2" />
-            Pay $30.00 USD
+            Pay $150.00 USD
           </>
         )}
       </Button>

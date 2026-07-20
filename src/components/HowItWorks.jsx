@@ -5,7 +5,7 @@ const STEPS = [
   { icon: QrCode, title: "Scan QR Code", desc: "Scan the QR at hotel reception or concierge" },
   { icon: UserPlus, title: "Register", desc: "Quick sign-up with passport details" },
   { icon: Receipt, title: "Upload Receipts", desc: "Our AI auto-extracts eligible items" },
-  { icon: CreditCard, title: "Pay $60", desc: "Flat rate per box — no surprises" },
+  { icon: CreditCard, title: "Pay $150", desc: "Checkout + Global Membership — no surprises" },
   { icon: Package, title: "Pack & Drop", desc: "Pack your box, leave at hotel reception" },
   { icon: Truck, title: "Delivered", desc: "1–3 working days to your doorstep" },
 ];

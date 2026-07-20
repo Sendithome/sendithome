@@ -30,7 +30,8 @@
     },
     "price": {
       "type": "number",
-      "default": 60
+      "default": 150,
+      "description": "Checkout total paid online (includes shipment + Global Membership + US$3,000 insurance)"
     },
     "currency": {
       "type": "string",

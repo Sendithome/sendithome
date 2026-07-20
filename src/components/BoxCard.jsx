@@ -56,12 +56,16 @@ export default function BoxCard({ size, selected, onSelect }) {
       {/* Price breakdown — separated, less prominent */}
       <div className="border-t border-border pt-3 space-y-1.5">
         <div className="flex items-center justify-between text-xs">
-          <span className="text-muted-foreground">Transit Protection &amp; Activation</span>
-          <span className="font-semibold text-foreground">US$30</span>
+          <span className="text-muted-foreground">Checkout &amp; Membership</span>
+          <span className="font-semibold text-foreground">US$150</span>
         </div>
         <div className="flex items-center justify-between text-xs">
           <span className="text-muted-foreground">Concierge Fulfillment</span>
           <span className="text-muted-foreground">US$20 (hotel bill)</span>
+        </div>
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-muted-foreground">Shipping Insurance</span>
+          <span className="text-green-600 font-medium">US$3,000 included</span>
         </div>
       </div>
 

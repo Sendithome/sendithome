@@ -527,8 +527,8 @@ export default function Register() {
                 {form.home_country && (
                   <div className="mt-3 space-y-2">
                     <p className="text-xs text-accent font-semibold">
-                      🚚 Shipping to {form.home_country}: <span className="font-bold">US$50 total</span>
-                      <span className="text-muted-foreground font-normal"> (US$30 paid now + US$20 hotel bill)</span>
+                      🚚 Shipping to {form.home_country}: <span className="font-bold">US$150 checkout</span>
+                      <span className="text-muted-foreground font-normal"> (+ US$20 hotel bill · incl. Global Membership)</span>
                     </p>
                     <p className="text-[10px] text-muted-foreground">You can choose your box size after uploading your receipts.</p>
                   </div>
