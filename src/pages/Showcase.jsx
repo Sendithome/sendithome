@@ -91,16 +91,22 @@ const SHOWCASE_PAGES = [
 export default function Showcase() {
   const [selected, setSelected] = useState(SHOWCASE_PAGES[0].pages[0]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [iframeKey, setIframeKey] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const handleSelect = (page) => {
+    setSidebarOpen(false);
     if (page.external) {
+      setSelected(page);
+      setLoading(false);
       window.open(page.path, '_blank', 'noopener,noreferrer');
       return;
     }
+    if (page.path === selected.path) {
+      setLoading(false);
+      return;
+    }
     setSelected(page);
-    setSidebarOpen(false);
-    setIframeKey(k => k + 1);
+    setLoading(true);
   };
 
   const iframeUrl = `${window.location.origin}${selected.path}`;
@@ -213,12 +219,20 @@ export default function Showcase() {
               </a>
             </div>
           ) : (
-            <iframe
-              key={iframeKey}
-              src={iframeUrl}
-              title={selected.label}
-              className="w-full h-full border-0"
-            />
+            <div className="relative w-full h-full">
+              {loading && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-muted/30 z-10">
+                  <div className="w-8 h-8 border-4 border-muted border-t-accent rounded-full animate-spin" />
+                  <p className="text-xs text-muted-foreground font-medium">Loading {selected.label}…</p>
+                </div>
+              )}
+              <iframe
+                src={iframeUrl}
+                title={selected.label}
+                onLoad={() => setLoading(false)}
+                className="w-full h-full border-0"
+              />
+            </div>
           )}
         </div>
       </div>
