@@ -18,11 +18,11 @@ const STAGE_LABELS = {
 };
 
 const STAGE_NEXT = {
-  dispatched_to_logistics: { next: 'logistics_contacted', label: 'Mark: Hotel Contacted' },
+  dispatched_to_logistics: { next: 'logistics_contacted', label: 'Confirm Hotel Contact' },
   logistics_contacted: { next: 'site_visit_scheduled', label: 'Mark: Site Visit Scheduled' },
   site_visit_scheduled: { next: 'site_visit_done', label: 'Mark: Site Visit Done' },
   site_visit_done: { next: 'materials_delivered', label: 'Mark: Materials Delivered' },
-  materials_delivered: { next: 'fully_onboarded', label: 'Mark: Fully Onboarded ✓' },
+  materials_delivered: { next: 'fully_onboarded', label: 'Complete Hotel Onboarding ✓' },
 };
 
 const STAGE_ORDER = [
@@ -254,7 +254,7 @@ export default function CourierDashboard() {
           >
             <AlertTriangle className="w-5 h-5 text-destructive shrink-0" />
             <p className="text-sm font-bold text-destructive">
-              ⚠️ {overdue.length} hotel{overdue.length !== 1 ? 's are' : ' is'} overdue — immediate action required
+              ⚠️ {overdue.length} Hotel Onboarding Tasks Require Immediate Attention
             </p>
           </motion.div>
         )}
@@ -266,7 +266,7 @@ export default function CourierDashboard() {
             <div className="flex items-center gap-3">
               <Package className="w-5 h-5 text-amber-600 shrink-0" />
               <p className="text-sm font-bold text-amber-800">
-                📦 {repOrders.length} Box Replenishment Request{repOrders.length > 1 ? 's' : ''} Pending
+                📦 {repOrders.length} Active Inventory Replenishment Requests
               </p>
             </div>
             <div className="space-y-2">

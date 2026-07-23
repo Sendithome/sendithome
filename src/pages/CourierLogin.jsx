@@ -45,7 +45,7 @@ export default function CourierLogin() {
             <span className="text-sm font-black text-foreground">SEND<span className="text-accent">IT</span>HOME</span>
           </div>
           <h1 className="text-xl font-bold text-foreground mt-2">Courier Partner Portal</h1>
-          <p className="text-sm text-muted-foreground mt-1">Logistics Partner Access Only</p>
+          <p className="text-sm text-muted-foreground mt-1">Authorised Logistics Partner Access Only</p>
         </div>
 
         <form onSubmit={handleLogin} className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
@@ -131,7 +131,7 @@ export default function CourierLogin() {
             className="w-full h-11 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-bold rounded-xl text-sm transition-colors flex items-center justify-center gap-2"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Truck className="w-4 h-4" />}
-            {loading ? 'Signing in…' : 'Access Courier Portal'}
+            {loading ? 'Signing in…' : 'Sign In to Courier Portal'}
           </button>
         </form>
 
