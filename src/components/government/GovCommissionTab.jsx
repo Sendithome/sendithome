@@ -269,7 +269,7 @@ export default function GovCommissionTab({ verifications, retailers }) {
 
         {/* Collection Efficiency */}
         <div className="bg-card border border-border rounded-2xl p-5">
-          <h3 className="text-sm font-bold mb-4">Collection Efficiency</h3>
+          <h3 className="text-sm font-bold mb-4">Revenue Collection Performance</h3>
           <div className="flex items-center justify-center h-36">
             <div className="relative w-36 h-36">
               <svg className="w-36 h-36 -rotate-90" viewBox="0 0 36 36">

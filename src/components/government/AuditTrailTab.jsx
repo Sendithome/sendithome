@@ -42,7 +42,7 @@ export default function AuditTrailTab({ verifications, retailers = [], onReview 
 
   const downloadCSV = () => {
     const rows = [
-      ['Shipment ID', 'Tourist', 'Nationality', 'Hotel', 'Retailer', 'Value', 'Status', 'Customs Ref', 'Created', 'Approved At', 'Actioned By'],
+      ['Shipment ID', 'Tourist', 'Nationality', 'Hotel', 'Retailer', 'Value', 'Status', 'Customs Ref', 'Created', 'Approved At', 'Performed By'],
       ...filtered.map(v => [v.shipment_id, v.tourist_name, v.tourist_passport_country, v.hotel_name, getRetailerName(v), v.total_value, v.status, v.customs_ref || '', v.created_date, v.approved_at || '', v.approved_by || ''])
     ];
     const csv = rows.map(r => r.map(c => `"${c || ''}"`).join(',')).join('\n');
@@ -61,7 +61,7 @@ export default function AuditTrailTab({ verifications, retailers = [], onReview 
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h3 className="text-base font-bold text-foreground">Audit Trail</h3>
+          <h3 className="text-base font-bold text-foreground">System Audit & Compliance Log</h3>
           <p className="text-xs text-muted-foreground mt-0.5">Complete searchable log of all system events</p>
         </div>
         <button onClick={downloadCSV} className="px-3 h-8 bg-muted hover:bg-muted/80 text-muted-foreground text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-colors">
@@ -98,7 +98,7 @@ export default function AuditTrailTab({ verifications, retailers = [], onReview 
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-border bg-muted/40">
-                {['Timestamp', 'Shipment ID', 'Tourist', 'Nationality', 'Hotel', 'Retailer', 'Value', 'Status', 'Actioned By', 'Customs Ref'].map(h => (
+                {['Timestamp', 'Shipment ID', 'Tourist', 'Nationality', 'Hotel', 'Retailer', 'Value', 'Status', 'Performed By', 'Customs Ref'].map(h => (
                   <th key={h} className="text-left px-3 py-2.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">{h}</th>
                 ))}
               </tr>

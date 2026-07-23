@@ -130,7 +130,7 @@ export default function ClearanceQueueTab({ clearanceQueue, onReview, onAction }
     <div className="space-y-4">
       <div>
         <h2 className="text-base font-bold text-foreground">Shipments Awaiting Government Clearance</h2>
-        <p className="text-xs text-muted-foreground mt-0.5">Retailer-approved shipments requiring official government clearance before payment release</p>
+        <p className="text-xs text-muted-foreground mt-0.5">Retailer-approved shipments awaiting government verification prior to settlement authorisation</p>
       </div>
 
       {/* Pass / Fail Summary */}
@@ -341,7 +341,7 @@ export default function ClearanceQueueTab({ clearanceQueue, onReview, onAction }
                             onClick={() => onReview(v)}
                             className="flex items-center gap-1.5 px-3 h-8 bg-accent hover:bg-accent/90 text-accent-foreground text-[10px] font-bold rounded-lg transition-colors whitespace-nowrap"
                           >
-                            <Eye className="w-3 h-3" /> Review & Clear
+                            <Eye className="w-3 h-3" /> Review & Approve
                           </button>
                         )}
                       </td>

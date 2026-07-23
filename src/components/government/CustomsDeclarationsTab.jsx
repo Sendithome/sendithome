@@ -134,9 +134,9 @@ export default function CustomsDeclarationsTab({ verifications, onReview }) {
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-base font-bold text-foreground">Customs Declaration Forms</h2>
+          <h2 className="text-base font-bold text-foreground">Customs Declaration Management</h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            All tourist customs declarations — {filtered.length} declaration{filtered.length !== 1 ? 's' : ''}
+            Monitor, review and manage customs declarations submitted through the SendITHome platform, ensuring regulatory compliance and efficient border processing
           </p>
         </div>
         <div className="flex items-center gap-2 text-xs font-semibold flex-wrap">
@@ -232,7 +232,7 @@ export default function CustomsDeclarationsTab({ verifications, onReview }) {
                         <div className="flex items-center gap-2">
                           <button onClick={() => setSelectedDecl(d)}
                             className="flex items-center gap-1 text-[11px] font-semibold text-accent hover:underline">
-                            <Eye className="w-3.5 h-3.5" /> View
+                            <Eye className="w-3.5 h-3.5" /> Review Declaration
                           </button>
                           <button onClick={() => handleDownloadPDF(d)} disabled={isDownloading}
                             className="flex items-center gap-1 text-[11px] font-semibold text-muted-foreground hover:text-foreground disabled:opacity-50">

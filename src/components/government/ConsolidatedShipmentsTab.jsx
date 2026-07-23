@@ -6,7 +6,7 @@ const STATUS_CFG = {
   not_applicable: { label: 'Single Store', color: 'text-muted-foreground', bg: 'bg-muted/50 border-border' },
   pending_retailer_approvals: { label: 'Awaiting Retailer Approvals', color: 'text-yellow-600', bg: 'bg-yellow-50 border-yellow-200' },
   all_retailers_approved: { label: 'All Approved', color: 'text-green-600', bg: 'bg-green-50 border-green-200' },
-  consolidated: { label: 'Consolidated ✓', color: 'text-accent', bg: 'bg-accent/5 border-accent/30' },
+  consolidated: { label: 'Ready for Government Clearance ✓', color: 'text-accent', bg: 'bg-accent/5 border-accent/30' },
 };
 
 export default function ConsolidatedShipmentsTab({ orders }) {

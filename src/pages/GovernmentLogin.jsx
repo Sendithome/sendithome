@@ -79,7 +79,7 @@ export default function GovernmentLogin() {
         {/* Classification Banner */}
         <div className="bg-accent/5 border border-accent/20 rounded-xl px-4 py-2.5 flex items-center gap-2 mb-5">
           <Lock className="w-3.5 h-3.5 text-accent shrink-0" />
-          <p className="text-[10px] font-bold text-accent tracking-widest uppercase">Authorised Government Access Only</p>
+          <p className="text-[10px] font-bold text-accent tracking-widest uppercase">Restricted Access – Authorised Government Officials Only</p>
         </div>
 
         <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
@@ -131,7 +131,7 @@ export default function GovernmentLogin() {
                 className="w-full h-12 bg-accent hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed text-accent-foreground font-bold rounded-xl flex items-center justify-center gap-2 transition-colors mt-2"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
-                {loading ? 'Verifying…' : 'Continue to 2FA'}
+                {loading ? 'Verifying…' : 'Proceed to Secure Verification'}
               </button>
 
               <button

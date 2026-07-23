@@ -70,7 +70,7 @@ export default function GovAnalyticsTab({ verifications, hotels, retailers }) {
 
       {/* Header */}
       <div>
-        <h3 className="text-base font-bold text-foreground">Economic Impact & Analytics Dashboard</h3>
+        <h3 className="text-base font-bold text-foreground">National Economic Impact Dashboard</h3>
         <p className="text-xs text-muted-foreground mt-0.5">UAE (Dubai) · Primary Showcase Market</p>
       </div>
 

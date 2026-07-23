@@ -60,9 +60,9 @@ export default function PassportCopiesTab({ verifications }) {
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-base font-bold text-foreground">Tourist Passport Copies</h2>
+          <h2 className="text-base font-bold text-foreground">Tourist Identity Verification</h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Passport documents submitted per shipment — {filtered.length} tourist{filtered.length !== 1 ? 's' : ''}
+            Monitor passport documentation submitted for each shipment to ensure identity verification, regulatory compliance and a complete sovereign audit trail
           </p>
         </div>
         <div className="flex items-center gap-2 text-xs font-semibold flex-wrap">
@@ -159,7 +159,7 @@ export default function PassportCopiesTab({ verifications }) {
                             <Eye className="w-3.5 h-3.5" /> View Passport
                           </button>
                         ) : (
-                          <span className="text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">Not Uploaded</span>
+                          <span className="text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">Document Required</span>
                         )}
                       </td>
                     </tr>
