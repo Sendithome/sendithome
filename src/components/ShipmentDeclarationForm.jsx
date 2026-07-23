@@ -416,7 +416,7 @@ export default function ShipmentDeclarationForm({ order, items, onProceed, onSig
         className="mt-3 w-full flex items-center justify-center gap-2 h-10 rounded-xl bg-gray-800 hover:bg-gray-700 text-white text-xs font-semibold transition-colors disabled:opacity-60"
       >
         {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-        {downloading ? 'Generating PDF…' : 'Download CN22/CN23 Declaration PDF'}
+        {downloading ? 'Generating PDF…' : 'Download Customs Declaration (PDF)'}
       </button>
     </div>
   );

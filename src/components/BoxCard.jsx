@@ -41,7 +41,7 @@ export default function BoxCard({ size, selected, onSelect }) {
             <span className="text-sm text-muted-foreground font-medium">kg max</span>
           </div>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {is10 ? 'Perfect for small items' : 'For larger shopping hauls'}
+            {is10 ? 'Ideal for Smaller Shopping Trips' : 'Ideal for Larger Shopping Purchases'}
           </p>
         </div>
       </div>

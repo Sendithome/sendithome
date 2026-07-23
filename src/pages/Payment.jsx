@@ -258,7 +258,7 @@ export default function Payment() {
         ) : (
           <>
             <Lock className="w-5 h-5 mr-2" />
-            Pay $150.00 USD
+            Complete Secure Payment – US$150.00
           </>
         )}
       </Button>

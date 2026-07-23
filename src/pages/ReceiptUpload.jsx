@@ -218,15 +218,15 @@ export default function ReceiptUpload() {
                     <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mx-auto mb-4">
                       <Camera className="w-6 h-6 text-accent" />
                     </div>
-                    <p className="text-sm font-semibold text-foreground">Upload Receipt</p>
+                    <p className="text-sm font-semibold text-foreground">Upload Your Receipt</p>
                     <p className="text-xs text-muted-foreground mt-1">
                       Take a photo of your receipt or upload an existing image.
                     </p>
-                    <p className="text-xs text-accent font-medium mt-3">Our AI will automatically extract the items from your receipt.</p>
+                    <p className="text-xs text-accent font-medium mt-3">Our AI automatically identifies and extracts your purchased items for review.</p>
                     <div className="flex gap-3 justify-center mt-5">
                       <label className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 rounded-xl text-xs font-semibold bg-accent text-accent-foreground hover:bg-accent/90 transition-colors">
                         <Camera className="w-3.5 h-3.5" />
-                        Take Receipt Photo
+                        Take Photo
                         <input type="file" accept="image/*" capture className="hidden" onChange={handleFileUpload} disabled={uploading || processing} />
                       </label>
                       <label className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 rounded-xl text-xs font-semibold border border-input bg-background hover:bg-muted transition-colors">
@@ -261,7 +261,7 @@ export default function ReceiptUpload() {
                 {/* Eligible Column */}
                 <div className="bg-green-50 border border-green-200 rounded-2xl overflow-hidden">
                   <div className="flex items-center justify-between px-3 py-2.5 border-b border-green-200 bg-green-100">
-                    <span className="text-[11px] font-bold text-green-800 uppercase tracking-wide">✅ Can Ship</span>
+                    <span className="text-[11px] font-bold text-green-800 uppercase tracking-wide">✅ Approved for Shipping</span>
                     <button onClick={toggleAll} className="text-[10px] text-green-700 font-medium hover:underline">
                       {allEligibleSelected ? 'None' : 'All'}
                     </button>
@@ -291,7 +291,7 @@ export default function ReceiptUpload() {
                 {/* Non-Eligible Column */}
                 <div className="bg-red-50 border border-red-200 rounded-2xl overflow-hidden">
                   <div className="flex items-center px-3 py-2.5 border-b border-red-200 bg-red-100">
-                    <span className="text-[11px] font-bold text-red-800 uppercase tracking-wide">❌ Cannot Ship</span>
+                    <span className="text-[11px] font-bold text-red-800 uppercase tracking-wide">❌ Restricted Items</span>
                   </div>
                   <div className="divide-y divide-red-100">
                     {ineligibleItems.length === 0 && (
@@ -345,7 +345,7 @@ export default function ReceiptUpload() {
                 {/* Eligible saved */}
                 <div className="bg-green-50 border border-green-200 rounded-2xl overflow-hidden">
                   <div className="flex items-center justify-between px-3 py-2.5 border-b border-green-200 bg-green-100">
-                    <span className="text-[11px] font-bold text-green-800 uppercase tracking-wide">✅ Can Ship</span>
+                    <span className="text-[11px] font-bold text-green-800 uppercase tracking-wide">✅ Approved for Shipping</span>
                     <button
                       onClick={() => {
                         const eligible = savedItems.filter(i => i.eligible !== false);
@@ -379,7 +379,7 @@ export default function ReceiptUpload() {
                 {/* Non-eligible saved */}
                 <div className="bg-red-50 border border-red-200 rounded-2xl overflow-hidden">
                   <div className="flex items-center px-3 py-2.5 border-b border-red-200 bg-red-100">
-                    <span className="text-[11px] font-bold text-red-800 uppercase tracking-wide">❌ Cannot Ship</span>
+                    <span className="text-[11px] font-bold text-red-800 uppercase tracking-wide">❌ Restricted Items</span>
                   </div>
                   <div className="divide-y divide-red-100">
                     {savedItems.filter(i => i.eligible === false).length === 0 && (
@@ -411,7 +411,7 @@ export default function ReceiptUpload() {
                 </Button>
                 <label className="block cursor-pointer">
                   <Button variant="outline" className="w-full rounded-xl pointer-events-none" type="button">
-                    <Upload className="w-4 h-4 mr-2" /> Upload Another Receipt
+                    <Upload className="w-4 h-4 mr-2" /> Add Another Receipt
                   </Button>
                   <input type="file" accept="image/*,.pdf" className="hidden" onChange={handleFileUpload} disabled={uploading || processing} />
                 </label>
@@ -425,8 +425,8 @@ export default function ReceiptUpload() {
       {step === 1 && (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl font-bold text-foreground">Choose Your Box</h2>
-            <p className="text-sm text-muted-foreground mt-1">The only difference is the maximum weight. Choose the size that fits your purchases.</p>
+            <h2 className="text-xl font-bold text-foreground">Select Your Shipment Box</h2>
+            <p className="text-sm text-muted-foreground mt-1">Both options include the same premium service. Simply choose the box size that best suits your purchases.</p>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <BoxCard size="10kg" selected={boxSize === '10kg'} onSelect={setBoxSize} />
@@ -437,7 +437,7 @@ export default function ReceiptUpload() {
             onClick={handleProceedToDeclaration}
             disabled={!boxSize}
           >
-            Continue — Review Customs Declaration
+            Continue to Customs Declaration
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </div>
@@ -452,9 +452,9 @@ export default function ReceiptUpload() {
               <h2 className="text-xl font-bold text-foreground">Customs Declaration</h2>
             </div>
             <div className="bg-accent/5 border border-accent/20 rounded-xl px-4 py-3 mb-4">
-              <p className="text-sm font-medium text-foreground">Please review your shipment details before confirming and proceeding to payment.</p>
+              <p className="text-sm font-medium text-foreground">Please review your customs declaration before confirming and proceeding to payment.</p>
             </div>
-            <p className="text-sm text-muted-foreground">Please review the CN22/CN23 declaration form below.</p>
+            <p className="text-sm text-muted-foreground">Your customs declaration has been automatically prepared for your review.</p>
           </div>
 
           <ShipmentDeclarationForm order={{ ...order, box_size: boxSize }} items={savedItems} />
@@ -465,7 +465,7 @@ export default function ReceiptUpload() {
             onClick={handleProceedToPayment}
           >
             {savingBox ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Package className="w-4 h-4 mr-2" />}
-            Confirm & Proceed to Payment
+            Confirm Declaration & Proceed to Payment
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </div>

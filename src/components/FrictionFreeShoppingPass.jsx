@@ -8,41 +8,40 @@ import {
 const sections = [
   {
     icon: Gift,
-    title: '1. What SENDITHOME Is',
-    body: 'Your holiday shopping, shipped from your hotel to your front door.\n\nSENDITHOME is a hotel-based shipping service for the things you buy on your trip. Instead of squeezing purchases into your suitcase or paying excess baggage, you register them at your hotel and we deliver them home.\n\nA new tourism retail mobility model — convenience delivered seamlessly.\n\nNo excess baggage fees. No airport queues. No customs confusion.',
+    title: '1. Travel Light. We\'ll Deliver Your Shopping Home.',
+    body: 'Your holiday shopping, shipped from your hotel to your front door.\n\nSendITHome is a hotel-based shipping service for the things you buy on your trip. Instead of squeezing purchases into your suitcase or paying excess baggage, you register them at your hotel and we deliver them home.\n\nA new tourism retail mobility model — convenience delivered seamlessly.\n\nNo excess baggage fees. No airport queues. No customs confusion.',
   },
   {
     icon: Settings,
     title: '2. How It Works for You',
     steps: [
-      'Scan the QR code & register your details — seamless, and takes less than 4 minutes to complete.',
-      'Pick up your box (10kg or 20kg) — collected from hotel reception, or conveniently delivered to your room.',
-      'Scan & upload your shopping receipts — upload unlimited receipts, subject to the terms and conditions.',
-      'Drop your box at reception — once packed, simply visit reception to seal and send.',
+      'Register',
+      'Collect Your Box',
+      'Shop & Upload Receipts',
+      'Pack & Send',
     ],
   },
   {
     icon: Smile,
-    title: '3. Your Benefits as a Tourist',
+    title: '3. Benefits of Global Membership',
     list: [
-      'Travel luggage-free while continuing your luxury shopping experiences.',
-      'Seamless "shop now, deliver home" capability.',
-      'Reduced airport stress, baggage handling, and carousel wait times.',
-      'Consolidated fulfillment in the convenience of your hotel room.',
-      'Improved convenience, security, and customer experience.',
-      'End-to-end tracking and integrated logistics management.',
-      'Enhanced premium travel experience aligned with luxury expectations.',
-      'Expedited international priority shipping, delivered to your home within 1–3 working days.',
+      'Shop without luggage limits.',
+      'Continue enjoying your holiday—not your suitcase.',
+      'Skip airport baggage queues.',
+      'Track every shipment from hotel to home.',
+      'Customs documentation completed for you.',
+      'Delivered safely to your doorstep.',
     ],
   },
   {
     icon: Sparkles,
-    title: "4. Why It's Different for You",
+    title: '4. Why Choose SendITHome',
     list: [
-      'One flat price for either a 10 kg or 20 kg box.',
-      'Packed by you from the convenience of your hotel room.',
-      'Customs paperwork done for you — generated automatically from your declared items.',
-      'Personal Shopping Only — a strict policy that keeps every shipment compliant, trusted, and hassle-free at customs.',
+      'One simple price.',
+      'No excess baggage surprises.',
+      'Pack when you\'re ready.',
+      'Customs documentation prepared automatically.',
+      'Protected from hotel to home.',
     ],
   },
 ];
@@ -90,20 +89,20 @@ export default function FrictionFreeShoppingPass({ open, onClose }) {
                 <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mx-auto mb-4">
                   <Plane className="w-7 h-7 text-accent-foreground" />
                 </div>
-                <p className="text-sm text-muted-foreground mb-1">Welcome to <BrandName primary className="text-foreground" /></p>
+                <p className="text-sm text-muted-foreground mb-1">Welcome to <BrandName className="text-foreground" /></p>
                 <h1 className="text-2xl font-black text-accent mb-1">Sail Through the Airport.</h1>
               </div>
 
               {/* Intro */}
               <div className="space-y-4 text-sm text-muted-foreground leading-relaxed mb-8">
                 <p>
-                  We've all been there: you're standing in a gorgeous boutique overseas, looking at a stunning pair of shoes or an incredible jacket, and that annoying little voice in your head stops you. "How am I going to fit this in my suitcase?" "Do I really want to drag this through three airport transfers?" "Is it worth standing in that massive, chaotic tax-refund line at 4:00 AM before my flight?" The airport tax and luggage game is broken. It adds friction to your holiday and ruins the thrill of shopping.
+                  Shopping should be one of the highlights of your holiday—not something you have to squeeze into your suitcase.
                 </p>
                 <p>
-                  That's why we created <BrandName className="font-bold text-foreground" /> — a brand-new, innovative, first-of-its-kind shopping multilateral corridor built entirely around your freedom.
+                  With <BrandName className="font-bold text-foreground" />, you can shop with confidence while we deliver your purchases safely from your hotel to your home.
                 </p>
-                <p className="font-semibold text-foreground">No heavy bags. No customs lines. No airport baggage stress.</p>
-                <p className="font-semibold text-accent">Just your elevated ultimate shopping mobility experience.</p>
+                <p className="font-semibold text-foreground">No heavy luggage. No excess baggage fees. No airport stress.</p>
+                <p className="font-semibold text-accent">Simply enjoy your holiday—we'll take care of the journey home.</p>
               </div>
 
               {/* Sections */}

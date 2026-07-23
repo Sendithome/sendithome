@@ -39,9 +39,9 @@ const STATUS_CONFIG = {
 };
 
 const TABS = [
-  { id: 'tracking',  label: 'Tracking',    icon: Truck },
-  { id: 'items',     label: 'My Items',    icon: ShoppingBag },
-  { id: 'details',   label: 'Details',     icon: FileText },
+  { id: 'tracking',  label: 'Shipment Tracking',    icon: Truck },
+  { id: 'items',     label: 'Declared Items',    icon: ShoppingBag },
+  { id: 'details',   label: 'Shipment Details',     icon: FileText },
 ];
 
 export default function TouristPortal() {

@@ -43,7 +43,7 @@ const LANGUAGES = [
 
 // UI strings that get translated
 const EN_STRINGS = {
-  title: 'Customs Declaration Form',
+  title: 'Review Your Customs Declaration',
   subtitle: 'Sample CN22/CN23 — as presented to the tourist for e-signature',
   langNote: 'Select your preferred language to read this form.',
 };

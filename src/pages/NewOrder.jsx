@@ -10,7 +10,7 @@ import PhoneInput from '../components/PhoneInput';
 import { getShippingPrice } from '../utils/pricing';
 import { convertToLocalCurrency } from '../utils/currencyConversion';
 
-const STEPS = ['Your Details', 'Home Address', 'Confirm'];
+const STEPS = ['Confirm Your Details', 'Home Address', 'Confirm'];
 
 export default function NewOrder() {
   const navigate = useNavigate();
@@ -200,8 +200,8 @@ export default function NewOrder() {
         {step === 0 && (
           <motion.div key="step0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
             <div>
-              <h2 className="text-xl font-bold text-foreground">Your Details</h2>
-              <p className="text-sm text-muted-foreground mt-1">Your personal details are pre-filled from your account.</p>
+              <h2 className="text-xl font-bold text-foreground">Confirm Your Details</h2>
+              <p className="text-sm text-muted-foreground mt-1">Your verified account details have been pre-filled for your convenience.</p>
             </div>
 
             {/* Read-only account summary */}

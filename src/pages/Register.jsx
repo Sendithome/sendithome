@@ -293,10 +293,10 @@ export default function Register() {
         className="w-full"
         style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}
       >
-        <div className="max-w-2xl mx-auto px-6 py-10 text-center">
+        <div className="max-w-2xl mx-auto px-6 py-6 text-center">
           {/* Welcome headline */}
           <h1 className="font-bold text-white mb-4" style={{ fontSize: 'clamp(22px, 5vw, 34px)', lineHeight: 1.2 }}>
-            Welcome to <BrandName primary />!
+            Create Your <BrandName /> Account
           </h1>
 
           {/* Hotel contextual greeting */}
@@ -317,7 +317,7 @@ export default function Register() {
             </div>
           ) : (
             <p className="text-white/70 mb-4" style={{ fontSize: 'clamp(14px, 3.5vw, 18px)' }}>
-              The smart way to send your holiday purchases back home.
+              Create your account in just a few minutes.
             </p>
           )}
 
@@ -334,12 +334,7 @@ export default function Register() {
           <div className="w-16 h-px mx-auto mb-5" style={{ background: 'linear-gradient(to right, transparent, #E5A93B, transparent)' }} />
 
           {/* Subtext */}
-          <p className="text-white/80 leading-relaxed mb-2" style={{ fontSize: 'clamp(13px, 3vw, 16px)' }}>
-            Create your account below to get started in just a few clicks.
-          </p>
-          <p className="text-white/60 leading-relaxed mb-5" style={{ fontSize: 'clamp(12px, 2.5vw, 14px)' }}>
-            Our unique international courier service makes sending packages back home safe, simple, reliable and with total peace of mind.
-          </p>
+
 
           {/* Tagline */}
           <p className="font-semibold tracking-wide" style={{ color: '#E5A93B', fontSize: 'clamp(13px, 3vw, 15px)' }}>
@@ -401,7 +396,7 @@ export default function Register() {
                 <div className="w-16 h-16 rounded-2xl bg-accent/20 border-2 border-accent/40 flex items-center justify-center mx-auto mb-4">
                   <ScanLine className="w-8 h-8 text-accent" />
                 </div>
-                <p className="text-base font-bold text-white mb-1">Scan Your Passport</p>
+                <p className="text-base font-bold text-white mb-1">Register in Under Two Minutes</p>
                 <p className="text-xs text-white/60 mb-5 max-w-xs mx-auto">
                   Point your camera at the photo page. Our AI instantly reads and automatically fills in your details.
                 </p>
@@ -411,7 +406,7 @@ export default function Register() {
                   className="w-full max-w-xs mx-auto flex items-center justify-center gap-2 h-12 rounded-2xl bg-accent text-accent-foreground font-bold text-sm hover:bg-accent/90 transition-colors"
                 >
                   <Camera className="w-5 h-5" />
-                  Open Camera & Scan
+                  Scan My Passport
                 </button>
                 <button
                   type="button"
