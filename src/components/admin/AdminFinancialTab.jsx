@@ -168,7 +168,7 @@ export default function AdminFinancialTab({ data }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <KpiCard icon={DollarSign} label="Total Revenue" value={`US$${metrics.totalRevenue.toLocaleString()}`} highlight delta={metrics.deltas.total} deltaLabel={fmtDelta(metrics.deltas.total)} />
         <KpiCard icon={TrendingUp} label="Shipping Revenue" value={`US$${metrics.shippingRevenue.toLocaleString()}`} delta={metrics.deltas.shipping} deltaLabel={fmtDelta(metrics.deltas.shipping)} />
-        <KpiCard icon={CreditCard} label="Payment Success" value={`${metrics.paymentSuccessRate}%`} delta={metrics.deltas.success} deltaLabel={`${metrics.deltas.success >= 0 ? '+' : ''}${metrics.deltas.success}pp vs prev`} />
+        <KpiCard icon={CreditCard} label="Refund Processing Success Rate" value={`${metrics.paymentSuccessRate}%`} delta={metrics.deltas.success} deltaLabel={`${metrics.deltas.success >= 0 ? '+' : ''}${metrics.deltas.success}pp vs prev`} />
         <KpiCard icon={Package} label="Refund Amount" value={`US$${metrics.refundAmount.toLocaleString()}`} delta={metrics.deltas.refund} deltaLabel={`${metrics.currentRefunded.length} orders · ${fmtDelta(metrics.deltas.refund)}`} />
       </div>
 
