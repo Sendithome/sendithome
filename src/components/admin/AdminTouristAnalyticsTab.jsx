@@ -157,8 +157,8 @@ export default function AdminTouristAnalyticsTab({ data }) {
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
         <KpiCard icon={Users} label="Total Tourists" value={metrics.fTourists.length} />
-        <KpiCard icon={TrendingUp} label="Repeat Users" value={metrics.repeatUsers} />
-        <KpiCard icon={DollarSign} label="Avg Spend / Tourist" value={metrics.avgSpendPerTourist ? `US$${metrics.avgSpendPerTourist}` : '—'} />
+        <KpiCard icon={TrendingUp} label="Returning Tourists" value={metrics.repeatUsers} />
+        <KpiCard icon={DollarSign} label="Average Tourist Spend" value={metrics.avgSpendPerTourist ? `US$${metrics.avgSpendPerTourist}` : '—'} />
         <KpiCard icon={ShoppingCart} label="Avg Items / Shipment" value={metrics.avgItemsPerShipment} />
         <KpiCard icon={Package} label="Completed Shipments" value={metrics.completedOrders.length} />
       </div>
@@ -234,7 +234,7 @@ export default function AdminTouristAnalyticsTab({ data }) {
           {[
             { label: 'Total Registered', value: metrics.fTourists.length, color: 'text-foreground' },
             { label: 'Have Placed Orders', value: metrics.registeredCount, color: 'text-accent' },
-            { label: 'Repeat Users', value: metrics.repeatUsers, color: 'text-green-600' },
+            { label: 'Returning Tourists', value: metrics.repeatUsers, color: 'text-green-600' },
             { label: 'Paid Shipments', value: metrics.paidOrders.length, color: 'text-blue-600' },
           ].map(({ label, value, color }) => (
             <div key={label} className="bg-muted/40 rounded-xl p-4 text-center">

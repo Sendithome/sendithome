@@ -74,7 +74,7 @@ export default function AdminRetailersTab({ retailers, onRefresh }) {
   };
 
   const handleExport = () => {
-    const rows = [['Store', 'Brand', 'Contact', 'Email', 'Category', 'Location', 'Partner Code', 'Commission %', 'Registered', 'Status']];
+    const rows = [['Store', 'Brand', 'Contact', 'Email', 'Category', 'Location', 'Partner Code', 'Commission %', 'Registration Date', 'Status']];
     filtered.forEach(r => rows.push([
       r.store_name || '', r.brand_name || '', r.contact_name || '', r.contact_email || '',
       r.store_category || '', r.store_location || '', r.partner_code || '', r.commission_rate ?? '',
@@ -123,7 +123,7 @@ export default function AdminRetailersTab({ retailers, onRefresh }) {
           <Download className="w-3.5 h-3.5" /> Export CSV
         </button>
         <a href="/admin-retailers" target="_blank" className="ml-auto text-xs text-accent hover:underline flex items-center gap-1">
-          Full Retailer Admin <ExternalLink className="w-3 h-3" />
+          Retailer Administration <ExternalLink className="w-3 h-3" />
         </a>
       </div>
 
@@ -147,7 +147,7 @@ export default function AdminRetailersTab({ retailers, onRefresh }) {
                     <div className="flex items-center gap-3 mt-1 flex-wrap">
                       {r.partner_code && <p className="text-xs font-mono text-accent">{r.partner_code}</p>}
                       {r.commission_rate != null && <p className="text-xs text-muted-foreground">Commission: {r.commission_rate}%</p>}
-                      <p className="text-xs text-muted-foreground">Registered: {r.created_date ? new Date(r.created_date).toLocaleDateString('en-GB') : '—'}</p>
+                      <p className="text-xs text-muted-foreground">Registration Date: {r.created_date ? new Date(r.created_date).toLocaleDateString('en-GB') : '—'}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">

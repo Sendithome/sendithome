@@ -88,7 +88,7 @@ export default function AdminOverviewTab({ data }) {
         </ChartCard>
 
         {/* Export Value Trend */}
-        <ChartCard title="Export Value Trend (USD)">
+        <ChartCard title="Export Value Trend (US$)">
           {monthlyData.length === 0 ? (
             <p className="text-xs text-muted-foreground text-center py-8">No data yet.</p>
           ) : (

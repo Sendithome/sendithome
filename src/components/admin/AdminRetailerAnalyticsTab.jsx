@@ -135,7 +135,7 @@ export default function AdminRetailerAnalyticsTab({ data }) {
         </div>
 
         <div className="bg-card border border-border rounded-2xl p-5">
-          <h3 className="text-sm font-bold mb-1">Retailer Status Distribution</h3>
+          <h3 className="text-sm font-bold mb-1">Retailer Approval Status</h3>
           <p className="text-xs text-muted-foreground mb-3">Avg approval time (period): <span className="font-bold text-foreground">{metrics.avgApprovalHours}h</span></p>
           {metrics.statusDist.length === 0 ? <p className="text-sm text-muted-foreground text-center py-16">No data yet</p> : (
             <ResponsiveContainer width="100%" height={180}>
@@ -162,7 +162,7 @@ export default function AdminRetailerAnalyticsTab({ data }) {
         <h3 className="text-sm font-bold mb-1">Retailer Performance Rankings <span className="text-xs font-normal text-muted-foreground">(this period)</span></h3>
         <p className="text-xs text-muted-foreground mb-4 flex items-center gap-1.5"><MousePointerClick className="w-3 h-3" /> Click any retailer row for full profile</p>
         {metrics.performanceTable.length === 0 || metrics.performanceTable.every(r => r.total === 0) ? (
-          <p className="text-sm text-muted-foreground text-center py-8">No retailer activity in this period</p>
+          <p className="text-sm text-muted-foreground text-center py-8">No activity recorded for the selected period</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">

@@ -137,7 +137,7 @@ export default function AdminOperationalTab({ data }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Bottlenecks */}
         <div className="bg-card border border-border rounded-2xl p-5">
-          <h3 className="text-sm font-bold mb-4">Current Operational Bottlenecks</h3>
+          <h3 className="text-sm font-bold mb-4">Current Workflow Bottlenecks</h3>
           {metrics.bottlenecks.length === 0 ? (
             <div className="flex items-center gap-2 text-green-600 py-4">
               <CheckCircle2 className="w-5 h-5" />
@@ -167,7 +167,7 @@ export default function AdminOperationalTab({ data }) {
           <h3 className="text-sm font-bold mb-4">Order Pipeline Status</h3>
           <div className="space-y-3">
             {[
-              { label: 'Pending / New', items: orders.filter(o => o.status === 'pending'), color: 'bg-gray-400', subtitle: 'New shipments awaiting receipt upload' },
+              { label: 'New Orders Awaiting Processing', items: orders.filter(o => o.status === 'pending'), color: 'bg-gray-400', subtitle: 'New shipments awaiting receipt upload' },
               { label: 'Receipt Uploaded', items: orders.filter(o => o.status === 'receipt_uploaded'), color: 'bg-blue-400', subtitle: 'Receipts uploaded — awaiting payment' },
               { label: 'Payment Pending', items: orders.filter(o => o.status === 'payment_pending'), color: 'bg-yellow-400', subtitle: 'Shipments awaiting online payment' },
               { label: 'Paid / Processing', items: orders.filter(o => ['paid', 'packed'].includes(o.status)), color: 'bg-accent', subtitle: 'Paid shipments being packed' },

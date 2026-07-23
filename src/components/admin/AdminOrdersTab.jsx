@@ -146,7 +146,7 @@ export default function AdminOrdersTab({ orders }) {
       {stalledCount > 0 && (
         <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-700 rounded-xl px-3 py-2 text-xs font-semibold">
           <AlertTriangle className="w-4 h-4 shrink-0" />
-          {stalledCount} order{stalledCount > 1 ? 's' : ''} stalled (no progress for {STALL_DAYS}+ days) — see highlighted rows below.
+          {stalledCount} orders require attention — no progress recorded for more than 3 days.
         </div>
       )}
 
@@ -163,7 +163,7 @@ export default function AdminOrdersTab({ orders }) {
                 <SortHeader label="Destination" column="destination" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} />
                 <th className="text-left py-2.5 px-3 font-semibold whitespace-nowrap">Box</th>
                 <SortHeader label="Status" column="status" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} />
-                <th className="text-left py-2.5 px-3 font-semibold whitespace-nowrap">Multi-Retailer</th>
+                <th className="text-left py-2.5 px-3 font-semibold whitespace-nowrap">Retailer Approvals</th>
                 <SortHeader label="Created" column="created" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} />
                 <th className="py-2.5 px-3" />
               </tr>

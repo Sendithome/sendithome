@@ -192,7 +192,7 @@ export default function AdminFinancialTab({ data }) {
         <div className="bg-card border border-border rounded-2xl p-5">
           <h3 className="text-sm font-bold mb-4">Revenue by Box Type <span className="text-xs font-normal text-muted-foreground">(this period)</span></h3>
           {metrics.byBox.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-12">No data for this period</p>
+            <p className="text-sm text-muted-foreground text-center py-12">No transactions recorded for the selected period</p>
           ) : (
             <>
               <ResponsiveContainer width="100%" height={140}>
@@ -220,7 +220,7 @@ export default function AdminFinancialTab({ data }) {
 
         <div className="bg-card border border-border rounded-2xl p-5 col-span-1 lg:col-span-2">
           <h3 className="text-sm font-bold mb-4">Revenue by Destination Country <span className="text-xs font-normal text-muted-foreground">(this period)</span></h3>
-          {metrics.byCountry.length === 0 ? <p className="text-sm text-muted-foreground text-center py-16">No data for this period</p> : (
+          {metrics.byCountry.length === 0 ? <p className="text-sm text-muted-foreground text-center py-16">No transactions recorded for the selected period</p> : (
             <ResponsiveContainer width="100%" height={180}>
               <BarChart data={metrics.byCountry} layout="vertical">
                 <XAxis type="number" tick={{ fontSize: 10 }} tickFormatter={v => `US$${v}`} />
@@ -234,8 +234,8 @@ export default function AdminFinancialTab({ data }) {
       </div>
 
       <div className="bg-card border border-border rounded-2xl p-5">
-        <h3 className="text-sm font-bold mb-4">Revenue by Hotel (Top 6) <span className="text-xs font-normal text-muted-foreground">(this period)</span></h3>
-        {metrics.byHotel.length === 0 ? <p className="text-sm text-muted-foreground text-center py-8">No data for this period</p> : (
+        <h3 className="text-sm font-bold mb-4">Top Revenue Generating Hotels <span className="text-xs font-normal text-muted-foreground">(this period)</span></h3>
+        {metrics.byHotel.length === 0 ? <p className="text-sm text-muted-foreground text-center py-8">No transactions recorded for the selected period</p> : (
           <ResponsiveContainer width="100%" height={180}>
             <BarChart data={metrics.byHotel} layout="vertical">
               <XAxis type="number" tick={{ fontSize: 10 }} tickFormatter={v => `US$${v}`} />

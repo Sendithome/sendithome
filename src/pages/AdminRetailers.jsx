@@ -148,7 +148,7 @@ export default function AdminRetailers() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[10px] font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
-            <h1 className="text-2xl font-bold text-primary mt-1">Retailer Admin Panel</h1>
+            <h1 className="text-2xl font-bold text-primary mt-1">Retailer Administration</h1>
             <p className="text-muted-foreground text-sm">Manage retailer registrations & approvals</p>
           </div>
           <button onClick={loadRetailers} className="p-2 text-muted-foreground hover:text-foreground transition-colors">
@@ -161,7 +161,7 @@ export default function AdminRetailers() {
           {['pending', 'approved', 'rejected', 'all'].map(s => (
             <button key={s} onClick={() => setFilter(s)}
               className={`px-4 py-2 rounded-xl text-xs font-bold border transition-colors capitalize ${filter === s ? 'bg-accent text-accent-foreground border-accent' : 'bg-card border-border text-muted-foreground hover:text-foreground'}`}>
-              {s} ({counts[s]})
+              {s === 'all' ? 'All Retailers' : s} ({counts[s]})
             </button>
           ))}
         </div>
@@ -251,7 +251,7 @@ export default function AdminRetailers() {
                     )}
                     <button onClick={() => setExpandedId(expandedId === r.id ? null : r.id)}
                       className="flex items-center gap-1 text-xs font-semibold text-foreground border border-border rounded-lg px-2.5 py-1.5 hover:border-accent hover:text-accent transition-colors">
-                      {expandedId === r.id ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />} View Details
+                      {expandedId === r.id ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />} Manage Retailer
                     </button>
                   </div>
                 </div>

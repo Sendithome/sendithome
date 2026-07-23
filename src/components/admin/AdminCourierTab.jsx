@@ -135,7 +135,7 @@ export default function AdminCourierTab({ onboardings = [], hotels = [], onRefre
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
           { label: 'Active Couriers', value: couriers.filter(c => c.status === 'active').length, bg: 'bg-blue-50 border-blue-200', color: 'text-blue-700' },
-          { label: 'Hotels In Progress', value: active.length, bg: 'bg-amber-50 border-amber-200', color: 'text-amber-700' },
+          { label: 'Hotels Currently Onboarding', value: active.length, bg: 'bg-amber-50 border-amber-200', color: 'text-amber-700' },
           { label: 'Overdue', value: overdue.length, bg: overdue.length > 0 ? 'bg-red-50 border-red-200' : 'bg-green-50 border-green-200', color: overdue.length > 0 ? 'text-destructive' : 'text-green-700' },
           { label: 'Fully Onboarded', value: completed.length, bg: 'bg-green-50 border-green-200', color: 'text-green-700' },
         ].map(kpi => (
@@ -286,7 +286,7 @@ export default function AdminCourierTab({ onboardings = [], hotels = [], onRefre
 
       {/* Hotel Onboarding Status Table */}
       <div>
-        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">Hotel Onboarding Status (Logistics View)</p>
+        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">Hotel Logistics Onboarding Status</p>
 
         {active.length + completed.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground bg-card border border-border rounded-2xl">

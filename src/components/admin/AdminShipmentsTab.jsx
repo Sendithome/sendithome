@@ -52,7 +52,7 @@ export default function AdminShipmentsTab({ verifications, retailers, onRefresh 
   };
 
   const handleExport = () => {
-    const rows = [['Shipment ID', 'Store', 'Tourist', 'Destination', 'Items', 'Value (USD)', 'Status', 'Deadline']];
+    const rows = [['Shipment ID', 'Store', 'Tourist', 'Destination', 'Items', 'Value (USD)', 'Status', 'Approval Deadline']];
     filtered.forEach(v => rows.push([
       v.shipment_id || '', v.store_name || '', v.tourist_name || '', v.destination_country || '',
       v.items?.length || 0, (v.total_value || 0).toFixed(2),
@@ -73,7 +73,7 @@ export default function AdminShipmentsTab({ verifications, retailers, onRefresh 
         <SummaryChip label="Pending" value={stats.pending} color="text-yellow-700" />
         <SummaryChip label="Overdue" value={stats.overdue} color="text-red-600" />
         <SummaryChip label="Approved" value={stats.approved} color="text-green-700" />
-        <SummaryChip label="Total Value" value={`US$${stats.totalValue.toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-foreground" />
+        <SummaryChip label="Declared Shipment Value" value={`US$${stats.totalValue.toLocaleString('en', { maximumFractionDigits: 0 })}`} color="text-foreground" />
       </div>
 
       {/* Filters */}
@@ -106,7 +106,7 @@ export default function AdminShipmentsTab({ verifications, retailers, onRefresh 
           <table className="w-full text-xs">
             <thead className="bg-muted/40 text-muted-foreground">
               <tr>
-                {['Shipment ID', 'Store', 'Tourist', 'Destination', 'Items', 'Value', 'Status', 'Deadline', ''].map(h => (
+                {['Shipment ID', 'Store', 'Tourist', 'Destination', 'Items', 'Value', 'Status', 'Approval Deadline', ''].map(h => (
                   <th key={h} className="text-left py-2.5 px-3 font-semibold whitespace-nowrap">{h}</th>
                 ))}
               </tr>

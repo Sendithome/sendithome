@@ -113,7 +113,7 @@ export default function AdminHotelAnalyticsTab({ data }) {
     const summary = [
       ['Total Hotels', hotels.length],
       ['Active Hotels', metrics.activeHotels.length],
-      ['Countries Covered', new Set(hotels.map(h => h.country).filter(Boolean)).size],
+      ['Participating Countries', new Set(hotels.map(h => h.country).filter(Boolean)).size],
       ['Shipments (period)', metrics.totalShipments],
       ['Revenue (period)', `US$${metrics.totalRevenue.toLocaleString()}`],
     ];
@@ -121,7 +121,7 @@ export default function AdminHotelAnalyticsTab({ data }) {
 
     y += 4;
     doc.setFontSize(12);
-    doc.text('Top Performing Hotels', 14, y); y += 7;
+    doc.text('Hotel Performance Rankings', 14, y); y += 7;
     doc.setFontSize(9);
     doc.text('#', 16, y); doc.text('Hotel Name', 22, y); doc.text('Shipments', 120, y); doc.text('Boxes', 145, y); doc.text('Revenue', 165, y); y += 6;
     metrics.topHotels.forEach((h, i) => {
@@ -165,7 +165,7 @@ export default function AdminHotelAnalyticsTab({ data }) {
         <KpiCard icon={Hotel} label="Total Hotels" value={hotels.length} />
         <KpiCard icon={TrendingUp} label="Active Hotels" value={metrics.activeHotels.length} />
         <KpiCard icon={Hotel} label="Inactive Hotels" value={metrics.inactiveHotels.length} />
-        <KpiCard icon={MapPin} label="Countries Covered" value={new Set(hotels.map(h => h.country).filter(Boolean)).size} />
+        <KpiCard icon={MapPin} label="Participating Countries" value={new Set(hotels.map(h => h.country).filter(Boolean)).size} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -197,7 +197,7 @@ export default function AdminHotelAnalyticsTab({ data }) {
       </div>
 
       <div className="bg-card border border-border rounded-2xl p-5">
-        <h3 className="text-sm font-bold mb-4">Revenue Generated per Hotel (Top 6) <span className="text-xs font-normal text-muted-foreground">(this period)</span></h3>
+        <h3 className="text-sm font-bold mb-4">Shipment Revenue by Hotel (Top 6) <span className="text-xs font-normal text-muted-foreground">(this period)</span></h3>
         {metrics.topByRevenue.length === 0 ? <p className="text-sm text-muted-foreground text-center py-8">No revenue data for this period</p> : (
           <ResponsiveContainer width="100%" height={180}>
             <BarChart data={metrics.topByRevenue} layout="vertical">
@@ -215,7 +215,7 @@ export default function AdminHotelAnalyticsTab({ data }) {
       </div>
 
       <div className="bg-card border border-border rounded-2xl p-5">
-        <h3 className="text-sm font-bold mb-1">Top Performing Hotels — Shipment Volume <span className="text-xs font-normal text-muted-foreground">(this period)</span></h3>
+        <h3 className="text-sm font-bold mb-1">Hotel Performance Rankings — Shipment Volume <span className="text-xs font-normal text-muted-foreground">(this period)</span></h3>
         <p className="text-xs text-muted-foreground mb-4 flex items-center gap-1.5"><MousePointerClick className="w-3 h-3" /> Click a hotel name to open its profile</p>
         {metrics.topHotels.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-8">No hotel shipment data for this period</p>

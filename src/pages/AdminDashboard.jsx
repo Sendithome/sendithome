@@ -25,7 +25,7 @@ import BrandName from '@/components/BrandName';
 const TABS = [
   { id: 'executive', label: 'Executive', icon: Star },
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-  { id: 'orders', label: 'Orders', icon: ShoppingBag },
+  { id: 'orders', label: 'Order Management', icon: ShoppingBag },
   { id: 'shipments', label: 'Verifications', icon: Package },
   { id: 'retailers', label: 'Retailers', icon: Store },
   { id: 'hotels', label: 'Hotels', icon: Hotel },

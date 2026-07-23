@@ -185,7 +185,7 @@ export default function AdminInventoryTab({ hotels = [], onRefresh }) {
         {[
           { label: 'Hotels Tracked', value: inventories.length, bg: 'bg-blue-50 border-blue-200', color: 'text-blue-700' },
           { label: 'Low Stock Alerts', value: inventories.filter(i => i.status_10kg === 'low' || i.status_20kg === 'low').length, bg: 'bg-amber-50 border-amber-200', color: 'text-amber-700' },
-          { label: 'Replenishments Active', value: pendingOrders.length, bg: pendingOrders.length > 0 ? 'bg-purple-50 border-purple-200' : 'bg-green-50 border-green-200', color: pendingOrders.length > 0 ? 'text-purple-700' : 'text-green-700' },
+          { label: 'Active Replenishment Orders', value: pendingOrders.length, bg: pendingOrders.length > 0 ? 'bg-purple-50 border-purple-200' : 'bg-green-50 border-green-200', color: pendingOrders.length > 0 ? 'text-purple-700' : 'text-green-700' },
           { label: 'Hotels Without Inventory', value: hotels.filter(h => !inventories.find(i => i.hotel_id === h.id)).length, bg: 'bg-slate-50 border-slate-200', color: 'text-slate-600' },
         ].map(kpi => (
           <div key={kpi.label} className={`rounded-2xl border p-4 ${kpi.bg}`}>
@@ -309,7 +309,7 @@ export default function AdminInventoryTab({ hotels = [], onRefresh }) {
       {/* Hotels without inventory - manual init */}
       {hotels.filter(h => !inventories.find(i => i.hotel_id === h.id)).length > 0 && (
         <div>
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">Hotels Without Inventory (Need Initialization)</p>
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">Hotels Pending Inventory Setup</p>
           <div className="space-y-2">
             {hotels.filter(h => !inventories.find(i => i.hotel_id === h.id)).map(h => (
               <div key={h.id} className="bg-card border border-border rounded-xl px-4 py-3 flex items-center gap-3">

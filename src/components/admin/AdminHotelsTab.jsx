@@ -146,7 +146,7 @@ export default function AdminHotelsTab({ hotels, orders = [] }) {
             <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-border">
               <button onClick={() => setSelectedHotel(h)}
                 className="flex items-center gap-1.5 text-[11px] font-semibold text-foreground bg-muted/40 hover:bg-accent/10 hover:text-accent border border-border rounded-lg px-2.5 py-1.5 transition-colors">
-                <Eye className="w-3 h-3" /> View Profile
+                <Eye className="w-3 h-3" /> Hotel Profile
               </button>
               <button onClick={() => setSelectedHotel(h)}
                 className="flex items-center gap-1.5 text-[11px] font-semibold text-foreground bg-muted/40 hover:bg-accent/10 hover:text-accent border border-border rounded-lg px-2.5 py-1.5 transition-colors">
@@ -154,7 +154,7 @@ export default function AdminHotelsTab({ hotels, orders = [] }) {
               </button>
               <a href="/hotel-dashboard" target="_blank"
                 className="flex items-center gap-1.5 text-[11px] font-semibold text-foreground bg-muted/40 hover:bg-accent/10 hover:text-accent border border-border rounded-lg px-2.5 py-1.5 transition-colors">
-                <User className="w-3 h-3" /> Manage Users
+                <User className="w-3 h-3" /> User Management
               </a>
             </div>
           </div>
