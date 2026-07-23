@@ -72,7 +72,7 @@ const LIABILITY_POINTS = [
   },
   {
     title: 'Comprehensive Transit Insurance',
-    desc: 'Once our global courier partner collects and scans the shipment, transit liability transfers immediately to the carrier. Every shipment automatically includes standard protection up to USD $2,000 against damage or loss during transit, with secondary coverage options up to USD $20,000 available directly to the guest for high-value apparel and footwear from the SendITHome platform.',
+    desc: 'Once our global courier partner collects and scans the shipment, transit liability transfers immediately to the carrier. Every shipment automatically includes standard protection up to USD $3,000 against damage or loss during transit, with secondary coverage options up to USD $20,000 available directly to the guest for high-value apparel and footwear from the SendITHome platform.',
   },
   {
     title: 'Declining Content Liability',
@@ -124,11 +124,11 @@ export default function HotelPartnerLanding() {
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-7 border" style={{ borderColor: GOLD_BORDER, background: GOLD_DIM }}>
               <ShieldCheck className="w-3.5 h-3.5" style={{ color: GOLD }} />
-              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: GOLD }}>Sovereign-Backed · Property Activation Portal</span>
+              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: GOLD }}>Sovereign-Backed · Hotel Partner Activation Portal</span>
             </div>
 
             <h1 className="font-black leading-tight mb-3" style={{ fontSize: 'clamp(1.6rem,3.5vw,2.6rem)', fontFamily: 'Georgia, serif', background: `linear-gradient(135deg, ${GOLD_LIGHT} 0%, ${GOLD} 55%, #8B6914 100%)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              Activate Your Property with SendITHome
+              Become a SendITHome Hotel Partner
             </h1>
 
             <p className="text-lg md:text-xl leading-snug mb-6 font-semibold" style={{ color: PLATINUM, fontFamily: 'Georgia, serif' }}>
@@ -170,7 +170,7 @@ export default function HotelPartnerLanding() {
             {[
                { value: 'US$20', label: 'Hotel Revenue Per Shipment' },
                { value: '7 Days', label: 'Ready in 7 Days' },
-               { value: 'Up to US$2,000', label: 'Shipment Cover' },
+               { value: 'Up to US$3,000', label: 'Shipment Cover' },
                { value: '24-Hour', label: 'VIP Courier Collection' },
              ].map(stat => (
               <div key={stat.label} className="rounded-2xl py-4 px-5 text-center border" style={{ background: 'rgba(201,168,76,0.06)', borderColor: GOLD_BORDER, backdropFilter: 'blur(8px)' }}>

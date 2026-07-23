@@ -17,8 +17,8 @@ const TABS = [
   { id: 'profile', label: 'Hotel Profile', icon: Hotel },
   { id: 'documents', label: 'Documents', icon: FileText },
   { id: 'qr', label: 'QR Code', icon: QrCode },
-  { id: 'status', label: 'Onboarding Status', icon: Activity },
-  { id: 'inventory', label: 'Box Inventory', icon: Package },
+  { id: 'status', label: 'Hotel Partner Onboarding Status', icon: Activity },
+  { id: 'inventory', label: 'Inventory Management', icon: Package },
 ];
 
 const FLOW_STEPS = [
@@ -685,7 +685,7 @@ export default function HotelDashboard() {
                     <PenLine className="w-5 h-5 text-accent" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-black text-foreground">Step 2: Sign the NDA</p>
+                    <p className="text-sm font-black text-foreground">Step 2: Review &amp; Sign the Non-Disclosure Agreement (NDA)</p>
                     <p className="text-xs text-muted-foreground mt-1">Before you can submit documents or access full onboarding, you must review and electronically sign the Non-Disclosure Agreement with Sandit.</p>
                   </div>
                   <Button size="sm" onClick={() => navigate('/nda-signing')} className="bg-accent hover:bg-accent/90 text-white rounded-xl text-xs gap-1 shrink-0">
@@ -903,7 +903,7 @@ export default function HotelDashboard() {
           {tab === 'documents' && (
             <motion.div key="docs" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="space-y-6">
               <div>
-                <h2 className="text-lg font-bold text-foreground">Verification Documents</h2>
+                <h2 className="text-lg font-bold text-foreground">Hotel Verification Documents</h2>
                 <p className="text-sm text-muted-foreground mt-1">
                   Upload your trade license and employee ID cards for verification. Accepted formats: JPG, PNG, PDF.
                 </p>
@@ -1056,7 +1056,7 @@ export default function HotelDashboard() {
           {tab === 'inventory' && (
             <motion.div key="inventory" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="space-y-4">
               <div>
-                <h2 className="text-lg font-bold text-foreground">Box Inventory</h2>
+                <h2 className="text-lg font-bold text-foreground">Inventory Management</h2>
                 <p className="text-sm text-muted-foreground mt-1">Track your allocated 10 KG and 20 KG box stock, replenishment orders, and usage history.</p>
               </div>
 
@@ -1105,7 +1105,7 @@ export default function HotelDashboard() {
           {tab === 'status' && (
             <motion.div key="status" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="space-y-6">
               <div>
-                <h2 className="text-lg font-bold text-foreground">Onboarding Status</h2>
+                <h2 className="text-lg font-bold text-foreground">Hotel Partner Onboarding Status</h2>
                 <p className="text-sm text-muted-foreground mt-1">Live view of your full onboarding pipeline — from registration to hotel going live.</p>
               </div>
               <div className="bg-card border border-border rounded-2xl p-5">
@@ -1141,7 +1141,7 @@ export default function HotelDashboard() {
           {tab === 'qr' && (
             <motion.div key="qr" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="space-y-6">
               <div>
-                <h2 className="text-lg font-bold text-foreground">QR Code Generator</h2>
+                <h2 className="text-lg font-bold text-foreground">Hotel QR Code Generator</h2>
                 <p className="text-sm text-muted-foreground mt-1">Generate your unique hotel QR code for guests to scan.</p>
               </div>
 

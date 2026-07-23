@@ -199,7 +199,7 @@ export default function HotelSignup() {
                     <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mx-auto mb-4">
                       <KeyRound className="w-7 h-7 text-accent" />
                     </div>
-                    <h1 className="text-2xl font-black text-foreground">Register Your Hotel</h1>
+                    <h1 className="text-2xl font-black text-foreground">Create your Hotel Partner Account</h1>
                     <p className="text-sm text-muted-foreground mt-2">Create your account to start offering <BrandName /> to your guests.</p>
                     <p className="text-[10px] text-muted-foreground mt-2">Fields marked with <span className="text-accent font-bold">*</span> are required.</p>
                   </div>
