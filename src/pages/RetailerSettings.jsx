@@ -71,12 +71,12 @@ export default function RetailerSettings() {
           <Link to="/retailer-dashboard" className="text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <h1 className="text-xl font-bold text-primary">Settings</h1>
+          <h1 className="text-xl font-bold text-primary">Retail Account Settings</h1>
         </div>
 
         <div className="space-y-5">
           {/* Store Profile */}
-          <Section icon={<Users className="w-4 h-4" />} title="Store Profile">
+          <Section icon={<Users className="w-4 h-4" />} title="Retail Partner Profile">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Field label="Store Name">
                 <input value={form.store_name || ''} onChange={e => update('store_name', e.target.value)} className={inputCls} />
@@ -128,7 +128,7 @@ export default function RetailerSettings() {
           </Section>
 
           {/* Support */}
-          <Section icon={<HelpCircle className="w-4 h-4" />} title="Support">
+          <Section icon={<HelpCircle className="w-4 h-4" />} title="Retail Partner Support">
             <div className="bg-muted/40 rounded-xl p-4 space-y-2 text-xs text-muted-foreground">
               <p>For support with your retailer account, please contact:</p>
               <p className="text-accent font-semibold">retail-partnerships@senditehome.com</p>

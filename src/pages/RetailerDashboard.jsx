@@ -15,8 +15,8 @@ import BrandName from '@/components/BrandName';
 
 const TABS = [
   { id: 'pending', label: 'Pending Approvals' },
-  { id: 'shipments', label: 'Shipments' },
-  { id: 'history', label: 'Approved History' },
+  { id: 'shipments', label: 'Guest Shipments' },
+  { id: 'history', label: 'Approved Shipments' },
   { id: 'analytics', label: 'Analytics & Reports' },
   { id: 'commission', label: '💰 Commission' },
 ];
@@ -99,7 +99,7 @@ export default function RetailerDashboard() {
           <div>
             <p className="text-[10px] font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
             <p className="text-sm font-bold text-primary mt-0.5">
-              {retailer?.store_name} — Retailer Partner Portal
+              {retailer?.store_name} — Retail Partner Dashboard
             </p>
           </div>
         </div>

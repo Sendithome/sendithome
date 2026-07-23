@@ -52,12 +52,12 @@ export default function RetailerPortal() {
             </div>
             <span className="text-sm font-black text-foreground">SEND<span className="text-accent">IT</span>HOME</span>
           </div>
-          <h1 className="text-2xl font-bold text-foreground mt-3">Retailer Verification Portal</h1>
+          <h1 className="text-2xl font-bold text-foreground mt-3">Retail Partner Portal</h1>
           <p className="text-muted-foreground text-sm mt-1">Where tourism meets luxury retail mobility</p>
         </div>
 
         <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
-          <Field label="Retailer Partner Code">
+          <Field label="Retail Partner ID">
             <input
               value={form.partner_code}
               onChange={e => setForm(p => ({ ...p, partner_code: e.target.value }))}
@@ -117,7 +117,7 @@ export default function RetailerPortal() {
             onClick={() => { navigate('/retailer-dashboard'); }}
             className="w-full h-10 border border-accent/40 text-accent hover:bg-accent/5 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors"
           >
-            🚀 Enter Demo (Skip Login)
+            🚀 Launch Demonstration Portal
           </button>
 
           <p className="text-center text-xs text-muted-foreground">
