@@ -142,7 +142,7 @@ export default function RetailerDashboard() {
           <div className="bg-muted/40 border border-border rounded-2xl p-4 shadow-sm">
             <p className="text-xs font-bold text-foreground mb-1">How Commission Works</p>
             <p className="text-[11px] text-muted-foreground leading-relaxed">
-              <strong className="text-foreground">Retailers pay</strong> a tiered commission (1%–10%) per transaction to the government, based on the tourist's origin country and spend — higher spend means a lower rate.
+              <strong className="text-foreground">Retailers only pay</strong> a tiered commission (10%–2%) into the Sovereign Escrow Fund following verification of the customs declaration for items shipped internationally and your digital shopping receipt.
             </p>
           </div>
         </div>
