@@ -284,7 +284,7 @@ export default function Register() {
 
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FDFAF5]">
+    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(135deg, #191919 0%, #0D3E7F 100%)' }}>
       {/* ── WELCOME HERO CARD ── */}
       <motion.div
         initial={{ opacity: 0, y: -12 }}
@@ -347,7 +347,7 @@ export default function Register() {
       </motion.div>
 
       {/* ── FORM SECTION ── */}
-      <div className="flex-1 px-5 py-8 max-w-2xl mx-auto w-full">
+      <div className="flex-1 w-full max-w-2xl mx-4 sm:mx-auto bg-card border border-border rounded-3xl p-5 sm:p-8 my-6 sm:my-8">
         <div className="mb-6">
           <h2 className="text-xl font-bold text-[#1a1a2e] mb-1">Create Your Account</h2>
           <p className="text-sm text-muted-foreground">Fill in your details below — it only takes a few minutes.</p>
