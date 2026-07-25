@@ -42,10 +42,10 @@ export default function CourierLogin() {
             <div className="w-8 h-8 rounded-xl bg-accent flex items-center justify-center shrink-0">
               <Package className="w-4 h-4 text-accent-foreground" />
             </div>
-            <span className="text-sm font-black text-foreground">SEND<span className="text-accent">IT</span>HOME</span>
+            <span className="text-sm font-black text-white">SEND<span className="text-accent">IT</span>HOME</span>
           </div>
-          <h1 className="text-xl font-bold text-foreground mt-2">Courier Partner Portal</h1>
-          <p className="text-sm text-muted-foreground mt-1">Authorised Logistics Partner Access Only</p>
+          <h1 className="text-xl font-bold text-white mt-2">Courier Partner Portal</h1>
+          <p className="text-sm text-white/70 mt-1">Authorised Logistics Partner Access Only</p>
         </div>
 
         <form onSubmit={handleLogin} className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
@@ -137,7 +137,7 @@ export default function CourierLogin() {
 
         <button
           onClick={() => navigate('/courier-dashboard')}
-          className="w-full mt-3 h-10 border border-blue-300 text-blue-600 hover:bg-blue-50 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors"
+          className="w-full mt-3 h-10 border border-white/30 text-white hover:bg-white/10 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors"
         >
           🚀 Enter Demo (Skip Login)
         </button>
@@ -158,7 +158,7 @@ export default function CourierLogin() {
           </div>
         </div>
 
-        <p className="text-center text-xs text-muted-foreground mt-3">
+        <p className="text-center text-xs text-white/60 mt-3">
           Logistics partners only · Contact admin for credentials
         </p>
       </div>
