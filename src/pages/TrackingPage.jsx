@@ -92,7 +92,7 @@ export default function TrackingPage() {
             value={trackingInput}
             onChange={e => setTrackingInput(e.target.value)}
             placeholder="e.g. SIH-20240001 or FX123456789"
-            className="h-12 text-base bg-white"
+            className="h-12 text-base"
           />
           <Button type="submit" className="h-12 px-6" disabled={loading || !trackingInput.trim()}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
