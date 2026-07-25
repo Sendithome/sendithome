@@ -171,8 +171,8 @@ export default function NewOrder() {
           <ArrowLeft className="w-4 h-4" />
         </button>
         <div>
-          <h1 className="text-lg font-bold text-foreground">New Shipment</h1>
-          <p className="text-xs text-muted-foreground">Step {step + 1} of {STEPS.length} — {STEPS[step]}</p>
+          <h1 className="text-lg font-bold text-white">New Shipment</h1>
+          <p className="text-xs text-white/60">Step {step + 1} of {STEPS.length} — {STEPS[step]}</p>
         </div>
       </div>
 
@@ -185,11 +185,11 @@ export default function NewOrder() {
 
       {/* Hotel badge */}
       {hotel && (
-        <div className="flex items-center gap-3 bg-accent/5 border border-accent/20 rounded-2xl px-4 py-3 mb-6">
+        <div className="flex items-center gap-3 bg-white/10 border border-white/20 rounded-2xl px-4 py-3 mb-6">
           <MapPin className="w-4 h-4 text-accent shrink-0" />
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-foreground">{hotel.name}</p>
-            <p className="text-[10px] text-muted-foreground">{hotel.city}, {hotel.country}</p>
+            <p className="text-xs font-semibold text-white">{hotel.name}</p>
+            <p className="text-[10px] text-white/70">{hotel.city}, {hotel.country}</p>
           </div>
         </div>
       )}
@@ -200,8 +200,8 @@ export default function NewOrder() {
         {step === 0 && (
           <motion.div key="step0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
             <div>
-              <h2 className="text-xl font-bold text-foreground">Confirm Your Details</h2>
-              <p className="text-sm text-muted-foreground mt-1">Your verified account details have been pre-filled for your convenience.</p>
+              <h2 className="text-xl font-bold text-white">Confirm Your Details</h2>
+              <p className="text-sm text-white/60 mt-1">Your verified account details have been pre-filled for your convenience.</p>
             </div>
 
             {/* Read-only account summary */}
@@ -240,7 +240,7 @@ export default function NewOrder() {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3 bg-card border border-border rounded-2xl p-4">
                 <div>
                   <Label className="text-xs text-muted-foreground">Hotel Name</Label>
                   <Input value={form.hotel_name} onChange={e => update('hotel_name', e.target.value)} placeholder="Hotel name" className="mt-1" />
@@ -258,15 +258,15 @@ export default function NewOrder() {
         {step === 1 && (
           <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
             <div>
-              <h2 className="text-xl font-bold text-foreground">Home Address</h2>
-              <p className="text-sm text-muted-foreground mt-1">Your home address is automatically fetched from your account.</p>
+              <h2 className="text-xl font-bold text-white">Home Address</h2>
+              <p className="text-sm text-white/60 mt-1">Your home address is automatically fetched from your account.</p>
             </div>
 
             {form.destination_country && (
-              <div className="flex items-center gap-2 bg-accent/5 border border-accent/20 rounded-xl px-4 py-3">
+              <div className="flex items-center gap-2 bg-white/10 border border-white/20 rounded-xl px-4 py-3">
                 <Package className="w-4 h-4 text-accent shrink-0" />
-                <p className="text-sm text-foreground">
-                  Shipping to <strong>{form.destination_country}</strong> · <span className="text-accent font-bold">$150 checkout</span> <span className="text-muted-foreground text-xs">(+ $20 hotel bill · incl. Global Membership)</span>
+                <p className="text-sm text-white">
+                  Shipping to <strong>{form.destination_country}</strong> · <span className="text-accent font-bold">$150 checkout</span> <span className="text-white/60 text-xs">(+ $20 hotel bill · incl. Global Membership)</span>
                 </p>
               </div>
             )}
@@ -314,7 +314,7 @@ export default function NewOrder() {
             </div>
 
             {/* Additional receiver fields that may differ from sender */}
-            <div className="border border-border rounded-2xl p-4 space-y-3">
+            <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
                 <User className="w-3.5 h-3.5" /> Additional Receiver Details
               </p>
@@ -336,8 +336,8 @@ export default function NewOrder() {
         {step === 2 && (
           <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
             <div>
-              <h2 className="text-xl font-bold text-foreground">Confirm Order</h2>
-              <p className="text-sm text-muted-foreground mt-1">Review your shipment details before continuing.</p>
+              <h2 className="text-xl font-bold text-white">Confirm Order</h2>
+              <p className="text-sm text-white/60 mt-1">Review your shipment details before continuing.</p>
             </div>
 
             <div className="bg-card rounded-2xl border border-border divide-y divide-border overflow-hidden">

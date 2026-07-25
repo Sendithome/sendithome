@@ -103,8 +103,8 @@ export default function Profile() {
 
   return (
     <div className="max-w-lg mx-auto px-4 py-8">
-      <h1 className="text-xl font-bold text-foreground mb-1">Profile</h1>
-      <p className="text-xs text-muted-foreground mb-8">{user?.email}</p>
+      <h1 className="text-xl font-bold text-white mb-1">Profile</h1>
+      <p className="text-xs text-white/60 mb-8">{user?.email}</p>
 
       {/* Passport scan */}
       <motion.div

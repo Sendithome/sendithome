@@ -100,8 +100,8 @@ export default function TouristPortal() {
   if (!order) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4 px-4">
-        <AlertCircle className="w-12 h-12 text-muted-foreground" />
-        <p className="text-foreground font-semibold">Shipment not found</p>
+        <AlertCircle className="w-12 h-12 text-white/60" />
+        <p className="text-white font-semibold">Shipment not found</p>
         <button onClick={() => navigate('/my-orders')} className="text-accent text-sm font-semibold">← Back to My Shipments</button>
       </div>
     );
@@ -115,7 +115,7 @@ export default function TouristPortal() {
   const currency = eligibleItems[0]?.currency || 'AED';
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #191919 0%, #0D3E7F 100%)' }}>
 
       {/* Header */}
       <header className="sticky top-0 z-30 bg-card border-b border-border px-4 py-3 flex items-center gap-3 shadow-sm">

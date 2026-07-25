@@ -20,7 +20,7 @@ export default function AppLayout() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(135deg, #191919 0%, #0D3E7F 100%)' }}>
       {/* Top header */}
       <header className="sticky top-0 z-50 bg-primary text-primary-foreground">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">

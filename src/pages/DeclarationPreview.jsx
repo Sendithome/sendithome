@@ -78,7 +78,7 @@ export default function DeclarationPreview() {
   const isRTL = selectedLang === 'ar';
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4">
+    <div className="min-h-screen py-8 px-4" style={{ background: 'linear-gradient(135deg, #191919 0%, #0D3E7F 100%)' }}>
       <div className="max-w-2xl mx-auto">
 
         {/* Language Selector */}
@@ -107,8 +107,8 @@ export default function DeclarationPreview() {
         </div>
 
         <div className="mb-6 text-center" dir={isRTL ? 'rtl' : 'ltr'}>
-          <h1 className="text-lg font-bold text-gray-800">{t.title}</h1>
-          <p className="text-sm text-gray-500 mt-1">{t.subtitle}</p>
+          <h1 className="text-lg font-bold text-white">{t.title}</h1>
+          <p className="text-sm text-white/60 mt-1">{t.subtitle}</p>
         </div>
 
         <ShipmentDeclarationForm order={SAMPLE_ORDER} items={SAMPLE_ITEMS} />

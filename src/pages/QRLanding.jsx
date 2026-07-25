@@ -47,9 +47,9 @@ export default function QRLanding() {
   if (notFound) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen px-4 text-center">
-        <Package className="w-12 h-12 text-muted-foreground mb-4" />
-        <h1 className="text-xl font-bold text-foreground">Hotel not found</h1>
-        <p className="text-sm text-muted-foreground mt-2">Please scan the QR code at your hotel reception.</p>
+        <Package className="w-12 h-12 text-white/60 mb-4" />
+        <h1 className="text-xl font-bold text-white">Hotel not found</h1>
+        <p className="text-sm text-white/70 mt-2">Please scan the QR code at your hotel reception.</p>
       </div>
     );
   }
@@ -206,7 +206,7 @@ export default function QRLanding() {
             <strong>{hotel?.name}</strong> is an official <BrandName /> collection point. Your parcel will be securely collected by our courier partner within 24 hours.
           </p>
         </div>
-        <p className="text-center text-[10px] text-muted-foreground mt-4">
+        <p className="text-center text-[10px] text-white/60 mt-4">
           Powered by <BrandName /> AI · Proprietary Intelligent Logistics Platform
         </p>
       </div>

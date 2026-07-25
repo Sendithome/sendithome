@@ -61,8 +61,8 @@ export default function OrderDetail() {
           <ArrowLeft className="w-4 h-4" />
         </button>
         <div className="flex-1">
-          <h1 className="text-lg font-bold text-foreground">{order.order_number || 'Shipment'}</h1>
-          <p className="text-xs text-muted-foreground">{order.box_size} box · {order.destination_country}</p>
+          <h1 className="text-lg font-bold text-white">{order.order_number || 'Shipment'}</h1>
+          <p className="text-xs text-white/60">{order.box_size} box · {order.destination_country}</p>
         </div>
         <span className={cn("text-[10px] font-semibold px-3 py-1.5 rounded-full", config.color)}>
           {config.label}
@@ -71,12 +71,12 @@ export default function OrderDetail() {
 
       {/* Action cards */}
       {needsReceipts && (
-        <div className="bg-accent/5 border border-accent/20 rounded-2xl p-4 mb-6">
+        <div className="bg-white/10 border border-white/20 rounded-2xl p-4 mb-6">
           <div className="flex items-start gap-3">
             <Receipt className="w-5 h-5 text-accent mt-0.5" />
             <div className="flex-1">
-              <p className="text-sm font-semibold">Upload your shopping receipts</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Our AI will scan and extract eligible items</p>
+              <p className="text-sm font-semibold text-white">Upload your shopping receipts</p>
+              <p className="text-xs text-white/60 mt-0.5">Our AI will scan and extract eligible items</p>
               <Button asChild size="sm" className="mt-3 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium">
                 <Link to={`/order/${orderId}/receipts`}>Upload Receipts</Link>
               </Button>
@@ -86,12 +86,12 @@ export default function OrderDetail() {
       )}
 
       {needsPayment && (
-        <div className="bg-accent/5 border border-accent/20 rounded-2xl p-4 mb-6">
+        <div className="bg-white/10 border border-white/20 rounded-2xl p-4 mb-6">
           <div className="flex items-start gap-3">
             <CreditCard className="w-5 h-5 text-accent mt-0.5" />
             <div className="flex-1">
-              <p className="text-sm font-semibold">Complete your payment</p>
-              <p className="text-xs text-muted-foreground mt-0.5">$150 paid online + $20 hotel bill</p>
+              <p className="text-sm font-semibold text-white">Complete your payment</p>
+              <p className="text-xs text-white/60 mt-0.5">$150 paid online + $20 hotel bill</p>
               <Button asChild size="sm" className="mt-3 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium">
                 <Link to={`/order/${orderId}/payment`}>Pay $150</Link>
               </Button>
@@ -102,12 +102,12 @@ export default function OrderDetail() {
 
       {/* Tourist Portal CTA for active shipments */}
       {['paid', 'packed', 'picked_up', 'in_transit', 'delivered'].includes(order.status) && (
-        <div className="bg-accent/5 border border-accent/20 rounded-2xl p-4 mb-4">
+        <div className="bg-white/10 border border-white/20 rounded-2xl p-4 mb-4">
           <div className="flex items-start gap-3">
             <Truck className="w-5 h-5 text-accent mt-0.5" />
             <div className="flex-1">
-              <p className="text-sm font-semibold">Track your shipment</p>
-              <p className="text-xs text-muted-foreground mt-0.5">View live tracking, your items, and customs documents</p>
+              <p className="text-sm font-semibold text-white">Track your shipment</p>
+              <p className="text-xs text-white/60 mt-0.5">View live tracking, your items, and customs documents</p>
               <Button asChild size="sm" className="mt-3 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium">
                 <Link to={`/shipment/${orderId}`}>Open Shipment Portal</Link>
               </Button>

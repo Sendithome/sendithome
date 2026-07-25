@@ -184,8 +184,8 @@ export default function ReceiptUpload() {
           <ArrowLeft className="w-4 h-4" />
         </button>
         <div>
-          <h1 className="text-lg font-bold text-foreground">{STEPS[step]}</h1>
-          <p className="text-xs text-muted-foreground">
+          <h1 className="text-lg font-bold text-white">{STEPS[step]}</h1>
+          <p className="text-xs text-white/60">
             Step {step + 1} of {STEPS.length} · {order?.order_number || 'Loading...'}
           </p>
         </div>
@@ -208,18 +208,18 @@ export default function ReceiptUpload() {
                 {uploading || processing ? (
                   <div className="flex flex-col items-center gap-3">
                     <Loader2 className="w-8 h-8 text-accent animate-spin" />
-                    <p className="text-sm font-medium text-foreground">
+                    <p className="text-sm font-medium text-white">
                       {processing ? 'AI is scanning your receipt...' : 'Uploading...'}
                     </p>
-                    <p className="text-xs text-muted-foreground">This may take a moment</p>
+                    <p className="text-xs text-white/60">This may take a moment</p>
                   </div>
                 ) : (
                   <>
                     <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mx-auto mb-4">
                       <Camera className="w-6 h-6 text-accent" />
                     </div>
-                    <p className="text-sm font-semibold text-foreground">Upload Your Receipt</p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-sm font-semibold text-white">Upload Your Receipt</p>
+                    <p className="text-xs text-white/60 mt-1">
                       Take a photo of your receipt or upload an existing image.
                     </p>
                     <p className="text-xs text-accent font-medium mt-3">Our AI automatically identifies and extracts your purchased items for review.</p>
@@ -328,7 +328,7 @@ export default function ReceiptUpload() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <FileText className="w-4 h-4 text-accent" />
-                <h3 className="text-sm font-semibold text-foreground">{savedReceipts.length} Receipt{savedReceipts.length !== 1 ? 's' : ''} Uploaded</h3>
+                <h3 className="text-sm font-semibold text-white">{savedReceipts.length} Receipt{savedReceipts.length !== 1 ? 's' : ''} Uploaded</h3>
               </div>
               <div className="flex flex-wrap gap-2 mb-5">
                 {savedReceipts.map((r) => (
@@ -425,8 +425,8 @@ export default function ReceiptUpload() {
       {step === 1 && (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl font-bold text-foreground">Select Your Shipment Box</h2>
-            <p className="text-sm text-muted-foreground mt-1">Both options include the same premium service. Simply choose the box size that best suits your purchases.</p>
+            <h2 className="text-xl font-bold text-white">Select Your Shipment Box</h2>
+            <p className="text-sm text-white/60 mt-1">Both options include the same premium service. Simply choose the box size that best suits your purchases.</p>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <BoxCard size="10kg" selected={boxSize === '10kg'} onSelect={setBoxSize} />
@@ -449,12 +449,12 @@ export default function ReceiptUpload() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <ClipboardList className="w-5 h-5 text-accent" />
-              <h2 className="text-xl font-bold text-foreground">Customs Declaration</h2>
+              <h2 className="text-xl font-bold text-white">Customs Declaration</h2>
             </div>
-            <div className="bg-accent/5 border border-accent/20 rounded-xl px-4 py-3 mb-4">
-              <p className="text-sm font-medium text-foreground">Please review your customs declaration before confirming and proceeding to payment.</p>
+            <div className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 mb-4">
+              <p className="text-sm font-medium text-white">Please review your customs declaration before confirming and proceeding to payment.</p>
             </div>
-            <p className="text-sm text-muted-foreground">Your customs declaration has been automatically prepared for your review.</p>
+            <p className="text-sm text-white/60">Your customs declaration has been automatically prepared for your review.</p>
           </div>
 
           <ShipmentDeclarationForm order={{ ...order, box_size: boxSize }} items={savedItems} />

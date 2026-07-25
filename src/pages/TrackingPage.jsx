@@ -74,7 +74,7 @@ export default function TrackingPage() {
   const isCancelled = order?.status === 'cancelled';
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #191919 0%, #0D3E7F 100%)' }}>
       <div className="max-w-2xl mx-auto px-4 py-10">
 
         {/* Header */}
@@ -82,8 +82,8 @@ export default function TrackingPage() {
           <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mx-auto mb-4">
             <Package className="w-7 h-7 text-accent-foreground" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground">Track Your Shipment</h1>
-          <p className="text-sm text-muted-foreground mt-1">Enter your tracking or shipment number to get real-time updates.</p>
+          <h1 className="text-2xl font-bold text-white">Track Your Shipment</h1>
+          <p className="text-sm text-white/70 mt-1">Enter your tracking or shipment number to get real-time updates.</p>
         </div>
 
         {/* Search Bar */}
@@ -92,7 +92,7 @@ export default function TrackingPage() {
             value={trackingInput}
             onChange={e => setTrackingInput(e.target.value)}
             placeholder="e.g. SIH-20240001 or FX123456789"
-            className="h-12 text-base"
+            className="h-12 text-base bg-white"
           />
           <Button type="submit" className="h-12 px-6" disabled={loading || !trackingInput.trim()}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}

@@ -68,9 +68,9 @@ export default function Payment() {
         >
           <Check className="w-10 h-10 text-green-600" />
         </motion.div>
-        <h1 className="text-2xl font-bold text-foreground">Payment Successful!</h1>
-        <p className="text-sm text-muted-foreground mt-3 max-w-sm mx-auto">
-          Payment confirmed! Pack your items in your box and leave it at the hotel reception desk. We'll arrange pickup within <strong className="text-foreground">24 working hours</strong>.
+        <h1 className="text-2xl font-bold text-white">Payment Successful!</h1>
+        <p className="text-sm text-white/70 mt-3 max-w-sm mx-auto">
+          Payment confirmed! Pack your items in your box and leave it at the hotel reception desk. We'll arrange pickup within <strong className="text-white">24 working hours</strong>.
         </p>
         <div className="mt-8 space-y-3">
           <Button
@@ -106,8 +106,8 @@ export default function Payment() {
           <ArrowLeft className="w-4 h-4" />
         </button>
         <div>
-          <h1 className="text-lg font-bold text-foreground">Payment</h1>
-          <p className="text-xs text-muted-foreground">{order.order_number}</p>
+          <h1 className="text-lg font-bold text-white">Payment</h1>
+          <p className="text-xs text-white/60">{order.order_number}</p>
         </div>
       </div>
 
@@ -263,7 +263,7 @@ export default function Payment() {
         )}
       </Button>
 
-      <p className="text-[10px] text-muted-foreground text-center mt-4">
+      <p className="text-[10px] text-white/60 text-center mt-4">
         By proceeding, you agree to our Terms of Service and Privacy Policy.
         Powered by FedEx & DHL.
       </p>
