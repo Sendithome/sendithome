@@ -86,7 +86,7 @@ export default function HotelSignup() {
 
   if (done) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-5">
+      <div className="min-h-screen flex items-center justify-center px-5" style={{ background: 'linear-gradient(135deg, #191919 0%, #0D3E7F 100%)' }}>
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -131,7 +131,7 @@ export default function HotelSignup() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(135deg, #191919 0%, #0D3E7F 100%)' }}>
       {/* Header */}
       <header className="sticky top-0 z-50 bg-primary border-b border-white/10">
         <div className="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
@@ -166,7 +166,7 @@ export default function HotelSignup() {
               <div key={s.step} className="flex items-center gap-2">
                 <div className="flex flex-col items-center">
                   <div className="w-7 h-7 rounded-full bg-accent/10 border border-accent/30 flex items-center justify-center text-xs font-bold text-accent">{s.step}</div>
-                  <span className="text-[10px] text-muted-foreground mt-1 whitespace-nowrap">{s.label}</span>
+                  <span className="text-[10px] text-white/70 mt-1 whitespace-nowrap">{s.label}</span>
                 </div>
                 {i < arr.length - 1 && <div className="w-8 h-px bg-border mb-3" />}
               </div>
@@ -182,7 +182,7 @@ export default function HotelSignup() {
                 }`}>
                   {i < step ? <CheckCircle2 className="w-4 h-4" /> : i + 1}
                 </div>
-                <span className={`text-xs font-semibold hidden sm:block ${i === step ? 'text-foreground' : 'text-muted-foreground'}`}>{label}</span>
+                <span className={`text-xs font-semibold hidden sm:block ${i === step ? 'text-white' : 'text-white/60'}`}>{label}</span>
                 {i < STEPS.length - 1 && <div className={`flex-1 h-px ${i < step ? 'bg-green-300' : 'bg-border'}`} />}
               </div>
             ))}
@@ -381,7 +381,7 @@ export default function HotelSignup() {
             </p>
           </div>
 
-          <p className="text-center text-[10px] text-muted-foreground mt-6">
+          <p className="text-center text-[10px] text-white/50 mt-6">
             Powered by FedEx & DHL · 50+ Countries · 1–3 Day Delivery
           </p>
         </motion.div>

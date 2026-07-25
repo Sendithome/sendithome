@@ -36,13 +36,13 @@ export default function RetailerRegistration() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="min-h-screen flex items-center justify-center px-4" style={{ background: 'linear-gradient(135deg, #191919 0%, #0D3E7F 100%)' }}>
         <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="max-w-md w-full text-center">
           <div className="w-20 h-20 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="w-10 h-10 text-accent" />
           </div>
-          <h2 className="text-2xl font-bold text-primary mb-3">Registration Submitted!</h2>
-          <p className="text-muted-foreground text-sm leading-relaxed">
+          <h2 className="text-2xl font-bold text-white mb-3">Registration Submitted!</h2>
+          <p className="text-white/70 text-sm leading-relaxed">
             Thank you! Your registration is under review. You will receive your <strong className="text-accent">Retailer Partner Code</strong> within 2 business days.
           </p>
           <Link to="/retailer-portal" className="mt-6 inline-block text-sm text-accent hover:underline">
@@ -54,7 +54,7 @@ export default function RetailerRegistration() {
   }
 
   return (
-    <div className="min-h-screen bg-background px-4 py-10">
+    <div className="min-h-screen px-4 py-10" style={{ background: 'linear-gradient(135deg, #191919 0%, #0D3E7F 100%)' }}>
       <div className="max-w-lg mx-auto">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -62,10 +62,10 @@ export default function RetailerRegistration() {
             <div className="w-8 h-8 rounded-xl bg-accent flex items-center justify-center shrink-0">
               <Package className="w-4 h-4 text-accent-foreground" />
             </div>
-            <p className="text-xs font-black tracking-widest text-foreground">SEND<span className="text-accent">IT</span>HOME</p>
+            <p className="text-xs font-black tracking-widest text-white">SEND<span className="text-accent">IT</span>HOME</p>
           </div>
-          <h1 className="text-2xl font-bold text-primary mt-4">Join the SendITHome Retail Partner Network</h1>
-          <p className="text-muted-foreground text-sm mt-1">Join the <BrandName /> certified retail network</p>
+          <h1 className="text-2xl font-bold text-white mt-4">Join the SendITHome Retail Partner Network</h1>
+          <p className="text-white/70 text-sm mt-1">Join the <BrandName /> certified retail network</p>
         </div>
 
         <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">

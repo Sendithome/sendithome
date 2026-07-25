@@ -32,7 +32,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: 'linear-gradient(135deg, #191919 0%, #0D3E7F 100%)' }}>
       <div className="w-full max-w-sm space-y-6">
         {/* Logo */}
         <div className="text-center">
@@ -40,10 +40,10 @@ export default function Login() {
             <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center">
               <Package className="w-5 h-5 text-accent-foreground" />
             </div>
-            <BrandName primary className="text-xl font-black tracking-widest" />
+            <BrandName primary className="text-xl font-black tracking-widest text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground">Welcome back</h1>
-          <p className="text-sm text-muted-foreground mt-1">Sign in to your account</p>
+          <h1 className="text-2xl font-bold text-white">Welcome back</h1>
+          <p className="text-sm text-white/70 mt-1">Sign in to your account</p>
         </div>
 
         {/* Google */}
@@ -58,15 +58,15 @@ export default function Login() {
         </Button>
 
         <div className="flex items-center gap-3">
-          <div className="flex-1 h-px bg-border" />
-          <span className="text-xs text-muted-foreground">or</span>
-          <div className="flex-1 h-px bg-border" />
+          <div className="flex-1 h-px bg-white/20" />
+          <span className="text-xs text-white/50">or</span>
+          <div className="flex-1 h-px bg-white/20" />
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-white">Email</Label>
             <Input
               id="email"
               type="email"
@@ -74,11 +74,12 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="bg-white"
             />
           </div>
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-white">Password</Label>
               <Link to="/forgot-password" className="text-xs text-accent hover:underline">
                 Forgot password?
               </Link>
@@ -90,6 +91,7 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="bg-white"
             />
           </div>
 
@@ -104,14 +106,14 @@ export default function Login() {
           </Button>
         </form>
 
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="text-center text-sm text-white/70">
           Don't have an account?{' '}
           <Link to="/register" className="text-accent font-medium hover:underline">
             Create one
           </Link>
         </p>
 
-        <p className="text-center text-[10px] text-muted-foreground">
+        <p className="text-center text-[10px] text-white/50">
           Powered by <BrandName /> AI · Proprietary Intelligent Logistics Platform
         </p>
       </div>

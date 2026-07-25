@@ -61,7 +61,7 @@ export default function GovernmentLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: 'linear-gradient(135deg, #191919 0%, #0D3E7F 100%)' }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
@@ -70,14 +70,14 @@ export default function GovernmentLogin() {
             <div className="w-8 h-8 rounded-xl bg-accent flex items-center justify-center shrink-0">
               <Package className="w-4 h-4 text-accent-foreground" />
             </div>
-            <span className="text-sm font-black text-foreground">SEND<span className="text-accent">IT</span>HOME</span>
+            <span className="text-sm font-black text-white">SEND<span className="text-accent">IT</span>HOME</span>
           </div>
-          <h1 className="text-2xl font-black text-foreground">Government Oversight Portal</h1>
-          <p className="text-muted-foreground text-sm mt-2 leading-relaxed">Tourism Retail Export — Fiscal Agent & Settlement Authority</p>
+          <h1 className="text-2xl font-black text-white">Government Oversight Portal</h1>
+          <p className="text-white/70 text-sm mt-2 leading-relaxed">Tourism Retail Export — Fiscal Agent & Settlement Authority</p>
         </div>
 
         {/* Classification Banner */}
-        <div className="bg-accent/5 border border-accent/20 rounded-xl px-4 py-2.5 flex items-center gap-2 mb-5">
+        <div className="bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 flex items-center gap-2 mb-5">
           <Lock className="w-3.5 h-3.5 text-accent shrink-0" />
           <p className="text-[10px] font-bold text-accent tracking-widest uppercase">Restricted Access – Authorised Government Officials Only</p>
         </div>
@@ -193,9 +193,9 @@ export default function GovernmentLogin() {
           )}
         </div>
 
-        <div className="mt-5 flex items-start gap-2 bg-destructive/5 border border-destructive/20 rounded-xl px-4 py-3">
-          <AlertTriangle className="w-3.5 h-3.5 text-destructive shrink-0 mt-0.5" />
-          <p className="text-[10px] text-destructive/70">This portal contains classified economic data. Unauthorised access is a criminal offence under UAE Federal Cybercrime Law No. 5 of 2012.</p>
+        <div className="mt-5 flex items-start gap-2 bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3">
+          <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+          <p className="text-[10px] text-red-200">This portal contains classified economic data. Unauthorised access is a criminal offence under UAE Federal Cybercrime Law No. 5 of 2012.</p>
         </div>
       </motion.div>
     </div>

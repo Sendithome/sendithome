@@ -43,17 +43,17 @@ export default function RetailerPortal() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: 'linear-gradient(135deg, #191919 0%, #0D3E7F 100%)' }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-5">
             <div className="w-8 h-8 rounded-xl bg-accent flex items-center justify-center shrink-0">
               <Package className="w-4 h-4 text-accent-foreground" />
             </div>
-            <span className="text-sm font-black text-foreground">SEND<span className="text-accent">IT</span>HOME</span>
+            <span className="text-sm font-black text-white">SEND<span className="text-accent">IT</span>HOME</span>
           </div>
-          <h1 className="text-2xl font-bold text-foreground mt-3">Retail Partner Portal</h1>
-          <p className="text-muted-foreground text-sm mt-1">Where tourism meets luxury retail mobility</p>
+          <h1 className="text-2xl font-bold text-white mt-3">Retail Partner Portal</h1>
+          <p className="text-white/70 text-sm mt-1">Where tourism meets luxury retail mobility</p>
         </div>
 
         <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">

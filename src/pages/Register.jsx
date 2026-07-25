@@ -291,7 +291,7 @@ export default function Register() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full"
-        style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}
+        style={{ background: 'linear-gradient(135deg, #191919 0%, #0D3E7F 100%)' }}
       >
         <div className="max-w-2xl mx-auto px-6 py-6 text-center">
           {/* Welcome headline */}
