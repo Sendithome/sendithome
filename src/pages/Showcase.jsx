@@ -52,7 +52,7 @@ const SHOWCASE_PAGES = [
       { label: 'Retailer Dashboard', path: '/retailer-dashboard' },
       { label: 'Retailer Settings', path: '/retailer-settings' },
       { label: 'Premium & Luxury Retailer Intelligence Platform', path: 'https://claude.ai/public/artifacts/3d8cd313-5342-4064-a81a-0c6b32b7a0c4', external: true },
-      { label: 'Eligible Items Dashboard', path: 'https://claude.ai/public/artifacts/2f0691fd-d770-469d-9c9f-525c7e8f114b', external: true },
+      { label: 'Eligible Items Dashboard', path: 'https://claude.ai/public/artifacts/35694655-5708-47ef-8db9-875ab0490556', external: true },
     ],
   },
   {
