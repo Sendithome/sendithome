@@ -109,9 +109,9 @@ export default function HotelPartnerLanding() {
               onClick={() => navigate('/hotel-signup')}
               className="font-bold rounded-xl h-9 px-5 text-sm transition-all hover:opacity-90"
               style={{ background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})`, color: NAVY }}
-            >
-              Activate Property
-            </button>
+              >
+              Activate Hotel
+              </button>
           </div>
         </div>
       </header>
@@ -148,7 +148,7 @@ export default function HotelPartnerLanding() {
                 className="font-bold rounded-2xl text-base px-8 py-4 flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-lg"
                 style={{ background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD}, #8B6914)`, color: NAVY, boxShadow: `0 8px 32px rgba(201,168,76,0.35)` }}
               >
-                Activate Your Property <ArrowRight className="w-5 h-5" />
+                Activate Your Hotel <ArrowRight className="w-5 h-5" />
               </button>
               <button
                 onClick={() => document.getElementById('how-it-works').scrollIntoView({ behavior: 'smooth' })}
