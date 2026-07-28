@@ -8,8 +8,8 @@ import {
 const sections = [
   {
     icon: Gift,
-    title: '1. Travel Light. We\'ll Deliver Your Shopping Home.',
-    body: 'Your holiday shopping, shipped from your hotel to your front door.\n\nSendITHome is a hotel-based shipping service for the things you buy on your trip. Instead of squeezing purchases into your suitcase or paying excess baggage, you register them at your hotel and we deliver them home.\n\nA new tourism retail mobility model — convenience delivered seamlessly.\n\nNo excess baggage fees. No airport queues. No customs confusion.',
+    title: '1. Shop Without Limits',
+    body: 'Your holiday shopping, shipped from your hotel to your doorstep.\n\nSendITHome lets you send the things you buy on your trip directly from your hotel to your doorstep. Instead of trying to fit your purchases into your suitcase or paying excess baggage, you simply register them at your hotel and we deliver them home.\n\nEnjoy your holiday while we take care of the rest.\n\nNo excess baggage fees. No airport queues. No customs confusion.',
   },
   {
     icon: Settings,
@@ -88,18 +88,7 @@ export default function FrictionFreeShoppingPass({ open, onClose }) {
                 <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mx-auto mb-4">
                   <Plane className="w-7 h-7 text-accent-foreground" />
                 </div>
-                <p className="text-sm text-muted-foreground mb-1">Welcome to <BrandName className="text-foreground" /></p>
-                <h1 className="text-2xl font-black text-accent mb-1">Shop Without Limits</h1>
-              </div>
-
-              {/* Intro */}
-              <div className="space-y-4 text-sm text-muted-foreground leading-relaxed mb-8">
-                <p className="font-semibold text-foreground">Your holiday shopping, shipped from your hotel to your doorstep.</p>
-                <p>
-                  <BrandName className="font-bold text-foreground" /> lets you send the things you buy on your trip directly from your hotel to your doorstep. Instead of trying to fit your purchases into your suitcase or paying excess baggage, you simply register them at your hotel and we deliver them home.
-                </p>
-                <p className="font-semibold text-foreground">Enjoy your holiday while we take care of the rest.</p>
-                <p className="font-semibold text-accent">No excess baggage fees. No airport queues. No customs confusion.</p>
+                <p className="text-sm text-muted-foreground">Welcome to <BrandName className="text-foreground" /></p>
               </div>
 
               {/* Sections */}
