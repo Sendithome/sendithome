@@ -84,11 +84,18 @@ export default function FrictionFreeShoppingPass({ open, onClose }) {
             {/* Scrollable content */}
             <div className="overflow-y-auto flex-1 px-5 py-6 sm:px-8 sm:py-8">
               {/* Hero */}
-              <div className="text-center mb-8">
+              <div className="text-center mb-6">
                 <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mx-auto mb-4">
                   <Plane className="w-7 h-7 text-accent-foreground" />
                 </div>
-                <p className="text-sm text-muted-foreground">Welcome to <BrandName className="text-foreground" /></p>
+                <p className="text-sm text-muted-foreground mb-1">Welcome to <BrandName className="text-foreground" /></p>
+                <h1 className="text-2xl font-black text-accent mb-4">Sail Through the Airport.</h1>
+                <div className="space-y-3 text-sm text-muted-foreground leading-relaxed text-left max-w-xl mx-auto">
+                  <p>Shopping should be one of the highlights of your holiday—not something you have to fit into your suitcase.</p>
+                  <p>With <BrandName className="font-bold text-foreground" />, you can shop with confidence while we deliver your purchases securely from your hotel to your doorstep.</p>
+                  <p className="font-semibold text-foreground">No heavy luggage. No excess baggage fees. No airport stress.</p>
+                  <p className="font-semibold text-accent">Simply enjoy your holiday—we'll take care of getting your shopping home.</p>
+                </div>
               </div>
 
               {/* Sections */}
