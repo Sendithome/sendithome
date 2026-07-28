@@ -1,11 +1,16 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import BrandName from '@/components/BrandName';
 import {
-  ArrowLeft, X, Plane, Settings, Smile, Sparkles, Route,
+  ArrowLeft, X, Gift, Plane, Settings, Smile, Sparkles, Route,
   CheckCircle2, ShoppingBag
 } from 'lucide-react';
 
 const sections = [
+  {
+    icon: Gift,
+    title: '1. Travel Light. We\'ll Deliver Your Shopping Home.',
+    body: 'Your holiday shopping, shipped from your hotel to your front door.\n\nSendITHome is a hotel-based shipping service for the things you buy on your trip. Instead of squeezing purchases into your suitcase or paying excess baggage, you register them at your hotel and we deliver them home.\n\nA new tourism retail mobility model — convenience delivered seamlessly.\n\nNo excess baggage fees. No airport queues. No customs confusion.',
+  },
   {
     icon: Settings,
     title: '2. How It Works for You',
@@ -84,7 +89,6 @@ export default function FrictionFreeShoppingPass({ open, onClose }) {
                   <Plane className="w-7 h-7 text-accent-foreground" />
                 </div>
                 <p className="text-sm text-muted-foreground mb-1">Welcome to <BrandName className="text-foreground" /></p>
-                <span className="inline-block text-[10px] font-bold tracking-widest uppercase text-accent/70 mb-1">1</span>
                 <h1 className="text-2xl font-black text-accent mb-1">Shop Without Limits</h1>
               </div>
 
