@@ -162,9 +162,9 @@ export default function QRLanding() {
           <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center mb-4">
             <Package className="w-6 h-6 text-accent" />
           </div>
-          <h2 className="text-2xl font-black text-foreground">Travel Light. We'll Deliver Your Shopping Home.</h2>
+          <h2 className="text-2xl font-black text-foreground">Shop Without Limits.</h2>
           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-            Deliver your items directly from <span className="font-semibold text-foreground">{hotel.name}</span> straight to your doorstep. Expedited delivery in 1–3 working days (M-F).
+            Deliver your luxury purchases straight from <span className="font-semibold text-foreground">{hotel.name}</span> to your doorstep in just 1–3 business days with <BrandName className="font-semibold text-foreground" />.
           </p>
 
           <PricingCard />
@@ -177,8 +177,7 @@ export default function QRLanding() {
           className="space-y-3"
         >
           <Button
-            variant="outline"
-            className="w-full h-12 rounded-2xl border-accent/40 text-accent hover:bg-accent/5 font-semibold text-sm"
+            className="w-full h-12 rounded-2xl bg-white text-primary hover:bg-white/90 font-semibold text-sm shadow-md"
             onClick={() => setShowPass(true)}
           >
             <Sparkles className="w-4 h-4 mr-2" />

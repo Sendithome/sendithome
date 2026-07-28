@@ -128,10 +128,7 @@ export default function Payment() {
           <span className="text-muted-foreground">Checkout &amp; Global Membership</span>
           <span className="font-semibold">$150.00 USD</span>
         </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Concierge Fulfillment</span>
-          <span className="text-muted-foreground">$20 — charged to hotel bill</span>
-        </div>
+
         <div className="border-t border-border">
           <button
             onClick={() => setShowItems(!showItems)}
@@ -155,12 +152,17 @@ export default function Payment() {
           )}
         </div>
         <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Insurance ($3,000 coverage)</span>
+          <span className="text-muted-foreground">Premium Transit Protection (Declared Value up to US$3,000)</span>
           <span className="text-green-600">Included</span>
         </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Tracking</span>
-          <span className="text-green-600">Included</span>
+        <div className="rounded-xl border border-dashed border-accent/40 bg-accent/5 p-3 mt-2">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-sm font-semibold text-foreground">Additional Transit Protection</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">Protect your eligible personal shopping items with additional Declared Value Transit Protection.</p>
+            </div>
+            <span className="text-[10px] font-semibold text-accent/70 uppercase tracking-wide whitespace-nowrap mt-0.5">Coming Soon</span>
+          </div>
         </div>
         <div className="border-t border-border pt-3 flex justify-between items-center">
           <span className="font-semibold">Amount Due Now</span>

@@ -15,22 +15,21 @@ const sections = [
     icon: Settings,
     title: '2. How It Works for You',
     steps: [
-      'Register',
-      'Collect Your Box',
-      'Shop & Upload Receipts',
-      'Pack & Send',
+      { title: 'Register', desc: "Scan the QR code and create your account. Registration takes just a few minutes and confirms your available shipping destinations." },
+      { title: 'Collect Your Box', desc: "Collect your official 10 kg or 20 kg amenity box from hotel reception, or have it conveniently delivered to your room." },
+      { title: 'Shop & Upload Receipts', desc: "Enjoy shopping, then upload your receipts through your account. Eligible personal shopping items are subject to the SendITHome Terms & Conditions." },
+      { title: 'Pack & Send', desc: "Pack your purchases into your official amenity box, return it to hotel reception, and we'll take care of the rest." },
     ],
   },
   {
     icon: Smile,
     title: '3. Benefits of Global Membership',
     list: [
-      'Shop without luggage limits.',
-      'Continue enjoying your holiday—not your suitcase.',
-      'Skip airport baggage queues.',
-      'Track every shipment from hotel to home.',
-      'Customs documentation completed for you.',
-      'Delivered safely to your doorstep.',
+      'Exclusive Global Member Rates until 31 December 2029.',
+      'Premium Transit Protection on eligible shipments.',
+      'Shipment tracking.',
+      'Digital customs processing.',
+      'Access to new destinations and exclusive member offers.',
     ],
   },
   {
@@ -38,10 +37,10 @@ const sections = [
     title: '4. Why Choose SendITHome',
     list: [
       'One simple price.',
-      'No excess baggage surprises.',
-      'Pack when you\'re ready.',
-      'Customs documentation prepared automatically.',
-      'Protected from hotel to home.',
+      'No excess baggage fees.',
+      'Sail through the airport.',
+      'Pack at your own pace.',
+      'Delivered safely to your doorstep.',
     ],
   },
 ];
@@ -54,7 +53,7 @@ export default function FrictionFreeShoppingPass({ open, onClose }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 bg-black/60 flex items-start justify-center"
+          className="fixed inset-0 z-50 bg-black/80 flex items-start justify-center"
           onClick={onClose}
         >
           <motion.div
@@ -63,10 +62,10 @@ export default function FrictionFreeShoppingPass({ open, onClose }) {
             exit={{ y: 40, opacity: 0 }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-background w-full max-w-2xl h-[100dvh] sm:h-[90vh] sm:rounded-3xl overflow-hidden flex flex-col"
+            className="bg-card w-full max-w-2xl h-[100dvh] sm:h-[90vh] sm:rounded-3xl overflow-hidden flex flex-col"
           >
             {/* Sticky header with Back button */}
-            <div className="sticky top-0 z-10 bg-background border-b border-border px-5 py-3 flex items-center justify-between shrink-0">
+            <div className="sticky top-0 z-10 bg-card border-b border-border px-5 py-3 flex items-center justify-between shrink-0">
               <button
                 onClick={onClose}
                 className="flex items-center gap-1.5 text-sm font-semibold text-foreground hover:text-accent transition-colors"
@@ -90,19 +89,17 @@ export default function FrictionFreeShoppingPass({ open, onClose }) {
                   <Plane className="w-7 h-7 text-accent-foreground" />
                 </div>
                 <p className="text-sm text-muted-foreground mb-1">Welcome to <BrandName className="text-foreground" /></p>
-                <h1 className="text-2xl font-black text-accent mb-1">Sail Through the Airport.</h1>
+                <h1 className="text-2xl font-black text-accent mb-1">Shop Without Limits</h1>
               </div>
 
               {/* Intro */}
               <div className="space-y-4 text-sm text-muted-foreground leading-relaxed mb-8">
+                <p className="font-semibold text-foreground">Your holiday shopping, shipped from your hotel to your doorstep.</p>
                 <p>
-                  Shopping should be one of the highlights of your holiday—not something you have to squeeze into your suitcase.
+                  <BrandName className="font-bold text-foreground" /> lets you send the things you buy on your trip directly from your hotel to your doorstep. Instead of trying to fit your purchases into your suitcase or paying excess baggage, you simply register them at your hotel and we deliver them home.
                 </p>
-                <p>
-                  With <BrandName className="font-bold text-foreground" />, you can shop with confidence while we deliver your purchases safely from your hotel to your home.
-                </p>
-                <p className="font-semibold text-foreground">No heavy luggage. No excess baggage fees. No airport stress.</p>
-                <p className="font-semibold text-accent">Simply enjoy your holiday—we'll take care of the journey home.</p>
+                <p className="font-semibold text-foreground">Enjoy your holiday while we take care of the rest.</p>
+                <p className="font-semibold text-accent">No excess baggage fees. No airport queues. No customs confusion.</p>
               </div>
 
               {/* Sections */}
@@ -142,7 +139,10 @@ export default function FrictionFreeShoppingPass({ open, onClose }) {
                               <div className="w-7 h-7 rounded-full bg-accent text-accent-foreground flex items-center justify-center shrink-0 text-xs font-bold">
                                 {i + 1}
                               </div>
-                              <span className="mt-1">{step}</span>
+                              <div className="mt-0.5">
+                                <p className="font-semibold">{step.title}</p>
+                                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{step.desc}</p>
+                              </div>
                             </li>
                           ))}
                         </ol>
