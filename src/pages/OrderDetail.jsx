@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Package, MapPin, Receipt, CreditCard, Truck } from 'lucide-react';
-import OrderDocuments from '../components/OrderDocuments';
+import { ArrowLeft, Package, MapPin, Receipt, Truck } from 'lucide-react';
+import ShipmentDocuments from '../components/ShipmentDocuments';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 import TrackingTimeline from '../components/TrackingTimeline';
@@ -85,21 +85,6 @@ export default function OrderDetail() {
         </div>
       )}
 
-      {needsPayment && (
-        <div className="bg-white/10 border border-white/20 rounded-2xl p-4 mb-6">
-          <div className="flex items-start gap-3">
-            <CreditCard className="w-5 h-5 text-accent mt-0.5" />
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-white">Complete your payment</p>
-              <p className="text-xs text-white/60 mt-0.5">$150 paid online + $20 hotel bill</p>
-              <Button asChild size="sm" className="mt-3 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium">
-                <Link to={`/order/${orderId}/payment`}>Pay $150</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Tourist Portal CTA for active shipments */}
       {['paid', 'packed', 'picked_up', 'in_transit', 'delivered'].includes(order.status) && (
         <div className="bg-white/10 border border-white/20 rounded-2xl p-4 mb-4">
@@ -165,9 +150,9 @@ export default function OrderDetail() {
         </div>
       )}
 
-      {/* Documents */}
+      {/* Documents — download only */}
       <div className="mt-4">
-        <OrderDocuments orderId={orderId} />
+        <ShipmentDocuments orderId={orderId} order={order} items={items} />
       </div>
     </div>
   );
