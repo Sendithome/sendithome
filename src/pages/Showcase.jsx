@@ -63,7 +63,7 @@ const SHOWCASE_PAGES = [
     pages: [
       { label: 'Government Login', path: '/government-login' },
       { label: 'Government Dashboard', path: '/government-dashboard' },
-      { label: 'Master Target Countries Dashboard', path: 'https://claude.ai/public/artifacts/a57e59d8-f2d5-455c-ad57-5751ddb4dc31', external: true },
+      { label: 'Master Target Countries Dashboard', path: 'https://claude.ai/public/artifacts/fa4a469c-c96c-468c-aef8-ac4a37d67ec3', external: true },
     ],
   },
   {
