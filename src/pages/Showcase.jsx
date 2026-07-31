@@ -51,7 +51,7 @@ const SHOWCASE_PAGES = [
       { label: 'Retailer Portal (Login)', path: '/retailer-portal' },
       { label: 'Retailer Dashboard', path: '/retailer-dashboard' },
       { label: 'Retailer Settings', path: '/retailer-settings' },
-      { label: 'Premium & Luxury Retailer Intelligence Platform', path: 'https://claude.ai/public/artifacts/f354bdaa-64e6-464d-8169-16bc6aae4a1b', external: true },
+      { label: 'Premium & Luxury Retailer Intelligence Platform', path: 'https://claude.ai/public/artifacts/72ac6ea9-41a4-493e-8ed0-9bb738949ee3', external: true },
       { label: 'Eligible Items Dashboard', path: 'https://claude.ai/public/artifacts/35694655-5708-47ef-8db9-875ab0490556', external: true },
     ],
   },
