@@ -1,0 +1,37 @@
+{
+  "name": "Auto-Consolidate Shipment on Retailer Approval",
+  "description": "When a RetailerVerification is approved, check if all verifications for that order are approved and consolidate the shipment.",
+  "trigger": {
+    "condition": "${ ((.trigger.data.status == \"approved\") and (.trigger.changed_fields | index(\"status\") != null)) }",
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "update"
+      ],
+      "entity_name": "RetailerVerification"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "auto_consolidate_shipment_on_retailer_approval",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "consolidateShipment",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "consolidateShipment"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "Initialize Hotel Inventory on Fully Onboarded",
+  "description": "Auto-creates HotelInventory record with tier-based box allocation when a hotel reaches 'fully_onboarded' status.",
+  "trigger": {
+    "condition": "${ (.trigger.data.logistics_stage == \"fully_onboarded\") }",
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "update"
+      ],
+      "entity_name": "HotelOnboardingStatus"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "initialize_hotel_inventory_on_fully_onboarded",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "initializeHotelInventory",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "initializeHotelInventory"
+  }
+}
